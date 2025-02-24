@@ -23,6 +23,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $title = "Inicio";
+        return view('home', compact('title'));
+    }
+
+    public function officers()
+    {
+        $title = "Oficiales";
+        return view('admin.officers.index', compact('title'));
     }
 }

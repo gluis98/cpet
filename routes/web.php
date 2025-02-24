@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OfficersController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,10 +14,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware('auth')->group(function(){
+    // General navigation
+    Route::controller(HomeController::class)->group(function(){
+        Route::get('/', 'index')->name('home');
+        Route::get('/officers', 'officers')->name('officers');
+    });
+
+    // Officers routes
+    Route::controller(OfficersController::class)->group(function(){
+        Route::get('/officers/create', 'create')->name('officers.create');
+        Route::get('/officers/edit/{id}', 'edit')->name('officers.edit');
+    });
 });
+
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
