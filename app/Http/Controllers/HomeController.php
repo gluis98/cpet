@@ -53,4 +53,11 @@ class HomeController extends Controller
         $title = "Oficial: " . $o->nombre_completo . " - Familiares";
         return view('admin.officers-family.index', compact('title', 'id'));
     }
+
+    public function officers_vacations($id)
+    {
+        $o = \App\Models\Oficiale::find($id);
+        $title = "Oficial: " . $o->nombre_completo . " - Vacaciones - Años de servicio: " . (now()->year - $o->fecha_ingreso->year);
+        return view('admin.officers-vacations.index', compact('title', 'id'));
+    }
 }

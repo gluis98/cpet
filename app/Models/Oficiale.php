@@ -32,14 +32,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property Collection|FormacionPolicial[] $formacion_policials
  * @property Collection|NombramientosProvisionale[] $nombramientos_provisionales
  * @property Collection|OficialesAcademico[] $oficiales_academicos
- * @property Collection|OficialesAscenso[] $oficiales_ascensos
  * @property Collection|Cargo[] $cargos
+ * @property Collection|OficialesCurso[] $oficiales_cursos
  * @property Collection|OficialesDocumento[] $oficiales_documentos
  * @property Collection|OficialesEmergencia[] $oficiales_emergencias
  * @property Collection|OficialesFamiliare[] $oficiales_familiares
  * @property Collection|OficialesFamiliaresDocumento[] $oficiales_familiares_documentos
+ * @property Collection|OficialesReconocimiento[] $oficiales_reconocimientos
  * @property Collection|OficialesSalud[] $oficiales_saluds
- * @property Collection|Reconocimiento[] $reconocimientos
+ * @property Collection|OficialesVacacione[] $oficiales_vacaciones
  *
  * @package App\Models
  */
@@ -85,15 +86,15 @@ class Oficiale extends Model
 		return $this->hasMany(OficialesAcademico::class, 'id_policia');
 	}
 
-	public function oficiales_ascensos()
-	{
-		return $this->hasMany(OficialesAscenso::class, 'id_policia');
-	}
-
 	public function cargos()
 	{
 		return $this->belongsToMany(Cargo::class, 'oficiales_cargos', 'id_policia', 'id_cargo')
 					->withPivot('id', 'fecha_inicio', 'fecha_fin', 'is_actual');
+	}
+
+	public function oficiales_cursos()
+	{
+		return $this->hasMany(OficialesCurso::class, 'id_policia');
 	}
 
 	public function oficiales_documentos()
@@ -116,13 +117,18 @@ class Oficiale extends Model
 		return $this->hasMany(OficialesFamiliaresDocumento::class, 'id_policia');
 	}
 
+	public function oficiales_reconocimientos()
+	{
+		return $this->hasMany(OficialesReconocimiento::class, 'id_policia');
+	}
+
 	public function oficiales_saluds()
 	{
 		return $this->hasMany(OficialesSalud::class, 'id_policia');
 	}
 
-	public function reconocimientos()
+	public function oficiales_vacaciones()
 	{
-		return $this->hasMany(Reconocimiento::class, 'id_policia');
+		return $this->hasMany(OficialesVacacione::class, 'id_policia');
 	}
 }

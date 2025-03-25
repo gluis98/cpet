@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class OficialesAscenso
+ * Class OficialesReconocimiento
  * 
  * @property int $id
  * @property int $id_policia
@@ -21,9 +21,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  */
-class OficialesAscenso extends Model
+class OficialesReconocimiento extends Model
 {
-	protected $table = 'oficiales_ascensos';
+	protected $table = 'oficiales_reconocimientos';
 	public $timestamps = false;
 
 	protected $casts = [

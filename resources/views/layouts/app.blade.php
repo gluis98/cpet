@@ -16,7 +16,7 @@
     <link href="{{asset("css/font-face.css")}}" rel="stylesheet" media="all">
     <link href="{{asset("vendor/fontawesome-free/css/all.min.css")}}" rel="stylesheet" media="all">
     <link href="{{asset("vendor/mdi-font/css/material-design-iconic-font.min.css")}}" rel="stylesheet" media="all">
-    <link rel="shortcut icon" href="images/icon/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset("images/icon/logo.png") }}" type="image/x-icon">
 
     <!-- Bootstrap CSS-->
     <link href="{{asset("vendor/bootstrap-4.1/bootstrap.min.css")}}" rel="stylesheet" media="all">
@@ -44,14 +44,16 @@
         <aside class="menu-sidebar2">
             <div class="logo text-white">
                 <a href="#">
-                    <img src="images/icon/logo.png" alt="Cool Admin"  width="50" height="50" />
+                    <img src="{{ asset("images/icon/logo.png") }}" alt="Cool Admin"  width="50" height="50" />
                 </a>
-                CPET
+                <span class="h4 ml-4">
+                    CPET
+                </span>
             </div>
             <div class="menu-sidebar2__content js-scrollbar1">
                 <div class="account2">
                     <div class="image img-cir img-120">
-                        <img src="images/icon/avatar-big-01.jpg" alt="John Doe" />
+                        <img src="{{ asset("images/avatar.png") }}" alt="Usuario" />
                     </div>
                     <h4 class="name">{{auth()->user()->name}}</h4>
                     <a href="{{ route('logout') }}"
@@ -126,15 +128,7 @@
                             </div>
                             <div class="header-button2">
                                 <div class="header-button-item js-item-menu">
-                                    <i class="zmdi zmdi-search"></i>
-                                    <div class="search-dropdown js-dropdown">
-                                        <form action="">
-                                            <input class="au-input au-input--full au-input--h65" type="text" placeholder="Search for datas &amp; reports..." />
-                                            <span class="search-dropdown__icon">
-                                                <i class="zmdi zmdi-search"></i>
-                                            </span>
-                                        </form>
-                                    </div>
+                                    <i class="zmdi zmdi-print"></i>
                                 </div>
                                 <div class="header-button-item has-noti js-item-menu">
                                     <i class="zmdi zmdi-notifications"></i>
@@ -171,43 +165,6 @@
                                         </div>
                                         <div class="notifi__footer">
                                             <a href="#">All notifications</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="header-button-item mr-0 js-sidebar-btn">
-                                    <i class="zmdi zmdi-menu"></i>
-                                </div>
-                                <div class="setting-menu js-right-sidebar d-none d-lg-block">
-                                    <div class="account-dropdown__body">
-                                        <div class="account-dropdown__item">
-                                            <a href="#">
-                                                <i class="zmdi zmdi-account"></i>Account</a>
-                                        </div>
-                                        <div class="account-dropdown__item">
-                                            <a href="#">
-                                                <i class="zmdi zmdi-settings"></i>Setting</a>
-                                        </div>
-                                        <div class="account-dropdown__item">
-                                            <a href="#">
-                                                <i class="zmdi zmdi-money-box"></i>Billing</a>
-                                        </div>
-                                    </div>
-                                    <div class="account-dropdown__body">
-                                        <div class="account-dropdown__item">
-                                            <a href="#">
-                                                <i class="zmdi zmdi-globe"></i>Language</a>
-                                        </div>
-                                        <div class="account-dropdown__item">
-                                            <a href="#">
-                                                <i class="zmdi zmdi-pin"></i>Location</a>
-                                        </div>
-                                        <div class="account-dropdown__item">
-                                            <a href="#">
-                                                <i class="zmdi zmdi-email"></i>Email</a>
-                                        </div>
-                                        <div class="account-dropdown__item">
-                                            <a href="#">
-                                                <i class="zmdi zmdi-notifications"></i>Notifications</a>
                                         </div>
                                     </div>
                                 </div>
@@ -415,7 +372,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="copyright">
-                                <p>Copyright © 2018 Colorlib. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+                                <p>Copyright © 2025 CPET. Todos los derechos reservados. Desarrollado por: <a href="https://www.instagram.com/adsyssystems/">Adsys Sistemas</a>.</p>
                             </div>
                         </div>
                     </div>

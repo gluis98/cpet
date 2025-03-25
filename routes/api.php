@@ -8,6 +8,7 @@ use App\Http\Controllers\OfficersAcademyController;
 use App\Http\Controllers\PositionsController;
 use App\Http\Controllers\OfficersFamillyController;
 use App\Http\Controllers\OfficersFilesController;
+use App\Http\Controllers\OfficersVacationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,4 +58,12 @@ Route::controller(OfficersFilesController::class)->group(function(){
     Route::get('/officers/files/{id}', 'show');
     Route::put('/officers/files/{id}', 'update');
     Route::delete('/officers/files/{id}', 'destroy');
+});
+
+Route::controller(OfficersVacationsController::class)->group(function(){
+    Route::get('/officers/vacations/index/{id}', 'index');
+    Route::post('/officers/vacations', 'store');
+    Route::get('/officers/vacations/{id}', 'show');
+    Route::put('/officers/vacations/{id}', 'update');
+    Route::delete('/officers/vacations/{id}', 'destroy');
 });

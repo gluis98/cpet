@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function(){
         Route::get('/officers/academy/{id}', 'officers_academy')->name('officers.academy');
         Route::get('/officers/positions/{id}', 'officers_position')->name('officers.positions');
         Route::get('/officers/familly/{id}', 'officers_familly')->name('officers.familly');
+        Route::get('/officers/vacations/{id}', 'officers_vacations')->name('officers.vacations');
     });
 
    

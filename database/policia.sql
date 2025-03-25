@@ -11,7 +11,7 @@
  Target Server Version : 80403 (8.4.3)
  File Encoding         : 65001
 
- Date: 24/03/2025 20:28:23
+ Date: 25/03/2025 14:58:50
 */
 
 SET NAMES utf8mb4;
@@ -76,7 +76,7 @@ CREATE TABLE `formacion_policial`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `id_policia`(`id_policia` ASC) USING BTREE,
   CONSTRAINT `formacion_policial_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of formacion_policial
@@ -115,7 +115,7 @@ CREATE TABLE `nombramientos_provisionales`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `id_policia`(`id_policia` ASC) USING BTREE,
   CONSTRAINT `nombramientos_provisionales_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of nombramientos_provisionales
@@ -148,7 +148,7 @@ CREATE TABLE `oficiales`  (
 -- ----------------------------
 -- Records of oficiales
 -- ----------------------------
-INSERT INTO `oficiales` VALUES (1, '27306869', 'Luis Fernando Gómez', '2025-03-24', 'A+', 'M', '32', '42', '2025-03-24', 'Soltero', 'Municipio Trujillo, Parroquia 3 Esquinas, Urb. Bucare Casa Nro 07', '04165324125', 'luisfgb919@gmail.com', 'activo', '0001');
+INSERT INTO `oficiales` VALUES (1, '27306869', 'Luis Fernando Gómez', '2025-03-24', 'A+', 'M', '32', '42', '2010-03-24', 'Soltero', 'Municipio Trujillo, Parroquia 3 Esquinas, Urb. Bucare Casa Nro 07', '04165324125', 'luisfgb919@gmail.com', 'activo', '0001');
 
 -- ----------------------------
 -- Table structure for oficiales_academico
@@ -172,24 +172,6 @@ CREATE TABLE `oficiales_academico`  (
 -- Records of oficiales_academico
 -- ----------------------------
 INSERT INTO `oficiales_academico` VALUES (4, 1, 'Ingeniería', 'Universidad de los Andes', '2025-03-24', '2025-03-24', 'Descripcon', 'Civil');
-
--- ----------------------------
--- Table structure for oficiales_ascensos
--- ----------------------------
-DROP TABLE IF EXISTS `oficiales_ascensos`;
-CREATE TABLE `oficiales_ascensos`  (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `id_policia` int NOT NULL,
-  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `fecha` date NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
-  CONSTRAINT `oficiales_ascensos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of oficiales_ascensos
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for oficiales_cargos
@@ -216,6 +198,26 @@ INSERT INTO `oficiales_cargos` VALUES (2, 1, 3, '2025-03-24', NULL, 1);
 INSERT INTO `oficiales_cargos` VALUES (3, 1, 2, '2025-03-24', '2025-03-24', NULL);
 
 -- ----------------------------
+-- Table structure for oficiales_cursos
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_cursos`;
+CREATE TABLE `oficiales_cursos`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NOT NULL,
+  `tipo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fecha_inicio` date NOT NULL,
+  `fecha_fin` date NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_cursos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_cursos
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for oficiales_documentos
 -- ----------------------------
 DROP TABLE IF EXISTS `oficiales_documentos`;
@@ -228,11 +230,12 @@ CREATE TABLE `oficiales_documentos`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `id_policia`(`id_policia` ASC) USING BTREE,
   CONSTRAINT `oficiales_documentos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of oficiales_documentos
 -- ----------------------------
+INSERT INTO `oficiales_documentos` VALUES (4, 1, 'Cedula de Identidad', 'archivos/1/vSVNKhjsJNgqPfmoywQUvtW1I7m03S1IW04msQTH.jpg', '2025-03-25 16:50:21');
 
 -- ----------------------------
 -- Table structure for oficiales_emergencias
@@ -299,6 +302,24 @@ CREATE TABLE `oficiales_familiares_documentos`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for oficiales_reconocimientos
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_reconocimientos`;
+CREATE TABLE `oficiales_reconocimientos`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NOT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fecha` date NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_reconocimientos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_reconocimientos
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for oficiales_salud
 -- ----------------------------
 DROP TABLE IF EXISTS `oficiales_salud`;
@@ -316,6 +337,27 @@ CREATE TABLE `oficiales_salud`  (
 
 -- ----------------------------
 -- Records of oficiales_salud
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for oficiales_vacaciones
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_vacaciones`;
+CREATE TABLE `oficiales_vacaciones`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NULL DEFAULT NULL,
+  `fecha_emision` date NULL DEFAULT NULL,
+  `fecha_reintegro` date NULL DEFAULT NULL,
+  `estatus` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `is_disfrutadas` int NULL DEFAULT NULL,
+  `descripcion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_vacaciones_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of oficiales_vacaciones
 -- ----------------------------
 
 -- ----------------------------
@@ -370,24 +412,6 @@ CREATE TABLE `personal_access_tokens`  (
 
 -- ----------------------------
 -- Records of personal_access_tokens
--- ----------------------------
-
--- ----------------------------
--- Table structure for reconocimientos
--- ----------------------------
-DROP TABLE IF EXISTS `reconocimientos`;
-CREATE TABLE `reconocimientos`  (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `id_policia` int NOT NULL,
-  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `fecha` date NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
-  CONSTRAINT `reconocimientos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of reconocimientos
 -- ----------------------------
 
 -- ----------------------------

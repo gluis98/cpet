@@ -361,6 +361,37 @@
             });
         });
 
+        $(document).on('click','.delete-file', function(e){
+            e.preventDefault();
+            id = $(this).data('id');
+            let formData = new FormData();
+            formData.append('_method', 'DELETE');
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esto.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('api/officers/files/'+id, {
+                        method: 'POST',
+                        body: formData
+                    }).then(response => response.json())
+                    .then(data => {
+                        Swal.fire(
+                            'Eliminado!',
+                            data.msj,
+                            'success'
+                        );
+                        index_archivos();
+                    });
+                }
+            });
+        });
+
         $(document).on('click', '.files', function() {
             id = $(this).attr('data-id');
             // Note that the name "myDropzone" is the camelized
@@ -400,12 +431,12 @@
                         <td class="text-center">${e.fecha_ingreso.substr(0,4) + '-' + e.fecha_ingreso.substr(5,2) + '-' + e.fecha_ingreso.substr(8,2)}</td>
                         <td class="text-center">${e.estatus.toUpperCase()}</td>
                         <td class="text-right actions">
-                            <button class="btn btn-dark edit" data-id="${e.id}"><i class="far fa-edit"></i></button>
-                            <a href="officers/academy/${e.id}" class="btn btn-dark"><i class="fas fa-graduation-cap"></i></a>
-                            <a href="officers/positions/${e.id}" class="btn btn-dark"><i class="fas fa-medal"></i></a>
-                            <a href="officers/familly/${e.id}" class="btn btn-dark"><i class="fab fa-gratipay"></i></a>
-                            <button data-id="${e.id}" class="btn btn-dark files"><i class="fas fa-file"></i></button>
-                            <a href="officers/positions/${e.id}" class="btn btn-primary"><i class="fas fa-map-marked"></i></a>
+                            <button class="btn btn-dark edit" data-id="${e.id}"  data-toggle="tooltip" data-placement="top" title="Editar oficial"><i class="far fa-edit"></i></button>
+                            <a href="officers/academy/${e.id}" class="btn btn-dark"  data-toggle="tooltip" data-placement="top" title="Formación académica"><i class="fas fa-graduation-cap"></i></a>
+                            <a href="officers/positions/${e.id}" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Cargos alcanzados"><i class="fas fa-medal"></i></a>
+                            <a href="officers/familly/${e.id}" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Hijos y familiares"><i class="fab fa-gratipay"></i></a>
+                            <button data-id="${e.id}" class="btn btn-dark files" data-toggle="tooltip" data-placement="top" title="Archivos del oficial"><i class="fas fa-file"></i></button>
+                            <a href="officers/vacations/${e.id}" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Solicitud de vacaciones"><i class="fas fa-map-marked"></i></a>
                             <button class="btn btn-danger delete" data-id="${e.id}"><i class="far fa-trash-alt"></i></button>
                         </td>
                     </tr>
@@ -414,6 +445,9 @@
                 $('table').DataTable().destroy();
                 $('tbody').html(template);
                 $('table').DataTable(t);
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                })
             });
         }
 
@@ -428,15 +462,18 @@
                         template += `
                             <div class="col-12 col-md-4 mb-3">
                                 <div class="img-container">
-                                    <a href="{{asset('storage')}}/${element.archivo_url}" download>
-                                        <img src="{{asset('storage')}}/${element.archivo_url}" class="img-fluid" alt="Previsualización">
-                                    </a>
+                                    <div class="position-relative">
+                                        <a href="{{asset('storage')}}/${element.archivo_url}" download>
+                                            <img src="{{asset('storage')}}/${element.archivo_url}" class="img-fluid border" alt="Previsualización">
+                                        </a>
+                                        <button class="btn btn-dark text-white position-absolute delete-file" style="top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;" data-id="${element.id}" title="Eliminar archivo"><i class="fas fa-times"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         `;
                     });
                 }else{
-                    template = `<div class='alert alert-light mx-auto'> <p>No hay archivos registrados de éste estudiante.</p></div>`;
+                    template = `<div class='alert alert-light mx-auto'> <p>No hay archivos registrados de éste oficial.</p></div>`;
                 }
 
                 $('#archivos-index').html(template);
