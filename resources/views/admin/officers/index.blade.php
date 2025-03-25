@@ -230,10 +230,10 @@
 @section('scripts')
 <script src="{{asset('vendor/dropzone/dropzone.min.js')}}"></script>
 <script>
+    Dropzone.autoDiscover = false;  // Deshabilita la detección automática de formularios
     $(document).ready(function() {
         var id = "";
         index();
-        Dropzone.autoDiscover = false;  // Deshabilita la detección automática de formularios
         $('#btn-add').click(function(e){
             e.preventDefault();
             $('#form-edit').attr('id', 'form-add');
@@ -367,7 +367,7 @@
 
             if (!Dropzone.instances.length) { 
                 const dropzone =  new Dropzone('#myDropzone', {
-                    url: 'https://cpet.000webhostapp.com/api/officers/',  // URL donde se enviarán los archivos
+                    url: '/cpet/public/api/officers/files/add-files/'+id,  // URL donde se enviarán los archivos
                     method: 'POST', //Método por el cual se enviarán los archivos
                     paramName: 'archivos',          // El nombre del campo de archivo en el backend
                     maxFilesize: 2,             // Tamaño máximo en MB
@@ -401,11 +401,11 @@
                         <td class="text-center">${e.estatus.toUpperCase()}</td>
                         <td class="text-right actions">
                             <button class="btn btn-dark edit" data-id="${e.id}"><i class="far fa-edit"></i></button>
-                            <a href="/officers/academy/${e.id}" class="btn btn-dark"><i class="fas fa-graduation-cap"></i></a>
-                            <a href="/officers/positions/${e.id}" class="btn btn-dark"><i class="fas fa-medal"></i></a>
-                            <a href="/officers/familly/${e.id}" class="btn btn-dark"><i class="fab fa-gratipay"></i></a>
+                            <a href="officers/academy/${e.id}" class="btn btn-dark"><i class="fas fa-graduation-cap"></i></a>
+                            <a href="officers/positions/${e.id}" class="btn btn-dark"><i class="fas fa-medal"></i></a>
+                            <a href="officers/familly/${e.id}" class="btn btn-dark"><i class="fab fa-gratipay"></i></a>
                             <button data-id="${e.id}" class="btn btn-dark files"><i class="fas fa-file"></i></button>
-                            <a href="/officers/positions/${e.id}" class="btn btn-primary"><i class="fas fa-map-marked"></i></a>
+                            <a href="officers/positions/${e.id}" class="btn btn-primary"><i class="fas fa-map-marked"></i></a>
                             <button class="btn btn-danger delete" data-id="${e.id}"><i class="far fa-trash-alt"></i></button>
                         </td>
                     </tr>
@@ -428,8 +428,8 @@
                         template += `
                             <div class="col-12 col-md-4 mb-3">
                                 <div class="img-container">
-                                    <a href="{{asset('escuela/public/storage')}}/${element.ruta}" download>
-                                        <img src="{{asset('escuela/public/storage')}}/${element.ruta}" class="img-fluid" alt="Previsualización">
+                                    <a href="{{asset('storage')}}/${element.archivo_url}" download>
+                                        <img src="{{asset('storage')}}/${element.archivo_url}" class="img-fluid" alt="Previsualización">
                                     </a>
                                 </div>
                             </div>

@@ -124,7 +124,7 @@
             e.preventDefault();
             let formData = new FormData(this);
                 formData.append('id_policia', '{{ $id }}');
-            fetch('/api/officers/academy', {
+            fetch('/cpet/public/api/officers/academy', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -144,7 +144,7 @@
             let formData = new FormData(this);
                 formData.append('_method', 'PUT');
             console.log(id)
-            fetch('/api/officers/academy/'+id, {
+            fetch('/cpet/public/api/officers/academy/'+id, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -165,7 +165,7 @@
         $(document).on('click','.edit', function(e){
             e.preventDefault();
             id = $(this).data('id');
-            fetch('/api/officers/academy/'+id)
+            fetch('/cpet/public/api/officers/academy/'+id)
             .then(response => response.json())
             .then(data => {
                 
@@ -196,7 +196,7 @@
             id = $(this).data('id');
             let formData = new FormData();
             formData.append('_method', 'DELETE');
-            fetch('/api/officers/academy/'+id, {
+            fetch('/cpet/public/api/officers/academy/'+id, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -211,7 +211,7 @@
         });
 
         function index(){
-            fetch('/api/officers/academy/index/{{ $id }}')
+            fetch('/cpet/public/api/officers/academy/index/{{ $id }}')
             .then(response => response.json())
             .then(data => {
                 let template = '';

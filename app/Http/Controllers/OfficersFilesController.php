@@ -26,7 +26,7 @@ class OfficersFilesController extends Controller
             // Actualizar el campo "logo" con la ruta del archivo
             $e = OficialesDocumento::create([
                 'id_policia' => $id,
-                'url_archivo' => $filePath, // Ruta relativa para acceder desde el navegador
+                'archivo_url' => $filePath, // Ruta relativa para acceder desde el navegador
                 'fecha_subida' => \Carbon\Carbon::now()
             ]);
         }
