@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $descripcion
  * @property Carbon $fecha
  * 
- * @property Policia $policia
+ * @property Oficiale $oficiale
  *
  * @package App\Models
  */
@@ -37,8 +37,8 @@ class Reconocimiento extends Model
 		'fecha'
 	];
 
-	public function policia()
+	public function oficiale()
 	{
-		return $this->belongsTo(Policia::class, 'id_policia');
+		return $this->belongsTo(Oficiale::class, 'id_policia');
 	}
 }

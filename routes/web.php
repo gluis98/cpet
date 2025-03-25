@@ -19,13 +19,12 @@ Route::middleware('auth')->group(function(){
     Route::controller(HomeController::class)->group(function(){
         Route::get('/', 'index')->name('home');
         Route::get('/officers', 'officers')->name('officers');
+        Route::get('/officers/academy/{id}', 'officers_academy')->name('officers.academy');
+        Route::get('/officers/positions/{id}', 'officers_position')->name('officers.positions');
+        Route::get('/officers/familly/{id}', 'officers_familly')->name('officers.familly');
     });
 
-    // Officers routes
-    Route::controller(OfficersController::class)->group(function(){
-        Route::get('/officers/create', 'create')->name('officers.create');
-        Route::get('/officers/edit/{id}', 'edit')->name('officers.edit');
-    });
+   
 });
 
 

@@ -14,8 +14,7 @@
 
     <!-- Fontfaces CSS-->
     <link href="{{asset("css/font-face.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/font-awesome-4.7/css/font-awesome.min.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/font-awesome-5/css/fontawesome-all.min.css")}}" rel="stylesheet" media="all">
+    <link href="{{asset("vendor/fontawesome-free/css/all.min.css")}}" rel="stylesheet" media="all">
     <link href="{{asset("vendor/mdi-font/css/material-design-iconic-font.min.css")}}" rel="stylesheet" media="all">
     <link rel="shortcut icon" href="images/icon/logo.png" type="image/x-icon">
 
@@ -34,7 +33,9 @@
 
     <!-- Main CSS-->
     <link href="{{asset("css/theme.css")}}" rel="stylesheet" media="all">
-
+    <link href="{{asset("css/dataTables.bootstrap4.css")}}" rel="stylesheet" media="all">
+    <link href="{{asset("vendor/datatables-buttons/css/buttons.bootstrap4.min.css")}}" rel="stylesheet" media="all">
+    @yield('styles')
 </head>
 
 <body class="animsition">
@@ -375,7 +376,7 @@
             <!-- END HEADER DESKTOP-->
 
             <!-- BREADCRUMB-->
-            <section class="au-breadcrumb m-t-75">
+            <section class="au-breadcrumb m-t-75 border-bottom">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="row">
@@ -395,9 +396,6 @@
                                             @endif
                                         </ul>
                                     </div>
-                                    <a class="au-btn au-btn-icon au-btn--green" href="{{Route('officers.create')}}">
-                                        <i class="zmdi zmdi-plus"></i>Agregar oficial
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -407,7 +405,7 @@
             <!-- END BREADCRUMB-->
 
             {{-- MAIN CONTENT --}}
-            <section class="container mt-3 bg-white shadow p-4">
+            <section class="container-fluid bg-white shadow p-4">
                 @yield('content')
             </section>
             {{-- END MAIN CONTENT --}}
@@ -455,7 +453,19 @@
 
     <!-- Main JS-->
     <script src="{{asset("js/main.js")}}"></script>
-
+    <script src="{{asset("js/sweetalert2@11.js") }}"></script>
+    <script src="{{asset("js/dataTables.js") }}"></script>
+    <script src="{{asset("js/datatable-spanish.js") }}"></script>
+    <script src="{{asset("js/dataTables.bootstrap4.js") }}"></script>
+    <script src="{{asset("js/dataTables.responsive.js") }}"></script>
+    <script src="{{asset("vendor/datatables-buttons/js/dataTables.buttons.min.js") }}"></script>
+    <script src="{{asset("vendor/jszip/jszip.min.js") }}"></script>
+    <script src="{{asset("vendor/pdfmake/pdfmake.min.js") }}"></script>
+    <script src="{{asset('vendor/pdfmake/vfs_fonts.js')}}"></script>
+    <script src="{{asset("vendor/datatables-buttons/js/buttons.html5.min.js") }}"></script>
+    <script src="{{asset("vendor/datatables-buttons/js/buttons.print.min.js") }}"></script>
+    <script src="{{asset("vendor/datatables-buttons/js/buttons.colVis.min.js") }}"></script>
+    @yield('scripts')
 </body>
 
 </html>

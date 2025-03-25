@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $nombre_cargo
  * 
- * @property Collection|CargosDesempeñado[] $cargos_desempeñados
+ * @property Collection|Oficiale[] $oficiales
  *
  * @package App\Models
  */
@@ -28,8 +28,9 @@ class Cargo extends Model
 		'nombre_cargo'
 	];
 
-	public function cargos_desempeñados()
+	public function oficiales()
 	{
-		return $this->hasMany(CargosDesempeñado::class, 'id_cargo');
+		return $this->belongsToMany(Oficiale::class, 'oficiales_cargos', 'id_cargo', 'id_policia')
+					->withPivot('id', 'fecha_inicio', 'fecha_fin', 'is_actual');
 	}
 }

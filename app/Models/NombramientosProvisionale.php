@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $fecha_inicio
  * @property Carbon|null $fecha_fin
  * 
- * @property Policia $policia
+ * @property Oficiale $oficiale
  *
  * @package App\Models
  */
@@ -40,8 +40,8 @@ class NombramientosProvisionale extends Model
 		'fecha_fin'
 	];
 
-	public function policia()
+	public function oficiale()
 	{
-		return $this->belongsTo(Policia::class, 'id_policia');
+		return $this->belongsTo(Oficiale::class, 'id_policia');
 	}
 }
