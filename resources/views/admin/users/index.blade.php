@@ -7,7 +7,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content ">
         <div class="modal-header">
-          <h4 class="modal-title" id="myModalLabel">Registrar cargo alcanzado</h4>
+          <h4 class="modal-title" id="myModalLabel">Registrar usuario</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
@@ -17,34 +17,60 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        Datos del cargo
+                        Datos del usuario
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label" for="id_cargo">Cargo *</label>
-                                <select class="form-control" id="id_cargo" name="id_cargo" required>
+                        <div class="row mb-3">
+                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Nombre de usuario') }}</label>
 
+                            <div class="col-md-8">
+                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+
+                                @error('name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Correo electrónico') }}</label>
+
+                            <div class="col-md-8">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="role" class="col-md-4 col-form-label text-md-end">{{ __('Rol') }}</label>
+
+                            <div class="col-md-8">
+                                <select name="role" id="role" class="form-control">
+                                    <option value>--- SELECCIONE UN ROL DE USUARIO</option>
+                                    <option value="Administrador">Administrador</option>
+                                    <option value="Usuario">Usuario</option>
                                 </select>
-                            </div>  
-                        </div>
-                        <div class="row">
-                            <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_inicio">Fecha de inicio *</label>
-                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
-                            </div>
-                            <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_fin">Fecha de fin *</label>
-                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
                             </div>
                         </div>
-                        <hr>
-                        <div class="row">
-                            <div class=" col-md-12 mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_actual" name="is_actual">
-                                    <label class="form-check-label" for="is_actual">Cargo actual</label>
-                                </div>
+
+                        <div class="row mb-3">
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Contraseña') }}</label>
+
+                            <div class="col-md-8">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
+
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -76,7 +102,7 @@
                 <a href="{{ route('officers') }}" class="btn text-uppercase text-dark"><i class="fas fa-arrow-left"></i> Regresar</a>
             </div>
             <a class="au-btn au-btn-icon au-btn--green" href="#" data-toggle="modal" data-target="#add" id="btn-add">
-                <i class="zmdi zmdi-plus"></i>Agregar cargo alcanzado
+                <i class="zmdi zmdi-plus"></i>Agregar solicitud de vacaciones
             </a>
         </div>
     </div>
@@ -84,8 +110,20 @@
 <div class="container-fluid">
     <h2>{{$title}}</h2>
     <hr>
-    <div class="container-fluid" id="academy-container">
-        
+    <div class="responsive-table">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">Nombre</th>
+                    <th class="text-center" scope="col">Correo electrónico</th>
+                    <th class="text-center" scope="col">Rol</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
     </div>
 </div>
 @endsection
@@ -95,7 +133,6 @@
     $(document).ready(function() {
         var id = "";
         index(); 
-        index_cargos();
 
         $('#btn-add').click(function(e){
             e.preventDefault();
@@ -109,8 +146,7 @@
         $(document).on('submit','#form-add', function(e){
             e.preventDefault();
             let formData = new FormData(this);
-                formData.append('id_policia', '{{ $id }}');
-            fetch('/cpet/public/api/officers/position', {
+            fetch('/cpet/public/api/users', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -130,7 +166,7 @@
             let formData = new FormData(this);
                 formData.append('_method', 'PUT');
             console.log(id)
-            fetch('/cpet/public/api/officers/position/'+id, {
+            fetch('/cpet/public/api/users/'+id, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -151,21 +187,19 @@
         $(document).on('click','.edit', function(e){
             e.preventDefault();
             id = $(this).data('id');
-            fetch('/cpet/public/api/officers/position/'+id)
+            fetch('/cpet/public/api/users/'+id)
             .then(response => response.json())
             .then(data => {
                 
                 id = data.id;
-                
-                $('#id_cargo option').each(function() {
-                    if($(this).val() == data.id_cargo){
+                $('#name').val(data.name);
+                $('#email').val(data.email);
+                $('#role option').each(function(){
+                    if($(this).val() == data.role){
                         $(this).attr('selected', 'selected');
                     }
                 });
 
-                $('#fecha_inicio').val(data.fecha_inicio.substr(0,4) + '-' + data.fecha_inicio.substr(5,2) + '-' + data.fecha_inicio.substr(8,2));
-                $('#fecha_fin').val((!data.is_actual) ? data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2) : '');
-                $('#is_actual').prop('checked', data.is_actual == 1);
                 
 
                 $('#form-add').attr('id', 'form-edit');
@@ -234,7 +268,7 @@
                                 confirmButtonText: 'Sí, eliminar'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/officers/positions/'+id, {
+                                    fetch('/cpet/public/api/users/'+id, {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -271,7 +305,7 @@
                     confirmButtonText: 'Sí, eliminar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/positions/'+id, {
+                        fetch('/cpet/public/api/users/'+id, {
                             method: 'POST',
                             body: formData
                         }).then(response => response.json())
@@ -289,64 +323,43 @@
         });
 
         function index(){
-            fetch('/cpet/public/api/officers/position/index/{{ $id }}')
+            fetch('/cpet/public/api/users')
             .then(response => response.json())
             .then(data => {
-                let template = ''
-                    actual = "";
-                if(data.length == 0){
+                let template = '', 
+                    disfrutadas = 0,
+                    vencidas = 0;
+                data.forEach(e => {
+                    if(e.is_disfrutadas){
+                        disfrutadas++;
+                    }
+
+                    if(e.estatus == 'Vencidas'){
+                        vencidas++;
+                    }
+
                     template += `
-                        <div class="row border p-3">
-                            <div class="col-md-12">
-                                <h5 class="text-center text-muted">No hay datos registrados</h5>
-                            </div>
-                        </div>`;
-                }else{
-                    data.forEach(e => {
-                        if(e.is_actual){
-                            actual = "Cargo actual";
-                        }
-                        template += `
-                        <div class="row border p-3 mb-2">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-6 h4"><span class="font-weight-bold"><i class="fas fa-medal ${(e.is_actual) ? "text-warning" : ""}"></i> ${e.cargo.nombre_cargo}</span> 
-                                        <button class="btn btn-dark btn-sm edit" data-id="${e.id}"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="fas fa-trash"></i></button>    
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <span>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_inicio))}</span> - 
-                                        <span>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_fin))}</span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <span class="text-muted">${actual}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        `;
-                        actual = "";
-                    });
-                }
-                $('#academy-container').html(template);
+                    <tr>
+                        <td class="text-center">${e.name}</td>
+                        <td class="text-center">${e.email}</td>
+                        <td class="text-center">${e.role}</td>
+                        <td class="text-right">
+                            <button class="btn btn-dark edit" data-id="${e.id}"><i class="far fa-edit"></i></button>
+                            <button class="btn btn-danger delete" data-id="${e.id}"><i class="far fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    `;
+                });
+                $('#vacaciones-disfrutadas').html(disfrutadas);
+                $('#vacaciones-vencidas').html(vencidas);
+
+                $('table').DataTable().destroy();
+                $('tbody').html(template);
+                $('table').DataTable(t);
             });
         }
 
-        function index_cargos(){
-            fetch('/cpet/public/api/positions')
-            .then(response => response.json())
-            .then(data => {
-                let template = '<option value>--- SELECCIONE UN CARGO ---</option>';
-                data.forEach(e => {
-                    template += `
-                        <option value="${e.id}">${e.nombre_cargo}</option>
-                    `;
-                });
-                $('#id_cargo').html(template);
-            });
-        }
+        
     });
 </script>
 @endsection

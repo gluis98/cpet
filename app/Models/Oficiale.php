@@ -28,10 +28,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $correo_electronico
  * @property string|null $estatus
  * @property string|null $numero_placa
+ * @property int|null $parroquia_id
  * 
- * @property Collection|FormacionPolicial[] $formacion_policials
- * @property Collection|NombramientosProvisionale[] $nombramientos_provisionales
+ * @property Parroquia|null $parroquia
  * @property Collection|OficialesAcademico[] $oficiales_academicos
+ * @property Collection|Armamento[] $armamentos
  * @property Collection|Cargo[] $cargos
  * @property Collection|OficialesCurso[] $oficiales_cursos
  * @property Collection|OficialesDocumento[] $oficiales_documentos
@@ -51,7 +52,8 @@ class Oficiale extends Model
 
 	protected $casts = [
 		'fecha_nacimiento' => 'datetime',
-		'fecha_ingreso' => 'datetime'
+		'fecha_ingreso' => 'datetime',
+		'parroquia_id' => 'int'
 	];
 
 	protected $fillable = [
@@ -68,22 +70,24 @@ class Oficiale extends Model
 		'telefono',
 		'correo_electronico',
 		'estatus',
-		'numero_placa'
+		'numero_placa',
+		'parroquia_id'
 	];
 
-	public function formacion_policials()
+	public function parroquia()
 	{
-		return $this->hasMany(FormacionPolicial::class, 'id_policia');
-	}
-
-	public function nombramientos_provisionales()
-	{
-		return $this->hasMany(NombramientosProvisionale::class, 'id_policia');
+		return $this->belongsTo(Parroquia::class);
 	}
 
 	public function oficiales_academicos()
 	{
 		return $this->hasMany(OficialesAcademico::class, 'id_policia');
+	}
+
+	public function armamentos()
+	{
+		return $this->belongsToMany(Armamento::class, 'oficiales_armamento', 'id_policia', 'id_arma')
+					->withPivot('id', 'descripcion', 'estado', 'fecha_asignacion');
 	}
 
 	public function cargos()

@@ -5,10 +5,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OfficersController;
 use App\Http\Controllers\OfficersPositionsController;
 use App\Http\Controllers\OfficersAcademyController;
+use App\Http\Controllers\OfficersCoursesController;
 use App\Http\Controllers\PositionsController;
 use App\Http\Controllers\OfficersFamillyController;
 use App\Http\Controllers\OfficersFilesController;
 use App\Http\Controllers\OfficersVacationsController;
+use App\Http\Controllers\OfficersAwardsController;
+use App\Http\Controllers\OfficersArmamentController;
+use App\Http\Controllers\ArmamentController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +32,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('/officers', OfficersController::class);
 Route::apiResource('/positions', PositionsController::class);
+Route::apiResource('/armament', ArmamentController::class);
+Route::apiResource('/users', UserController::class);
+Route::post('/users/confirm-password-admin', [UserController::class, 'confirm_password_admin']);
 
 Route::controller(OfficersPositionsController::class)->group(function(){
     Route::get('/officers/position/index/{id}', 'index');
@@ -42,6 +50,22 @@ Route::controller(OfficersAcademyController::class)->group(function(){
     Route::get('/officers/academy/{id}', 'show');
     Route::put('/officers/academy/{id}', 'update');
     Route::delete('/officers/academy/{id}', 'destroy');
+});
+
+Route::controller(OfficersCoursesController::class)->group(function(){
+    Route::get('/officers/course/index/{id}', 'index');
+    Route::post('/officers/course', 'store');
+    Route::get('/officers/course/{id}', 'show');
+    Route::put('/officers/course/{id}', 'update');
+    Route::delete('/officers/course/{id}', 'destroy');
+});
+
+Route::controller(OfficersAwardsController::class)->group(function(){
+    Route::get('/officers/awards/index/{id}', 'index');
+    Route::post('/officers/awards', 'store');
+    Route::get('/officers/awards/{id}', 'show');
+    Route::put('/officers/awards/{id}', 'update');
+    Route::delete('/officers/awards/{id}', 'destroy');
 });
 
 Route::controller(OfficersFamillyController::class)->group(function(){
@@ -66,4 +90,12 @@ Route::controller(OfficersVacationsController::class)->group(function(){
     Route::get('/officers/vacations/{id}', 'show');
     Route::put('/officers/vacations/{id}', 'update');
     Route::delete('/officers/vacations/{id}', 'destroy');
+});
+
+Route::controller(OfficersArmamentController::class)->group(function(){
+    Route::get('/officers/armament/index/{id}', 'index');
+    Route::post('/officers/armament', 'store');
+    Route::get('/officers/armament/{id}', 'show');
+    Route::put('/officers/armament/{id}', 'update');
+    Route::delete('/officers/armament/{id}', 'destroy');
 });

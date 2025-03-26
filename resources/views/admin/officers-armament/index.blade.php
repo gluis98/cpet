@@ -7,7 +7,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content ">
         <div class="modal-header">
-          <h4 class="modal-title" id="myModalLabel">Registrar cargo alcanzado</h4>
+          <h4 class="modal-title" id="myModalLabel">Registrar armamento</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
@@ -17,35 +17,42 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        Datos del cargo
+                        Datos generales
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <label class="form-label" for="id_cargo">Cargo *</label>
-                                <select class="form-control" id="id_cargo" name="id_cargo" required>
-
+                                <label class="form-label" for="id_arma">Arma *</label>
+                                <select class="form-control" id="id_arma" name="id_arma" required>
+        
                                 </select>
                             </div>  
                         </div>
                         <div class="row">
-                            <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_inicio">Fecha de inicio *</label>
-                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
-                            </div>
-                            <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_fin">Fecha de fin *</label>
-                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
+                            <div class=" col-md-12 mb-3">
+                                <label class="form-label" for="fecha_asignacion">Fecha de asignación *</label>
+                                <input type="date" class="form-control" id="fecha_asignacion" name="fecha_asignacion" required>
                             </div>
                         </div>
-                        <hr>
+
                         <div class="row">
                             <div class=" col-md-12 mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_actual" name="is_actual">
-                                    <label class="form-check-label" for="is_actual">Cargo actual</label>
-                                </div>
+                                <label class="form-label" for="descripcion">Descripción</label>
+                                <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
                             </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label" for="estado">Estado *</label>
+                                <select class="form-control" id="estado" name="estado" required>
+                                    <option value>--- SELECCIONE UN ESTATUS ---</option>
+                                    <option value="EXCELENTES CODICIONES">EXCELENTES CODICIONES</option>
+                                    <option value="BUENO">BUENO</option>
+                                    <option value="MEDIO">MEDIO</option>
+                                    <option value="MAL ESTADO">MAL ESTADO</option>
+                                </select>
+                            </div>  
                         </div>
                     </div>
                 </div>
@@ -76,7 +83,7 @@
                 <a href="{{ route('officers') }}" class="btn text-uppercase text-dark"><i class="fas fa-arrow-left"></i> Regresar</a>
             </div>
             <a class="au-btn au-btn-icon au-btn--green" href="#" data-toggle="modal" data-target="#add" id="btn-add">
-                <i class="zmdi zmdi-plus"></i>Agregar cargo alcanzado
+                <i class="zmdi zmdi-plus"></i>Agregar armamento
             </a>
         </div>
     </div>
@@ -94,8 +101,8 @@
 <script>
     $(document).ready(function() {
         var id = "";
-        index(); 
-        index_cargos();
+        index();
+        index_armamento();
 
         $('#btn-add').click(function(e){
             e.preventDefault();
@@ -110,7 +117,7 @@
             e.preventDefault();
             let formData = new FormData(this);
                 formData.append('id_policia', '{{ $id }}');
-            fetch('/cpet/public/api/officers/position', {
+            fetch('/cpet/public/api/officers/armament', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -130,7 +137,7 @@
             let formData = new FormData(this);
                 formData.append('_method', 'PUT');
             console.log(id)
-            fetch('/cpet/public/api/officers/position/'+id, {
+            fetch('/cpet/public/api/officers/armament/'+id, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -151,21 +158,23 @@
         $(document).on('click','.edit', function(e){
             e.preventDefault();
             id = $(this).data('id');
-            fetch('/cpet/public/api/officers/position/'+id)
+            fetch('/cpet/public/api/officers/armament/'+id)
             .then(response => response.json())
             .then(data => {
                 
                 id = data.id;
                 
-                $('#id_cargo option').each(function() {
-                    if($(this).val() == data.id_cargo){
+                $('#tipo option').each(function() {
+                    if($(this).val() == data.tipo){
                         $(this).attr('selected', 'selected');
                     }
                 });
 
+                $('#nombre').val(data.nombre);
+                $('#institucion').val(data.institucion);
                 $('#fecha_inicio').val(data.fecha_inicio.substr(0,4) + '-' + data.fecha_inicio.substr(5,2) + '-' + data.fecha_inicio.substr(8,2));
-                $('#fecha_fin').val((!data.is_actual) ? data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2) : '');
-                $('#is_actual').prop('checked', data.is_actual == 1);
+                $('#fecha_fin').val(data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2));
+                $('#descripcion').val(data.descripcion);
                 
 
                 $('#form-add').attr('id', 'form-edit');
@@ -234,7 +243,7 @@
                                 confirmButtonText: 'Sí, eliminar'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/officers/positions/'+id, {
+                                    fetch('/cpet/public/api/officers/armament/'+id, {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -271,7 +280,7 @@
                     confirmButtonText: 'Sí, eliminar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/positions/'+id, {
+                        fetch('/cpet/public/api/officers/armament/'+id, {
                             method: 'POST',
                             body: formData
                         }).then(response => response.json())
@@ -289,11 +298,10 @@
         });
 
         function index(){
-            fetch('/cpet/public/api/officers/position/index/{{ $id }}')
+            fetch('/cpet/public/api/officers/armament/index/{{ $id }}')
             .then(response => response.json())
             .then(data => {
-                let template = ''
-                    actual = "";
+                let template = '';
                 if(data.length == 0){
                     template += `
                         <div class="row border p-3">
@@ -302,49 +310,60 @@
                             </div>
                         </div>`;
                 }else{
+                
                     data.forEach(e => {
-                        if(e.is_actual){
-                            actual = "Cargo actual";
-                        }
                         template += `
-                        <div class="row border p-3 mb-2">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-6 h4"><span class="font-weight-bold"><i class="fas fa-medal ${(e.is_actual) ? "text-warning" : ""}"></i> ${e.cargo.nombre_cargo}</span> 
-                                        <button class="btn btn-dark btn-sm edit" data-id="${e.id}"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="fas fa-trash"></i></button>    
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <span>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_inicio))}</span> - 
-                                        <span>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_fin))}</span>
-                                    </div>
+                        <div class="col-md-3">
+                            <div class="card mb-3 shadow">
+                                <div class="card-header">
+                                    <i class="fas fa-shield-alt"></i> ${e.armamento.nombre}
+                                    <span class="float-right">${e.armamento.tipo}</span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <span class="text-muted">${actual}</span>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p><strong>Estado:</strong> ${e.estado}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p><strong>Fecha de asignación:</strong> ${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_asignacion))}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p class="text-justify">${e.descripcion}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-12 text-right">
+                                            <button class="btn btn-dark btn-sm edit" data-id="${e.id}"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="fas fa-trash"></i></button>    
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         `;
-                        actual = "";
                     });
                 }
                 $('#academy-container').html(template);
             });
         }
 
-        function index_cargos(){
-            fetch('/cpet/public/api/positions')
+        function index_armamento(){
+            fetch('/cpet/public/api/armament')
             .then(response => response.json())
             .then(data => {
-                let template = '<option value>--- SELECCIONE UN CARGO ---</option>';
+                let template = '<option value>--- SELECCIONE UN ARMAMENTO ---</option>';
                 data.forEach(e => {
                     template += `
-                        <option value="${e.id}">${e.nombre_cargo}</option>
+                        <option value="${e.id}">${e.nombre} - ${e.tipo} - ${e.calibre}</option>
                     `;
                 });
-                $('#id_cargo').html(template);
+                $('#id_arma').html(template);
             });
         }
     });

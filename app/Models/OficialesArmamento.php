@@ -10,37 +10,46 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class OficialesReconocimiento
+ * Class OficialesArmamento
  * 
  * @property int $id
  * @property int $id_policia
- * @property string $descripcion
- * @property Carbon $fecha
- * @property string|null $autoridad
+ * @property int $id_arma
+ * @property string|null $descripcion
+ * @property string $estado
+ * @property Carbon|null $fecha_asignacion
  * 
  * @property Oficiale $oficiale
+ * @property Armamento $armamento
  *
  * @package App\Models
  */
-class OficialesReconocimiento extends Model
+class OficialesArmamento extends Model
 {
-	protected $table = 'oficiales_reconocimientos';
+	protected $table = 'oficiales_armamento';
 	public $timestamps = false;
 
 	protected $casts = [
 		'id_policia' => 'int',
-		'fecha' => 'datetime'
+		'id_arma' => 'int',
+		'fecha_asignacion' => 'datetime'
 	];
 
 	protected $fillable = [
 		'id_policia',
+		'id_arma',
 		'descripcion',
-		'fecha',
-		'autoridad'
+		'estado',
+		'fecha_asignacion'
 	];
 
 	public function oficiale()
 	{
 		return $this->belongsTo(Oficiale::class, 'id_policia');
+	}
+
+	public function armamento()
+	{
+		return $this->belongsTo(Armamento::class, 'id_arma');
 	}
 }

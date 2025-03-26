@@ -27,11 +27,9 @@ use Illuminate\Database\Eloquent\Model;
 class OficialesVacacione extends Model
 {
 	protected $table = 'oficiales_vacaciones';
-	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
 		'id_policia' => 'int',
 		'fecha_emision' => 'datetime',
 		'fecha_reintegro' => 'datetime',

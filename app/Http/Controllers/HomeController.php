@@ -27,6 +27,12 @@ class HomeController extends Controller
         return view('home', compact('title'));
     }
 
+    public function users()
+    {
+        $title = "Usuarios";
+        return view('admin.users.index', compact('title'));
+    }
+
     public function officers()
     {
         $title = "Oficiales";
@@ -59,5 +65,26 @@ class HomeController extends Controller
         $o = \App\Models\Oficiale::find($id);
         $title = "Oficial: " . $o->nombre_completo . " - Vacaciones - Años de servicio: " . (now()->year - $o->fecha_ingreso->year);
         return view('admin.officers-vacations.index', compact('title', 'id'));
+    }
+
+    public function officers_courses($id)
+    {
+        $o = \App\Models\Oficiale::find($id);
+        $title = "Oficial: " . $o->nombre_completo . " - Cursos y diplomados";
+        return view('admin.officers-courses.index', compact('title', 'id'));
+    }
+
+    public function officers_awards($id)
+    {
+        $o = \App\Models\Oficiale::find($id);
+        $title = "Oficial: " . $o->nombre_completo . " - Reconocimientos";
+        return view('admin.officers-awards.index', compact('title', 'id'));
+    }
+
+    public function officers_armament($id)
+    {
+        $o = \App\Models\Oficiale::find($id);
+        $title = "Oficial: " . $o->nombre_completo . " - Armamento";
+        return view('admin.officers-armament.index', compact('title', 'id'));
     }
 }

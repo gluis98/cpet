@@ -86,7 +86,7 @@
                                 </span>
                             </a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                <li>
+                                {{-- <li>
                                     <a href="index.html">
                                         <i class="fas fa-arrow-right"></i>Profesiones</a>
                                 </li>
@@ -105,6 +105,10 @@
                                 <li>
                                     <a href="index4.html">
                                     <i class="fas fa-arrow-right"></i>Parroquias</a>
+                                </li> --}}
+                                <li>
+                                    <a href="{{Route('users')}}">
+                                        <i class="fas fa-arrow-right"></i>Usuarios</a>
                                 </li>
                             </ul>
                         </li>
@@ -134,9 +138,9 @@
                                     <i class="zmdi zmdi-notifications"></i>
                                     <div class="notifi-dropdown js-dropdown">
                                         <div class="notifi__title">
-                                            <p>You have 3 Notifications</p>
+                                            <p>Tienes 1 notificación(es)</p>
                                         </div>
-                                        <div class="notifi__item">
+                                        {{-- <div class="notifi__item">
                                             <div class="bg-c1 img-cir img-40">
                                                 <i class="zmdi zmdi-email-open"></i>
                                             </div>
@@ -153,18 +157,18 @@
                                                 <p>Your account has been blocked</p>
                                                 <span class="date">April 12, 2018 06:50</span>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="notifi__item">
                                             <div class="bg-c3 img-cir img-40">
                                                 <i class="zmdi zmdi-file-text"></i>
                                             </div>
                                             <div class="content">
-                                                <p>You got a new file</p>
-                                                <span class="date">April 12, 2018 06:50</span>
+                                                <p>Nueva solicitud de vacaciones</p>
+                                                <span class="date">{{ \Carbon\Carbon::now()->format('d \d\e F \d\e\l Y \a \\l\a\s H:i') }}</span>
                                             </div>
                                         </div>
                                         <div class="notifi__footer">
-                                            <a href="#">All notifications</a>
+                                            <a href="#">Todas las notificaciones</a>
                                         </div>
                                     </div>
                                 </div>
@@ -372,7 +376,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="copyright">
-                                <p>Copyright © 2025 CPET. Todos los derechos reservados. Desarrollado por: <a href="https://www.instagram.com/adsyssystems/">Adsys Sistemas</a>.</p>
+                                <p>Copyright © 2025 CPET. Todos los derechos reservados. Desarrollado por: <a href="https://www.instagram.com/adsyssystems/" target="_blank">Adsys Sistemas</a>.</p>
                             </div>
                         </div>
                     </div>

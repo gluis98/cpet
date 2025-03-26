@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property int $id_policia
+ * @property string|null $nombre
+ * @property string|null $institucion
  * @property string|null $tipo
  * @property string $descripcion
  * @property Carbon $fecha_inicio
@@ -36,6 +38,8 @@ class OficialesCurso extends Model
 
 	protected $fillable = [
 		'id_policia',
+		'nombre',
+		'institucion',
 		'tipo',
 		'descripcion',
 		'fecha_inicio',

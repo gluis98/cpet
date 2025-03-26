@@ -26,7 +26,8 @@
                                 <select class="form-control" id="estatus" name="estatus" required>
                                     <option value>--- SELECCIONE UN ESTATUS ---</option>
                                     <option value="APROBADAS">APROBADAS</option>
-                                    <option value="NEGADAS">DENEGADAS</option>
+                                    <option value="NEGADAS">NEGADAS</option>
+                                    <option value="VENCIDAS">VENCIDAS</option>
                                     <option value="EN PROCESO">EN PROCESO</option>
                                 </select>
                             </div>  
@@ -93,6 +94,14 @@
 <div class="container-fluid">
     <h2>{{$title}}</h2>
     <hr>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <p class="h5"><i class="fas fa-check text-success"></i> <b>Disfrutadas:</b> <span id="vacaciones-disfrutadas"></span></p>
+                <p class="h5"><i class="fas fa-times text-danger"></i> <b>Vencidas:</b> <span id="vacaciones-vencidas"></span></p>
+            </div>
+        </div>
+    </div>
     <div class="responsive-table">
         <table class="table table-bordered">
             <thead>
@@ -202,38 +211,130 @@
             id = $(this).data('id');
             let formData = new FormData();
             formData.append('_method', 'DELETE');
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "No podrás revertir esto.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch('/cpet/public/api/officers/vacations/'+id, {
-                        method: 'POST',
-                        body: formData
-                    }).then(response => response.json())
-                    .then(data => {
-                        Swal.fire({
-                            title: data.msj,
-                            icon: "success",
-                            draggable: true
-                        });
-                        index();
+            let pass = "",
+                request = "";
+            if({{ auth()->user()->role != 'Administrador' ? 'true' : 'false' }}){
+                Swal.fire({
+                    title: 'Ingrese contraseña del administrador',
+                    input: 'password',
+                    inputPlaceholder: 'Contraseña actual',
+                    inputAttributes: {
+                        maxlength: 20,
+                        autocapitalize: 'off',
+                        autocorrect: 'off'
+                    }
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        let form = new FormData();
+                            form.append('password', result.value);
+                        request = fetch('/cpet/public/api/users/confirm-password-admin', {
+                                        method: "POST",
+                                        body: form
+                                    }).then(response => response.json())
+                                    .then(result => {
+                                        return result;
+                                    })
+                                    .catch(error => {
+                                        // Manejo de errores y asignar mensaje a una variable
+                                        let errorMessage = `Error: ${error.message}`;
+                                        console.error(errorMessage);
+                                        return { error: errorMessage };
+                                    });
+                                    
+                            return request;
+                        
+                    }
+                }).then(() => {
+                    request.then(result => {
+                        if(result.msj){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msj
+                            });                            
+                        }
+
+                        if(result.status){
+                            Swal.fire({
+                                title: '¿Estás seguro?',
+                                text: "No podrás revertir esto.",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Sí, eliminar'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    fetch('/cpet/public/api/officers/vacations/'+id, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                        },
+                                        body: JSON.stringify({
+                                            _method: 'DELETE',
+                                            password: pass
+                                        })
+                                    }).then(response => response.json())
+                                    .then(data => {
+                                        Swal.fire({
+                                            title: data.msj,
+                                            icon: "success",
+                                            draggable: true
+                                        });
+                                        index();
+                                    });
+                                }
+                            });
+                        }
+
+                        
                     });
-                }
-            });
+                });
+            }else{
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "No podrás revertir esto.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('/cpet/public/api/officers/vacations/'+id, {
+                            method: 'POST',
+                            body: formData
+                        }).then(response => response.json())
+                        .then(data => {
+                            Swal.fire({
+                                title: data.msj,
+                                icon: "success",
+                                draggable: true
+                            });
+                            index();
+                        });
+                    }
+                });
+            }
         });
 
         function index(){
             fetch('/cpet/public/api/officers/vacations/index/{{ $id }}')
             .then(response => response.json())
             .then(data => {
-                let template = '';
+                let template = '', 
+                    disfrutadas = 0,
+                    vencidas = 0;
                 data.forEach(e => {
+                    if(e.is_disfrutadas){
+                        disfrutadas++;
+                    }
+
+                    if(e.estatus == 'Vencidas'){
+                        vencidas++;
+                    }
+
                     template += `
                     <tr>
                         <td class="text-center">${e.fecha_emision.substr(0,4) + '-' + e.fecha_emision.substr(5,2) + '-' + e.fecha_emision.substr(8,2)}</td>
@@ -247,6 +348,9 @@
                     </tr>
                     `;
                 });
+                $('#vacaciones-disfrutadas').html(disfrutadas);
+                $('#vacaciones-vencidas').html(vencidas);
+
                 $('table').DataTable().destroy();
                 $('tbody').html(template);
                 $('table').DataTable(t);

@@ -196,18 +196,112 @@
             id = $(this).data('id');
             let formData = new FormData();
             formData.append('_method', 'DELETE');
-            fetch('/cpet/public/api/officers/academy/'+id, {
-                method: 'POST',
-                body: formData
-            }).then(response => response.json())
-            .then(data => {
+            let pass = "",
+                request = "";
+            if({{ auth()->user()->role != 'Administrador' ? 'true' : 'false' }}){
                 Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
+                    title: 'Ingrese contraseña del administrador',
+                    input: 'password',
+                    inputPlaceholder: 'Contraseña actual',
+                    inputAttributes: {
+                        maxlength: 20,
+                        autocapitalize: 'off',
+                        autocorrect: 'off'
+                    }
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        let form = new FormData();
+                            form.append('password', result.value);
+                        request = fetch('/cpet/public/api/users/confirm-password-admin', {
+                                        method: "POST",
+                                        body: form
+                                    }).then(response => response.json())
+                                    .then(result => {
+                                        return result;
+                                    })
+                                    .catch(error => {
+                                        // Manejo de errores y asignar mensaje a una variable
+                                        let errorMessage = `Error: ${error.message}`;
+                                        console.error(errorMessage);
+                                        return { error: errorMessage };
+                                    });
+                                    
+                            return request;
+                        
+                    }
+                }).then(() => {
+                    request.then(result => {
+                        if(result.msj){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msj
+                            });                            
+                        }
+
+                        if(result.status){
+                            Swal.fire({
+                                title: '¿Estás seguro?',
+                                text: "No podrás revertir esto.",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Sí, eliminar'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    fetch('/cpet/public/api/officers/academy/'+id, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                        },
+                                        body: JSON.stringify({
+                                            _method: 'DELETE',
+                                            password: pass
+                                        })
+                                    }).then(response => response.json())
+                                    .then(data => {
+                                        Swal.fire({
+                                            title: data.msj,
+                                            icon: "success",
+                                            draggable: true
+                                        });
+                                        index();
+                                    });
+                                }
+                            });
+                        }
+
+                        
+                    });
                 });
-                index();
-            });
+            }else{
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "No podrás revertir esto.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('/cpet/public/api/officers/academy/'+id, {
+                            method: 'POST',
+                            body: formData
+                        }).then(response => response.json())
+                        .then(data => {
+                            Swal.fire({
+                                title: data.msj,
+                                icon: "success",
+                                draggable: true
+                            });
+                            index();
+                        });
+                    }
+                });
+            }
         });
 
         function index(){
