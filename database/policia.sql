@@ -11,7 +11,7 @@
  Target Server Version : 80403 (8.4.3)
  File Encoding         : 65001
 
- Date: 26/03/2025 19:35:32
+ Date: 08/04/2025 12:26:39
 */
 
 SET NAMES utf8mb4;
@@ -120,7 +120,7 @@ CREATE TABLE `failed_jobs`  (
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `failed_jobs_uuid_unique`(`uuid` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of failed_jobs
@@ -657,7 +657,7 @@ CREATE TABLE `oficiales_emergencias`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `id_policia`(`id_policia` ASC) USING BTREE,
   CONSTRAINT `oficiales_emergencias_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of oficiales_emergencias
@@ -701,7 +701,7 @@ CREATE TABLE `oficiales_familiares_documentos`  (
   INDEX `id_familiar`(`id_familiar` ASC) USING BTREE,
   CONSTRAINT `oficiales_familiares_documentos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   CONSTRAINT `oficiales_familiares_documentos_ibfk_2` FOREIGN KEY (`id_familiar`) REFERENCES `oficiales_familiares` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of oficiales_familiares_documentos
@@ -740,7 +740,7 @@ CREATE TABLE `oficiales_salud`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `id_policia`(`id_policia` ASC) USING BTREE,
   CONSTRAINT `oficiales_salud_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of oficiales_salud
@@ -1968,7 +1968,7 @@ CREATE TABLE `personal_access_tokens`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `personal_access_tokens_token_unique`(`token` ASC) USING BTREE,
   INDEX `personal_access_tokens_tokenable_type_tokenable_id_index`(`tokenable_type` ASC, `tokenable_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of personal_access_tokens

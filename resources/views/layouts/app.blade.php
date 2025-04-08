@@ -56,7 +56,7 @@
                         <img src="{{ asset("images/avatar.png") }}" alt="Usuario" />
                     </div>
                     <h4 class="name">{{auth()->user()->name}}</h4>
-                    <a href="{{ route('logout') }}"
+                    <a href="#"
                         onclick="event.preventDefault();
                                         document.getElementById('logout-form').submit();">
                         {{ __('Salir') }}
