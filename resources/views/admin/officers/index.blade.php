@@ -508,9 +508,9 @@
                     <tr>
                         <td class="text-center">${e.documento_identidad}</td>
                         <td class="text-center">${e.nombre_completo}</td>
-                        <td class="text-center">${e.telefono}</td>
-                        <td class="text-center">${e.numero_placa}</td>
-                        <td class="text-center">${e.fecha_ingreso.substr(0,4) + '-' + e.fecha_ingreso.substr(5,2) + '-' + e.fecha_ingreso.substr(8,2)}</td>
+                        <td class="text-center">${(e.telefono) ? e.telefono : 'S/T'}</td>
+                        <td class="text-center">${(e.numero_placa ? e.numero_placa : 'S/NC')}</td>
+                        <td class="text-center">${(e.fecha_ingreso) ? e.fecha_ingreso.substr(0,4) + '-' + e.fecha_ingreso.substr(5,2) + '-' + e.fecha_ingreso.substr(8,2) : 'S/F'}</td>
                         <td class="text-center">${e.estatus.toUpperCase()}</td>
                         <td class="text-right actions">
                             <button class="btn btn-dark edit" data-id="${e.id}"  data-toggle="tooltip" data-placement="top" title="Editar oficial"><i class="far fa-edit"></i></button>

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\OfficersController;
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +30,10 @@ Route::middleware('auth')->group(function(){
 
         Route::get('/users', 'users')->name('users');
     });
-
+    
+    Route::controller(ReportesController::class)->group(function(){
+        Route::get('/reports/vacation/{id}', 'vacation')->name('report.vacation');
+    });
    
 });
 

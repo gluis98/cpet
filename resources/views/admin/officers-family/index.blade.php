@@ -47,6 +47,20 @@
                                 <input type="text" class="form-control" id="telefono" name="telefono">
                             </div>
                         </div>
+                        <div class="row">
+                            <div class=" col-md-6 mb-3">
+                                <label class="form-label" for="sexo">Sexo *</label>
+                                <select class="form-control" id="sexo" name="sexo" required>
+                                    <option value>--- SELECCIONE UN SEXO ---</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                                </select>
+                            </div>
+                            <div class=" col-md-6 mb-3">
+                                <label class="form-label" for="Edad">Edad </label>
+                                <input type="text" class="form-control" id="Edad" name="Edad" required>
+                            </div>
+                        </div>
                         <hr>
                         <div class="row">
                             <div class=" col-md-12 mb-3">
@@ -101,7 +115,9 @@
                     <th class="text-center" scope="col">Teléfono</th>
                     <th class="text-center" scope="col">Parentesco</th>
                     <th class="text-center" scope="col">Fecha de nacimiento</th>
+                    <th class="text-center" scope="col">Edad</th>
                     <th class="text-center" scope="col">Dirección</th>
+                    <th class="text-center" scope="col">Sexo</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -324,7 +340,9 @@
                         <td class="text-center">${(e.telefono) ? e.telefono : 'S/N'}</td>
                         <td class="text-center">${e.parentesco}</td>
                         <td class="text-center">${e.fecha_nacimiento.substr(0,4) + '-' + e.fecha_nacimiento.substr(5,2) + '-' + e.fecha_nacimiento.substr(8,2)}</td>
-                        <td class="text-center">${e.direccion}</td>
+                        <td class="text-center">${(e.edad) ? e.edad : 'S/E'}</td>
+                        <td class="text-center">${(e.direccion) ? e.direccion : 'S/D'}</td>
+                        <td class="text-center">${(e.sexo) ? (e.sexo == 'M' ? 'Masculino' : 'Femenino') : 'S/S'}</td>
                         <td class="text-right">
                             <button class="btn btn-dark edit" data-id="${e.id}"><i class="far fa-edit"></i></button>
                             <button class="btn btn-danger delete" data-id="${e.id}"><i class="far fa-trash-alt"></i></button>

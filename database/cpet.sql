@@ -1,0 +1,2888 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : localhost
+ Source Server Type    : MySQL
+ Source Server Version : 80030 (8.0.30)
+ Source Host           : localhost:3306
+ Source Schema         : cpet
+
+ Target Server Type    : MySQL
+ Target Server Version : 80030 (8.0.30)
+ File Encoding         : 65001
+
+ Date: 31/05/2025 17:30:57
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for armamentos
+-- ----------------------------
+DROP TABLE IF EXISTS `armamentos`;
+CREATE TABLE `armamentos`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `tipo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `calibre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `origen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `uso` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `serial` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of armamentos
+-- ----------------------------
+INSERT INTO `armamentos` VALUES (1, 'Glock 17', 'Pistola', '9 mm', 'Austria', 'Policial', NULL);
+INSERT INTO `armamentos` VALUES (2, 'AK-103', 'Fusil', '7.62 mm', 'Rusia', 'Militar', NULL);
+INSERT INTO `armamentos` VALUES (3, 'Beretta Px4 Storm', 'Pistola', '9 mm', 'Italia', 'Policial', NULL);
+INSERT INTO `armamentos` VALUES (4, 'FN Minimi', 'Ametralladora', '5.56 mm', 'Bélgica', 'Militar', NULL);
+INSERT INTO `armamentos` VALUES (5, 'Mossberg 590', 'Escopeta', '12 ga', 'Estados Unidos', 'Policial', NULL);
+
+-- ----------------------------
+-- Table structure for cargos
+-- ----------------------------
+DROP TABLE IF EXISTS `cargos`;
+CREATE TABLE `cargos`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre_cargo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of cargos
+-- ----------------------------
+INSERT INTO `cargos` VALUES (1, 'Oficial');
+INSERT INTO `cargos` VALUES (2, 'Primer Oficial');
+INSERT INTO `cargos` VALUES (3, 'Oficial Jefe');
+INSERT INTO `cargos` VALUES (4, 'Inspector');
+INSERT INTO `cargos` VALUES (5, 'Primer Inspector');
+INSERT INTO `cargos` VALUES (6, 'Inspector Jefe');
+INSERT INTO `cargos` VALUES (7, 'Comisario');
+INSERT INTO `cargos` VALUES (8, 'Primer Comisario');
+INSERT INTO `cargos` VALUES (9, 'Comisario Jefe');
+INSERT INTO `cargos` VALUES (10, 'Comisario General');
+INSERT INTO `cargos` VALUES (11, 'Comisario Mayor');
+INSERT INTO `cargos` VALUES (12, 'Comisario Superior');
+
+-- ----------------------------
+-- Table structure for estados
+-- ----------------------------
+DROP TABLE IF EXISTS `estados`;
+CREATE TABLE `estados`  (
+  `id` smallint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(75) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `descripcion`(`descripcion` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of estados
+-- ----------------------------
+INSERT INTO `estados` VALUES (1, 'DTTO. CAPITAL');
+INSERT INTO `estados` VALUES (22, 'EDO. AMAZONAS');
+INSERT INTO `estados` VALUES (2, 'EDO. ANZOATEGUI');
+INSERT INTO `estados` VALUES (3, 'EDO. APURE');
+INSERT INTO `estados` VALUES (4, 'EDO. ARAGUA');
+INSERT INTO `estados` VALUES (5, 'EDO. BARINAS');
+INSERT INTO `estados` VALUES (6, 'EDO. BOLIVAR');
+INSERT INTO `estados` VALUES (7, 'EDO. CARABOBO');
+INSERT INTO `estados` VALUES (8, 'EDO. COJEDES');
+INSERT INTO `estados` VALUES (23, 'EDO. DELTA AMACURO');
+INSERT INTO `estados` VALUES (9, 'EDO. FALCON');
+INSERT INTO `estados` VALUES (10, 'EDO. GUARICO');
+INSERT INTO `estados` VALUES (11, 'EDO. LARA');
+INSERT INTO `estados` VALUES (12, 'EDO. MERIDA');
+INSERT INTO `estados` VALUES (13, 'EDO. MIRANDA');
+INSERT INTO `estados` VALUES (14, 'EDO. MONAGAS');
+INSERT INTO `estados` VALUES (15, 'EDO. NVA. ESPARTA');
+INSERT INTO `estados` VALUES (16, 'EDO. PORTUGUESA');
+INSERT INTO `estados` VALUES (17, 'EDO. SUCRE');
+INSERT INTO `estados` VALUES (18, 'EDO. TACHIRA');
+INSERT INTO `estados` VALUES (19, 'EDO. TRUJILLO');
+INSERT INTO `estados` VALUES (24, 'EDO. VARGAS');
+INSERT INTO `estados` VALUES (20, 'EDO. YARACUY');
+INSERT INTO `estados` VALUES (21, 'EDO. ZULIA');
+
+-- ----------------------------
+-- Table structure for failed_jobs
+-- ----------------------------
+DROP TABLE IF EXISTS `failed_jobs`;
+CREATE TABLE `failed_jobs`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `failed_jobs_uuid_unique`(`uuid` ASC) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of failed_jobs
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for migrations
+-- ----------------------------
+DROP TABLE IF EXISTS `migrations`;
+CREATE TABLE `migrations`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of migrations
+-- ----------------------------
+INSERT INTO `migrations` VALUES (1, '2014_10_12_000000_create_users_table', 1);
+INSERT INTO `migrations` VALUES (2, '2014_10_12_100000_create_password_reset_tokens_table', 1);
+INSERT INTO `migrations` VALUES (3, '2014_10_12_100000_create_password_resets_table', 1);
+INSERT INTO `migrations` VALUES (4, '2019_08_19_000000_create_failed_jobs_table', 1);
+INSERT INTO `migrations` VALUES (5, '2019_12_14_000001_create_personal_access_tokens_table', 1);
+
+-- ----------------------------
+-- Table structure for municipios
+-- ----------------------------
+DROP TABLE IF EXISTS `municipios`;
+CREATE TABLE `municipios`  (
+  `id` smallint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `estado_id` smallint UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `estado_id`(`estado_id` ASC) USING BTREE,
+  CONSTRAINT `municipios_ibfk_1` FOREIGN KEY (`estado_id`) REFERENCES `estados` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 339 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of municipios
+-- ----------------------------
+INSERT INTO `municipios` VALUES (1, 'MP. LIBERTADOR', 1);
+INSERT INTO `municipios` VALUES (2, 'MP. INFANTE', 10);
+INSERT INTO `municipios` VALUES (3, 'MP. LAS MERCEDES', 10);
+INSERT INTO `municipios` VALUES (4, 'MP. EL SOCORRO', 10);
+INSERT INTO `municipios` VALUES (5, 'MP. ORTIZ', 10);
+INSERT INTO `municipios` VALUES (6, 'MP. S MARIA DE IPIRE', 10);
+INSERT INTO `municipios` VALUES (7, 'MP. CHAGUARAMAS', 10);
+INSERT INTO `municipios` VALUES (8, 'MP.SAN GERONIMO DE G', 10);
+INSERT INTO `municipios` VALUES (9, 'MP. MELLADO', 10);
+INSERT INTO `municipios` VALUES (10, 'MP. MIRANDA', 10);
+INSERT INTO `municipios` VALUES (11, 'MP. MONAGAS', 10);
+INSERT INTO `municipios` VALUES (12, 'MP. RIBAS', 10);
+INSERT INTO `municipios` VALUES (13, 'MP. ROSCIO', 10);
+INSERT INTO `municipios` VALUES (14, 'MP. ZARAZA', 10);
+INSERT INTO `municipios` VALUES (15, 'MP. CAMAGUAN', 10);
+INSERT INTO `municipios` VALUES (16, 'MP.S JOSE DE GUARIBE', 10);
+INSERT INTO `municipios` VALUES (17, 'MP. CRESPO', 11);
+INSERT INTO `municipios` VALUES (18, 'MP. IRIBARREN', 11);
+INSERT INTO `municipios` VALUES (19, 'MP. JIMENEZ', 11);
+INSERT INTO `municipios` VALUES (20, 'MP. MORAN', 11);
+INSERT INTO `municipios` VALUES (21, 'MP. PALAVECINO', 11);
+INSERT INTO `municipios` VALUES (22, 'MP. TORRES', 11);
+INSERT INTO `municipios` VALUES (23, 'MP. URDANETA', 11);
+INSERT INTO `municipios` VALUES (24, 'MP. ANDRES E BLANCO', 11);
+INSERT INTO `municipios` VALUES (25, 'MP. SIMON PLANAS', 11);
+INSERT INTO `municipios` VALUES (26, 'MP. ALBERTO ADRIANI', 12);
+INSERT INTO `municipios` VALUES (27, 'MP. MIRANDA', 12);
+INSERT INTO `municipios` VALUES (28, 'MP. ANTONIO PINTO S.', 12);
+INSERT INTO `municipios` VALUES (29, 'MP.OB. RAMOS DE LORA', 12);
+INSERT INTO `municipios` VALUES (30, 'MP. CARACCIOLO PARRA', 12);
+INSERT INTO `municipios` VALUES (31, 'MP.CARDENAL QUINTERO', 12);
+INSERT INTO `municipios` VALUES (32, 'MP. PUEBLO LLANO', 12);
+INSERT INTO `municipios` VALUES (33, 'MP. RANGEL', 12);
+INSERT INTO `municipios` VALUES (34, 'MP. RIVAS DAVILA', 12);
+INSERT INTO `municipios` VALUES (35, 'MP. SUCRE', 12);
+INSERT INTO `municipios` VALUES (36, 'MP. TOVAR', 12);
+INSERT INTO `municipios` VALUES (37, 'MP. ANDRES BELLO', 12);
+INSERT INTO `municipios` VALUES (38, 'MP. TULIO F CORDERO', 12);
+INSERT INTO `municipios` VALUES (39, 'MP. PADRE NOGUERA', 12);
+INSERT INTO `municipios` VALUES (40, 'MP. ARICAGUA', 12);
+INSERT INTO `municipios` VALUES (41, 'MP. ZEA', 12);
+INSERT INTO `municipios` VALUES (42, 'MP. ARZOBISPO CHACON', 12);
+INSERT INTO `municipios` VALUES (43, 'MP. CAMPO ELIAS', 12);
+INSERT INTO `municipios` VALUES (44, 'MP. GUARAQUE', 12);
+INSERT INTO `municipios` VALUES (45, 'MP.JULIO CESAR SALAS', 12);
+INSERT INTO `municipios` VALUES (46, 'MP. JUSTO BRICE#O', 12);
+INSERT INTO `municipios` VALUES (47, 'MP. LIBERTADOR', 12);
+INSERT INTO `municipios` VALUES (48, 'MP. SANTOS MARQUINA', 12);
+INSERT INTO `municipios` VALUES (49, 'MP. ACEVEDO', 13);
+INSERT INTO `municipios` VALUES (50, 'MP. URDANETA', 13);
+INSERT INTO `municipios` VALUES (51, 'MP. ZAMORA', 13);
+INSERT INTO `municipios` VALUES (52, 'MP. CRISTOBAL ROJAS', 13);
+INSERT INTO `municipios` VALUES (53, 'MP. LOS SALIAS', 13);
+INSERT INTO `municipios` VALUES (54, 'MP. ANDRES BELLO', 13);
+INSERT INTO `municipios` VALUES (55, 'MP. SIMON BOLIVAR', 13);
+INSERT INTO `municipios` VALUES (56, 'MP. BARUTA', 13);
+INSERT INTO `municipios` VALUES (57, 'MP. CARRIZAL', 13);
+INSERT INTO `municipios` VALUES (58, 'MP. CHACAO', 13);
+INSERT INTO `municipios` VALUES (59, 'MP. EL HATILLO', 13);
+INSERT INTO `municipios` VALUES (60, 'MP. BRION', 13);
+INSERT INTO `municipios` VALUES (61, 'MP. BUROZ', 13);
+INSERT INTO `municipios` VALUES (62, 'MP. PEDRO GUAL', 13);
+INSERT INTO `municipios` VALUES (63, 'MP. GUAICAIPURO', 13);
+INSERT INTO `municipios` VALUES (64, 'MP. INDEPENDENCIA', 13);
+INSERT INTO `municipios` VALUES (65, 'MP. LANDER', 13);
+INSERT INTO `municipios` VALUES (66, 'MP. PAEZ', 13);
+INSERT INTO `municipios` VALUES (67, 'MP. PAZ CASTILLO', 13);
+INSERT INTO `municipios` VALUES (68, 'MP. PLAZA', 13);
+INSERT INTO `municipios` VALUES (69, 'MP. SUCRE', 13);
+INSERT INTO `municipios` VALUES (70, 'MP. ACOSTA', 14);
+INSERT INTO `municipios` VALUES (71, 'MP. SOTILLO', 14);
+INSERT INTO `municipios` VALUES (72, 'MP. AGUASAY', 14);
+INSERT INTO `municipios` VALUES (73, 'MP. SANTA BARBARA', 14);
+INSERT INTO `municipios` VALUES (74, 'MP. URACOA', 14);
+INSERT INTO `municipios` VALUES (75, 'MP. BOLIVAR', 14);
+INSERT INTO `municipios` VALUES (76, 'MP. CARIPE', 14);
+INSERT INTO `municipios` VALUES (77, 'MP. CEDE#O', 14);
+INSERT INTO `municipios` VALUES (78, 'MP. EZEQUIEL ZAMORA', 14);
+INSERT INTO `municipios` VALUES (79, 'MP. LIBERTADOR', 14);
+INSERT INTO `municipios` VALUES (80, 'MP. MATURIN', 14);
+INSERT INTO `municipios` VALUES (81, 'MP. PIAR', 14);
+INSERT INTO `municipios` VALUES (82, 'MP. PUNCERES', 14);
+INSERT INTO `municipios` VALUES (83, 'MP. ARISMENDI', 15);
+INSERT INTO `municipios` VALUES (84, 'MP.ANTOLIN DEL CAMPO', 15);
+INSERT INTO `municipios` VALUES (85, 'MP. GARCIA', 15);
+INSERT INTO `municipios` VALUES (86, 'MP. DIAZ', 15);
+INSERT INTO `municipios` VALUES (87, 'MP. GOMEZ', 15);
+INSERT INTO `municipios` VALUES (88, 'MP. MANEIRO', 15);
+INSERT INTO `municipios` VALUES (89, 'MP. MARCANO', 15);
+INSERT INTO `municipios` VALUES (90, 'MP. MARI#O', 15);
+INSERT INTO `municipios` VALUES (91, 'MP.PENIN. DE MACANAO', 15);
+INSERT INTO `municipios` VALUES (92, 'MP.VILLALBA(I.COCHE)', 15);
+INSERT INTO `municipios` VALUES (93, 'MP. TUBORES', 15);
+INSERT INTO `municipios` VALUES (94, 'MP. ARAURE', 16);
+INSERT INTO `municipios` VALUES (95, 'MP. AGUA BLANCA', 16);
+INSERT INTO `municipios` VALUES (96, 'MP. PAPELON', 16);
+INSERT INTO `municipios` VALUES (97, 'MP.GENARO BOCONOITO', 16);
+INSERT INTO `municipios` VALUES (98, 'MP.S RAFAEL DE ONOTO', 16);
+INSERT INTO `municipios` VALUES (99, 'MP. SANTA ROSALIA', 16);
+INSERT INTO `municipios` VALUES (100, 'MP. ESTELLER', 16);
+INSERT INTO `municipios` VALUES (101, 'MP. GUANARE', 16);
+INSERT INTO `municipios` VALUES (102, 'MP. GUANARITO', 16);
+INSERT INTO `municipios` VALUES (103, 'MP. OSPINO', 16);
+INSERT INTO `municipios` VALUES (104, 'MP. PAEZ', 16);
+INSERT INTO `municipios` VALUES (105, 'MP. SUCRE', 16);
+INSERT INTO `municipios` VALUES (106, 'MP. TUREN', 16);
+INSERT INTO `municipios` VALUES (107, 'MP. M.JOSE V DE UNDA', 16);
+INSERT INTO `municipios` VALUES (108, 'MP. ARISMENDI', 17);
+INSERT INTO `municipios` VALUES (109, 'MP. VALDEZ', 17);
+INSERT INTO `municipios` VALUES (110, 'MP. ANDRES E BLANCO', 17);
+INSERT INTO `municipios` VALUES (111, 'MP. LIBERTADOR', 17);
+INSERT INTO `municipios` VALUES (112, 'MP. ANDRES MATA', 17);
+INSERT INTO `municipios` VALUES (113, 'MP. BOLIVAR', 17);
+INSERT INTO `municipios` VALUES (114, 'MP. CRUZ S ACOSTA', 17);
+INSERT INTO `municipios` VALUES (115, 'MP. BENITEZ', 17);
+INSERT INTO `municipios` VALUES (116, 'MP. BERMUDEZ', 17);
+INSERT INTO `municipios` VALUES (117, 'MP. CAJIGAL', 17);
+INSERT INTO `municipios` VALUES (118, 'MP. MARI#O', 17);
+INSERT INTO `municipios` VALUES (119, 'MP. MEJIA', 17);
+INSERT INTO `municipios` VALUES (120, 'MP. MONTES', 17);
+INSERT INTO `municipios` VALUES (121, 'MP. RIBERO', 17);
+INSERT INTO `municipios` VALUES (122, 'MP. SUCRE', 17);
+INSERT INTO `municipios` VALUES (123, 'MP. AYACUCHO', 18);
+INSERT INTO `municipios` VALUES (124, 'MP. CORDOBA', 18);
+INSERT INTO `municipios` VALUES (125, 'MP. GARCIA DE HEVIA', 18);
+INSERT INTO `municipios` VALUES (126, 'MP. GUASIMOS', 18);
+INSERT INTO `municipios` VALUES (127, 'MP. MICHELENA', 18);
+INSERT INTO `municipios` VALUES (128, 'MP. LIBERTADOR', 18);
+INSERT INTO `municipios` VALUES (129, 'MP. PANAMERICANO', 18);
+INSERT INTO `municipios` VALUES (130, 'MP. PEDRO MARIA UREÑA', 18);
+INSERT INTO `municipios` VALUES (131, 'MP. SUCRE', 18);
+INSERT INTO `municipios` VALUES (132, 'MP. ANDRES BELLO', 18);
+INSERT INTO `municipios` VALUES (133, 'MP. FERNANDEZ FEO', 18);
+INSERT INTO `municipios` VALUES (134, 'MP. BOLIVAR', 18);
+INSERT INTO `municipios` VALUES (135, 'MP. LIBERTAD', 18);
+INSERT INTO `municipios` VALUES (136, 'MP. SAMUEL MALDONADO', 18);
+INSERT INTO `municipios` VALUES (137, 'MP. SEBORUCO', 18);
+INSERT INTO `municipios` VALUES (138, 'MP. ANTONIO ROMULO C', 18);
+INSERT INTO `municipios` VALUES (139, 'MP. FCO DE MIRANDA', 18);
+INSERT INTO `municipios` VALUES (140, 'MP. JOSE MARIA VARGA', 18);
+INSERT INTO `municipios` VALUES (141, 'MP. RAFAEL URDANETA', 18);
+INSERT INTO `municipios` VALUES (142, 'MP. SIMON RODRIGUEZ', 18);
+INSERT INTO `municipios` VALUES (143, 'MP. TORBES', 18);
+INSERT INTO `municipios` VALUES (144, 'MP. SAN JUDAS TADEO', 18);
+INSERT INTO `municipios` VALUES (145, 'MP. INDEPENDENCIA', 18);
+INSERT INTO `municipios` VALUES (146, 'MP. CARDENAS', 18);
+INSERT INTO `municipios` VALUES (147, 'MP. JAUREGUI', 18);
+INSERT INTO `municipios` VALUES (148, 'MP. JUNIN', 18);
+INSERT INTO `municipios` VALUES (149, 'MP. LOBATERA', 18);
+INSERT INTO `municipios` VALUES (150, 'MP. SAN CRISTOBAL', 18);
+INSERT INTO `municipios` VALUES (151, 'MP. URIBANTE', 18);
+INSERT INTO `municipios` VALUES (152, 'MP. BETIJOQUE', 19);
+INSERT INTO `municipios` VALUES (153, 'MP. MONTE CARMELO', 19);
+INSERT INTO `municipios` VALUES (154, 'MP. MOTATAN', 19);
+INSERT INTO `municipios` VALUES (155, 'MP. PAMPAN', 19);
+INSERT INTO `municipios` VALUES (156, 'MP. SAN RAFAEL DE CARVAJAL', 19);
+INSERT INTO `municipios` VALUES (157, 'MP. SUCRE', 19);
+INSERT INTO `municipios` VALUES (158, 'MP. ANDRES BELLO', 19);
+INSERT INTO `municipios` VALUES (159, 'MP. BOLIVAR', 19);
+INSERT INTO `municipios` VALUES (160, 'MP. JOSE FELIPE MARQUEZ CAÑIZALES', 19);
+INSERT INTO `municipios` VALUES (161, 'MP. JUAN VICENTE CAMPO ELIAS', 19);
+INSERT INTO `municipios` VALUES (162, 'MP. LA CEIBA', 19);
+INSERT INTO `municipios` VALUES (163, 'MP. BOCONÓ', 19);
+INSERT INTO `municipios` VALUES (164, 'MP. PAMPANITO', 19);
+INSERT INTO `municipios` VALUES (165, 'MP. CARACHE', 19);
+INSERT INTO `municipios` VALUES (166, 'MP. ESCUQUE', 19);
+INSERT INTO `municipios` VALUES (167, 'MP. TRUJILLO', 19);
+INSERT INTO `municipios` VALUES (168, 'MP. URDANETA', 19);
+INSERT INTO `municipios` VALUES (169, 'MP. VALERA', 19);
+INSERT INTO `municipios` VALUES (170, 'MP. CANDELARIA', 19);
+INSERT INTO `municipios` VALUES (171, 'MP. MIRANDA', 19);
+INSERT INTO `municipios` VALUES (172, 'MP. ANACO', 2);
+INSERT INTO `municipios` VALUES (173, 'MP. MONAGAS', 2);
+INSERT INTO `municipios` VALUES (174, 'MP. PEÑALVER', 2);
+INSERT INTO `municipios` VALUES (175, 'MP. SIMON RODRIGUEZ', 2);
+INSERT INTO `municipios` VALUES (176, 'MP. SOTILLO', 2);
+INSERT INTO `municipios` VALUES (177, 'MP. GUANIPA', 2);
+INSERT INTO `municipios` VALUES (178, 'MP. GUANTA', 2);
+INSERT INTO `municipios` VALUES (179, 'MP. PIRITU', 2);
+INSERT INTO `municipios` VALUES (180, 'MP. DIEGO BAUTISTA U', 2);
+INSERT INTO `municipios` VALUES (181, 'MP. CARVAJAL', 2);
+INSERT INTO `municipios` VALUES (182, 'MP. SANTA ANA', 2);
+INSERT INTO `municipios` VALUES (183, 'MP. ARAGUA', 2);
+INSERT INTO `municipios` VALUES (184, 'MP. MC GREGOR', 2);
+INSERT INTO `municipios` VALUES (185, 'MP.S JUAN CAPISTRANO', 2);
+INSERT INTO `municipios` VALUES (186, 'MP. BOLIVAR', 2);
+INSERT INTO `municipios` VALUES (187, 'MP. BRUZUAL', 2);
+INSERT INTO `municipios` VALUES (188, 'MP. CAJIGAL', 2);
+INSERT INTO `municipios` VALUES (189, 'MP. FREITES', 2);
+INSERT INTO `municipios` VALUES (190, 'MP. INDEPENDENCIA', 2);
+INSERT INTO `municipios` VALUES (191, 'MP. LIBERTAD', 2);
+INSERT INTO `municipios` VALUES (192, 'MP. MIRANDA', 2);
+INSERT INTO `municipios` VALUES (193, 'MP. BOLIVAR', 20);
+INSERT INTO `municipios` VALUES (194, 'MP. COCOROTE', 20);
+INSERT INTO `municipios` VALUES (195, 'MP. INDEPENDENCIA', 20);
+INSERT INTO `municipios` VALUES (196, 'MP. ARISTIDES BASTID', 20);
+INSERT INTO `municipios` VALUES (197, 'MP. MANUEL MONGE', 20);
+INSERT INTO `municipios` VALUES (198, 'MP. VEROES', 20);
+INSERT INTO `municipios` VALUES (199, 'MP. BRUZUAL', 20);
+INSERT INTO `municipios` VALUES (200, 'MP. NIRGUA', 20);
+INSERT INTO `municipios` VALUES (201, 'MP. SAN FELIPE', 20);
+INSERT INTO `municipios` VALUES (202, 'MP. SUCRE', 20);
+INSERT INTO `municipios` VALUES (203, 'MP. URACHICHE', 20);
+INSERT INTO `municipios` VALUES (204, 'MP. PE#A', 20);
+INSERT INTO `municipios` VALUES (205, 'MP.JOSE ANTONIO PAEZ', 20);
+INSERT INTO `municipios` VALUES (206, 'MP. LA TRINIDAD', 20);
+INSERT INTO `municipios` VALUES (207, 'MP. BARALT', 21);
+INSERT INTO `municipios` VALUES (208, 'MP. LA CA#ADA DE U.', 21);
+INSERT INTO `municipios` VALUES (209, 'MP. LAGUNILLAS', 21);
+INSERT INTO `municipios` VALUES (210, 'MP. CATATUMBO', 21);
+INSERT INTO `municipios` VALUES (211, 'MP. ROSARIO DE PERIJA', 21);
+INSERT INTO `municipios` VALUES (212, 'MP. CABIMAS', 21);
+INSERT INTO `municipios` VALUES (213, 'MP.VALMORE RODRIGUEZ', 21);
+INSERT INTO `municipios` VALUES (214, 'MP. JESUS E LOSSADA', 21);
+INSERT INTO `municipios` VALUES (215, 'MP. ALMIRANTE P', 21);
+INSERT INTO `municipios` VALUES (216, 'MP. SAN FRANCISCO', 21);
+INSERT INTO `municipios` VALUES (217, 'MP. JESUS M SEMPRUN', 21);
+INSERT INTO `municipios` VALUES (218, 'MP. SANTA RITA', 21);
+INSERT INTO `municipios` VALUES (219, 'MP. FRANCISCO J PULG', 21);
+INSERT INTO `municipios` VALUES (220, 'MP. SIMON BOLIVAR', 21);
+INSERT INTO `municipios` VALUES (221, 'MP. COLON', 21);
+INSERT INTO `municipios` VALUES (222, 'MP. MARA', 21);
+INSERT INTO `municipios` VALUES (223, 'MP. MARACAIBO', 21);
+INSERT INTO `municipios` VALUES (224, 'MP. MIRANDA', 21);
+INSERT INTO `municipios` VALUES (225, 'MP. PAEZ', 21);
+INSERT INTO `municipios` VALUES (226, 'MP. MACHIQUES DE P', 21);
+INSERT INTO `municipios` VALUES (227, 'MP. SUCRE', 21);
+INSERT INTO `municipios` VALUES (228, 'MP. ATURES', 22);
+INSERT INTO `municipios` VALUES (229, 'MP. ATABAPO', 22);
+INSERT INTO `municipios` VALUES (230, 'MP. MAROA', 22);
+INSERT INTO `municipios` VALUES (231, 'MP. RIO NEGRO', 22);
+INSERT INTO `municipios` VALUES (232, 'MP. AUTANA', 22);
+INSERT INTO `municipios` VALUES (233, 'MP. MANAPIARE', 22);
+INSERT INTO `municipios` VALUES (234, 'MP. ALTO ORINOCO', 22);
+INSERT INTO `municipios` VALUES (235, 'MP. TUCUPITA', 23);
+INSERT INTO `municipios` VALUES (236, 'MP. PEDERNALES', 23);
+INSERT INTO `municipios` VALUES (237, 'MP. ANTONIO DIAZ', 23);
+INSERT INTO `municipios` VALUES (238, 'MP. CASACOIMA', 23);
+INSERT INTO `municipios` VALUES (239, 'MP. VARGAS', 24);
+INSERT INTO `municipios` VALUES (240, 'MP. ACHAGUAS', 3);
+INSERT INTO `municipios` VALUES (241, 'MP. MU#OZ', 3);
+INSERT INTO `municipios` VALUES (242, 'MP. PAEZ', 3);
+INSERT INTO `municipios` VALUES (243, 'MP. PEDRO CAMEJO', 3);
+INSERT INTO `municipios` VALUES (244, 'MP. ROMULO GALLEGOS', 3);
+INSERT INTO `municipios` VALUES (245, 'MP. SAN FERNANDO', 3);
+INSERT INTO `municipios` VALUES (246, 'MP. BIRUACA', 3);
+INSERT INTO `municipios` VALUES (247, 'MP. GIRARDOT', 4);
+INSERT INTO `municipios` VALUES (248, 'MP. JOSE ANGEL LAMAS', 4);
+INSERT INTO `municipios` VALUES (249, 'MP. BOLIVAR', 4);
+INSERT INTO `municipios` VALUES (250, 'MP. SANTOS MICHELENA', 4);
+INSERT INTO `municipios` VALUES (251, 'MP. MARIO B IRAGORRY', 4);
+INSERT INTO `municipios` VALUES (252, 'MP. TOVAR', 4);
+INSERT INTO `municipios` VALUES (253, 'MP. CAMATAGUA', 4);
+INSERT INTO `municipios` VALUES (254, 'MP. JOSE R REVENGA', 4);
+INSERT INTO `municipios` VALUES (255, 'MP. FRANCISCO LINARES A.', 4);
+INSERT INTO `municipios` VALUES (256, 'MP. OCUMARE D LA COSTA', 4);
+INSERT INTO `municipios` VALUES (257, 'MP. SANTIAGO MARI#O', 4);
+INSERT INTO `municipios` VALUES (258, 'MP. JOSE FELIX RIVAS', 4);
+INSERT INTO `municipios` VALUES (259, 'MP. SAN CASIMIRO', 4);
+INSERT INTO `municipios` VALUES (260, 'MP. SAN SEBASTIAN', 4);
+INSERT INTO `municipios` VALUES (261, 'MP. SUCRE', 4);
+INSERT INTO `municipios` VALUES (262, 'MP. URDANETA', 4);
+INSERT INTO `municipios` VALUES (263, 'MP. ZAMORA', 4);
+INSERT INTO `municipios` VALUES (264, 'MP. LIBERTADOR', 4);
+INSERT INTO `municipios` VALUES (265, 'MP. ARISMENDI', 5);
+INSERT INTO `municipios` VALUES (266, 'MP. A JOSE DE SUCRE', 5);
+INSERT INTO `municipios` VALUES (267, 'MP. CRUZ PAREDES', 5);
+INSERT INTO `municipios` VALUES (268, 'MP. ANDRES E. BLANCO', 5);
+INSERT INTO `municipios` VALUES (269, 'MP. BARINAS', 5);
+INSERT INTO `municipios` VALUES (270, 'MP. BOLIVAR', 5);
+INSERT INTO `municipios` VALUES (271, 'MP. EZEQUIEL ZAMORA', 5);
+INSERT INTO `municipios` VALUES (272, 'MP. OBISPOS', 5);
+INSERT INTO `municipios` VALUES (273, 'MP. PEDRAZA', 5);
+INSERT INTO `municipios` VALUES (274, 'MP. ROJAS', 5);
+INSERT INTO `municipios` VALUES (275, 'MP. SOSA', 5);
+INSERT INTO `municipios` VALUES (276, 'MP. ALBERTO ARVELO T', 5);
+INSERT INTO `municipios` VALUES (277, 'MP. CARONI', 6);
+INSERT INTO `municipios` VALUES (278, 'MP. EL CALLAO', 6);
+INSERT INTO `municipios` VALUES (279, 'MP.PADRE PEDRO CHIEN', 6);
+INSERT INTO `municipios` VALUES (280, 'MP. CEDE#O', 6);
+INSERT INTO `municipios` VALUES (281, 'MP. HERES', 6);
+INSERT INTO `municipios` VALUES (282, 'MP. PIAR', 6);
+INSERT INTO `municipios` VALUES (283, 'MP. ROSCIO', 6);
+INSERT INTO `municipios` VALUES (284, 'MP. SUCRE', 6);
+INSERT INTO `municipios` VALUES (285, 'MP. SIFONTES', 6);
+INSERT INTO `municipios` VALUES (286, 'MP. RAUL LEONI', 6);
+INSERT INTO `municipios` VALUES (287, 'MP. GRAN SABANA', 6);
+INSERT INTO `municipios` VALUES (288, 'MP. BEJUMA', 7);
+INSERT INTO `municipios` VALUES (289, 'MP. MIRANDA', 7);
+INSERT INTO `municipios` VALUES (290, 'MP. LOS GUAYOS', 7);
+INSERT INTO `municipios` VALUES (291, 'MP. NAGUANAGUA', 7);
+INSERT INTO `municipios` VALUES (292, 'MP. SAN DIEGO', 7);
+INSERT INTO `municipios` VALUES (293, 'MP. LIBERTADOR', 7);
+INSERT INTO `municipios` VALUES (294, 'MP. CARLOS ARVELO', 7);
+INSERT INTO `municipios` VALUES (295, 'MP. DIEGO IBARRA', 7);
+INSERT INTO `municipios` VALUES (296, 'MP. GUACARA', 7);
+INSERT INTO `municipios` VALUES (297, 'MP. MONTALBAN', 7);
+INSERT INTO `municipios` VALUES (298, 'MP. JUAN JOSE MORA', 7);
+INSERT INTO `municipios` VALUES (299, 'MP. PUERTO CABELLO', 7);
+INSERT INTO `municipios` VALUES (300, 'MP. SAN JOAQUIN', 7);
+INSERT INTO `municipios` VALUES (301, 'MP. VALENCIA', 7);
+INSERT INTO `municipios` VALUES (302, 'MP. ANZOATEGUI', 8);
+INSERT INTO `municipios` VALUES (303, 'MP. FALCON', 8);
+INSERT INTO `municipios` VALUES (304, 'MP. GIRARDOT', 8);
+INSERT INTO `municipios` VALUES (305, 'MP. PAO SAN J BAUTISTA', 8);
+INSERT INTO `municipios` VALUES (306, 'MP. RICAURTE', 8);
+INSERT INTO `municipios` VALUES (307, 'MP. SAN CARLOS', 8);
+INSERT INTO `municipios` VALUES (308, 'MP. TINACO', 8);
+INSERT INTO `municipios` VALUES (309, 'MP. LIMA BLANCO', 8);
+INSERT INTO `municipios` VALUES (310, 'MP. ROMULO GALLEGOS', 8);
+INSERT INTO `municipios` VALUES (311, 'MP. ACOSTA', 9);
+INSERT INTO `municipios` VALUES (312, 'MP. MIRANDA', 9);
+INSERT INTO `municipios` VALUES (313, 'MP. PETIT', 9);
+INSERT INTO `municipios` VALUES (314, 'MP. SILVA', 9);
+INSERT INTO `municipios` VALUES (315, 'MP. ZAMORA', 9);
+INSERT INTO `municipios` VALUES (316, 'MP. DABAJURO', 9);
+INSERT INTO `municipios` VALUES (317, 'MP. MONS. ITURRIZA', 9);
+INSERT INTO `municipios` VALUES (318, 'MP. LOS TAQUES', 9);
+INSERT INTO `municipios` VALUES (319, 'MP. PIRITU', 9);
+INSERT INTO `municipios` VALUES (320, 'MP. UNION', 9);
+INSERT INTO `municipios` VALUES (321, 'MP. SAN FRANCISCO', 9);
+INSERT INTO `municipios` VALUES (322, 'MP. BOLIVAR', 9);
+INSERT INTO `municipios` VALUES (323, 'MP. JACURA', 9);
+INSERT INTO `municipios` VALUES (324, 'MP. CACIQUE MANAURE', 9);
+INSERT INTO `municipios` VALUES (325, 'MP. PALMA SOLA', 9);
+INSERT INTO `municipios` VALUES (326, 'MP. SUCRE', 9);
+INSERT INTO `municipios` VALUES (327, 'MP. URUMACO', 9);
+INSERT INTO `municipios` VALUES (328, 'MP. TOCOPERO', 9);
+INSERT INTO `municipios` VALUES (329, 'MP. BUCHIVACOA', 9);
+INSERT INTO `municipios` VALUES (330, 'MP. CARIRUBANA', 9);
+INSERT INTO `municipios` VALUES (331, 'MP. COLINA', 9);
+INSERT INTO `municipios` VALUES (332, 'MP. DEMOCRACIA', 9);
+INSERT INTO `municipios` VALUES (333, 'MP. FALCON', 9);
+INSERT INTO `municipios` VALUES (334, 'MP. FEDERACION', 9);
+INSERT INTO `municipios` VALUES (335, 'MP. MAUROA', 9);
+
+-- ----------------------------
+-- Table structure for oficiales
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales`;
+CREATE TABLE `oficiales`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `documento_identidad` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `nombre_completo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `fecha_nacimiento` date NULL DEFAULT NULL,
+  `tipo_sangre` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `talla_camisa` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `talla_pantalon` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `talla_zapatos` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `fecha_ingreso` date NULL DEFAULT NULL,
+  `estado_civil` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `direccion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `telefono` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `correo_electronico` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `estatus` enum('activo','inactivo') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT 'activo',
+  `numero_placa` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `parroquia_id` smallint UNSIGNED NULL DEFAULT NULL,
+  `fotografia` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `centro_votacion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `direccion_centro` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `documento_identidad`(`documento_identidad` ASC) USING BTREE,
+  INDEX `parroquia_id`(`parroquia_id` ASC) USING BTREE,
+  CONSTRAINT `oficiales_ibfk_1` FOREIGN KEY (`parroquia_id`) REFERENCES `parroquias` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1771 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales
+-- ----------------------------
+INSERT INTO `oficiales` VALUES (886, '8720691', 'Montilla Briceño Baudilio Segundo', '1968-09-07', NULL, NULL, NULL, NULL, '1993-01-01', NULL, 'RINCON III, PARROQUIA EL CARMEN MUNICIPIO BOCONÓ', '0416-7921398', 'baudiliomontilla2020@gmail.com', 'activo', 'PET-210001511', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (887, '9499387', 'Perez Briceño Jaime Argenis', '1966-07-26', NULL, NULL, NULL, NULL, '2019-05-01', NULL, 'eje vial sector maria isabel de chavez parroquia jose leonardo suarez municipio carvajal', '0426/4483537', 'perez9876jaime@gmail.com', 'activo', 'PET-210002217', NULL, NULL, 'UNIDAD EDUCATIVA HUGO CHAVEZ FRIAS', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL  PARROQUIA ANTONIO NICOLAS  BRICEÑO SECTOR MARIA ISABEL DE CHAVEZ DERECHA AVENIDA SUCRE. IZQUIERDA CALLE CEMENTERIO. FRENTE CALLE PRINCIPAL FRENTE A MACKRO CASA');
+INSERT INTO `oficiales` VALUES (888, '10404899', 'Navas Teran Jose Omar', '1970-05-30', NULL, NULL, NULL, NULL, '1991-01-01', NULL, 'urbanizacion terrazas de jalisco parroquia jalisco municipio motatan', '4127984018', 'JOSEONAVA30@GMAIL.COM', 'activo', 'PET-210002021', NULL, NULL, 'UNIDAD EDUCATIVA RAFAEL QUEVEDO URBINA', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR CAMPO ALEGRE IZQUIERDA AVENIDA PRINCIPAL. DERECHA CALLE SIN NUMERO. FRENTE CALLE QUINTA A 50 METROS DE PREFECTURA CAMPO ALEGRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (889, '10911374', 'Rojas  Jairo Alexander', '1972-07-03', NULL, NULL, NULL, NULL, '2001-01-01', NULL, 'plata III vereda 17 casa 4 parroqui juan ignacio montilla municipio valera', '0426-8781824', 'jairoelmonorgias@gmail.com', 'activo', 'PET-210001950', NULL, NULL, 'UNIDAD EDUCATIVA ELVIA MONTILLA DE SANTOS', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA URBANIZACIÓN PABLO EMIGDIO DE LEÓN DERECHA CALLE RÓMULO BETANCOURT. IZQUIERDA CALLE ANDRES BELLO. FRENTE CALLE SIMÓN RODRÍGUEZ SECTOR LAS MALVINAS, A 50 METROS DE LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (890, '10912366', 'Villamizar Berrios Jesus Alberto', '1970-11-27', NULL, NULL, NULL, NULL, '1998-01-01', NULL, 'la lomas via el casino militar parroquia san luis municipio valera', '0426-4636802', 'pueblinoalbertovillamizar@gmail.com', 'activo', 'PET-210002093', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (891, '11320254', 'Vargas Araujo Jose Gregorio', '1974-07-25', NULL, NULL, NULL, NULL, '1998-01-01', NULL, 'lazo de la vega final avenida los pinos parroquia mercedez diaz municipio valera', '0424-7018303', 'vargasaraujojosegregorio6@gmail.com', 'activo', 'PET-210001642', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (892, '11611534', 'Teran Cadenas Mirla Del Valle', '1974-02-18', NULL, NULL, NULL, NULL, '1998-07-01', NULL, 'urbanizacion la muralla calle campos casa A-22 parroquia pampanito municipio pampanito', '0414-5311649', 'mirla201718@gmail.com', 'activo', 'PET-210001887', NULL, NULL, 'SIMONCITO LA MURALLA', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO URBANIZACIÓN LA MURALLA DERECHA CALLE EL CAMPO. IZQUIERDA CALLE LAS DUNAS. FRENTE CALLE LOS MOLINOS FRENTE A LA PLAZA CASA');
+INSERT INTO `oficiales` VALUES (893, '11614760', 'Niño Torres Jose Gregorio', '1974-06-19', NULL, NULL, NULL, NULL, '1998-07-01', NULL, 'URB. MONSEÑOR CAMATGO PAMPAN', '0416-5775142', 'josegregorionino1974@gmail.com', 'activo', 'PET-210001641', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (894, '11619666', 'Briceño Mendez Heddixon Jose', '1975-10-24', NULL, NULL, NULL, NULL, '1997-01-01', NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (895, '12026363', 'Torres Luna Jenner Antonio', '1974-02-27', NULL, NULL, NULL, NULL, '2012-07-17', NULL, 'avenida 2 sector el rincon III parroquia el carmen municipio bocono', '0412-6634648', 'horus.otzi27@gmail.com', 'activo', 'PET-210001912', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ LUIS FAURET SABAUT', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA LA PUERTA SECTOR LOS JUMANGUEZ IZQUIERDA CALLE LOS JUMANGUEZ. FRENTE CALLE 7 A 300 METROS DE LA PLAZA BOLIVAR DE LA PUERTA CASA');
+INSERT INTO `oficiales` VALUES (896, '12029374', 'Villegas Rojas Henry Jose', '1971-11-30', NULL, NULL, NULL, NULL, '1997-05-01', NULL, 'junin kilometro 23 parroquia junin municipio sucre', '4261962391', 'villegasrojashenryjose71@gmail.com', 'activo', 'PET-210001656', NULL, NULL, 'UNIDAD BÁSICA 27 DE JUNIO DE 1870', ' ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUA JUNIN SECTOR LA PLAZA DERECHA CALLE LA ESPERANZA. IZQUIERDA CALLE BENTANCOURT. FRENTE CALLE BOLÍVAR AL LADO DE LA PLAZA BOLÍVAR, JUNIN KILÓMETRO 23 EDIFICIO');
+INSERT INTO `oficiales` VALUES (897, '12456657', 'Paredes  Engelber ', '1975-08-18', NULL, NULL, NULL, NULL, '2000-07-20', NULL, 'URBANIZACION PABLO EMILIO LEON CASA 67/99 CERCA DE LA ESCUELA ELVIA MONTILLA DE SANTOS PARROQUIA FLOR DE PATRIA MUNICIPIO PAMPAN', '0414-7539806', 'engelberparedes1@gmail.com', 'activo', 'PET-210000569', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO VELASCO', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CARVAJAL SECTOR SAN GENARO FRENTE AVENIDA PRINCIPAL. IZQUIERDA CALLEJÓN LA ESPERANZA. DERECHA CAMINO LA UNION A 100 METROS DEL CDI CASA');
+INSERT INTO `oficiales` VALUES (898, '12498891', 'Carmona Garcia Efrain Enrique', '1977-01-06', NULL, NULL, NULL, NULL, '2021-12-16', NULL, 'calle manuel ojeda sector pueblo nuevo casa s/n parroquia pampanito municipio pampanito', '0412-2786491', 'EFRAINCARMONA19772019@GMAIL.COM', 'activo', 'PET-210001872', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (899, '12541670', 'Sarache Vieras Jose Ramon', '1976-03-13', NULL, NULL, NULL, NULL, '1998-01-01', NULL, 'avenida principal el turagual  parroquia jose leonardo suarez municipio carvajal', '4165243347', 'JOSESARACHE79@GMAIL.COM', 'activo', 'PET-210002210', NULL, NULL, 'ESCUELA CONCENTRADA EL TURAGUAL', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR EL TURAGUAL FRENTE AVENIDA PRINCIPAL. DERECHA CALLE SAN JOSE. IZQUIERDA CALLE PPL AL LADO DE LA CASILLA POLICIAL CASA');
+INSERT INTO `oficiales` VALUES (900, '12542010', 'Aldana Moreno Rafael Antonio', '1975-10-13', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'sector centro calle principal casa n°16 parroquia san luis municipio valera', '0424-7698690', 'aldanarafael20@gmail.com', 'activo', 'PET-210001981', NULL, NULL, 'ESCUELA CONCENTRADA SAN LUIS NER 365', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR CENTRO IZQUIERDA CALLE PRINCIPAL SAN LUIS PARTE ALTA. FRENTE CALLE CENTRO. DERECHA CALLEJÓN CANCHA 100 METROS DE LA IGLESIA Y AL LADO DEL AMBULATORIO SAN LUIS PARTE ALTA CASA');
+INSERT INTO `oficiales` VALUES (901, '12542454', 'Rojas  Carlos Oswaldo', '1976-04-06', NULL, NULL, NULL, NULL, '1996-07-15', NULL, 'parroquia flor de patria municipio pampan', '0426-4732792', 'carlososwaldorojas1976@gmail.com', 'activo', 'PET-210002036', NULL, NULL, 'UNIDAD EDUCATIVA ELVIA MONTILLA DE SANTOS', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA URBANIZACIÓN PABLO EMIGDIO DE LEÓN DERECHA CALLE RÓMULO BETANCOURT. IZQUIERDA CALLE ANDRES BELLO. FRENTE CALLE SIMÓN RODRÍGUEZ SECTOR LAS MALVINAS, A 50 METROS DE LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (902, '12617135', 'Montilla Martinez Angel Rafael', '1976-07-09', NULL, NULL, NULL, NULL, '2009-09-15', NULL, 'COMUNA LUIS CABEZA, TORRE BUCARE, PLANTA BAJA APARTAMENTO 00-D', '0426-4260896', 'amontilla76@gmail.com', 'activo', 'PET-210001543', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (903, '12720726', 'Pimentel Jaramillo Mirla Maria', '1977-11-01', NULL, NULL, NULL, NULL, '1999-03-01', NULL, 'BRISAS DE JALISCO JALISCO  MOTATAN', '0426-4734388', 'mirlapimentel5@gmil.com', 'activo', 'PET-210001447', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (904, '12722883', 'Avila Soler Jose Richard', '1977-09-24', NULL, NULL, NULL, NULL, '2000-07-20', NULL, 'calle morillo sector la haciendita parroquia pampanito II municipio pampanito', '0412-1086033', 'fapet777@gmail.com', 'activo', 'PET-210001476', NULL, NULL, 'ESCUELA BOLIVARIANA VIVIENDA RURAL', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO II SECTOR LA VIVIENDA RURAL DERECHA AVENIDA LA FLORIDA. IZQUIERDA CALLE PRINCIPAL LA RECTA DE PAMPANITO. FRENTE CALLE LA MORA PRIMERA PASARELA BAJANDO A 100 METROS DEL CENTRO DE ACOPIO MERCAL CASA');
+INSERT INTO `oficiales` VALUES (905, '12723346', 'Briceño Godoy Richard Jose', '1976-10-17', NULL, NULL, NULL, NULL, '1997-07-01', NULL, 'urbanizacion timirisis parte alta parroquia matriz municipio trujillo', '424-7443861', 'briceñogodoyrichardjose@gmail.com', 'activo', 'PET-210001674', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (906, '12723513', 'Gil Cegarra Jose Del Rosario', '1975-01-24', NULL, NULL, NULL, NULL, '2000-07-20', NULL, 'LA CHAPA PARROQUIA PAMPANITO MUNICIPIO PAMPANITO', '0416-7723381', 'j24011975@gmail.com', 'activo', 'PET-210001820', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (907, '12890269', 'Marquez Peña Leomar Wilfrido', '1977-09-25', NULL, NULL, NULL, NULL, '2001-01-01', NULL, 'sector 2 casa s/n parroquia tres esquinas municipio trujillo', '0424-7098183', 'marquezleomar12@gmail.com', 'activo', 'PET-210002214', NULL, NULL, 'UNIDAD EDUCATIVA DOCTOR ANDRÉS LOMELLI ROSARIO', 'ESADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA TRES ESQUINAS URBANIZACIÓN RAFAEL MARIA VILLASMIL FRENTE AVENIDA RAFAEL MARÍA VILLASMIL. IZQUIERDA CALLE LOS MECANICOS AVENIDA PRINCIPAL, SECTOR I TRES ESQUINAS EDIFICIO');
+INSERT INTO `oficiales` VALUES (908, '12906288', 'Patiño Matos Jose Antonio', '1975-05-25', NULL, NULL, NULL, NULL, '1999-11-15', NULL, 'sector san benito parroquia jose leonardo suarez municipio san rafael de carvajal', '0416-9787419', 'joseantoniojapm@gmail.com', 'activo', 'PET-210002019', NULL, NULL, 'UNIDAD EDUCATIVA RAFAEL RANGEL', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR PIE DE SABANA DERECHA AVENIDA PRINCIPAL DE CHIMPIRE. IZQUIERDA CALLE AFALTO. FRENTE CARRETERA VIEJA DE CHIMPIRE AL LADO AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (909, '12939024', 'Azuaje Garcia Ricardo Domingo', '1976-10-08', NULL, NULL, NULL, NULL, '2021-08-01', NULL, 'avenida principal la floresta frente a la plaza miranda parroquia merdecez diaz municipio valera', '0414-7023124', 'ricardo1_azuaje1@gmail.com', 'activo', 'PET-210002205', NULL, NULL, 'ESCUELA BÁSICA BARRIO NUEVO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE AVENIDA PRINCIPAL DE LOS SIN TECHOS AL LADO DEL ABULATORIO DE LOS SIN TECHO EDIFICIO');
+INSERT INTO `oficiales` VALUES (910, '12939308', 'Daboin Ocanto Jose Ramon', NULL, NULL, NULL, NULL, NULL, '1995-03-15', NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (911, '12939382', 'Montilla Briceño Jhonny Alberto', '1977-09-18', NULL, NULL, NULL, NULL, '2004-08-01', NULL, 'via peraza parroquia flor de patria municipio pampan', '0426-9761181', 'montillajhanny1977@gmail.com', 'activo', 'PET-210001489', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (912, '12940818', 'Andrade Portillo Andres Alexander', '1978-05-24', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'DON TOBIAS CALLE N° 07 MATRIZ TRUJILLO', '0412-6679499', 'andresandradeportillo@gmail.com', 'activo', 'PET-210001727', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (913, '13048712', 'Abreu De Gil  Xiomara Coromoto', '1975-11-29', NULL, NULL, NULL, NULL, '1998-07-15', NULL, 'urbanizacion moron diagonal a la brigada motorizada casa 22-24 parroquia mercedez diaz municipio valera', '0426-36744004', 'xiomechua@gmail.com', 'activo', 'PET-210001718', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (914, '13049416', 'Valero Tarazona Josefina ', '1978-02-08', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'SABANA LIBRE, CALLE FERRER CASA NRO 11-516 SABANA LIBRE ESCUQUE', '0426-0551336', 'josefinatarazona1@gmail.com', 'activo', 'PET-210001758', NULL, NULL, 'LICEO BOLIVARIANO SABANA LIBRE', 'ESTADO TRUJILLO MUNICIPIO ESCUQUE PARROQUIA SABANA LIBRE SECTOR BARRIO LINDO FRENTE CALLE VIA A SABANA LIBRE. DERECHA CARRETERA PRINCIPAL VALERA - ISNOTU A 700 METROS DE LA ESCUELA NEPTALI VALERO HURTADO EDIFICIO');
+INSERT INTO `oficiales` VALUES (915, '13049477', 'Negron Rivero Leandro Argenis', '1977-04-11', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'avenida francisco ruiz diagonal al estadio parroquia escuque municipio escuque', '4168446701', 'leandronegron11@gmail.com', 'activo', 'PET-210001717', NULL, NULL, 'GRUPO ESCOLAR EDUARDO BLANCO', ' ESTADO TRUJILLO MUNICIPIO ESCUQUE PARROQUIA ESCUQUE SECTOR EL CENTRO DERECHA CALLE CIPRIANO CASTRO. IZQUIERDA CALLE PADRE JUAREZ. FRENTE CALLE BOLIVAR FRENTE AL AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (916, '13049614', 'Andrade Ramirez Robert ', '1977-01-27', NULL, NULL, NULL, NULL, '1999-11-15', NULL, 'comuna 13 de abril parroquia la concepcion municipio pampanito', '0416-1169723', 'RA958915@GMAIL.COM', 'activo', 'PET-210001940', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (917, '13049837', 'Segovia  Yanel Alexander', '1975-08-05', NULL, NULL, NULL, NULL, '1995-11-01', NULL, 'avenida principal de campo alegre parroquia campo alegre municipio rafael de carvajal', '0416-3783118', 'segoviapoli@gmail.com', 'activo', 'PET-210001443', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (918, '13050929', 'Torrealba Torres Juan Carlos', '1977-07-03', NULL, NULL, NULL, NULL, '1999-11-15', NULL, 'urbanizacion gira luna casa n° 54 parroquia motatan municipio motatan', '0426-3837433. 0412-5372982', 'juanctorrealba0@gmail.com', 'activo', 'PET-210001877', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (919, '13118230', 'Quevedo Caceres Jose Daniel', '1977-06-29', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'lomas de pabellon parroquia el carmen municipio bocono', '424-7364459', 'qjosedaniel74@gmail.com', 'activo', 'PET-210002150', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (920, '13119976', 'Gonzalez Duran Frankly Tony', '1979-09-19', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'loma de pabellon parroquia el carmen municipio bocono', '4161315502', 'franklygonzalez1979@gmail.com', 'activo', 'PET-210001454', NULL, NULL, 'ESCUELA BOLIVARIANA LOMA EL PABELLÓN', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR EL RODEO FRENTE CALLE SAN ISIDRO. DERECHA CALLEJÓN CALLEJON. IZQUIERDA CALLEJÓN CALLEJON AL FRENTE DE LA POSADA CASA');
+INSERT INTO `oficiales` VALUES (921, '13158850', 'Macedo Hernandez Jackson Jose', '1977-11-13', NULL, NULL, NULL, NULL, '2000-06-15', NULL, 'CONJUNTO RESIDENSIAL TOSTO BLOQUE I EDIFICIO I APARTAMENTO 1F BOCONO BOCONO', '0426-2443542', 'jacksonmacedo1311@gmail.com', 'activo', 'PET-210002144', NULL, NULL, 'ESCUELA BOLIVARIANA CIUDAD DE VALERA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA BARRIO EL MILAGRO FRENTE AVENIDA FINAL MONSENOR FELIX SERRANO. DERECHA PROLONGACIÓN CALLE 8. IZQUIERDA PASAJE 4 FRENTE AL ESTADIO MARIO URDANETA ARAUJO EDIFICIO');
+INSERT INTO `oficiales` VALUES (922, '13205818', 'Caceres Gudiño Ramon Antonio', '1977-07-29', NULL, NULL, NULL, NULL, '2000-07-20', NULL, 'calle el cazabe de monay parroquia la paz municipio pampan', '426-0608738', 'Caceresramon22@Gmail.con', 'activo', 'PET-210001670', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (923, '13206039', 'Briceño Briceño Juan Ramon', '1975-09-16', NULL, NULL, NULL, NULL, '1996-03-15', NULL, 'avenida principal monseñor camargo parroquia cristobal mendoza municipio trujillo', '0412-5449527', 'juanto.1609@gmail.com', 'activo', 'PET-210001646', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (924, '13207062', 'Delgado Torres Danny De Jesus', '1977-07-14', NULL, NULL, NULL, NULL, '2003-08-01', NULL, 'sector maracaibito calle el talador parroquia la paz municipio pampan', '4167747913', 'DANY44SEBARACHE@GMAIL.COM', 'activo', 'PET-210002114', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (925, '13207288', 'Briceño  Ronny Jose', '1978-11-21', NULL, NULL, NULL, NULL, '2002-01-10', NULL, 'antigua via san francisco sector boron bajo  parroquia monseñor carrillo municipio trujillo', '4126617375', 'ronaldana33@gmail.com', 'activo', 'PET-210001482', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (926, '13461803', 'Lozada Marquez Tonny Jose', '1977-03-14', NULL, NULL, NULL, NULL, '2000-07-20', NULL, 'urbanizacion las lomas sector colina de bello monte parroquia san luis municipio valera', '0416-7715564', 'tonnyjoselozadamarquez@gmail.com', 'activo', 'PET-210001864', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (927, '13535823', 'Barreto Briceño Raul Antonio', '1978-04-21', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'el socorro parroquia la pueblita  municipio san rafael rangel', '0426-6791837', 'raulbarreto1978@gmail.com', 'activo', 'PET-210001908', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (928, '13628523', 'Alvarez Araque Milandys Alejandra', '1978-12-18', NULL, NULL, NULL, NULL, '1999-07-01', NULL, 'sector las malvinas parroquia flor de patria municipio pampan', '4269344135', 'milandy2012@gmail.com', 'activo', 'PET-210002094', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (929, '13629238', 'Moreno Castellanos Klenne Jose', '1979-11-23', NULL, NULL, NULL, NULL, '2016-09-01', NULL, 'campo rancho grande parroquia la libertad municipio baralt', '0412-6933238', 'morenoklenne@gmail.com', 'activo', 'PET-210001679', NULL, NULL, 'UNIDAD BASICA ESTADAL ANDRES BELLO', 'ESTADO ZULIA MUNICIPIO BARALT PARROQUIA LIBERTADOR URBANIZACIÓN CAMPO ALEGRIA DERECHA CALLE PRIMERA TRANSVERSAL DE RANCHO GRANDO. IZQUIERDA CALLE SEGUNDA TRANVERSAL DE CARORITA. FRENTE PROLONGACIÓN FRENTE A LA PLAZA ANDRES BELLO CALLE ALEGRIA CAMPO ALEGRIA MENE GRANDE EDIFICIO');
+INSERT INTO `oficiales` VALUES (930, '13633485', 'Viera Linares Jhonny Alberto', '1977-12-27', NULL, NULL, NULL, NULL, '2003-08-01', NULL, 'barrio el milagro calle 8 parroquia juan ignacion montilla  municipio valera', '4128333431', 'VIERASJHONNY0@GMAIL.COM', 'activo', 'PET-210002062', NULL, NULL, 'ESCUELA BOLIVARIANA CIUDAD DE VALERA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA BARRIO EL MILAGRO FRENTE AVENIDA FINAL MONSENOR FELIX SERRANO. DERECHA PROLONGACIÓN CALLE 8. IZQUIERDA PASAJE 4 FRENTE AL ESTADIO MARIO URDANETA ARAUJO EDIFICIO');
+INSERT INTO `oficiales` VALUES (931, '13633837', 'Torres Gomez Juan Carlos', '1977-08-23', NULL, NULL, NULL, NULL, '1998-02-01', NULL, 'avenida principal san luis parte alta parroquia san luis municipio valera', '4262716323', 'juancarlostorresgomez77@gmail.com', 'activo', 'PET-210001980', NULL, NULL, 'UNIDAD EDUCATIVA DOCTOR RAUL LEONI', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA MOTATAN SECTOR SAN NICOLAS FRENTE AVENIDA PRINCIPAL VIA EL BANO. DERECHA CALLE SAN NICOLAS. IZQUIERDA CALLE LA CRUZ ENTRE LOS BARRIOS SAN NICOLÁS Y BARRIO NUEVO EDIFICIO');
+INSERT INTO `oficiales` VALUES (932, '13633855', 'Hernandez Suarez Reinaldo Jose', '1978-02-02', NULL, NULL, NULL, NULL, '2004-08-01', NULL, 'barrio el milagro calle 8 pasaje 2 casa s/n  parroquia juan ignacion montilla  municipio valera', '0414-7367864', 'elsalto98.e@gmail.com', 'activo', 'PET-210001455', NULL, NULL, 'ESCUELA BOLIVARIANA CIUDAD DE VALERA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA BARRIO EL MILAGRO FRENTE AVENIDA FINAL MONSENOR FELIX SERRANO. DERECHA PROLONGACIÓN CALLE 8. IZQUIERDA PASAJE 4 FRENTE AL ESTADIO MARIO URDANETA ARAUJO EDIFICIO');
+INSERT INTO `oficiales` VALUES (933, '13745259', 'Montilla Villareal Johander Javier', '1979-10-08', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'sector planta de asfalto via bocono parroquia flor de patria municipio pampan', '426-3349807', 'johandermontilla81@gmail.com', 'activo', 'PET-210001640', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (934, '13764531', 'Materano Ramirez Isaias Antonio', '1979-06-13', NULL, NULL, NULL, NULL, '1999-01-01', NULL, 'la beatriz bloque 31 apartamento 1-1 parroquia la beatriz municipio valera', '0426-2799321', 'ISAANTONIORAMIREZ673@GMAIL.COM', 'activo', 'PET-210002006', NULL, NULL, 'JARDÍN DE INFANCIA NUESTRA SEÑORA DE LA CANDELARIA', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA LA BEATRIZ URBANIZACIÓN LA BEATRIZ FRENTE AVENIDA JOSE MENDEZ QUIJADA. DERECHA CALLEJÓN ESTACIONAMIENTO BLOQUE 46. IZQUIERDA CALLEJÓN ESTACIONAMIENTO BLOQUE 48 DIAGONAL SEDE NUEVA UNIVERSIDAD SIMON RODRIGUEZ QUINTA');
+INSERT INTO `oficiales` VALUES (935, '13846162', 'Mendez Pereira Walter Hugo', '1977-06-23', NULL, NULL, NULL, NULL, '2012-11-01', NULL, 'CALLE RICARDO BERLTY PARROQUIA MOSQUEY MUNICIPIO BOCONO', '0414-0250226', 'waltherhugo569@gmail.com', 'activo', 'PET-210001391', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (936, '13897631', 'Briceño Muchacho Daniel Antonio', '1978-09-30', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'urbanizacion fran ignacio alvarez parroquia escuque municipio escuque', '416-8923079', 'muchachoaron.78@ Gmail.com', 'activo', 'PET-210002111', NULL, NULL, 'GRUPO ESCOLAR EDUARDO BLANCO', ' ESTADO TRUJILLO MUNICIPIO ESCUQUE PARROQUIA ESCUQUE SECTOR EL CENTRO DERECHA CALLE CIPRIANO CASTRO. IZQUIERDA CALLE PADRE JUAREZ. FRENTE CALLE BOLIVAR FRENTE AL AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (937, '13925025', 'Paredes Zabala Ismael ', '1978-08-07', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'URB COLINAS DE BELLO MONTE  SECTOR LAS LOMAS PARROQUIA SAN LUIS MUNICIPIO VALERA', '0412-1607343', 'ismapare78@gmail.com', 'activo', 'PET-210002160', NULL, NULL, 'UNIDAD EDUCATIVA SIMÓN RODRIGUEZ', ' ESTADO TRUJILLO MUNICIPIO  PAMPANITO PARROQUIA LA CONCEPCION SECTOR MUCUCHE FRENTE CALLE VIEJA A MUCUCHE. DERECHA CARRETERA PRINCIPAL. IZQUIERDA CAMINO CASERIO A 50 METROS DE LA CANCHA EDIFICIO');
+INSERT INTO `oficiales` VALUES (938, '13925726', 'Briceño Gonzalez Jose Gregorio', '1978-02-24', NULL, NULL, NULL, NULL, '2001-01-01', NULL, 'SECTOR EL SEMINARIO PARTE ALTA, PARROQUIA CHIQUINQUIRA MUNICIPIO TRUJILLO', '0412-2140928', 'josegbriceño0402@gmail.com', 'activo', 'PET-210001395', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (939, '13925866', 'Ojeda Linares Luis Alirio', '1979-10-25', NULL, NULL, NULL, NULL, '2000-07-20', NULL, 'calle arismendi pie de cerro alegre parroquia pampanito municipio pampanito', '426-2763200', 'luisalirioojeda1392@gmail.com', 'activo', 'PET-210002189', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (940, '13926394', 'Marin Gudiño Yorman Noe', '1980-07-16', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'CALLE PRINCIPAL DE MONAY LA PAZ  PAMPAN', '0426-4769219', 'yormannoemaring80@GMAIL.COM', 'activo', 'PET-210001781', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (941, '13926823', 'Rodriguez Campos Hugo Cesar', '1979-02-03', NULL, NULL, NULL, NULL, '2003-08-01', NULL, 'RECTA DE MONAY, MUNICIPIO PAMPAN PARROQUIA LA PAZ', '0426-2642288', 'hugorodriguezcampos037@gmail.com', 'activo', 'PET-210001385', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (942, '13996947', 'Urbina Barreto Roger Ismael', '1978-04-06', NULL, NULL, NULL, NULL, '1997-07-01', NULL, 'SECTOR SAN NICOLAS CALLE PRINCIPAL CASA N° 25 MOTATAN MOTATAN', '0426-7377042', 'rogyan2009@gmail.com', 'activo', 'PET-210001772', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (943, '13997502', 'Aldana Graterol Argenis Jose', '1979-01-14', NULL, NULL, NULL, NULL, '2012-02-01', NULL, 'sector la loma parroquia san luis municipio valera ', '0416-9707093', 'argenij574@gmail.com', 'activo', 'PET-210001961', NULL, NULL, 'UNIDAD EDUCATIVA FE Y ALEGRÍA GONZALO SENIOR', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR LAS LOMAS PARTE ALTA FRENTE AVENIDA PRINCIPAL FRENTE A LA URBANIZACION LAS LOMAS EDIFICIO');
+INSERT INTO `oficiales` VALUES (944, '14150005', 'Castellanos Godoy Jesus Alberto', '1980-01-29', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'calle el tendal parroquia pampanito municipio pampanito', '4165641560', 'JESUSCASTELLANOS01@GMAIL.COM', 'activo', 'PET-210002066', NULL, NULL, 'ESCUELA BOLIVARIANA JUAN IGNACIO MONTILLA', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO SECTOR PAMPANITO IZQUIERDA AVENIDA CARRETERA VIEJA TRUJILLO VALERA. FRENTE AVENIDA RAFAEL ANTONIO AYALA. DERECHA CALLE AYALA DIAGONAL A LA FARMACIA MI FARMACIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (945, '14150538', 'Garcia Araujo Regulo Antonio', '1979-10-17', NULL, NULL, NULL, NULL, '2011-03-01', NULL, 'serctor puente de carache de monay parroquia chejende municipio candelaria', '0416-5776136', 'regulogarcia151@gmail.com', 'activo', 'PET-210001688', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (946, '14151469', 'Rivas Angel Jean Carlos', '1980-08-19', NULL, NULL, NULL, NULL, '2020-11-01', NULL, 'calle monte libre sector la orqueta parroquia la paz municipio pampan', ' 426-0488328', 'rivas190880@gmail.com', 'activo', 'PET-210002147', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (947, '14151488', 'Baptista Sanchez Richard Jose', '1980-01-31', NULL, NULL, NULL, NULL, '2000-07-20', NULL, 'PAMPANITO 2 SECTOR LA RECTA CALLE CEMENTERIO', '0416-7728610', 'richardjbaptista40@gmail.com', 'activo', 'PET-210001521', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (948, '14309698', 'Villegas Daboin Alirio Ramon', '1978-12-30', NULL, NULL, NULL, NULL, '2023-08-28', NULL, 'avenida principal troncal 007 sector los corrales parroquia santa ana municipio pampan', '414-7029720', 'villegasd3012@gmail.com', 'activo', 'PET-210002188', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (949, '14310652', 'Avila Teran Noris Josefina', '1980-10-23', NULL, NULL, NULL, NULL, '2003-08-01', NULL, 'el parque parroquia campo alegre municipio san rafael de carvajal', '0426-8694501', 'norisavila1980@gmail.com', 'activo', 'PET-210001702', NULL, NULL, 'LICEO BOLIVARIANO RAFAEL QUEVEDO URBINA', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR CAMPO ALEGRE FRENTE AVENIDA PRINCIPAL. DERECHA PASAJE SIN NOMBRE. IZQUIERDA VEREDA PPL LADO DE LA IGLESIA SAGRADO CORAZON DE JESUS CASA');
+INSERT INTO `oficiales` VALUES (950, '14328908', 'Rosario Perez Delvis Ali', '1980-09-15', NULL, NULL, NULL, NULL, '2020-03-01', NULL, 'avenida cruz carrillo casa n° 35 parroquia antonio nicolas briceño municipio san rafael de carvajal', '424-7201125', 'mistresd.dr@gmail.com', 'activo', 'PET-210002120', NULL, NULL, 'ESCUELA INTEGRAL BOLIVARIANA JULIO SÁNCHEZ VIVAS', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL  PARROQUIA ANTONIO NICOLAS  BRICEÑO SECTOR LA CEJITA FRENTE AVENIDA PRINCIPAL. DERECHA CALLEJÓN SAN JUAN. IZQUIERDA CALLEJÓN CEMENTERIO A 150 METROS ABASTO LA Y CASA');
+INSERT INTO `oficiales` VALUES (951, '14460039', 'Calderas Briceño Richard Eduardo', '1980-09-22', NULL, NULL, NULL, NULL, '2002-01-10', NULL, 'AVDA EL CEMENTERIO. LA FLORESTA, SECTOR SANTA ELENA, MERCEDES DIAZ, VALERA, EDO TRUJILLO', '0412-1311586', 'richardcalderas@hotmail.com', 'activo', 'PET-210001659', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (952, '14527688', 'Ponce Piña Alexander Antonio', '1980-03-25', NULL, NULL, NULL, NULL, '1999-08-15', NULL, 'los rios casa 23 parroquia pampanito municipio pampanito', '0412-9980001', 'alexanderponce2580@gmail.com', 'activo', 'PET-210002153', NULL, NULL, 'ESCUELA BOLIVARIANA CIUDAD DE VALERA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA BARRIO EL MILAGRO FRENTE AVENIDA FINAL MONSENOR FELIX SERRANO. DERECHA PROLONGACIÓN CALLE 8. IZQUIERDA PASAJE 4 FRENTE AL ESTADIO MARIO URDANETA ARAUJO EDIFICIO');
+INSERT INTO `oficiales` VALUES (953, '14556226', 'Urbina  Danny Wilherd', '1981-07-02', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'mesa de gallardo parroquia cruz carrillo municipio trujillo', '0412-1590211', 'udanny635@gmail.com', 'activo', 'PET-210001900', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (954, '14556396', 'Benitez Benitez Alexander Jose', '1978-04-15', NULL, NULL, NULL, NULL, '1999-08-15', NULL, 'SECTOR TIERRA DE NUBES VEREDA 2, PARROQUIA Y MUNICIPIO ESCUQUE ', '0416-0743281', 'alexanderbenitez917@gmail.com', 'activo', 'PET-210001816', NULL, NULL, 'UNIDAD EDUCATIVA FE Y ALEGRÍA GONZALO SENIOR', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR LAS LOMAS PARTE ALTA FRENTE AVENIDA PRINCIPAL FRENTE A LA URBANIZACION LAS LOMAS EDIFICIO');
+INSERT INTO `oficiales` VALUES (955, '14557064', 'Quevedo Moreno Margaret Nataly', '1980-12-01', NULL, NULL, NULL, NULL, '2005-12-15', NULL, 'san francisco via bocono parroquia flor de patria municipio pampan', '0416-4771218', 'titamar0810@gmail.com', 'activo', 'PET-210001902', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (956, '14557765', 'Vasquez Montilla Miguel Angel', '1981-02-27', NULL, NULL, NULL, NULL, '2003-08-01', NULL, 'URBANIZACION MONSEÑOR CAMARGO PAMPAN PAMPAN', '0412-6559098', 'vasquezmiguel1981@gmail.com', 'activo', 'PET-210001723', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (957, '14598065', 'Mendez Quintero Henry Jose', '1980-01-04', NULL, NULL, NULL, NULL, '2001-01-01', NULL, 'AVENIDA PRINCIPAL PIE DE SABANA SECTOR EL PEPO ANTONIO NICOLAS BRICEÑO SAN RAFAEL DE CARVAJAL', '0424-7471946', 'henrylionelm80@gmail.com', 'activo', 'PET-210001960', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (958, '14719650', 'Cegarra Castro Tony Daniel', '1979-02-06', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'barrio el milagro avenida estadium numera 3-100', '0412-6817311', 'tonycegarra1@gmail.com', 'activo', 'PET-210002082', NULL, NULL, 'UNIDAD EDUCATIVA MANUEL MARIA CARRASQUERO', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR EL AMPARO DERECHA AVENIDA PRINCIPAL. IZQUIERDA CALLE EL LIMON. FRENTE CALLE SAN MARCOS FRENTE AL CONSULTORIO DOCTOR HONORIO CASA');
+INSERT INTO `oficiales` VALUES (959, '14739625', 'Paredes Barazarte Luz Francy', '1980-03-01', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'valle verde I parroquia el carmen municipio bocono', '4147355475', 'Paredesbarazarteluz@gmail.com', 'activo', 'PET-210001399', NULL, NULL, 'ESCUELA BOLIVARIANA PRESBÍTERO JOSÉ DE JESÚS ESPINOZA', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN URBANIZACIÓN LA ELBA IZQUIERDA CALLE LA INOS. FRENTE CALLE MARIO BRICEÑO IRAGORRI A MEDIA CUADRA DE ESTAMPADOS PALAFITO EDIFICIO');
+INSERT INTO `oficiales` VALUES (960, '14780002', 'Portillo Delgado Damian Yohaver', '1979-06-05', NULL, NULL, NULL, NULL, '2003-08-01', NULL, 'URB FERRUCHO BATISTONI MUCUCHE PARROQUIA LA CONCEPCION MUNICIPIO PAMPANITO', '0426-3471916', 'portillodamian772@gmail.com', 'activo', 'PET-210001799', NULL, NULL, 'ESCUELA ESTADAL CONCENTRADA DOLORES DIONISIA SANTO MORENO', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO SECTOR LA CHAPA GRANDE FRENTE CALLE PRINCIPAL. DERECHA SENDERO CHAPA. IZQUIERDA PICA CERRADO DIAGONAL AL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (961, '14781723', 'Caldera Landaeta Leonardo Jesus', '1980-02-06', NULL, NULL, NULL, NULL, '2008-10-01', NULL, 'sector el penal parte alta parroquia sabana libre municipio escuque', '4262896292', 'ordppe@gmail.com', 'activo', 'PET-210001692', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (962, '14799145', 'Prado Diaz Leonardo Antonio', '1980-06-24', NULL, NULL, NULL, NULL, '2001-09-01', NULL, 'brisas de jalisco parrquia jalisco municipio motatan', '4166484036', 'pradoleonardo145@gmail.com', 'activo', 'PET-210001671', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (963, '14799574', 'Rojas Mogollon Nayini Coromoto', '1981-08-25', NULL, NULL, NULL, NULL, '2004-08-01', NULL, 'urbanizacion la muralla parroquia pampanito municipio pampanito', '0412-2869376', 'nayinirojas60@gamail.com', 'activo', 'PET-210002022', NULL, NULL, 'UNIDAD EDUCATIVA DR. JOSE GREGORIO HERNANDEZ', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR SANTA CRUZ FRENTE CALLE PRINCIPAL. IZQUIERDA VEREDA N° 12 AL LADO DE LA IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (964, '14800857', 'Araujo Colmenares Jose Felix', '1979-08-18', NULL, NULL, NULL, NULL, '2007-09-01', NULL, 'barrio san nicolas casa n° 19  parroquia motatan municipio motatan', '4126586857', 'josefelixaraujo2021@gmail.com', 'activo', 'PET-210001658', NULL, NULL, 'UNIDAD EDUCATIVA DOCTOR RAUL LEONI', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA MOTATAN SECTOR SAN NICOLAS FRENTE AVENIDA PRINCIPAL VIA EL BANO. DERECHA CALLE SAN NICOLAS. IZQUIERDA CALLE LA CRUZ ENTRE LOS BARRIOS SAN NICOLÁS Y BARRIO NUEVO EDIFICIO');
+INSERT INTO `oficiales` VALUES (965, '14929132', 'Villarreal Ordoñez Jesus Antonio', '1981-08-23', NULL, NULL, NULL, NULL, '2004-08-01', NULL, 'urbanizacion arturo cardoza del sector san juan casa n° 7 parroquia jose gregorio hernandez municipio rafael rangel', '0414-7473959', 'jesusvillarrealordenez55@gmail.com', 'activo', 'PET-210001939', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (966, '14982381', 'Benitez Moncayo German Joswar', '1982-06-05', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'urbanizacion antonio nicolas briceño casa n° 5 parroquia san luis municipio valera', '0412-1767777', 'ANAISJOSYUSET21@GMAIL.COM', 'activo', 'PET-210001985', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (967, '15009006', 'Delgado Chirinos Javier Jose', '1982-06-23', NULL, NULL, NULL, NULL, '2007-09-01', NULL, 'enrada paramo torres parroquia la puerta municipio valera', '0416-3101310', 'javierdelgado1982@gmail.com', 'activo', 'PET-210001474', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (968, '15042051', 'Peña Isea Jose Ramon', '1979-12-24', NULL, NULL, NULL, NULL, '2003-08-01', NULL, 'urbanizacion rincon 3 avenida 5 callejon san jose parroquia el carmen municipio bocono', ' 416-8520904', 'josepenaisea79@gmail.com', 'activo', 'PET-210002196', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (969, '15042725', 'Izarra Mejia Your Anderson', '1977-12-30', NULL, NULL, NULL, NULL, '2020-02-16', NULL, 'kilometro 17 parroquia la ceiba municipio la ceiba', '0426-3756226', 'youranderson725@gmail.com', 'activo', 'PET-210001600', NULL, NULL, 'UNIDAD ESCOLAR ZONA RICA', 'ESTADO TRUJILLO MUNICIPIO  LA CEIBA PARROQUIA EL PROGRESO SECTOR ZONA RICA DERECHA AVENIDA BICENTENARIA. IZQUIERDA AVENIDA TABORDA. FRENTE CALLE LAS FLORES FRENTE AL AMBULATORIO RURAL II, KILÓMETRO 17 CASA');
+INSERT INTO `oficiales` VALUES (970, '15042760', 'Materan Daboin Jean Carlos', '1981-06-05', NULL, NULL, NULL, NULL, '2003-08-01', NULL, 'calle andres bello casa n° 15 parroquia motatan municipio motatan', '0416-0818343', 'jeancarlosmateran61@gmail.com', 'activo', 'PET-210001463', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (971, '15060376', 'Rivas Godoy Nino Junior', '1977-08-14', NULL, NULL, NULL, NULL, '2002-01-10', NULL, 'sector san pedro viejo via principal parroquia isnotu municipio rafael rangel', '4262156887', 'NINORIVAS1988@GMAIL.COM', 'activo', 'PET-210002188', NULL, NULL, 'ESCUELA BOLIVARIANA ENRIQUE FLORES', ' ESTADO TRUJILLO  MUNICIPIO  MIRANDA PARROQUIA EL DIVIDIVE SECTOR LAS RURALES IZQUIERDA AVENIDA PUEBLO VIEJO. FRENTE CALLE SAN LUIS. DERECHA CARRETERA PANAMERICANA SECTOR BOLIMIR FRENTE AVENIDA BOLIVAR. DERECHA CALLE LAS VEGAS. IZQUIERDA CALLE BOLIMR FRENTE A LA PISTA CASA CASA');
+INSERT INTO `oficiales` VALUES (972, '15188744', 'Mendez Mejia Carlos Eduardo', '1982-05-07', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'sector san miguel casa n° 27 parroquia la floresta municipio valera', '0416-8207423', 'elzurditodeoro8@gmail.com', 'activo', 'PET-210001427', NULL, NULL, 'JARDIN DE INFANCIA BOLIVARIANA NUESTRA SEÑORA DE LA PAZ', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE CALLE PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (973, '15294051', 'Ramirez Simancas Alexander Jose', '1981-11-12', NULL, NULL, NULL, NULL, '2000-07-20', NULL, 'urbanizacion santa eduviges casa n°16 sector el filo parroquia carvajal municipio san rafael de carvajal', '416-9431166', 'alexanderramirez078@gmail.com', 'activo', 'PET-210001994', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (974, '15407246', 'Canelones Perdomo Isaac de Jesus', '1980-06-15', NULL, NULL, NULL, NULL, '2022-07-15', NULL, 'sector siquisay parroquia santa ana municipio pampan', '0416-0250857', 'ISAACCANELONES11@GMAIL.COM', 'activo', 'PET-210002206', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (975, '15407316', 'Riveros Gil Jose Luis', '1982-04-09', NULL, NULL, NULL, NULL, '2019-07-01', NULL, 'comuna antonio nicolas briceño parroquia san luis municipio valera ', '0414-3768194', 'joseriverosj6@gmail.com', 'activo', 'PET-210002124', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (976, '15408370', 'Nuñez Peña Jhoan Alexander', '1982-11-08', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'sector cambalache parroquia pampanito II municipio pampanito', '0416-8795473', 'jhoannuñez2013@gmail.com', 'activo', 'PET-210001909', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (977, '15408768', 'Briceño Gonzalez Gilberto Segundo', '1982-04-03', NULL, NULL, NULL, NULL, '2012-11-01', NULL, 'urbanizacion el castillo parroquia sabana grande municipio bolivar', '0412-9665480', 'yohe260507@gmail.com', 'activo', 'PET-210002023', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (978, '15408991', 'Arroyo Colmenares Edna Ruvi', '1980-05-13', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'SECTOR ANTONIO GOMEZ CALLE PAZ, FLOR DE PATRIA MUNIC. PAMPAN', '0424-7447679', 'ednarubi93@gmail.com', 'activo', 'PET-210001388', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (979, '15430889', 'Paredes Bracamonte Jorge Luis', '1981-11-01', NULL, NULL, NULL, NULL, '2006-12-15', NULL, 'sector san nicolas parroquia motatan municipio motatan', '0416-7016823', 'jorgeluisparedesbracamonte@gmail.com', 'activo', 'PET-210001484', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (980, '15583358', 'Palencia Pedro Miguel ', '1981-03-21', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'sector la cabaña parroquia mercedez diaz municipio valera', '0412-6617452', NULL, 'activo', 'PET-210001619', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL PADRE BLANCO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR CENTRO IZQUIERDA AVENIDA 13. FRENTE AVENIDA 12. DERECHA CALLE 14 FRENTE FUNERARIA SAN JOSE EDIFICIO');
+INSERT INTO `oficiales` VALUES (981, '15583460', 'Muñoz Gualdron Magaly Andreina', '1981-05-22', NULL, NULL, NULL, NULL, '2006-12-15', NULL, 'sector la cienega calle 13 y 14 parroquia mercedez diasz municipio valera', '414-7332512', 'magamu1406@gmail.com', 'activo', 'PET-210002115', NULL, NULL, 'ESCUELA BOLIVARIANA PASCUAL IGNACIO VILLASMIL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA URBANIZACIÓN BELLA VISTA FRENTE AVENIDA ANDRES BELLO. DERECHA VEREDA 1. IZQUIERDA VEREDA 2 A 20 METROS DEL CENTRO DE DIGNOSTICO INTEGRAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (982, '15584427', 'Barrios Rosales Pedro Jose', '1982-04-28', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'sector el milagro calle 7 el pandillo parroquia juan ignacin montilla municipio valera', '0412-8594293', 'pedritobarrios30@gmail.com', 'activo', 'PET-210001465', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (983, '15585907', 'Morillo Veliz Yanis Yorbin', '1982-06-20', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'LLANOS DE MONAY, CALLE 8 MANZANA 12 PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0416-7420704', 'yanisdarlydugly2019@gmail.com', 'activo', 'PET-210001817', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (984, '15589946', 'Arraiz Urbina Luis Eduardo', '1981-06-03', NULL, NULL, NULL, NULL, '2009-09-15', NULL, 'SECTOR QUIRIJOY CASA 4-16 CUICAS CARACHE', '0416-9697443', 'arraizurbinaluiseduardo@gmail.com', 'activo', 'PET-210001773', NULL, NULL, 'ESCUELA BOLIVARIANA PRESBÍTERO JOSÉ DE JESÚS ESPINOZA', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN URBANIZACIÓN LA ELBA IZQUIERDA CALLE LA INOS. FRENTE CALLE MARIO BRICEÑO IRAGORRI A MEDIA CUADRA DE ESTAMPADOS PALAFITO EDIFICIO');
+INSERT INTO `oficiales` VALUES (985, '15708006', 'Daboin Rosales Andy Yoel', '1981-03-30', NULL, NULL, NULL, NULL, '2005-12-15', NULL, 'calle principal casa s/n parroquia la paz municipio pampan', '0426-1996286', 'andyyoeldeboinrosles@gmail.com', 'activo', 'PET-210001991', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (986, '15708317', 'Marquez Ricardo Eduardo', '1981-12-29', NULL, NULL, NULL, NULL, '2021-12-16', NULL, 'COMUNA ANTONIO NICOLAS BRICEÑO PARROQUIA SANTA CRUZ MUNICIPIO VALERA', '0426-1989810', 'ricmarquez700@gmail.com', 'activo', 'PET-210002164', NULL, NULL, 'UNIDAD EDUCATIVA ELVIA MONTILLA DE SANTOS', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA URBANIZACIÓN PABLO EMIGDIO DE LEÓN DERECHA CALLE RÓMULO BETANCOURT. IZQUIERDA CALLE ANDRES BELLO. FRENTE CALLE SIMÓN RODRÍGUEZ SECTOR LAS MALVINAS, A 50 METROS DE LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (987, '15708318', 'Briceño Duran Yonathan Yovanny', '1981-11-23', NULL, NULL, NULL, NULL, '2006-12-15', NULL, 'urbanizacion san rafael parroquia flor de patria municipio pampan', '4168447302', 'YONTHANBRICE2021@GMAIL.COM', 'activo', 'PET-210002054', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (988, '15708788', 'Andrade Azuaje Ender Jose', '1980-05-01', NULL, NULL, NULL, NULL, '2007-02-15', NULL, 'sector el guatiry calle la union casa s/n parroquia la paz municipio pampan', '0412-6618315', 'NDRDEDUAR@GMAIL.COM', 'activo', 'PET-210001986', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (989, '15708822', 'Montilla Vasquez Johan Fabricio', '1983-05-11', NULL, NULL, NULL, NULL, '2005-12-15', NULL, 'el tablon de monay parroquia la paz municipio pampan', '0426-3373908', 'johanfmontilla@gmail.com', 'activo', 'PET-210001438', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (990, '15709046', 'Villegas Giro Nelson Enrique', '1980-10-17', NULL, NULL, NULL, NULL, '2001-01-01', NULL, 'PAMPANITO TERCERO, DIAGONAL A LA PACA DE PAMPANITO', '0426-3761468', 'gironelson_80@hotmail.com', 'activo', 'PET-210001553', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (991, '15709379', 'Nuñez Leal Edgar Nicolas', '1980-12-02', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'plata II parroquia mercedez diaz municipio valera', '0416-8597790', 'nunezlealedgarnicolas@gmail.com', 'activo', 'PET-210001869', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (992, '15709743', 'Gonzalez Montilla Alexander Jose', '1983-10-12', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'avenida principal el turagual sector santa barbara parroquia jose leonardo suarez municipio carvajal', '0416-1735528', 'alexandermontillag1406@gmail.com', 'activo', 'PET-210001664', NULL, NULL, 'ESCUELA CONCENTRADA EL TURAGUAL', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR EL TURAGUAL FRENTE AVENIDA PRINCIPAL. DERECHA CALLE SAN JOSE. IZQUIERDA CALLE PPL AL LADO DE LA CASILLA POLICIAL CASA');
+INSERT INTO `oficiales` VALUES (993, '15709987', 'Briceño Martos Jose Luis', '1983-10-16', NULL, NULL, NULL, NULL, '2006-12-15', NULL, 'santa rosa parroquia cristobal mendoza municipio trujillo', '0414-7011966', 'joseluismartos83@gmail.com', 'activo', 'PET-210001471', NULL, NULL, 'ESCUELA BOLIVARIANA AMÉRICO BRICEÑO VALERO', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA DERECHA AVENIDA BUEN PASTOR. FRENTE AVENIDA AYACUCHO A UNA CUADRA DE LA IGLESIA SANTA ROSA EDIFICIO');
+INSERT INTO `oficiales` VALUES (994, '15751041', 'Barrios Rosales Oscar Enrique', '1982-04-28', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'sector virgen del carmen parroquia campo alegre municipio san rafael de carvajal', '0416-3654855', 'OSCARBARRIOS1541@GMAIL.COM', 'activo', 'PET-210001959', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (995, '15752901', 'Paredes Ramirez Nelson Enrique', '1979-09-12', NULL, NULL, NULL, NULL, '1999-07-01', NULL, 'URBANIZACION MORON SECTOR 02 VEREDA 38 JUAN IGNACIO MONTILLA VALERA', '0426-3267626', 'nelsonparedes326@gmail.com', 'activo', 'PET-210001990', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (996, '15824159', 'Martos Vieras Luis Enrique', '1982-09-26', NULL, NULL, NULL, NULL, '2005-12-15', NULL, 'urbanizacion don romulo betancour parroquia mercedez diaz municipio valera', '4247136874', 'LUISEMV09@GMAIL.COM', 'activo', 'PET-210002065', NULL, NULL, 'ESCUELA BÁSICA BARRIO NUEVO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE AVENIDA PRINCIPAL DE LOS SIN TECHOS AL LADO DEL ABULATORIO DE LOS SIN TECHO EDIFICIO');
+INSERT INTO `oficiales` VALUES (997, '15826388', 'Delgado Duarte Francisco Ricardo', '1981-12-11', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'urbanizacion don tobias parroquia matriz municipio trujillo', '4247021404', 'DELGADOFRANCISCO9999@GMAIL.COM', 'activo', 'PET-210002167', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (998, '15827035', 'Diaz Piña Frank Jackson', '1984-02-19', NULL, NULL, NULL, NULL, '2021-12-16', NULL, 'el trompillo n° 1 calle 1 sabana de mendoza parroquia balmore rodriguez municipio sucre', '0426-7892720', 'jack1902fm@gmal.com', 'activo', 'PET-210001796', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (999, '15940062', 'Sarmiento Mora Roger Eduardo', '1983-09-21', NULL, NULL, NULL, NULL, '2009-09-15', NULL, 'sector lomas de pabellon parroquia el carmen municipio bocono', '0416-4268137', 'Rogersarmiento2303@gmail.com', 'activo', 'PET-210001769', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1000, '16015510', 'Peña Rojas Yhonny Alexander', '1983-06-29', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'eje vial calle principal diagonal a la UNES parroquia pampanito II municipio pampanito', '0416-3196638', 'rojasyhonny29@gmail.com', 'activo', 'PET-210001821', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1001, '16015557', 'Urbina Bermudez Pedro Pablo', '1983-06-20', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'sector pueblo nuevo casa s/n parroquia santa ana municipio pampan', '0426-3736638', 'pedrourbina16015@gmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1002, '16066490', 'Pirela Laguna Freddy Jose', '1982-01-31', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'santa rosalia parroquia mercedez diaz municipio valera', '0426-7223322', 'Freypi160@gmail.com', 'activo', 'PET-210002192', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1003, '16066961', 'Palencia  Yohana Teresa', '1983-07-14', NULL, NULL, NULL, NULL, '2003-08-01', NULL, 'terraza briza de jalisco manzana 2 casa s/n parroquia motatan municipio motatan', '0416-5793055', 'yohanny030214@Ggmail.com', 'activo', 'PET-210002025', NULL, NULL, 'UNIDAD EDUCATIVA PROFESOR SANTIAGO SANCHEZ', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO URBANIZACIÓN LOS RIOS DERECHA CALLE MIQUIMBOL. IZQUIERDA CALLE MISISI. FRENTE CALLE PRINCIPAL DE LOS RIOS FRENTE A LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1004, '16121600', 'Hidrobo Hidrobo Donnys Alexander', '1982-12-06', NULL, NULL, NULL, NULL, '2016-05-16', NULL, 'sectro la mata casa s/n  parroquia escuque municipio escuque', '0424-7327212', 'ALEXANDER.D.H@GMAIL.COM', 'activo', 'PET-210001999', NULL, NULL, 'UNIDAD EDUCATIVA RURAL LA MATA', 'ESTADO TRUJILLO MUNICIPIO ESCUQUE PARROQUIA SANTA RITA SECTOR LA MATA IZQUIERDA CALLE PRINCIPAL SECTOR EL TERRENO. FRENTE CALLE PRINCIPAL AL LADO DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1005, '16267867', 'Benitez Ramirez Edixon David', '1983-02-18', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'urbanizacion jaime lucinche parroquia tres de febrero municipio la ceiba', '0426-1795895', 'Benitezredixon@gmail.com', 'activo', 'PET-210002055', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1006, '16275558', 'Perez Ramirez Adolfo Ramón', '1984-11-08', NULL, NULL, NULL, NULL, '2018-01-01', NULL, 'ana rodriguez parroquia pampanito segundo municipio pampanito', '4169777070', 'Adolfoperez16275@gmail.com', 'activo', 'PET-210001917', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1007, '16276133', 'Marquez Mendez Edinxon Enrique', '1983-09-02', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'urbanizacion el roza parroquia pampanito municipio pampanito', '0416-4617668', 'edixonmarquez206@gmail.com', 'activo', 'PET-210001627', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1008, '16276921', 'Caceres Gudiño Gregorio Antonio', '1984-01-21', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'sector maracaibito de monay parroquia la paz municipio monay', '0416-2098800', 'gregoriocaceres423@gmail.com', 'activo', 'PET-210001478', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1009, '16281269', 'Pedrozo Martinez Armando ', '1984-04-19', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'sabana de mendoza parroquia balmorez rodriquez municipio sucre', '0414-1779223', 'pedrozoarmando1@gmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'ALDEA BOLIVARIANA MUNICIPIO SUCRE', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ SECTOR CASA BLANCA DERECHA CALLE CALLE HUGO SUAREZ. IZQUIERDA CALLE CALLE HUGO SUAREZ. FRENTE CALLE HUGO SUÁREZ SECTOR 5 DE JULIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1010, '16376876', 'Sanchez Linares Jairo De Jesus', '1984-04-17', NULL, NULL, NULL, NULL, '2006-07-15', NULL, 'santa rosa sector el paramito parroquia cristobal mendoza municipio trujillo', '0426-2617238', 'jairolinarez097@gmail.com', 'activo', 'PET-210001583', NULL, NULL, 'JARDIN DE INFANCIA BOLIVARIANA NUESTRA SEÑORA DE LA PAZ', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE CALLE PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1011, '16377446', 'Barreto Rojas Rafael Antonio', '1984-11-06', NULL, NULL, NULL, NULL, '2007-02-15', NULL, 'sector 23 de diciembre calle principal parrquia santa apolonia municipio la ceiba', '4261969529', 'barretorojasrafaelantonio@gmail.com', 'activo', 'PET-210001884', NULL, NULL, 'UNIDAD EDUCATIVA SAN VICENTE DE PAÚL', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LA PLATA DERECHA AVENIDA 9. FRENTE AVENIDA BOLIVAR AL LADO DE LA IGLESIA EL CARMEN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1012, '16377683', 'Luque Pedro Jose', '1981-09-14', NULL, NULL, NULL, NULL, '2021-12-16', NULL, 'SECTOR CARLOS ANDRES CALLE 03 CASA SIN NUMERO SABANA DE MENDOZA SUCRE', '0416-5243736', 'pedrojoseluque822_@gmail.com', 'activo', 'PET-210002010', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1013, '16463073', 'Morales Castillo Enyelverth Jose ', '1983-02-01', NULL, NULL, NULL, NULL, '2006-07-15', NULL, 'calle rosario paramito parroquia cristobal mendoza municipio trujillo', '0424-7573553', 'morales16463073@gmail.com', 'activo', 'PET-210001787', NULL, NULL, 'ESCUELA BOLIVARIANA LA TUNITA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR EL PARAMITO DERECHA AVENIDA BUEN PASTOR. FRENTE AVENIDA BUEN PASTOR AL FRENTE DEL CEMENTERIO BUEN PASTOR FINAL DE LA AVENIDA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1014, '16463254', 'Mendoza  Omar Arvenys', '1983-12-21', NULL, NULL, NULL, NULL, '2006-12-15', NULL, 'minas de monay parroquia arnoldo gabaldon municipio candelaria', '0426-9495571', 'mendozaomararvenis@gmail.com', 'activo', 'PET-210002190', NULL, NULL, 'ESCUELA BOLIVARIANA MINAS DE MONAY', ' ESTADO TRUJILLO MUNICIPIO CANDELARIA PARROQUIA ARNOLDO GABALDON SECTOR LAS RURALES IZQUIERDA CALLE LOS ARAGUANEY. FRENTE CALLE LA CRUZ DE LA MISION AL LADO CANCHA DEPORTIVA CASERIO MINA DE MONAI CASA');
+INSERT INTO `oficiales` VALUES (1015, '16464502', 'Valera Eyen Jose ', '1984-11-03', NULL, NULL, NULL, NULL, '2004-08-01', NULL, 'SECTOR LOS LECHOZOS CALLE PRINCIPAL PARROQUIA FLOR DE PATRIA MUNICIPIO PAMPAN', '0426-474-34-05', 'EYENVALERA74@GMAIL.COM', 'activo', 'PET-210001634', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1016, '16465478', 'Avila Graterol Dionicio Ramon', '1984-12-13', NULL, NULL, NULL, NULL, '2006-07-15', NULL, 'sector monseñor carrillo santa lucia parroquia monseñor carrillo municipio trujillo', '416-5734819', 'danielavila1984.25@gmail.com', 'activo', 'PET-210002201', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1017, '16465648', 'Fernandez Valera Ramon Antonio', '1983-10-01', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'comuna 13 de abril parroquia la concepcion municipio pampanito', '0416-4769151', 'RAMONFERNANDEZ0025@GMAIL.COM', 'activo', 'PET-210002118', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1018, '16533123', 'Vasquez Barreto Jinmy Jesus', '1984-05-16', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'san luis parte alta parroquia san luis municipo valera', '4266787440', 'Jinmyvazquez1984@gmail.com', 'activo', 'PET-210002185', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1019, '16534033', 'Villarreal  Yoender Jose', '1983-09-04', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'final de la calle 6 frente al hospital central parroquia mercedez diaz municipio valera', '0426-3797666', 'YOENDERJOSEVILLARREAL83@GMAIL.COM', 'activo', 'PET-210001840', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL PADRE BLANCO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR CENTRO IZQUIERDA AVENIDA 13. FRENTE AVENIDA 12. DERECHA CALLE 14 FRENTE FUNERARIA SAN JOSE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1020, '16651591', 'Duran Cacerez Jose Noel', '1981-06-25', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'SECTOR MOROMOY, MUNICIPIO CANDELARIA PARROQUIA BOLIVIA', '0426-2742930', 'joseduran251981@gmail.com', 'activo', 'PET-210001555', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1021, '16652535', 'Montilla Diaz Johan Jose', '1984-04-17', NULL, NULL, NULL, NULL, '2006-07-15', NULL, 'urbanizacion pablo emigdio leon parroquia flor de patria municipio pampan', '0412-6557578', 'johanmontilla16652@gmail.com', 'activo', 'PET-210001453', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1022, '16652636', 'Villegas Valecillos Argenis Ramon', '1984-07-29', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'la vega parroquia santa ana municipio pampan', '0416-0608509', 'argenisramonvillegasvalecillos@gmail.com', 'activo', 'PET-210002116', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1023, '16652746', 'Coronado Linares Marbeli Nathaly', '1985-02-05', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'sector mucuche parroquia la concepcion municipio pampanito', '0412-0585456', 'marbeliscoronoado93@gmail.com', 'activo', 'PET-210001771', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1024, '16652788', 'Gil Villegas Jose Gregorio', '1984-08-09', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'sector jaime lusinchi parroqui tres de frebrero municipio la ceiba', '0424-7216548', 'josegil16652@gmail.com', 'activo', 'PET-210001503', NULL, NULL, 'LICEO BOLIVARIANO ANTONIO JOSÉ DE SUCRE', 'ESTADO TRUJILLO MUNICIPIO LA CEIBA  PARROQUIA TRES DE FEBRERO SECTOR TRES DE FEBRERO FRENTE CARRETERA PRINCIPAL CASERIO TRES DE FEBRERO CASA');
+INSERT INTO `oficiales` VALUES (1025, '16653252', 'Villegas Diaz Freddy Yohanny', '1982-12-01', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'sector las americas parroquia balmore rodriguez municipio sucre', '0416/6720864', 'freddyvillegas0108@gmail.com', 'activo', 'PET-210001409', NULL, NULL, 'UNIDAD EDUCATIVA VALMORE RODRIGUEZ', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ URBANIZACIÓN VALMORE RODRÍGUEZ DERECHA CALLE CALLE 3. IZQUIERDA CALLE NÚMERO 5. FRENTE CALLE NÚMERO 4 SABANA DE MENDOZA ENTRE CALLES 4 Y 5 DE JULIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1026, '16653695', 'Peña Perdomo Jorge Luis', '1985-08-22', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'las mesetas parroquia chejende municipio candelaria ', '0426-2591485', 'jorgeluispeñapeña26@gmail.com', 'activo', 'PET-210001654', NULL, NULL, 'ESCUELA BOLIVARIANA LAS MESETAS', ' ESTADO TRUJILLO MUNICIPIO CANDELARIA PARROQUIA CHEJENDE CASERÍO LAS MESETAS FRENTE CALLE LAS MESETAS 200 METROS DE LA CASA COMUNAL');
+INSERT INTO `oficiales` VALUES (1027, '16737895', 'Marquines Benitez Jose Luis', '1983-05-25', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'urbanizacion don tobias calle 7 callejon nuevo parroqia matriz municipio trujillo', '0414-7223287', 'francinie338@gmail.com', 'activo', 'PET-210001499', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1028, '16738550', 'Valero Osuna Deiby Rafael', '1983-04-02', NULL, NULL, NULL, NULL, '2006-12-15', NULL, 'barrio el milagro avenida monseñor felix serrano', '0416-5843972', 'valerodeiby@gmail.com', 'activo', 'PET-210001611', NULL, NULL, 'CASA DEL NIÑO Y ADOLESCENTE TRABAJADOR EL MILAGRO', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA BARRIO EL MILAGRO FRENTE AVENIDA MONSENOR FELIX SERRANO. DERECHA CARRETERA VALERA MERIDA. IZQUIERDA PROLONGACIÓN EL ESTADIUM A 50 METROS DEL ESTADIO MARIO URDANETA ARAUJO CASA');
+INSERT INTO `oficiales` VALUES (1029, '16738693', 'Baptista Bastidas Richard Javier', '1984-11-11', NULL, NULL, NULL, NULL, '2007-02-15', NULL, 'sector la quinta parroquia granados municipio bolivar', '4162704635', 'RICHARBAPTISTA1984@GMAIL.COM', 'activo', 'PET-210001979', NULL, NULL, 'ESCUELA BOLIVARIANA LA QUINTA', 'ESTADO  TRUJILLO MUNICIPIO BOLIVAR PARROQUIA GRANADOS CASERÍO LA QUINTA FRENTE CALLE PRINCIPAL A 50 METROS DE LA PANAMERICANA CASA');
+INSERT INTO `oficiales` VALUES (1030, '16740001', 'Andara Flores Angel Daniel', '1985-05-30', NULL, NULL, NULL, NULL, '2007-09-01', NULL, 'pie de sabana sector calle 2 parroquia antonio nicolas briceño municipio san rafael de carvajal', '0412-2996634', 'angeldanielandaraflores@gmail.com', 'activo', 'PET-210001734', NULL, NULL, 'LICEO BOLIVARIANO JULIO SANCHEZ VIVAS', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL  PARROQUIA ANTONIO NICOLAS  BRICEÑO SECTOR PIE DE SABANA FRENTE AVENIDA PRINCIPAL. DERECHA VEREDA NEGRA UNO. IZQUIERDA PICA PALMA SOLA A 100 METROS DEL STADIUM EDIFICIO');
+INSERT INTO `oficiales` VALUES (1031, '16740060', 'Lozada  Luis Ougusto', '1984-12-12', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'AV. PRINCIPAL MESETA DE SAN GENARO CARVAJAL  SAN RAFAEL DE CARVAJAL', '0424-6083942', 'yesemontilla009@gmail.com', 'activo', 'PET-210001495', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1032, '16882727', 'Torres Olivar Jorge Luis', '1985-10-11', NULL, NULL, NULL, NULL, '2019-05-01', NULL, 'avenida principal el milagro parroquia juan ignacio montilla municipo valera', '4163544196', 'JORGETOLIVAR@GMAIL.COM', 'activo', 'PET-210002165', NULL, NULL, 'ESCUELA BOLIVARIANA CIUDAD DE VALERA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA BARRIO EL MILAGRO FRENTE AVENIDA FINAL MONSENOR FELIX SERRANO. DERECHA PROLONGACIÓN CALLE 8. IZQUIERDA PASAJE 4 FRENTE AL ESTADIO MARIO URDANETA ARAUJO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1033, '16883948', 'Villa Villegas Andreina Coromoto', '1983-06-03', NULL, NULL, NULL, NULL, '2016-05-16', NULL, 'urbanizacion aliciaprieti de caldera  parroquia pampanito II municipio pampanito', '0426-4507877', 'andreinavilla19916@gmail.com', 'activo', 'PET-210002099', NULL, NULL, 'UNIDAD EDUCATIVA DOCTOR ANDRÉS LOMELLI ROSARIO', 'ESADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA TRES ESQUINAS URBANIZACIÓN RAFAEL MARIA VILLASMIL FRENTE AVENIDA RAFAEL MARÍA VILLASMIL. IZQUIERDA CALLE LOS MECANICOS AVENIDA PRINCIPAL, SECTOR I TRES ESQUINAS EDIFICIO');
+INSERT INTO `oficiales` VALUES (1034, '17037336', 'Villegas Vasquez Armando Alexander', '1984-02-09', NULL, NULL, NULL, NULL, '2004-08-01', NULL, 'calle principal del paraiso parroquia la paz municipio pampan', '0412-1701131', 'villegasarmando662@gmail.com', 'activo', 'PET-210001445', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1035, '17037577', 'Marin Gudiño Ysrrael Antonio', '1985-01-28', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'sector andres bello parroquia la paz municipio pampan', '0426-35001593', 'agudino156@gmail.com', 'activo', 'PET-210001407', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1036, '17037901', 'Castellanos Lopez Wilfredo Ramon', '1983-08-22', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'SECTOR MONSEÑOR CAMARGO, PARROQUIA PAMPAN, MUNICIPIO PAMPAN', '0416-3480083', 'wilfredocastellanos45@gmail.com', 'activo', 'PET-210001394', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1037, '17038019', 'Gonzalez Rodriguez Jose Luis', '1985-04-01', NULL, NULL, NULL, NULL, '2022-07-15', NULL, 'secto 5 de julio parroquia la paz municipio pampan', '412-1269042', 'joseluisgonzalez332@gmail.com', 'activo', 'PET-210001567', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1038, '17038345', 'Urbina  Heriberto Jose', '1984-07-02', NULL, NULL, NULL, NULL, '2006-12-15', NULL, 'avenida principal casa s/n parroquia chejende municipio candelaria', '0412/9706594', 'heribertourbina56@gmail.com', 'activo', 'PET-210001446', NULL, NULL, 'ESCUELA BOLIVARIANA JUAN IGNACIO MONTILLA', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO SECTOR PAMPANITO IZQUIERDA AVENIDA CARRETERA VIEJA TRUJILLO VALERA. FRENTE AVENIDA RAFAEL ANTONIO AYALA. DERECHA CALLE AYALA DIAGONAL A LA FARMACIA MI FARMACIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1039, '17038766', 'Vasquez Ramirez Dolgar Ramon', '1983-04-18', NULL, NULL, NULL, NULL, '2004-01-01', NULL, 'CALLE 3 SECTOR BELLA VISTA PARROQUIA JUAN IGNACIO MONTILLA MUNICIPIO VALERA', '0416-0530007', 'dolgarvasquez@gmail.com', 'activo', 'PET-210001795', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1040, '17038826', 'Briceño Materan Juan Carlos', '1985-12-11', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'LA GRAN PARADA ANDINA PARROQUIA ARNOLDO GABALDON MUNICIPIO CANDELARIA', '0414-7504301', 'juanlargo32198@gmail.com', 'activo', 'PET-210001836', NULL, NULL, 'ESCUELA BOLIVARIANA LA TUNITA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR EL PARAMITO DERECHA AVENIDA BUEN PASTOR. FRENTE AVENIDA BUEN PASTOR AL FRENTE DEL CEMENTERIO BUEN PASTOR FINAL DE LA AVENIDA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1041, '17049407', 'Becerra Rivas Marisol Coromoto', '1986-06-15', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'SECTOR LA CIMA, PARROQUIA ARNOLDO GABALDON, PARROQUIA JUAN V. CAMPO ELIAS', '0416-5215689', 'becerramarisol49@gmail.com', 'activo', 'PET-210001650', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1042, '17066183', 'Gil Velasquez Jean Carlos', '1983-06-24', NULL, NULL, NULL, NULL, '2009-09-15', NULL, 'comuna fabricio ojeda sector el tendalito torre 6 apartamento 3-5 parroqia el carmen municipio bocono', '0424-7467182', 'jeancargil1983@gmail.com', 'activo', 'PET-210001645', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1043, '17093283', 'Benitez Albarran Jose Luis', '1983-09-18', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'valera parroquia mercedez diaz municipio valera', '0426-2157627', 'benitezcapino@gmail.com', 'activo', 'PET-210001439', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1044, '17094347', 'Soto Briceño Victor Manuel', '1985-06-20', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'SECTOR SANTA CRUZ, CUARTA ETAPA, SECTOR 9, CASA N° 39', '0412-1750228', 'sotov2089@gmail.com', 'activo', 'PET-210001393', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1045, '17095444', 'Araujo Arraiz Frank Jhonny', '1986-07-16', NULL, NULL, NULL, NULL, '2007-02-15', NULL, 'sector barrio nuevo la floresta parroquia mercedez diaz municipio valera', '416-9788471', 'frankaraujo1709@gmail.com', 'activo', 'PET-210001561', NULL, NULL, 'JARDIN DE INFANCIA BOLIVARIANA NUESTRA SEÑORA DE LA PAZ', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE CALLE PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1046, '17095698', 'Suarez Maldonado Luis Alberto', '1984-09-27', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'SECTOR PABLO EMILIO LEON CASA Nº 5 PARROQUIA FLOR DE PATRIA  MUNICPIO PAMPAN', '0416-1297068', 'luissuarez152427@gmail.com', 'activo', 'PET-210002215', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1047, '17265332', 'Moreno Briceño Alexander Jose', '1982-06-28', NULL, NULL, NULL, NULL, '2003-08-01', NULL, 'sector las palmitas casa s/n calle vetancoruth parroquia el dividive municipio miranda', '0426-3196638', 'alexanderjosemoreno2021@gmail.com', 'activo', 'PET-210001475', NULL, NULL, 'CENTRO PREESCOLAR BOLIVARIANO ANDRES BELLO', ' ESTADO TRUJILLO  MUNICIPIO  MIRANDA PARROQUIA EL DIVIDIVE SECTOR BOLIMIR FRENTE AVENIDA BOLIVAR. DERECHA CALLE LAS VEGAS. IZQUIERDA CALLE BOLIMR FRENTE A LA PISTA CASA');
+INSERT INTO `oficiales` VALUES (1048, '17265361', 'Gonzalez Nava Luis Gerardo', '1985-01-26', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'sector el arenal parroquia betijoque municipio rafael rangel', '4247033410', 'luilli.lg82@gmail.com', 'activo', 'PET-210001690', NULL, NULL, 'ESCUELA BOLIVARIANA LA CANTARRANA', ' ESTADO TRUJILLO  MUNICIPIO RAFAEL RANGEL  PARROQUIA BETIJOQUE SECTOR EL ARENAL FRENTE AVENIDA 6 B A 50 METROS DE LA CANCHA 23 DE ENERO CASA');
+INSERT INTO `oficiales` VALUES (1049, '17265479', 'Santilly Rivas Johan Gabriel', '1985-11-04', NULL, NULL, NULL, NULL, '2007-02-15', NULL, 'barrio el milagro calle 8 parroquia juan ignacion montilla  municipio valera', '0424-7830345', 'johansantilly@gmail.com', 'activo', 'PET-210001898', NULL, NULL, 'ESCUELA BOLIVARIANA PASCUAL IGNACIO VILLASMIL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA URBANIZACIÓN BELLA VISTA FRENTE AVENIDA ANDRES BELLO. DERECHA VEREDA 1. IZQUIERDA VEREDA 2 A 20 METROS DEL CENTRO DE DIGNOSTICO INTEGRAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1050, '17265864', 'Hurtado Duarte Junior Anthony', '1983-11-16', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'avenida 4 casa n°6-50 centro de valera parroquia valera municipio valera', '0416-3778611', 'juniorhurtado1983@gmail.com', 'activo', 'PET-210002142', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1051, '17266434', 'Arias Gonzalez Deixon Jose', '1985-04-25', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'el conuco de la paz sector 1 la floresta parroquia mercedez diaz municipio valera', '0426-8764080', 'ariasgabriel675@gmail.com', 'activo', 'PET-210001653', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1052, '17266516', 'Gonzalez Linares Leonardo Jose', '1985-02-15', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'TABOR PARROQUIA FLOR DE PATRIA MUNICIPIO PAMPAN', '0426-1744670', 'gonzalezleonardojose.85@gmail.com', 'activo', 'PET-210001827', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1053, '17332528', 'Pacheco Borges Yorman Octavio', '1985-06-05', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'parroquia juan ignacio montilla municipio valr', '0426-9121258', 'Yormanpacheco08@gmail.com', 'activo', 'PET-210002179', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1054, '17345250', 'Canelones  Francisco Javier', '1986-12-26', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'VIA BOCONO SECTOR LOS CORRALES  SAN ANA PAMPAN', '0426-24718015', 'canelonesfranciscojavier@gmail.com', 'activo', 'PET-210002176', NULL, NULL, 'ESCUELA BOLIVARIANA LOS CORRALES', ' ESTADO  TRUJILLO MUNICIPIO PAMPAN PARROQUIA SANTA ANA CASERÍO LOS CORRALES FRENTE CALLE VÍA LA OVEJERA VÍA BOCONO, CRUZANDO A LA IZQUIERDA ANTES DE LA ENTRADA A SANTA ANA CASA');
+INSERT INTO `oficiales` VALUES (1055, '17345701', 'Zabala Fonseca Asdrubal Jose', '1984-08-12', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'urbanizacion josefina de paz bajada parroquia campo alegre municipio san rafael de carvajal', '0414-7025039', 'asdrubalzabala83@gmaol.com', 'activo', 'PET-210001449', NULL, NULL, 'UNIDAD EDUCATIVA MONSEÑOR ARIAS BLANCO', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR LA HOYADA IZQUIERDA CALLE FINAL DE LA CALLE. FRENTE TRANSVERSAL SEGUNDA. DERECHA CAMINO SIN NOMBRE A 100 METROS AEROPUERTO CASA');
+INSERT INTO `oficiales` VALUES (1056, '17345785', 'Victora Urbina Johan Antonio', '1986-07-01', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'CALLE MARIO BRICEÑO  LA PAZ  PAMPAN', '0412-6809991', 'johanvictora17@gmail.com', 'activo', 'PET-210001756', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1057, '17346001', 'Valero Azuaje Benito Ramon', '1986-12-30', NULL, NULL, NULL, NULL, '2006-07-15', NULL, 'parroquia juan ignacio montilla municipio valera', '0426/2379083', 'benitoramonvaleroazuaje@gmail.com', 'activo', 'PET-210001419', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1058, '17346194', 'Materano Gil Yoalberto ', '1983-03-13', NULL, NULL, NULL, NULL, '2005-12-15', NULL, 'sector pueblo nuevo calle 8 mene grande parroquia y  municipio pampanito', '0426-1194425', 'yoalbertomaterano@gmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1059, '17346564', 'Valderrama Santos Gregorio Alfonzo', '1987-05-26', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1060, '17346700', 'Pirela Teran Yanki Alberto', '1983-05-07', NULL, NULL, NULL, NULL, '2008-11-01', NULL, 'sector terrazas de jalisco  parroquia jalisco municipio motatan', '0426-1749725', 'YANKIPIRELA@GMAIL.COM', 'activo', 'PET-210002004', NULL, NULL, 'UNIDAD EDUCATIVA RAFAEL QUEVEDO URBINA', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR CAMPO ALEGRE IZQUIERDA AVENIDA PRINCIPAL. DERECHA CALLE SIN NUMERO. FRENTE CALLE QUINTA A 50 METROS DE PREFECTURA CAMPO ALEGRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1061, '17346846', 'Marquez Teran Omaria Del Carmen', '1987-07-06', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'urbanizacion don tobias callejon nuevo casa n° 0-5 parroquia matriz municipio trujillo', '0414-0800612', 'omairalemus,33@gmail.com', 'activo', 'PET-210001892', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1062, '17347072', 'Peña Flores Jose Rafael', '1986-03-12', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'el tablon de monay parroquia la paz municipio pampan', '0416-1384902', 'josspoli12@gmail.com', 'activo', 'PET-210001633', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1063, '17347204', 'Garcia Bastidas Luis Felipe', '1986-11-12', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'urbanizacion llanos de monay final de la calle 8 parroquia la paz municipio pampan', '414-7094008', 'Bastidasfelipe90@gmail.com', 'activo', 'PET-210001574', NULL, NULL, 'ALDEA BOLIVARIANA - LA PAZ', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR MONAY FRENTE TRONCAL 002 A 300 METROS DEL CENTRO COMERCIAL ATLANTIS EDIFICIO');
+INSERT INTO `oficiales` VALUES (1064, '17348789', 'Torres Savedra Heiver Alonso', '1985-07-19', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'KILOMETRO 23 LA CIEBA JUNIN SUCRE', '0416-1372493', 'torresheiver76@gmail.com', 'activo', 'PET-210001590', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1065, '17392436', 'Altuve Matheus Fernando Jose', '1985-08-17', NULL, NULL, NULL, NULL, '2006-12-15', NULL, 'sector santa rosalias parroquia mercedez diaz municipio valera', '0416-0622942', 'ALTUVE602@GMAIL.COM', 'activo', 'PET-210001870', NULL, NULL, 'JARDIN DE INFANCIA BOLIVARIANA NUESTRA SEÑORA DE LA PAZ', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE CALLE PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1066, '17393030', 'Humbria Delgado Rafael Jose', '1985-09-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1067, '17475096', 'Lopez Caldea Jorge Eliecer', '1987-05-04', NULL, NULL, NULL, NULL, '2019-06-01', NULL, 'sector la macarena parte baja parroquia escuque municipio escuque', '0414-9711307', 'naty17yazmin@gmail.com', 'activo', 'PET-210001835', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1068, '17509537', 'Gudiño Ortegano Nestor Jose', '1985-10-06', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'LOMA EL PABELLON, SECTOR 2, CASA 1-17 PARROQUIA EL CARMEN', '0424-7802792 / 0412-1265118', 'nstrgudino@gmail.com', 'activo', 'PET-210001547', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1069, '17509581', 'Rivero Ramirez Ramon Yonkeiber', '1986-07-02', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'barzalito bloque 11 apartamento 1-04 parroquia bocono municipio bocono', '0414-7564418', 'ramonrivero130@gmail.com', 'activo', 'PET-210001881', NULL, NULL, 'UNIDAD EDUCATIVA JUAN BAUTISTA DALLA COSTA', ' ESTADO TRUJILLO  MUNICIPIO BOCONO PARROQUIA BOCONO SECTOR EL RECODO IZQUIERDA CALLE GRAN COLOMBIA. FRENTE CALLE PAEZ FRENTE AL ATENEO BARRIO EL SAMAN BOCONO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1070, '17596568', 'Albarran Linares Ramon Leonardo', '1986-05-27', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'sector la peñita de monay casa s/n parroquia san jose municipio candelaria', '0412-9650078', 'ramonaalbarram18@gmail.com', 'activo', 'PET-210001438', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCA FERRINI VELAZCO', 'ESTADO TRUJILLO MUNICIPIO CHEJENDE  PARROQUIA SAN JOSE SECTOR LAS LLANADAS');
+INSERT INTO `oficiales` VALUES (1071, '17596671', 'Torres Montilla Luis Alfredo', '1986-05-17', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'urbanizacion pablo emigdio leon parroquia flor de patria municipio pampan', '0416-4958737', 'luisaalfredotorres.1705@hotmail.com', 'activo', 'PET-210001432', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1072, '17597173', 'Azuaje De Briceño  Marleny Del Carmen', '1987-06-17', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'via principal de mendoza fria frente al cementerio parroquia mendoza fria municipio valera', '426-4775264', 'MARLENY_AZU@HOTMAIL.COM', 'activo', 'PET-210002141', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1073, '17597419', 'Andrade  Daniel Jose', '1984-12-11', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'urbanizacion terrazas  segunda etapa MJ/PB parroquia jalisco municipio motatan', '0424-7101224', 'pechoandrade12@gmail.com', 'activo', 'PET-210001784', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1074, '17597503', 'Castillo Zerpa Kelly Eloisa', '1986-08-18', NULL, NULL, NULL, NULL, '2012-07-17', NULL, 'DESARROLLO HABITACIONAL COMUNA INAVI LA MURALLA TORRE 9 APARTAMENTO B03-03 PAMPANITO PAMPANITO', '0424-7497983', 'eloisaz@gmail.com', 'activo', 'PET-210001989', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1075, '17597797', 'Rodriguez Aldana Yilbi Antonio', '1987-05-06', NULL, NULL, NULL, NULL, '2007-02-15', NULL, 'sector el tablon parte alta parroquia la paz municipio pampan', '0416-5180135', 'yilbyrodriguez17@gmail.com', 'activo', 'PET-210001441', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1076, '17598544', 'Rangel Canelones Felix Enderson', '1987-04-11', NULL, NULL, NULL, NULL, '2006-12-15', NULL, 'SECTOR LAS MALVINAS FLOR DE PATRIA  PAMPAN', '0412-0254509', 'felixrangelcomando@gmail.com', 'activo', 'PET-210001739', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1077, '17604120', 'Chinchilla Montilla Mervis Frank', '1985-04-03', NULL, NULL, NULL, NULL, '2005-12-15', NULL, 'sabana de mendoza parroquia balmorez rodriquez municipio sucre', '0416-7628193', 'frankm.17m@gmail.com', 'activo', 'PET-210001629', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1078, '17604292', 'Rivero  Jose Alberto', '1985-03-31', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'SECTOR SAN ISIDRO CERCA DEL CLUB ITALVEN MENDOZA FRIA VALERA', '0426-1172557', 'josrrivero3@gmail.com', 'activo', 'PET-210001986', NULL, NULL, 'ESCUELA BOLIVARIANA PADRE ROSARIO', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA MENDOZA AVENIDA PRINCIPAL DE MENDOZA, SECTOR LA PUEBLITA');
+INSERT INTO `oficiales` VALUES (1079, '17605829', 'Parraga Rojas Regulo Jose', '1986-09-03', NULL, NULL, NULL, NULL, '2007-02-15', NULL, 'DIAGONAL AL LICEO LASSO DE LA VEGA, CASA 05, MERCEDES DIAZ, VALERA EDO TRUJILLO', '0424-7680578', 'regulo327@hotmail.com', 'activo', 'PET-210001701', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1080, '17605963', 'Hernandez Montilla Derwy Antonio', '1986-06-09', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'agua santa calle los algarrobo parroqui agua santa municipio miranda', '4166755235', 'DERWYHERNANDEZ2020@GMAIL.COM', 'activo', 'PET-210001943', NULL, NULL, 'ESCUELA BASICA ELISA PULGAR DE RAMIREZ', ' ESTADO TRUJILLO MUNICIPIO  MIRANDA  PARROQUIA AGUA SANTA SECTOR CASCO CENTRAL DE AGUA SANTA DERECHA CALLE AGUA SANTA. IZQUIERDA CALLE DEMOCRACIA. FRENTE CALLE PRINCIPAL CERCA DE LA MEDICATURA CASA');
+INSERT INTO `oficiales` VALUES (1081, '17696652', 'Benitez Acevedo Jesus Manuel', '1986-10-16', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'urbanizacion mesetas de moron parroquia mercedez diaz municipio valera', '0424-7451576', 'BENITEZJM1986@GMAIL.COM', 'activo', 'PET-210001865', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1082, '17755895', 'Montilla Peña Jesus Antonio', '1987-03-27', NULL, NULL, NULL, NULL, '2007-09-01', NULL, 'urbanizacion florida II parroquia motatan municipio motatan', '0416-4736572', 'ANTWANJESUS.23@GMAIL.COM', 'activo', 'PET-210002100', NULL, NULL, 'UNIDAD EDUCATIVA PROFESOR JOSÉ ALBERTO AZUAJE', ' ESTADO TRUJILLO MUNICIPIO  PAMPANITO PARROQUIA LA CONCEPCION SECTOR LA PEÑITA DERECHA CALLE CANCHA. IZQUIERDA CALLE PEÑA. FRENTE CALLE CIEGA AL LADO DE LA CAPILLA CASA');
+INSERT INTO `oficiales` VALUES (1083, '17769227', 'Zambrano Peña Ana Gabriela', '1987-10-17', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'kilometro 23 sector santa lucia calle la floresta parroquia junin municipio sucre', '416-3970067', 'ana.zamb87@gmail.com', 'activo', 'PET-210001601', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1084, '17830186', 'Godoy Quintero Loreidis Emmar', '1985-07-16', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'las mesetas de chimpire calle principal parroquia jose leonardo suarez municipio san rafael de carvajal', '0412-7502299', 'loreidisggodoy8@gmail.com', 'activo', 'PET-210001946', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA ');
+INSERT INTO `oficiales` VALUES (1085, '17830299', 'Ruiz Villar Miguel Angel', '1983-05-13', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'la guaira frente el ambulario parroquia la guaira municipio trujillo', '0416-0831972', 'miguelangelruizvillar305@gmail.com', 'activo', 'PET-210002030', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1086, '17830536', 'Albarran Jaimes Antonio Ramon', '1986-03-07', NULL, NULL, NULL, NULL, '2005-12-15', NULL, 'las mesetas de chimpire calle principal parroquia jose leonardo suarez municipio san rafael de carvajal', '0426-4343215', 'albarranantonia304@gmail.com', 'activo', 'PET-210001468', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1087, '17832845', 'Saavedra Briceño Ever Alexis', '1985-06-15', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'urbanizacion los llanos parroquia campo alegre municipio san rafael de carvajal', '0416-67293349', 'everalexissaavedra17@gmail.com', 'activo', 'PET-210001414', NULL, NULL, 'UNIDAD EDUCATIVA RAFAEL QUEVEDO URBINA', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR CAMPO ALEGRE IZQUIERDA AVENIDA PRINCIPAL. DERECHA CALLE SIN NUMERO. FRENTE CALLE QUINTA A 50 METROS DE PREFECTURA CAMPO ALEGRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1088, '17865104', 'Artigas Gudiño Kennedy Antonio', '1985-10-12', NULL, NULL, NULL, NULL, '2006-12-15', NULL, 'sector la represa de mesa de gallardo parroquia cruz carrillo municipio trujillo', '412-1738408', 'kennedyartigas@gmail.com', 'activo', 'PET-210002095', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1089, '17865472', 'Arias Frias Freddy Manuel', '1987-02-07', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'SECTOR LA PLAZUELA CRUZ CARRILLLO TRUJILLO', '0426-1741967', 'freddymanuelariasfrias@gmail.com', 'activo', 'PET-210001765', NULL, NULL, 'ESCUELA BOLIVARIANA PADRE RASQUIN', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRUZ CARRILLO SECTOR LA PLAZUELA FRENTE CALLE CORONELA DOLORES BRICE#O CERCA DEL AMBULATORIO LA PLAZUELA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1090, '17865815', 'Escalona Suarez Yoel Jose', '1987-01-08', NULL, NULL, NULL, NULL, '2005-12-15', NULL, 'avenida andres bello parroquia cristobal mendoza municipio trujillo', '0412-1689162', 'yoeljose0801@gmail.com', 'activo', 'PET-210002149', NULL, NULL, 'ESCUELA CONCENTRADA EL LIMON', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR CERRO EL LIMON FRENTE ESCALERA PRINCIPAL VIA EL LIMON PARTE ALTA DETRAS DEL BATALLON RIBAS DAVILA 222 AVENIDA ANDRES BELLO');
+INSERT INTO `oficiales` VALUES (1091, '17865824', 'Azuaje Valderrama Tomas Alexander', '1987-01-26', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'SECTOR LA RECTA DE MONAY LA PAZ  PAMPAN', '0416-3122352', 'tomasazuaje04@gmail.com', 'activo', 'PET-210002197', NULL, NULL, 'ESCUELA ESTADAL LUCILA CORONADO', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR LA RECTA FRENTE CALLE LA CANCHA. DERECHA CALLEJÓN EL DIAMANTE. IZQUIERDA TRONCAL 002 FRENTE AL HOTEL EL DIAMANTE CASA');
+INSERT INTO `oficiales` VALUES (1092, '17866150', 'Montilla Valera Jesus Alexander', '1986-11-25', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'parroquia flor de patria municipio pampan', '0416-3737137', 'jesusmontilla@gmail.com', 'activo', 'PET-210001675', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1093, '17866343', 'Angel Landaeta Yeferson Jesus ', '1988-07-26', NULL, NULL, NULL, NULL, '2019-07-01', NULL, 'SECTOR LA ATALAYA PARROQUIA Y MUNICIPIO PAMPAN', '0426-1132193', 'angellandaetayefersonjesus@gmail.com', 'activo', 'PET-210001673', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1094, '17866837', 'Salas Valera David Alexander', '1987-08-24', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'sector el tablon de monay parroquia la paz municipio pampan', '0416-4280251', 'salasvaleradavidalexander@gmail.com', 'activo', 'PET-210001490', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1095, '17916215', 'Ruzza Rivera Kenny Alexander', '1985-01-23', NULL, NULL, NULL, NULL, '2005-01-01', NULL, 'SECTOR LOS CORRALES, PARROQUIA SANTA ANA MUNICIPIO PAMPAN', '0416-1319760', 'ruzzakenny.visipol2@gmail.com', 'activo', 'PET-210001512', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1096, '17985510', 'Ochoa Anzola Juvenal Enrique', '1986-02-16', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'sector bolivar calle principal parroquia pueblo nuevo municipio baralt estado zulia', '0412-8712960', 'ochoajuvenal4@gmail.com', 'activo', 'PET-210001498', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1097, '17995294', 'Rodriguez Rodriguez Raidys Rafael', '1984-11-02', NULL, NULL, NULL, NULL, '2016-05-16', NULL, 'sector sabana de machango parroquia raul cuenca municipio balmore rodriguez', '0424/6687878', 'rairodri210@gmail.com', 'activo', 'PET-210001597', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL VIRGEN DEL MONTE CARMELO', 'ESTADO ZULIA MUNICIPIO VALMORE RODRIGUEZ PARROQUIA LA VICTORIA SECTOR PADILLA1 A DERECHA CALLE POLLO PINTO. FRENTE CALLE AV 7 ENTRE CALLE VARGAS Y POLLO PINTO. IZQUIERDA CALLEJÓN CALLEJON EL MILAGRO AVENIDA 7, ENTRE CALLES VARGAS Y POLLO PINTO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1098, '18034630', 'Duran Teran Reinaldo Antonio', '1985-03-11', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'la catalina de monay via principal parroquia la paz municipio pampan', '426-4154022', 'reinaldoduran18034630@gmail.com', 'activo', 'PET-210002134', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1099, '18034733', 'Briceño Reyes Jhovanny Jose', '1988-04-07', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'santa rosa cerca de nutricion parte alta parroquia cristobal mendoza municipio trujillo', '0412-1657472', 'jhovannybriceno91@gmail.com', 'activo', 'PET-210002119', NULL, NULL, 'ESCUELA BOLIVARIANA AMÉRICO BRICEÑO VALERO', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA DERECHA AVENIDA BUEN PASTOR. FRENTE AVENIDA AYACUCHO A UNA CUADRA DE LA IGLESIA SANTA ROSA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1100, '18035201', 'Saavedra Aguilar Elio Francisco', '1987-03-27', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'sector tierra negra parroquia dividive municipio rafael rangel', '4261079324', 'saavedraelio66@gmail.com', 'activo', 'PET-210001405', NULL, NULL, 'LICEO BOLIVARIANO MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ URBANIZACIÓN LA PAZ FRENTE VEREDA 10 AL LADO DE LA BODEGA DE LA SEÑORA IRIALA CASA');
+INSERT INTO `oficiales` VALUES (1101, '18035239', 'Montilla Moncayo Danny Enrique', '1986-04-30', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'sector la sabana las mesetas casa n° 86 parroquia carvajal municipio carvajal', '0414-7238541', 'danny_montilla_03@hotmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL SALOMÓN BRICEÑO GABALDON', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR LAS MESETAS DE CHIMPIRE IZQUIERDA CALLE PPL. FRENTE CALLE PRINCIPAL. DERECHA CALLEJÓN EL CARMEN A 100 METROS IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1102, '18035583', 'Nelo Cornieles Daniel Enrique', '1988-01-16', NULL, NULL, NULL, NULL, '2016-05-16', NULL, 'BARBARITA DE LA TORRE CRISTOBAL MENDOZA TRUJILLO', '0426-9892274', 'danielnelo243@gmail.com', 'activo', 'PET-210001760', NULL, NULL, 'ESCUELA CONCENTRADA BARBARITA DE LA TORRE', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR BARBARITA DE LA TORRE IZQUIERDA ESCALERA VIA SECTOR EL PARAMITO. FRENTE ESCALERA PRINCIPAL BARBARITA DE LA TORRE BARBARITA DE LA TORRE ABAJO DE LA CANCHA Y MODULO DE BARRIO ADENTRO');
+INSERT INTO `oficiales` VALUES (1103, '18035870', 'Pernia Gonzalez Maiker Segundo', '1986-10-19', NULL, NULL, NULL, NULL, '2007-09-01', NULL, 'sabana de mendoza parroquia balmorez rodriquez municipio sucre', '0412-7888738', 'Maikerpernia1174@gmail.com', 'activo', 'PET-210002193', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1104, '18036032', 'Materan Pacheco Rafael Antonio', '1987-12-10', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'sector santa eduvijes parroquia jose gregorio hernandez municipio rafael rangel', '4261698436', 'materanrafael1987@gmail.com', 'activo', 'PET-210001462', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1105, '18036364', 'Marin Hernandez Marlene Del Carmen', '1988-02-01', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR EL PROGRESO PARROQUIA Y MUNICIPIO PAMPAN', '4125552820', 'marinmarlene@gmail.com', 'activo', 'PET-210001984', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1106, '18036691', 'Barrios Chinchilla Yusmary Milagros ', '1986-11-22', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'sector las tinajitas del tablon parroquia la paz municipio pampan', '426-9721924', 'junismar1210@gmail.com', 'activo', 'PET-210001759', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1107, '18095504', 'Graterol Rivas Reinaldo Jose', '1987-07-15', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'avenida principal el baño parroquia motatan municipio motatan', '0412-4262597', 'reinaldograterol81@gmail.com', 'activo', 'PET-210001492', NULL, NULL, ' LICEO BOLIVARIANO HILARIO PIZANI ANSELMI', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA MOTATAN SECTOR CENTRO FRENTE AVENIDA BOLIVAR. DERECHA CALLE 06. IZQUIERDA CALLE 05 AL LADO DE LA ALCALDIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1108, '18096417', 'Camargo Parra Jorge Isaac', '1987-11-30', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'LOS CERRILLOS PARROQUIA FLOR DE PATRIA MUNICIPIO PAMPAN', '0426-6371286', 'jorgecamargo318@gmail.com', 'activo', 'PET-210002159', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1109, '18096965', 'Ramos Peña Diego Armando', '1986-10-02', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'calle principal sector la juventud parroquia betijoque municipio rafael rangel', '0416-2743911', 'fapetramos@gmail.com', 'activo', 'PET-210001944', NULL, NULL, 'ESCUELA BOLIVARIANA LA CANTARRANA', ' ESTADO TRUJILLO  MUNICIPIO RAFAEL RANGEL  PARROQUIA BETIJOQUE SECTOR EL ARENAL FRENTE AVENIDA 6 B A 50 METROS DE LA CANCHA 23 DE ENERO CASA');
+INSERT INTO `oficiales` VALUES (1110, '18097177', 'Moreno Villarreal Alfredo Jose', '1987-04-23', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'SECTOR SAN BENITO CALLE 19 DE ABRIL PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0412-5812017', 'morenoalfredo19@gmail.com', 'activo', 'PET-210002211', NULL, NULL, 'JARDIN DE INFANCIA BOLIVARIANA NUESTRA SEÑORA DE LA PAZ', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE CALLE PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1111, '18097722', 'Parraga Vasquez Anthony Alberto', '1988-12-09', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'MOTATAN, AVENIDA PRINCIPAL', '0412-7519526', 'antonyparraga@gmail.com', 'activo', 'PET-210001533', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1112, '18250546', 'De La Cruz Perez Rafael Jose', '1987-07-12', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR LA QUINTA CAMPO ELIAS', '0426-3592646', 'rafaeljperezdelacruz@gmail.com', 'activo', 'PET-210001528', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1113, '18348225', 'Villegas Colmenares Freddy Daniel', '1987-12-31', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'URBANIZACION LA FLORESTA CASA 169 PAMPANITO PAMPANITO', '0412-6712802', 'fdwc311287@gmail.com', 'activo', 'PET-210001730', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1114, '18348745', 'Duran Franco Manuel Angel', '1986-08-17', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'calle 16 con avenida 12 la flroresta parroquia mercedez diaz municipio valera', '4267712133', 'Manuelduran1986@gmail.com', 'activo', 'PET-210001473', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1115, '18348851', 'Pirela  Robert Willian', '1987-01-12', NULL, NULL, NULL, NULL, '2006-07-15', NULL, 'sector giraluna torre 32 apartamento D3 parroquia jalisco municipio motatan', '4126519138', 'ROBERTPIRELA@GMAIL.COM', 'activo', 'PET-210002008', NULL, NULL, 'ESCUELA BOLIVARIANA CIUDAD DE VALERA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA BARRIO EL MILAGRO FRENTE AVENIDA FINAL MONSENOR FELIX SERRANO. DERECHA PROLONGACIÓN CALLE 8. IZQUIERDA PASAJE 4 FRENTE AL ESTADIO MARIO URDANETA ARAUJO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1116, '18350092', 'Teran la Torre Eduardo Daniel', '1987-07-16', NULL, NULL, NULL, NULL, '2024-08-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1117, '18376118', 'Rosario  Jose Gregorio', '1986-10-25', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'sector santa rita via principal parroquia pampanito II municipio pampanito', '0412-6553345', 'josegreros@gmail.com', 'activo', 'PET-210002182', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1118, '18376264', 'Vasquez Teran Alexander Antonio', '1988-04-06', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'santa lucia de monay parroquia la paz municipio pampan', '0412/9785721', 'vasquez18376264@gmail.com', 'activo', 'PET-210001712', NULL, NULL, 'ESCUELA BOLIVARIANA SANTA LUCIA DE MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR SANTA LUCIA FRENTE CALLE LAS FLORES. IZQUIERDA TRONCAL 002 A 100 METROS DE LA SUD ESTACION ELECTRICA DE CORPOELEC CASA');
+INSERT INTO `oficiales` VALUES (1119, '18376309', 'Perdomo Mogollon Deibys Jose', '1987-09-25', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'LA LIBERTAD, MUNICIIO CARACHE PARROQUIA SANTA CRUZ', '0416-9927499', 'deibyperdomo@gmail.com', 'activo', 'PET-210001595', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1120, '18376419', 'Andrade Roman Carmelo Antonio', '1984-08-21', NULL, NULL, NULL, NULL, '2006-07-15', NULL, 'SECTOR EL VALLE PARROQUIA FLOR DE PATRIA MUNICIPIO PAMPAN', '0412-1046583', 'carmeloandadre02@gmail.com', 'activo', 'PET-210001839', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1121, '18376437', 'Soto Cabezas Donald Enmanuel', '1985-03-01', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'via principal, via bocono parroquia flor de patria municipio pampan', '426-2582751', 'donsoto@gmail.com', 'activo', 'PET-210002174', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1122, '18376521', 'Montilla Teran Diuver Javier', '1988-09-14', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector brisas del rio municipio trujillo estado trujillo', '0416-3736243', 'diuver.montilla1@gmail.com', 'activo', 'PET-210001667', NULL, NULL, 'UNIDAD EDUCATIVA DOCTOR ANDRÉS LOMELLI ROSARIO', 'ESADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA TRES ESQUINAS URBANIZACIÓN RAFAEL MARIA VILLASMIL FRENTE AVENIDA RAFAEL MARÍA VILLASMIL. IZQUIERDA CALLE LOS MECANICOS AVENIDA PRINCIPAL, SECTOR I TRES ESQUINAS EDIFICIO');
+INSERT INTO `oficiales` VALUES (1123, '18376771', 'Raga  Karina Del Carmen', '1988-12-12', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'comuna 13 de abril torre 30 piso 1-04 parroquia la concepcion municipio pampanito', '416-7648455', 'karinaraga3@gmail.com', 'activo', 'PET-210002194', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1124, '18376845', 'Leal  Williams Jose', '1986-02-24', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'SECTOR EL TABLON CALLE FRANCISCO LEON LA PAZ  PAMPAN', '0426-3900104 ', 'williamsleal2020@gmail.com', 'activo', 'PET-210001762', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1125, '18376847', 'Leal  Carlos Antonio', '1987-05-14', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'tablon de monay parroquia la paz municipio pampan', '4261700638', 'LEAL56501@GMAIL.COM', 'activo', 'PET-210002049', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1126, '18377348', 'Martos Torres Cristian Jose', '1988-02-17', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'diagonal al ambulatoria de monay parroquia la paz municipio pampan', '0426-6285343', 'martoscristian49@gmail.com', 'activo', 'PET-210001737', NULL, NULL, 'ESCUELA BOLIVARIANA AMÉRICO BRICEÑO VALERO', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA DERECHA AVENIDA BUEN PASTOR. FRENTE AVENIDA AYACUCHO A UNA CUADRA DE LA IGLESIA SANTA ROSA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1127, '18377476', 'Godoy Peña William Joseht', '1986-09-29', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'avenida libertador parroquia cristobal mendoza municpio trujillo', '414-7294229', 'williamjosehtgodoypena7@gmail.com', 'activo', 'PET-210002133', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1128, '18377993', 'Delgado Santiago Andriu De Jesus', '1987-07-17', NULL, NULL, NULL, NULL, '2005-12-15', NULL, 'sector el corozo parroquia escuque  municipio escuque', '4164323761', 'Andriudelgado2703@gmail.com', 'activo', 'PET-210001630', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1129, '18378431', 'Villegas Perez Ali Enrique', '1986-02-21', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'florida III parroquia y municipio motatan', '0412-5347817', 'adrianabriceno2019@gmail.com', 'activo', 'PET-210002067', NULL, NULL, 'UNIDAD EDUCATIVA FE Y ALEGRÍA GONZALO SENIOR', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR LAS LOMAS PARTE ALTA FRENTE AVENIDA PRINCIPAL FRENTE A LA URBANIZACION LAS LOMAS EDIFICIO');
+INSERT INTO `oficiales` VALUES (1130, '18378658', 'Pirela Valderrama William Antonio', '1988-04-19', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'FLOR DE PATRIA. MUNICIPIO PAMPAN', '0426-1073288', 'WILLIAMPIRELA1988@GMAIL.COM', 'activo', 'PET-210001548', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1131, '18456101', 'Mendoza Salas Wilmer De Jesus', '1984-09-18', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'MONAY SECTOR EL PROGRESO  LA PAZ PAMPÁN ', '0414-1799464', 'wilmermendoza18091984@gmail.com', 'activo', 'PET-210001790', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1132, '18456519', 'Araujo Manzanilla Marcos Xavier', '1985-12-20', NULL, NULL, NULL, NULL, '2018-08-01', NULL, 'via principal sector san jose calle n° 4 transversal 3 parroquia sabana de mendoza municipio sucre', '0426-4241607', 'ARAUJOXAVIERMARCOS.20@GMAIL.COM', 'activo', 'PET-210001841', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1133, '18456741', 'Angulo Riveros David De Jesus', '1986-07-28', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'la comuna 13 de abril torre 30 apartamento 1-2 parroquia la concepcion municipio pampanito', '0426-3229102', 'davisangulo2832@gmail.com', 'activo', 'PET-210001916', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1134, '18457854', 'Alvarez  Eliecer Jose', '1986-09-13', NULL, NULL, NULL, NULL, '2019-05-01', NULL, 'santa eduviges parroquia mercedez diaz municipio valera', '0414-7519703', 'Elieceralvarez116@gimail.com', 'activo', 'PET-210001575', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL PADRE BLANCO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR CENTRO IZQUIERDA AVENIDA 13. FRENTE AVENIDA 12. DERECHA CALLE 14 FRENTE FUNERARIA SAN JOSE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1135, '18458608', 'Nava Valecillos Victor Javier', '1987-09-10', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'municipio valera', '4167753344', 'CA18458608@GMAIL.COM', 'activo', 'PET-210002058', NULL, NULL, 'ESCUELA CONCENTRADA LA CONCEPCIÓN', ' ESTADO TRUJILLO MUNICIPIO  PAMPANITO PARROQUIA LA CONCEPCION SECTOR EL TRAPICHE FRENTE CALLE SAN JOSÉ. DERECHA CALLEJÓN CERRADO. IZQUIERDA CALLEJÓN CERRADO A 300 METROS DE LA REDOMA DE LA CONCEPCIÓN CASA');
+INSERT INTO `oficiales` VALUES (1136, '18458645', 'Maldonado Jovito Erwin Jose', '1987-07-27', NULL, NULL, NULL, NULL, '2007-02-15', NULL, 'comuna 13 de abril torre 5 planta baja n° 004 parroquia pampanito municipio pampanito', '0412-1728151', 'emaldonadojovito@gmail.com', 'activo', 'PET-210001635', NULL, NULL, 'MULTIHOGAR GOTITA DE AMOR', ' ESTADO TRUJILLO MUNICIPIO  PAMPANITO PARROQUIA LA CONCEPCION SECTOR FERUSIO BATISTONI FRENTE AVENIDA MOCUCHE. DERECHA VEREDA CERCA DE LA CRUZ DE LA MISION. IZQUIERDA VEREDA AL LADO DE LA CANCHA AL LADO DE LA PLAZA Y CANCHA CASA');
+INSERT INTO `oficiales` VALUES (1137, '18471367', 'Montilla Aldana Yon Anderson', '1989-04-09', NULL, NULL, NULL, NULL, '2009-09-15', NULL, 'avenida principal sector el volcan parroquia monseñor jauraqui municipio bocono', '0424-7031496', 'Yonanmon89@gmail.com', 'activo', 'PET-210001748', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1138, '18471768', 'Bentacourt Araujo Jose Miguel', '1986-10-08', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'SECTOR CALLE PRINCIPAL TRONCAL007, MUNICIPIO JUAN VICENTE CAMPO ELIAS', '0426-0850442', 'tableamazon754@gmail.com', 'activo', 'PET-210001618', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1139, '18472267', 'Alcala Duran Edixon Bernardo', '1988-09-09', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR FLORIDA II PARROQUIA Y MUNICIPIO MOTATAN', '0416-4254824', 'ebad7886@gmail.com', 'activo', 'PET-210001803', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1140, '18472489', 'Avila Montilla Maria Balbina', '1988-03-31', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'SECTOR EL PROGRESO PARROQUIA Y MUNICIPIO PAMPAN', '0426-2460876', 'mariangelbal979@gmail.com', 'activo', 'PET-210001812', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1141, '18706092', 'Loyo Torres Carlos Eduardo', '1989-01-26', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'biscucuy parroquia biscucuy municipio sucre estado portuguesa', '0414-7009221', 'carlosloyo70@gmail.com', 'activo', 'PET-210001956', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1142, '18733178', 'Segovia Valera Jesus Gabriel', '1988-02-24', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'SECTOR TABOR CALLE LA MORON FLOR DE PATRIA  PAMPAN', '0424-7102966', 'gabrielvalera650@gmail.com', 'activo', 'PET-210001725', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1143, '18733312', 'Santana Rosario Lisbeth Del Valle', '1987-05-06', NULL, NULL, NULL, NULL, '2018-01-01', NULL, 'tabor calle la moron parroquia flor de patria municipio pampan', '0416-1961040', 'LisbethSantana.0588@gmail.com', 'activo', 'PET-210002216', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1144, '18733590', 'Rueda Valera Richard Javier', '1988-12-24', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'urbanizacion pablo  emigdio leon urbanizacion flor de patria municipio pampan', 'O412-0771168', 'richardrueda.88@gmail.com', 'activo', 'PET-210001494', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1145, '18733814', 'Albarran Abreu Nayaly Valesca', '1986-11-10', NULL, NULL, NULL, NULL, '2024-08-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1146, '18734007', 'Aponte Mendoza Enderson Jose', '1989-11-15', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'SECTOR SANTA LUCIA PAROQUIA LA PAZ MUNICIPIO PAMPAN', '0426-2084167', 'apontee689@gmail.com', 'activo', 'PET-210001831', NULL, NULL, 'LICEO BOLIVARIANO MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ URBANIZACIÓN LA PAZ FRENTE VEREDA 10 AL LADO DE LA BODEGA DE LA SEÑORA IRIALA CASA');
+INSERT INTO `oficiales` VALUES (1147, '18734225', 'Godoy Urbina Jorwin Antonio', '1989-11-05', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector pueblo nuevo parroquia cristobal mendoza municipio trujillo', '0416-5877372', 'jorwin@gmail.com', 'activo', 'PET-210002078', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1148, '18734984', 'Godoy Rangel Alexis Jose', '1987-02-06', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'avenida principal 3 de febrero  sector renacer parroquia tres de febrero municipio la ceiba', '0416-6980244', 'alexisjosegodoy18@gmail.com', 'activo', 'PET-210002101', NULL, NULL, 'LICEO BOLIVARIANO ANTONIO JOSÉ DE SUCRE', 'ESTADO TRUJILLO MUNICIPIO LA CEIBA  PARROQUIA TRES DE FEBRERO SECTOR TRES DE FEBRERO FRENTE CARRETERA PRINCIPAL CASERIO TRES DE FEBRERO CASA');
+INSERT INTO `oficiales` VALUES (1149, '18801120', 'Rivas Gonzalez Jackson Rafael', '1988-04-18', NULL, NULL, NULL, NULL, '2007-09-01', NULL, 'la floresta avenida el cementerio sector el gallo parroquia mercedez diaz municipio valera', '0416-3657251', 'ribas_jackson_10@hotmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'UNIDAD EDUCATIVA LAS MERCEDES', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LAS MERCEDES FRENTE CALLE SIN NOMBRE DETRAS DE LA CANCHA LAS MERCEDES, CERCA DEL DEPOSITO DE LA PEPSI EDIFICIO');
+INSERT INTO `oficiales` VALUES (1150, '18801483', 'Matheus Valecillos Edber Alfredo', '1987-11-29', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'comuna antonio nicolas briceño parroquia san luis municipio valera ', '0416-3342072', 'valecillosmatheus@gmail.com', 'activo', 'PET-210001501', NULL, NULL, 'ESCUELA NACIONAL BOLIVARIANA CAJA DE AGUA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ BARRIO CAJA DE AGUA FRENTE AVENIDA PRINCIPAL DE CAJA DE AGUA PARTE MEDIA A 200 METROS DEL FOGON COMUNAL CASA');
+INSERT INTO `oficiales` VALUES (1151, '18802207', 'Montilla  Deyanira Del Valle', '1990-03-11', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'avenida cementerio sector monseñor cardozo el gallo parroquia mercedez diaz muncipio valera', '0426-8797243', 'deyanira2214montilla@gmail.com', 'activo', 'PET-210001888', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1152, '18802862', 'Calderas Romero Pedro Jose', '1988-05-16', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'el cementerio sector santa eduviges parroquia mercedez diaz municipio valera', '4127347311', 'PEDROCALDERA1174@GMAIL.COM', 'activo', 'PET-210002202', NULL, NULL, 'JARDIN DE INFANCIA BOLIVARIANA NUESTRA SEÑORA DE LA PAZ', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE CALLE PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1153, '18924974', 'Briceño Caceres Yuismarlin Del Valle', '1988-06-08', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector san miguel vereda # 05 casa 34 parroquia mercedez diaz municipio valera', '0416-5779677', 'yus.yuis16.05@gmail.com', 'activo', 'PET-210001872', NULL, NULL, 'MODULO DE SERVICIO LA FLORESTA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT (LOS SINTECHO) FRENTE AVENIDA PRINCIPAL LOS SIN TECHO. IZQUIERDA CARRETERA PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO');
+INSERT INTO `oficiales` VALUES (1154, '18924977', 'Sanchez  Jorge Leonardo', '1988-01-18', NULL, NULL, NULL, NULL, '2007-09-01', NULL, 'barbarita de la torre parroquia cristobal mendoza municipio trujillo parroquia cristobal mendoza municipio trujillo', '0424/7664763', 'jorgeleonardo.sanchez07@gmail.com', 'activo', 'PET-210001408', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1155, '18925271', 'Perez Medina Leopoldo Daniel', '1988-09-07', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'sector los lechozos casa s/n parroquia flor de patria municipio pampan', '0414-0793389   0416-5789286', 'LEOPOLDODANIELP@GMAIL.COM', 'activo', 'PET-210002017', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1156, '18925841', 'Gudiño Villegas Jesus Leonardo', '1988-11-23', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'AV PRINCIPAL EL CRUCE VIA BOCONO CERCA DEL HOTEL BARILOCHE FLOR DE PATRIA  PAMPAN', '0416-5288473', 'gudijesus2@gmail.com', 'activo', 'PET-210001982', NULL, NULL, 'ESCUELA BOLIVARIANA EL HATILLO', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA ANDRES LINARES CASERÍO EL HATILLO FRENTE CARRETERA VIA SAN LAZARO KILOMETRO 23 CASA');
+INSERT INTO `oficiales` VALUES (1157, '18925983', 'Andrade Peña Pedro Jose', '1990-03-04', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'SECTOR MARACAIBITO PAROQUIA LA PAZ MUNICIPIO PAMPAN', '0412-0482317', 'andradepedro55@gmail.com', 'activo', 'PET-210001825', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1158, '18984553', 'Villarreal Valera Jothsel Adrian', '1988-10-16', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'urbanizacion la beatriz 4 etapa sector la chimenea casa 32', '0271-2310706', 'adrianvillarreal 1088@gmail.com', 'activo', 'PET-210002102', NULL, NULL, 'CENTRO DE EDUCACIÓN INICIAL ALBORADA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN JOSE HUMBERTO CONTRERAS (MORON) FRENTE CALLE PRINCIPAL. DERECHA VEREDA 3 AL LADO DEL COLEGIO MARIASON ROSAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1159, '18985032', 'Briceño Godoy Anderson Alexander', '1987-02-14', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'caja de agua parte baja valera parroquia mercedez diaz municipio valera', '0426-3452802', 'andersonb140287@gmail.com', 'activo', 'PET-210001450', NULL, NULL, 'ESCUELA NACIONAL BOLIVARIANA CAJA DE AGUA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ BARRIO CAJA DE AGUA FRENTE AVENIDA PRINCIPAL DE CAJA DE AGUA PARTE MEDIA A 200 METROS DEL FOGON COMUNAL CASA');
+INSERT INTO `oficiales` VALUES (1160, '18985092', 'Mendoza  Adriana Carolina', '1989-02-08', NULL, NULL, NULL, NULL, '2007-09-01', NULL, 'caja de agua parte media calle principal casa s/n parroquia mercedez diaz municipio valera', '4147594537', 'adrianacarolina892@gmail.com', 'activo', 'PET-210001878', NULL, NULL, 'ESCUELA NACIONAL BOLIVARIANA CAJA DE AGUA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ BARRIO CAJA DE AGUA FRENTE AVENIDA PRINCIPAL DE CAJA DE AGUA PARTE MEDIA A 200 METROS DEL FOGON COMUNAL CASA');
+INSERT INTO `oficiales` VALUES (1161, '18985299', 'Perez Gonzalez Jonathan Alberto', '1989-11-03', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'urbanizacion san rafael bloque 13 piso 03 apartamento 0302 parroquia san luis municipio valera', '0414-7488714', 'albertojpgonzalez@gmail.com', 'activo', 'PET-210002027', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1162, '18985428', 'Rondon  Jean Carlos', '1985-10-25', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'isnotu parroquia jose gregorio hernandez municipio rafael rangel', '0424-7123942', 'jcrondon75@gmail.com', 'activo', 'PET-210001616', NULL, NULL, 'UNIDAD EDUCATIVA COLEGIO MADRE RAFOLS', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR 5 DE MAYO DERECHA AVENIDA 15. IZQUIERDA AVENIDA 16. FRENTE CALLE 10 A 20 METROS DEL AMBULATORIODEL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1163, '18985611', 'Baptista Urbina Jorge Luis', '1988-01-09', NULL, NULL, NULL, NULL, '2007-02-15', NULL, 'sector el bolo parroquia mercedez diaz municipio valera', '0426-8700939', 'jorgebaptista900@gmail.com', 'activo', 'PET-210001623', NULL, NULL, 'ESCUELA BOLIVARIANA LA QUINTA', 'ESTADO  TRUJILLO MUNICIPIO BOLIVAR PARROQUIA GRANADOS CASERÍO LA QUINTA FRENTE CALLE PRINCIPAL A 50 METROS DE LA PANAMERICANA CASA');
+INSERT INTO `oficiales` VALUES (1164, '18985880', 'Roman  Kelvis Antonio', '1987-05-08', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'sector terrazas de jalisco 3era etapa parroquia jalisco municipio motatan', '0414-7453244', 'romankelvis288@gmail.com', 'activo', 'PET-210001891', NULL, NULL, 'MODULO DE SERVICIO LA FLORESTA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT (LOS SINTECHO) FRENTE AVENIDA PRINCIPAL LOS SIN TECHO. IZQUIERDA CARRETERA PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO');
+INSERT INTO `oficiales` VALUES (1165, '18985931', 'Pirela Ramirez Leandro Ramon', '1989-03-27', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'urbanizacion eloisa torres vereda 5 casa s/n parroquia escuque municipio escuque', '0414-7183194', 'leandropirela10@gmail.com', 'activo', 'PET-210001517', NULL, NULL, 'LICEO BOLIVARIANO IGNACIO CARRASQUERO', ' ESTADO TRUJILLO MUNICIPIO ESCUQUE PARROQUIA ESCUQUE SECTOR ELOISA TORRES IZQUIERDA CALLE LOS LIMONCITOS. FRENTE CALLE MISMOTE AL LADO DEL MATERNAL ROSA BRICENO DE GONZALEZ CASA');
+INSERT INTO `oficiales` VALUES (1166, '19101269', 'Valecillos Carlos Daniel', '1988-02-10', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'sector tierra negra parroquia dividive municipio rafael rangel', '0426-3743148', 'carlosvalecillos562@gmsil.com', 'activo', 'PET-210002123', NULL, NULL, 'SALON DE USOS MULTIPLES', ' ESTADO TRUJILLO  MUNICIPIO  MIRANDA PARROQUIA EL DIVIDIVE SECTOR BOLIMIR DERECHA AVENIDA BOLIVAR. IZQUIERDA CALLE BOLIMIR. FRENTE CALLE EMIGDIO OLMOS AL LADO DE LA TORRE DE CANTV CASA');
+INSERT INTO `oficiales` VALUES (1167, '19101493', 'Hernandez Montilla Delvy Enrique', '1987-07-08', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'EL MURO MUNICIPIO BATATAL, MENE GRANDE', '0416-4239528', 'delvyh4@gmail.com', 'activo', 'PET-210001637', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1168, '19102609', 'Alvarez Viloria Rosmel Daniel', '1989-04-01', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'miraflores parroquia motatan municipio motatan', '0426-1702786', 'alvarez.rosmel@gmail.com', 'activo', 'PET-210001467', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1169, '19102619', 'Angel Godoy Raiber Anderson', '1989-03-12', NULL, NULL, NULL, NULL, '2007-09-01', NULL, 'avenida el cementerio los sintechos parroquia mercedez diaz municipio valera', '4165736602', 'TIBISAYMARIA200989@GMAIL.COM', 'activo', 'PET-210001915', NULL, NULL, 'UNIVERSIDAD PEDAGOGICA EXPERIMENTAL LIBERTADOR (UPEL)', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ URBANIZACIÓN VALMORE RODRIGUEZ IZQUIERDA CALLE CALLE 4. FRENTE CALLE NUMERO 4 A 100M DEL TERMINAL DE PASAJERO CASA');
+INSERT INTO `oficiales` VALUES (1170, '19102884', 'Araujo Azuaje Andreina Del Carmen ', '1989-01-07', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'el cumbe sector la playita parroquia juan ignacio montilla municipio valera', '0426-47577780', 'andreinaaraujo814@gmail.com', 'activo', 'PET-210001911', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1171, '19122368', 'Vega Carrillo Omar Miguel', '1989-04-22', NULL, NULL, NULL, NULL, '2022-07-15', NULL, 'agua santa calle 3 casa 1 parroquia agua santa municipio miranda', '4263755122', 'OMVC30@GMAIL.COM', 'activo', 'PET-210002208', NULL, NULL, 'UNIDAD EDUCATIVA DOCTOR LUIS BELTRAN PRIETO FIGUEROA', ' ESTADO TRUJILLO MUNICIPIO  MIRANDA  PARROQUIA AGUA SANTA SECTOR LOS POZOS DERECHA CALLE BELLO MONTE. IZQUIERDA CALLE LAS FLORES. FRENTE CALLE LOS POZOS SEGUNDA ENTRADA SUBIENDO POR LA PANAMERICANA CASA');
+INSERT INTO `oficiales` VALUES (1172, '19147444', 'Cadenas Caceres Johan Alfredo', '1989-03-26', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'santa rosa las playitas parroquia cristobal mendoza municipio trujillo', '0412-4260002', 'Johancadenad@gmail.com', 'activo', 'PET-210002122', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1173, '19147489', 'Rojas Hurtado Nilson Rafael', '1986-02-28', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'SECTOR LA FLORESTA PARROQUIA MERCEDEZ DIAZ MUNICIPIO VALERA', '0416-8791785', 'prolectariored@gmail.com', 'activo', 'PET-210001822', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1174, '19147505', 'Bravo Escobar Elvis Ramon', '1987-03-06', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'KILMETRO 23 VIA LA SELVA, PARROQUIA JUNIN MUNICIPIO SUCRE', '0412-6931892', 'elvisbravo0102@gmail.com', 'activo', 'PET-210001549', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1175, '19147516', 'Vasquez Santos Maryoluis Del Carmen', '1989-03-14', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'barrio el progreso sector el carmen parroquia pampan municipio pampan', '426-9139262', 'Vasquezmar283@gmail.con', 'activo', 'PET-210002175', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1176, '19147694', 'Delgado Teran Simon Gregorio', '1990-08-28', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'LOMAS DE PIEDRA NUEVA MONSEÑOR CARRILLO TRUJILLO', '0424-7286364', 'delgadosimon42@gmail.com', 'activo', 'PET-210001793', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1177, '19148063', 'Perdomo Cordero Ramon Eduardo', '1987-08-19', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'avenida principal del batatillo parroquia chejende municipio candelaria', '4161771587', 'EDUARTHAPERDOMO19@GMAIL.COM', 'activo', 'PET-210002172', NULL, NULL, 'UNIDAD EDUCATIVA EL BATATILLO', ' ESTADO TRUJILLO  MUNICIPIO CANDELARIA PARROQUIA CHEJENDE CASERÍO EL BATATILLO FRENTE CALLE PRINCIPAL CARRETERA PANAMERICANA, SECTOR EL BATATILLO CASA');
+INSERT INTO `oficiales` VALUES (1178, '19148193', 'Gil Carrillo Luis Miguel', '1990-11-13', NULL, NULL, NULL, NULL, '2024-05-16', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1179, '19148396', 'Cordero  Ruben Eduardo', '1988-02-12', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'lomas de mitimbis parroquia el carmen municipio bocono', '0424-7629557', NULL, 'activo', 'PET-210002156', NULL, NULL, 'ESCUELA BOLIVARIANA SAN FELIPE', 'ESTADO TRUJILLO MUNICIPIO CARACHE PARROQUIA PANAMERICANA SECTOR SAN FELIPE FRENTE CARRETERA VÍA TRASANDINA ENTRE UNIMIN Y PEAJE SAN ANTONIO, A 10 METROS DE LA CAPILLA CASA');
+INSERT INTO `oficiales` VALUES (1180, '19148925', 'Benitez Montilla Luis Alfredo', '1990-11-30', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'las mesetas de chimpire calle principal parroquia jose leonardo suarez municipio san rafael de carvajal', '0426-7151787', 'luisalfredobenitez.1990@gmail.com', 'activo', 'PET-210001929', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1181, '19185285', 'Rojas Ortegano Laura Karina', '1988-07-24', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'sector valle verde 1 calle don ramon parroquia el carmen municipio bocono', '0424-7212206', 'rojasorteganolaurakarina@gmail.com', 'activo', 'PET-210002024', NULL, NULL, 'ESCUELA BOLIVARIANA PRESBÍTERO JOSÉ DE JESÚS ESPINOZA', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN URBANIZACIÓN LA ELBA IZQUIERDA CALLE LA INOS. FRENTE CALLE MARIO BRICEÑO IRAGORRI A MEDIA CUADRA DE ESTAMPADOS PALAFITO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1182, '19186971', 'Gonzalez Berbeci Francis Annabel', '1989-05-27', NULL, NULL, NULL, NULL, '2019-07-01', NULL, 'miticun sector el paraizo parroquia y municipio bocono', '414-7348344', 'francisgonzalez1704@gmail.com', 'activo', 'PET-210002128', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1183, '19270550', 'Colmenares Angel Ender Jose', '1985-09-14', NULL, NULL, NULL, NULL, '2005-07-15', NULL, 'TERRAZA DE JALISCO JALISCO  MOTATAN', '0426-4749241', 'endercolmenares301@gmail.com', 'activo', 'PET-210001788', NULL, NULL, 'ESCUELA GRADUADA RÓMULO BETANCOURT', ' ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUA JUNIN CASERÍO BOYACA DERECHA CALLE JUAN BRICENO. IZQUIERDA CALLE EL MAMON. FRENTE CALLE COMERCIO KILÓMETRO 20 EDIFICIO');
+INSERT INTO `oficiales` VALUES (1184, '19270954', 'Castellanos Villegas Carlos Eduardo', '1989-06-10', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'tabor sector la moron parroquia flor de patria municipio pampan', '0412-6552897', 'dayanalaviera@gmail.com', 'activo', 'PET-210001607', NULL, NULL, 'ESCUELA BOLIVARIANA FERNÁNDO SEGNINI LUPI', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR TABOR DERECHA CALLE MORON. FRENTE CALLE LA MORON. IZQUIERDA CALLEJÓN CERRADO CERCA DE LA CAPILLA CASA');
+INSERT INTO `oficiales` VALUES (1185, '19271405', 'Villegas Perez Orlando Xavier', '1987-10-29', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'LO LLANOS DE MONAY LA PAZ  PAMPAN', '0416-4701797', 'michavillegas03@gmail.com', 'activo', 'PET-210001757', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1186, '19271895', 'Materano  Daniel Alberto', '1988-10-17', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'EL CERRITO DE TOROCOCO PARTE ALTA  CARRILLO CANDELARIA', '0412-1252557', 'ep2.5laquebrada@gmail.com', 'activo', 'PET-210002014', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1187, '19285021', 'Lamus Briceño Gerardo Enrique', '1989-07-13', NULL, NULL, NULL, NULL, '2019-05-01', NULL, 'SECTOR CAJA DE AGUA, PARTE BAJA, CALLE PPAL, CASA S/N, MERCEDES DIAZ, VALERA', '0424-7842788', 'gerardoelamus@gmail.com', 'activo', 'PET-210001687', NULL, NULL, 'ESCUELA NACIONAL BOLIVARIANA CAJA DE AGUA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ BARRIO CAJA DE AGUA FRENTE AVENIDA PRINCIPAL DE CAJA DE AGUA PARTE MEDIA A 200 METROS DEL FOGON COMUNAL CASA');
+INSERT INTO `oficiales` VALUES (1188, '19285650', 'Hidalgo Abreu Luis Eduardo', '1988-11-10', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'avenida monseñor mejias la cejita parroquia antonio nicolas briceño municipio carvajal', '0412/7541942', 'abreu1988eduardo@gmail.com', 'activo', 'PET-210001581', NULL, NULL, 'ESCUELA INTEGRAL BOLIVARIANA JULIO SÁNCHEZ VIVAS', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL  PARROQUIA ANTONIO NICOLAS  BRICEÑO SECTOR LA CEJITA FRENTE AVENIDA PRINCIPAL. DERECHA CALLEJÓN SAN JUAN. IZQUIERDA CALLEJÓN CEMENTERIO A 150 METROS ABASTO LA Y CASA');
+INSERT INTO `oficiales` VALUES (1189, '19285885', 'Vergara Cabrera Luis Enrique', '1987-02-13', NULL, NULL, NULL, NULL, '2019-07-01', NULL, 'sector la flORESTA  primera etapa  casa s/n PARROQUIA MERCEDEZ DIAZ MUNICIPIO VALERA', '0424-7092146', 'LUISENRIQUEVERGARACABRERA@GMAIL.COM', 'activo', 'PET-210002002', NULL, NULL, 'ESCUELA TÉCNICA ROBINSONIANA ZAMORANA PEDRO GARCÍA LEAL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LAS ACACIAS DERECHA AVENIDA BOLIVARIANA. IZQUIERDA AVENIDA 3. FRENTE CALLE 18 FRENTE AL COLEGIO REPUBLICA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1190, '19286788', 'Salcedo Vasquez Eudis Daniel', '1991-01-29', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'avenida principal parroquia betijoque municipio rafael rangel', '0416-4672127', 'salcedoeudis1991@gmail.com', 'activo', 'PET-210001522', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1191, '19286818', 'Ramirez Graterol Jose Antonio', '1987-10-06', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'sector san pablo via la puerta parroquia la puerta municipio valera', '0424-7549926', 'ramirezjose1928@gmail.com', 'activo', 'PET-210002103', NULL, NULL, 'ESCUELA CONCENTRADA SAN PABLO', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA MENDOZA CASERÍO SAN PABLO FRENTE CALLE PRINCIPAL SAN PABLO. IZQUIERDA CARRETERA VIA VALERA - LA PUERTA LA PASARELA DE SAN PABLO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1192, '19287267', 'Moreno Villegas Jonathan Miguel', '1991-07-30', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'calle principal del sector santo domingo parroquia mercedez diaz municipio valera', '4129322870', 'JM5809051@GMAIL.COM', 'activo', 'PET-210001964', NULL, NULL, 'ESCUELA BASICA ELISA PULGAR DE RAMIREZ', ' ESTADO TRUJILLO MUNICIPIO  MIRANDA  PARROQUIA AGUA SANTA SECTOR CASCO CENTRAL DE AGUA SANTA DERECHA CALLE AGUA SANTA. IZQUIERDA CALLE DEMOCRACIA. FRENTE CALLE PRINCIPAL CERCA DE LA MEDICATURA CASA');
+INSERT INTO `oficiales` VALUES (1193, '19338524', 'Valenzuela Lozada Leonso Jose', '1989-11-03', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'los silos parte alta parroquia santa ana municipio pampan', '0426/4088508', 'leonsovalenzuela@gmail.com', 'activo', 'PET-210001418', NULL, NULL, 'ESCUELA BOLIVARIANA 27 DE NOVIEMBRE DE 1820', ' ESTADO  TRUJILLO MUNICIPIO PAMPAN PARROQUIA SANTA ANA SECTOR VITORO DERECHA CALLE BOLIVAR. FRENTE CALLE BOLIVAR AL FRENTE DE LA PARADA DE LA LINEA SANTA ANA CASA');
+INSERT INTO `oficiales` VALUES (1194, '19338774', 'Piñero Castellanos Junior Jose', '1991-01-27', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'LOMA ISLETA, SECTOR LOS TRES CUARTOS, CASA S/N,  PARROQUIA EL CARMEN , MUNICIPIO BOCONÓ.', '0426-6264908', 'piñerosc1991@gmail.com', 'activo', 'PET-210001548', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1195, '19373042', 'Suarez Herrera Aaron Eulis', '1989-07-19', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'san francisco de yare parroquia san antonio municipio simon bolivar', '0412-3635467', 'victorsaelo204@gmail.com', 'activo', 'PET-210001579', NULL, NULL, 'UNIDAD EDUCATIVA SAN VICENTE DE PAÚL', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LA PLATA DERECHA AVENIDA 9. FRENTE AVENIDA BOLIVAR AL LADO DE LA IGLESIA EL CARMEN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1196, '19427489', 'Godoy Villegas Johan Jose', '1989-11-15', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'tres esquinas plaza ali primera via poligono de tiro parroquia tres esquinas municipio trujillo', '0416-0786026', 'johanjosegodoy481@gmail.com', 'activo', 'PET-210001713', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1197, '19427581', 'Victora Urbina Yorman Francisco', '1989-08-05', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'minas calle mario briceño iragorry casa s/n parroquia la paz municipio pampan', '0426-8082520', 'yosmaryvictora27@gmail.com', 'activo', 'PET-210001625', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1198, '19427653', 'Azuaje Vasquez Ramon Jose', '1988-10-23', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1199, '19427674', 'Pirela Urbina Nestor Leonel', '1991-02-18', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'sector andres eloy blanco parroquia pampan municipio pampan', '0426-3005750', 'nestorpirela647@gmail.com', 'activo', 'PET-210001488', NULL, NULL, 'ESCUELA BOLIVARIANA MONSEÑOR MEJIAS', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR LA COROMOTANA DERECHA CARRETERA NACIONAL. IZQUIERDA CARRETERA NACIONAL. FRENTE TRONCAL 007 AL LADO DEL MINISTERIO DEL AMBIENTE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1200, '19427804', 'Roman Roman Ramiro Antonio', '1986-06-19', NULL, NULL, NULL, NULL, '2016-05-16', NULL, 'sector la juventud parroquia balmore rodriguez municipio sucre', '424-7220184', 'rrramiro19@gmail.com', 'activo', 'PET-210001565', NULL, NULL, 'ALDEA BOLIVARIANA MUNICIPIO SUCRE', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ SECTOR CASA BLANCA DERECHA CALLE CALLE HUGO SUAREZ. IZQUIERDA CALLE CALLE HUGO SUAREZ. FRENTE CALLE HUGO SUÁREZ SECTOR 5 DE JULIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1201, '19427852', 'Delgado Araujo Alexander Jose', '1990-11-06', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'colinas de guatiri parroquia la paz municipio pampan ', '0426/1762690', 'alexanderflacucho1@gmail.com', 'activo', 'PET-210001425', NULL, NULL, 'LICEO BOLIVARIANO MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ URBANIZACIÓN LA PAZ FRENTE VEREDA 10 AL LADO DE LA BODEGA DE LA SEÑORA IRIALA CASA');
+INSERT INTO `oficiales` VALUES (1202, '19428023', 'Franco Montilla  David Jose', '1989-07-15', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'sector la quedradita parroquia la esperanza municipio andres bello', '0416-4651333', 'davidfranco8915@gmail.com', 'activo', 'PET-210002157', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1203, '19428329', 'Villegas Montilla Jose Manuel', '1985-06-01', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'sector el tablon de monay parroquia la paz municipio pampan', '0412-5131836', 'jv7240437@gmail.com', 'activo', 'PET-210001444', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1204, '19428357', 'Segovia Briceño Michael Jose', '1988-06-23', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'kilometro 23 via la ceiba parroquia junin municipio la ceiba', '4268282537', 'michaelkm232021@gmail.com', 'activo', 'PET-210001498', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1205, '19428640', 'Morales Torrealba Giovanny Alexander', '1989-11-12', NULL, NULL, NULL, NULL, '2018-01-01', NULL, 'la tunita parte baja parroquia cristobal mendoza municipio trujillo', '0426-4245661', 'giovannymorales111989@gmail.com', 'activo', 'PET-210001677', NULL, NULL, 'ESCUELA BOLIVARIANA LA TUNITA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR EL PARAMITO DERECHA AVENIDA BUEN PASTOR. FRENTE AVENIDA BUEN PASTOR AL FRENTE DEL CEMENTERIO BUEN PASTOR FINAL DE LA AVENIDA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1206, '19428781', 'Ramirez Perdomo Yohaner Jose', '1982-08-17', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'calle 3 de mayo casa s/n parroquia balmore rodriguez municipio sucre', '0416-0663949', 'ramirezyohaner82@gmail.com', 'activo', 'PET-210001879', NULL, NULL, 'ALDEA BOLIVARIANA MUNICIPIO SUCRE', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ SECTOR CASA BLANCA DERECHA CALLE CALLE HUGO SUAREZ. IZQUIERDA CALLE CALLE HUGO SUAREZ. FRENTE CALLE HUGO SUÁREZ SECTOR 5 DE JULIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1207, '19428838', 'Cordero Lucena German Ramon', '1990-05-11', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'SECTOR SANTA EDUVIJES CARACHE CARACHE', '0416-1423049', 'german.cordero1990@gmail.com', 'activo', 'PET-210001729', NULL, NULL, 'COMPLEJO CULTURAL CARACHY', ' ESTADO TRUJILLO  MUNICIPIO CARACHE PARROQUIA CARACHE SECTOR CASCO DE CARACHE FRENTE AVENIDA 2, SAN JUAN. IZQUIERDA CALLE CARRILO DIAGONAL A LA FARMACIA CARACHE, A UNA CUADRA DE LA PLAZA BOLÍVAR CASA');
+INSERT INTO `oficiales` VALUES (1208, '19428846', 'Godoy Araujo Antonio Enrique', '1989-01-14', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'MONAY, SECTOR SAN BENITO, CALLE FRANCISO DE MIRANDA, CASA SIN NUMERO, PARROQUIA LA PAZA MUNICUPIO PAMPAN', '0412-5368939', 'antoniogodoy7514@gmail.com', 'activo', 'PET-210001606', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1209, '19428853', 'Castellanos Teran Jhoander Xavier', '1990-04-30', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'SECTOR PUENTE BLANCO LA PAZ  PAMPAN', '0412-0484113', 'cyohander25@gmail.com', 'activo', 'PET-210001770', NULL, NULL, 'ESCUELA BOLIVARIANA PUENTE BLANCO', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR PUENTE BLANCO DERECHA CALLE EL PUENTE. FRENTE CALLE PRINCIPAL. IZQUIERDA CARRETERA TIERRA DESPUES DEL PUENTE BLANCO CRUSE ALA DERECHA A UN KILOMETRO');
+INSERT INTO `oficiales` VALUES (1210, '19512676', 'Rondon Lara Jose Manuel', '1990-04-18', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'sector las mesetas de chimpire parroquia jose leonardo suarez municipio san rafael de carvajal', '4262748199', 'rondonjose367@gmail.com', 'activo', 'PET-210001575', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL SALOMÓN BRICEÑO GABALDON', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR LAS MESETAS DE CHIMPIRE IZQUIERDA CALLE PPL. FRENTE CALLE PRINCIPAL. DERECHA CALLEJÓN EL CARMEN A 100 METROS IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1211, '19573049', 'Aldana Asuaje Mirian', '1990-10-24', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'sector mosquey casa s/n parroquia bocono municipio bocono', '4241138371', 'Aldanamirian1990@gmail.com', 'activo', 'PET-210001882', NULL, NULL, 'UNIDAD EDUCATIVA DOCTOR LEONARDO RUIZ PINEDA', ' ESTADO TRUJILLO  MUNICIPIO BOCONO PARROQUIA BOCONO URBANIZACIÓN RUIZ PINEDA FRENTE AVENIDA CEMENTERIO. DERECHA CALLE MIRANDA. IZQUIERDA CALLE GUAICAIPURO IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1212, '19609073', 'Graterol Graterol Reinaldo Alfonso', '1991-11-17', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'SECTOR CAMPO SOLO PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0416-8796146', 'reinaldograterograterol@gmail.com', 'activo', 'PET-210001800', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1213, '19609379', 'Montilla Araujo Richard Jose', '1988-03-19', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'sector el tablon parroquia la paz municipio pampan', '0412-4593060', 'richard19marzo88@gmil.com', 'activo', 'PET-210002031', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1214, '19610139', 'Roman Roman Alirio Enrique', '1989-09-14', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector santa lucia parroquia la paz municipio pampan', '4264048439', 'ALIRIOENRIQUEROMAN8989@GMAIL.COM', 'activo', 'PET-210001975', NULL, NULL, 'ESCUELA BOLIVARIANA SANTA LUCIA DE MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR SANTA LUCIA FRENTE CALLE LAS FLORES. IZQUIERDA TRONCAL 002 A 100 METROS DE LA SUD ESTACION ELECTRICA DE CORPOELEC CASA');
+INSERT INTO `oficiales` VALUES (1215, '19610355', 'Cabrera Daboin Yoelvis Jose', '1991-03-17', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'parroquia la paz municipio pampan', '4165794667', 'yoelviscabrera199@gmail.com', 'activo', 'PET-210002075', NULL, NULL, 'ESCUELA ESTADAL CONCENTRADA', ' ESTADO  TRUJILLO MUNICIPIO PAMPAN PARROQUIA SANTA ANA CASERÍO LA VEGA DE SANTA ANA FRENTE CALLE VIA PRINCIPAL FRENTE DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1216, '19610489', 'Calderon Barreto Aryanny Karelis', '1991-01-25', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector la represa de mesa de gallardo parroquia cruz carrillo municipio trujillo', '414-5741449', 'leogere2019@gmail.com', 'activo', 'PET-210002096', NULL, NULL, 'ESCUELA BOLIVARIANA TOBÍAS VALERA MARTÍNEZ', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRUZ CARRILLO URBANIZACIÓN MESA DE GALLARDO FRENTE CALLE PRINCIPAL MESA DE GALLARDO A 100 METROS DEL GERIATRICO ALEJANDRO PROSPERO REVEREN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1217, '19610732', 'Villa Olivar Carlos Humberto', '1989-01-10', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'la floresta san miguel parroquia mercedez diaz municipio valera', '0416-9832018', 'carlovilla1174@gmail.com', 'activo', 'PET-210002026', NULL, NULL, 'UNIDAD EDUCATIVA SESQUICENTENARIO SAN MIGUEL', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ BARRIO SAN MIGUEL FRENTE CALLE CALLEJON MIRAFLORES 50 METRO DE LA CAPILLA SAN MIGUEL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1218, '19610749', 'Gudiño Teran Ivan Antonio', '1989-06-13', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR CAMPO SOLO PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0412-7735172', 'isabelteran802@gmail.com', 'activo', 'PET-210001400', NULL, NULL, 'ESCUELA BOLIVARIANA MINAS DE MONAY', ' ESTADO TRUJILLO MUNICIPIO CANDELARIA PARROQUIA ARNOLDO GABALDON SECTOR LAS RURALES IZQUIERDA CALLE LOS ARAGUANEY. FRENTE CALLE LA CRUZ DE LA MISION AL LADO CANCHA DEPORTIVA CASERIO MINA DE MONAI CASA');
+INSERT INTO `oficiales` VALUES (1219, '19610773', 'Marquez Teran Alfonso Jose', '1992-02-17', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'urbanizacion don tobias callejon nuevo casa n° 0-5 parroquia matriz municipio trujillo', '0416-3775147', 'alfonsomarquez2024@gmail.com', 'activo', 'PET-210001705', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1220, '19610795', 'Manzanilla Molina Jonathan Jose', '1989-08-10', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'sector valle blanco parroquia la quedrada municipio urdaneta', '0426-1724746', 'manzanillajonathan49@gmail.com', 'activo', 'PET-210001510', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1221, '19643935', 'Uzcategui Romero Andreina Ysabel', '1992-03-14', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'urbanizacion el mirador al final de la quinta calle parroquia carvajal municipio san rafael de carvajal', '0414-0360858', '2.6lapuerta@gmail.com', 'activo', 'PET-210001886', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1222, '19644513', 'Infante Espinoza Alirio De Jesus', '1990-08-19', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'mesetas de chimpire sector las curvas parroquia jose leonardo suarez municipio carvajal', '0412/0606652', 'alirioinfante6@gmail.com', 'activo', 'PET-210001631', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL SALOMÓN BRICEÑO GABALDON', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR LAS MESETAS DE CHIMPIRE IZQUIERDA CALLE PPL. FRENTE CALLE PRINCIPAL. DERECHA CALLEJÓN EL CARMEN A 100 METROS IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1223, '19644852', 'Benitez Araujo Yohander Jesus', '1989-06-16', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'urbanizacion las lomas sector colina de bello monte parroquia san luis municipio valera', '0271-2252754', 'YOHARLYBETH2911@GMAIL.COM', 'activo', 'PET-210002089', NULL, NULL, 'LICEO BOLIVARIANO ANTONIO NICOLÁS BRICEÑO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN MONSEÑOR JOSE HUMBERTO QUINTERO FRENTE VEREDA 42 A 50 METROS DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1224, '19670295', 'Paredes Barazarte  Morella Del Carmen', '1987-12-01', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'segunda sabana velle verde I parroquia el carmen municipio bocono', '0424-7477853', 'paredesmorela22@gmail.com', 'activo', 'PET-210002097', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1225, '19670812', 'Delgado Valera Zuleima Karina', '1989-09-01', NULL, NULL, NULL, NULL, '2019-12-01', NULL, 'urbanizacion de la paz parroquia la paz municipio pampan', '0416-9727351', 'zuleimadelgado0109@gmail.com', 'activo', 'PET-210001632', NULL, NULL, 'ESCUELA ESTADAL LUCILA CORONADO', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR LA RECTA FRENTE CALLE LA CANCHA. DERECHA CALLEJÓN EL DIAMANTE. IZQUIERDA TRONCAL 002 FRENTE AL HOTEL EL DIAMANTE CASA');
+INSERT INTO `oficiales` VALUES (1226, '19670886', 'Paredes Azuaje Juan Carlos', '1992-05-08', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'urbanizacin rincon 3 calle 5 casa 38 parroquia el carmen municipio bocono', '4247330782', 'paredesaqzuajej@gmail.com', 'activo', 'PET-210001691', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1227, '19713395', 'Rumbos Segundo', '1988-06-16', NULL, NULL, NULL, NULL, '2024-03-01', NULL, 'santa eduviges parte baja parroquia sabana de mendoza municipio sucre', '4269050712', 'segundorumbos93@gmail.com', 'activo', 'PET-210001794', NULL, NULL, 'ALDEA BOLIVARIANA MUNICIPIO SUCRE', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ SECTOR CASA BLANCA DERECHA CALLE CALLE HUGO SUAREZ. IZQUIERDA CALLE CALLE HUGO SUAREZ. FRENTE CALLE HUGO SUÁREZ SECTOR 5 DE JULIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1228, '19713512', 'Bastidas Rojas Johan Ramon', '1989-05-14', NULL, NULL, NULL, NULL, '2024-04-16', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, 'ESCUELA BOLIVARIANA LA QUINTA', 'ESTADO  TRUJILLO MUNICIPIO BOLIVAR PARROQUIA GRANADOS CASERÍO LA QUINTA FRENTE CALLE PRINCIPAL A 50 METROS DE LA PANAMERICANA CASA');
+INSERT INTO `oficiales` VALUES (1229, '19794001', 'Paredez  Jose  Luis', '1989-11-11', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'sector los jardines parroquia campo alegre del municipo san rafael de carvajal', '4120608721', 'JOSEPAREDES9448@GMAIL.COM', 'activo', 'PET-210001976', NULL, NULL, 'ESCUELA GRADUADA CUBITA', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR CUBITA DERECHA CALLE LA LAGUNITA. IZQUIERDA CALLE SIN NOMBRE. FRENTE CALLE PRINCIPAL AL LADO AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1230, '19795023', 'Linares Paredes Wilmer Antonio', '1988-03-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1231, '19795284', 'Valecillos Hernandez Eduardo Jose', '1988-12-31', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'sector el amparo pasaje n° 4 parroquia san rafael de carvajal municipio carvajal', '4161342537', 'valecilloseduardo0@gmail.com', 'activo', 'PET-210001404', NULL, NULL, 'CENTRO DE EDUCACION INTEGRAL RAFAEL QUEVEDO URBINA', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR CAMPO ALEGRE IZQUIERDA AVENIDA PRINCIPAL. DERECHA CALLE FINAL CALLE QUINTA. FRENTE CALLE CUARTA DETRAS PREFECTURA CAMPO ALEGRE CASA');
+INSERT INTO `oficiales` VALUES (1232, '19795687', 'Sanchez  Luis Enrique', '1990-11-28', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'kilometro 23 via la ceiba parroquia junin municipio la ceiba', '0416-4689141', 'sluisenrique721@gmail.com', 'activo', 'PET-210001464', NULL, NULL, 'UNIDAD BÁSICA 27 DE JUNIO DE 1870', ' ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUA JUNIN SECTOR LA PLAZA DERECHA CALLE LA ESPERANZA. IZQUIERDA CALLE BENTANCOURT. FRENTE CALLE BOLÍVAR AL LADO DE LA PLAZA BOLÍVAR, JUNIN KILÓMETRO 23 EDIFICIO');
+INSERT INTO `oficiales` VALUES (1233, '19795719', 'Montilla Rangel Francisco Antonio', '1989-02-19', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'urbanizacion altos de motatan parroquia motatan municipio motatan', '4126513687', 'MONTILLARANGELFRANCISCOANTONIO@GMAIL.COM', 'activo', 'PET-210002166', NULL, NULL, ' LICEO BOLIVARIANO HILARIO PIZANI ANSELMI', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA MOTATAN SECTOR CENTRO FRENTE AVENIDA BOLIVAR. DERECHA CALLE 06. IZQUIERDA CALLE 05 AL LADO DE LA ALCALDIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1234, '19795816', 'Vielma Viloria Yhony Alberto', '1990-06-08', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'calle 8 barrio el milagro parroqia juan ignacio montilla municipio valera ', '4147364689', 'YHONYVIELMA006@GMAIL.COM', 'activo', 'PET-210001962', NULL, NULL, 'ESCUELA BOLIVARIANA PASCUAL IGNACIO VILLASMIL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA URBANIZACIÓN BELLA VISTA FRENTE AVENIDA ANDRES BELLO. DERECHA VEREDA 1. IZQUIERDA VEREDA 2 A 20 METROS DEL CENTRO DE DIGNOSTICO INTEGRAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1235, '19812146', 'Abreu Graterol Junior Manuel', '1991-01-03', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'parroquia valmore rodriguez municipio sucre', '0416/2700716', 'abreugrateroljuniormanuel@gmail.com', 'activo', 'PET-210001585', NULL, NULL, 'UNIVERSIDAD PEDAGOGICA EXPERIMENTAL LIBERTADOR (UPEL)', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ URBANIZACIÓN VALMORE RODRIGUEZ IZQUIERDA CALLE CALLE 4. FRENTE CALLE NUMERO 4 A 100M DEL TERMINAL DE PASAJERO CASA');
+INSERT INTO `oficiales` VALUES (1236, '19812157', 'Duran Bolivar Agustin Salvador', '1989-11-09', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'SECTOR LA CUCHILLA PARTE BAJA PARROQUIA Y MUNICIPIO CAMPO ELIAS ', '0424-7289339', 'agustin11duran89@gmail.com', 'activo', 'PET-210001678', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1237, '19812656', 'Benitez Hernandez Fabiola Desiree', '1989-12-02', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'las cocuizas de monay parroquia la paz municipio pampan', '4247489379', 'BENITEZFABIOLA714@GMAIL.COM', 'activo', 'PET-210001748', NULL, NULL, 'ESCUELA LISANDRO ALVARADO', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR LAS COCUIZAS');
+INSERT INTO `oficiales` VALUES (1238, '19812839', 'Marquez Bravo Geilin Oswaldo', '1989-05-29', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'sector mesa de timirisis detrás del complejo kuikas parroquia matriz  municipio trujillo', '0416-2056551', 'estadalpolicia59@gmail.com', 'activo', 'PET-210002184', NULL, NULL, 'ESCUELA BOLIVARIANA MARIO BRICEÑO IRAGORRY', ' ESTADO TRUJILLO  MUNICIPIO TRUJILLO  PARROQUIA MONSEÑOR CARRILLO SECTOR LAS ARAUJAS-SAN JACINTO FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE DOCTOR MARIO BRICE#O IRAGORRY AL LADO DE CENTRO CULTURAL CUIKAS ANTIGUO ATENEO DE TRUJILLO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1239, '19813259', 'Briceño Nuñez Jose Gregorio', '1992-03-28', NULL, NULL, NULL, NULL, '2024-04-16', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1240, '19813448', 'Pacheco Godoy Jean Carlos', '1991-12-13', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'calle san rafael parroquia la paz municipio pampan', '4264733863', 'PACHECOJEANCARLOS35@GMAIL.COM', 'activo', 'PET-210002060', NULL, NULL, 'LICEO BOLIVARIANO MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ URBANIZACIÓN LA PAZ FRENTE VEREDA 10 AL LADO DE LA BODEGA DE LA SEÑORA IRIALA CASA');
+INSERT INTO `oficiales` VALUES (1241, '19813572', 'Daboin Quintero Rafael Angel', '1985-11-24', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'SECTOR LA PAZ VIA PANAMERICANA, ANDRES BELLO, EDO TRUJILLO', '0426-6438026', 'yerianny2510@gmail.com', 'activo', 'PET-210001905', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1242, '19846144', 'Caraballo Tovar Jorge Luis', '1990-02-09', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'urbanizacion francisco de miranda parroquia el socorro municipio jose marquez cañizalez', '0412-0611292', 'carabayjorge90@gmail.com', 'activo', 'PET-210002158', NULL, NULL, 'ESCUELA PRIMARIA BOLIVARIANA VIRGILIO GERMAN DÍAZ', 'ESTADO TRUJILLO MUNICIPIO J.F.MARQUEZ C.  PARROQUIA EL SOCORRO CASERÍO EL PARADERO FRENTE CALLE ARROYO FRENTE A LA ALCALDIA CASA');
+INSERT INTO `oficiales` VALUES (1243, '19846164', 'Tovar Gutierrez Frank Jose', '1991-10-25', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'avenida principal el rinconcito parroquia valerita municipio miranda', '0426-7123942', 'franktovar280@gmail.com', 'activo', 'PET-210001610', NULL, NULL, 'MODULO DE SERVICIO LA FLORESTA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT (LOS SINTECHO) FRENTE AVENIDA PRINCIPAL LOS SIN TECHO. IZQUIERDA CARRETERA PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO');
+INSERT INTO `oficiales` VALUES (1244, '19898019', 'Estrada Rivero Danielly Coromoto', '1990-11-30', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'quinta mi valeria callejon la esmeralda parroquia jose leonardo juarez municipio san rafael de carvajal', '0412-3927324', 'sanemictrujillo@gmail.com', 'activo', 'PET-210002086', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1245, '19898087', 'Valecillos Matheus Nuvia Del Valle', '1989-05-05', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'urbanizacion pedro emilio carrillo casa n° 56 parroquia mercedez diaz municipio valera', '0416-4997566', 'nuviavalecillos@gmail.com', 'activo', 'PET-210001668', NULL, NULL, 'CENTRO DE EDUCACIÓN INICIAL ALBORADA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN JOSE HUMBERTO CONTRERAS (MORON) FRENTE CALLE PRINCIPAL. DERECHA VEREDA 3 AL LADO DEL COLEGIO MARIASON ROSAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1246, '19898536', 'Calderon Valecillos Joel David', '1989-09-05', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector alberto rabel parroquia motatan municipio motatan', '0426-6923601', 'calderonjosel423@gmail.com', 'activo', 'PET-210002079', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1247, '19898924', 'Lamus Materan Jonathan Daniel', '1991-03-30', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'urbanizacion la muralla calle bucare parroquia pampanito municipio pampanito', '0412-5794019', 'materandaniel4@gmail.com', 'activo', 'PET-210002056', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1248, '19899028', 'Araujo Rojo Frank Jose', '1990-09-01', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'la floresta barrio simon bolivar calle sucre parroquia mercedez diaz municipio valera', '0426-2633268', 'araujofrank41@gmail.com', 'activo', 'PET-210001689', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1249, '19899299', 'Bolivar  Carolina Del Valle', '1989-05-28', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'monay sector la orqueta sector las delicias parroquia la paz municipio pampan', '0412-6824339', 'cbolivar851@gmail.com', 'activo', 'PET-210001895', NULL, NULL, 'LICEO BOLIVARIANO MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ URBANIZACIÓN LA PAZ FRENTE VEREDA 10 AL LADO DE LA BODEGA DE LA SEÑORA IRIALA CASA');
+INSERT INTO `oficiales` VALUES (1250, '19899349', 'Canelones Barreto Ender Antonio', '1989-12-01', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'sector la orqueta parroquia la paz municipio pampan', '0426-3163185', 'ccanelones31@gmail.com', 'activo', 'PET-210001947', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA ');
+INSERT INTO `oficiales` VALUES (1251, '19899726', 'Teran Ortuño Jhorman Manuel', '1989-02-07', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'SECTOR LA TRINIDAD PARROQUIA JOSE LEONARDO SUAREZ MUNICIPIO SAN RAFAEL DE CARVAJAL', '0426-8267981', 'teranyortuño@gmail.com', 'activo', 'PET-210001941', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1252, '20018276', 'Bolivar Castillo Victor Felipe', '1990-03-03', NULL, NULL, NULL, NULL, '2015-09-01', NULL, 'calle 7 casa s/n a media cuadra del hospital central parroquia mercedez diaz municipio valera', '0416-3080298', 'YOLYTORRES02@GMAIL.COM', 'activo', 'PET-210002191', NULL, NULL, 'UNIDAD EDUCATIVA COLEGIO MARIA SANTISIMA', 'ESTADO LARA MUNICIPIO PALAVECINO PARROQUIA JOSE G. BASTIDAS URBANIZACIÓN EL RECREO DERECHA AVENIDA EL PLACER. IZQUIERDA CALLE PRINCIPAL. FRENTE CALLE LOS NARANJOS AL LADO DE CANCHA DE BEISBOL EL RECREO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1253, '20038306', 'Cardozo  Carlos Neptaly', '1991-06-19', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR LS JUVENTUD CAMPO ALEGRE SAN RAFAEL DE CARVAJAL', '0426-1244646', 'cardozocarlosneptali@gmail.com', 'activo', 'PET-210001777', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1254, '20038563', 'Flores Rojo Gerardo Jose', '1987-06-11', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'avenida 10 entre calle 17 y 18 una cuadra del teatro juvenil parroquia mercedez diaz municipio valera', '0412-7855542', 'f4536694@gmail.com', 'activo', 'PET-210001714', NULL, NULL, 'UNIDAD EDUCATIVA ANTONIO NICOLÁS BRICEÑO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR CENTRO FRENTE AVENIDA 12. DERECHA CALLE 14. IZQUIERDA CALLE 15 FRENTE A LA IGLESIA CRISTIANA PRINCIPE DE PAZ EDIFICIO');
+INSERT INTO `oficiales` VALUES (1255, '20038664', 'Viloria Benitez Luis Enrique', '1990-06-05', NULL, NULL, NULL, NULL, '2019-07-01', NULL, 'sabana grande municipio bolivar', '04169746515', 'viloria92@gmail.com', 'activo', 'PET-210001665', NULL, NULL, 'CENTRO DE EDUCACION INICIAL BOLIVARIANO ANTONIO NICOLAS BRICEÑO', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA MOTATAN SECTOR ANDRES BELLO DERECHA AVENIDA PRINCIPAL. IZQUIERDA CALLE LIBERTAD. FRENTE CALLE ANDRES BELLO DETRAS DEL ODONTOLOGICO GALPÓN');
+INSERT INTO `oficiales` VALUES (1256, '20038892', 'Zambrano Delgado Derwis Antonio', '1990-08-26', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'terraza de jalisco  parroquia jalisco municipio motatan', '0416/3131025', 'derwiszambra2690@gmail.com', 'activo', 'PET-210001424', NULL, NULL, 'UNIDAD BÁSICA 27 DE JUNIO DE 1870', ' ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUA JUNIN SECTOR LA PLAZA DERECHA CALLE LA ESPERANZA. IZQUIERDA CALLE BENTANCOURT. FRENTE CALLE BOLÍVAR AL LADO DE LA PLAZA BOLÍVAR, JUNIN KILÓMETRO 23 EDIFICIO');
+INSERT INTO `oficiales` VALUES (1257, '20038990', 'Mascareño Rivera Darwin Oswaldo', '1989-10-24', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'la floresta plaza miranda parroquia mercedez diaz municipio valera', '0426-3196638', 'darwinmascareño5@gmail.com', 'activo', 'PET-210001890', NULL, NULL, 'MODULO DE SERVICIO LA FLORESTA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT (LOS SINTECHO) FRENTE AVENIDA PRINCIPAL LOS SIN TECHO. IZQUIERDA CARRETERA PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO');
+INSERT INTO `oficiales` VALUES (1258, '20039131', 'Camacho Cabrera Josepthli Alberli', '1991-05-21', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector la quinta parroquia granados municipio bolivar', '0426-3709849', 'josepthalicamacho1991@gmail.com', 'activo', 'PET-210002083', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1259, '20039511', 'Naranjo Ramirez Yohander Jose', '1989-10-12', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'los pinos sector lazo de la vega parroquia mercedez diaz municipio valera', '0424-7216858', 'naranjoyohander@gmail.com', 'activo', 'PET-210001951', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1260, '20039625', 'Scioscia Cabrera Oriana Emperatriz', '1991-10-21', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'parroquia el baño municipio motatan', '0426-1731901', 'orianaemperatrizscioscia@gmail.com', 'activo', 'PET-210002104', NULL, NULL, 'ESCUELA BOLIVARIANA EL BAÑO', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA EL BAÑO SECTOR LA PLAZA FRENTE CALLE LA VIRGEN DEL CARMEN AL LADO DE LA CAPILLA VIRGEN DEL CARMEN, FRENTE A LA PLAZA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1261, '20040214', 'Flores Pulido Manuel', '1990-08-22', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'SECTOR HARAGUAMA CALLE PRINCIPAL CHEJENDE  CANDELARIA', '0412-0746313', 'manuelf3190@gmail.com', 'activo', 'PET-210001743', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1262, '20040913', 'Briceño  Jose Gregorio', '1991-07-01', NULL, NULL, NULL, NULL, '2020-02-16', NULL, 'el amparo callejon 1 casa 1 parroquia carvajal municipio carvajal', '0414-7009781', 'josevalery1991@gmail.com', 'activo', 'PET-210002204', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1263, '20133023', 'Duran Montaña Robert Alexander', '1989-06-16', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'Monay sector el tablon parroquia la paz municipio pampan', '0412/6619309', 'robertduran734@gmail.com', 'activo', 'PET-210002180 credencial extraviada', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1264, '20133070', 'Villegas De Rodriguez Yoselin Del Valle', '1989-06-24', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'cementerio nuevo tablon de monay parroquia la paz municipio pampan', '0412-6552518', 'yoselinyosemith@gmail.com', 'activo', 'PET-210002137', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1265, '20133405', 'Peña Perdomo Pedro Luis', '1990-12-02', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'los silos de monay parroquia chejende municipio candelaria', '4167262730', 'pedroluis20-24@gmail.com', 'activo', 'PET-210001626', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1266, '20133494', 'Briceño Aldana Yovert Alberto', '1989-11-29', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'san jacinto parroquia monseñor carrillo municipio trujillo', '0414/7552465', 'briceñoaldanayovertalberto@gmail.com', 'activo', 'PET-210001636', NULL, NULL, 'UNIDAD EDUCATIVA MONSEÑOR ESTANISLAO CARRILLO', ' ESTADO TRUJILLO  MUNICIPIO TRUJILLO  PARROQUIA MONSEÑOR CARRILLO SECTOR SAN JACINTO FRENTE AVENIDA JOSE FELIX RIBAS AL LADO DEL PARQUE ROMULO GALLEGOS VIA RIO ARRIBA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1267, '20133539', 'Rosales Azuaje  Yorvin Javier', '1991-02-02', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'sector el cementerio del tablon de monay parroquia la paz municipio pampan', '4262714751', 'YORVINROSALES06@GMAIL.COM', 'activo', 'PET-210001945', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1268, '20133688', 'Caceres Vazquez Arnoldo Antonio', '1990-01-18', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'sector la garita II parroquia la paz municipio pampan', '0412-8335531', 'caceresarnoldo678@gmail.com', 'activo', 'PET-210002072', NULL, NULL, 'ESCUELA BOLIVARIANA CAMPO ESTRELLA', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CAMPO ESTRELLA FRENTE TRONCAL 002 FRENTE DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1269, '20133990', 'Benitez Flor del Carmen', '1991-10-17', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'MONAY SECTOR EL PROGRESO LA PAZ  PAMPAN', '0412-9668871', 'florbenitez446@gmail.com', 'activo', 'PET-210001775', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1270, '20134080', 'Moreno  Yugledys Karina', '1986-11-15', NULL, NULL, NULL, NULL, '2008-08-15', NULL, 'sector bella vista parroquia juan ignacio montilla municipio valera', '0416-7735615', 'yuglemoreno41@gmail.com', 'activo', 'PET-210001785', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1271, '20134294', 'Rojas Castellanos Reinaldo Adolfo', '1989-03-05', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'monseñor camargo parroquia pampan municipio pampan', '0426-6151377', 'reinaldoadolforojas5@gmail.com', 'activo', 'PET-210001483', NULL, NULL, 'LICEO BOLIVARIANO RAFAEL MARIA URRECHEAGA', ' ESTADO TRUJILLO  MUNICIPIO PAMPAN PARROQUIA PAMPAN SECTOR CALLE ARRIBA FRENTE CALLE SAN RAFAEL AL LADO DEL CENTRO DIAGNÓSTICO INTEGRAL CASA');
+INSERT INTO `oficiales` VALUES (1272, '20134485', 'Gudiño Roman Leandro Jose', '1989-08-11', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'MONAY, CALLE LIBERTADOR CASA S/N, PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0412-0136615', 'leandrogudi2021@gmail.com', 'activo', 'PET-210001594', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1273, '20134626', 'Niño Franco Anderson Jesus', '1990-07-22', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'SECTOR DON ALFREDO CALLE BELLO MONTE PAROQUIA LA PAZ MUNICIPIO PAMPAN', '0426-7020079', 'andersonniñofranco@gmail.com', 'activo', 'PET-210001824', NULL, NULL, 'UNIDAD EDUCATIVA FRANCISCO TORRES TORO', ' ESTADO TRUJILLO MUNICIPIO CANDELARIA PARROQUIA CHEJENDE SECTOR LAS PLAYITAS IZQUIERDA CALLE SECUNDARIA. FRENTE CARRETERA PANAMERICANA AL FRENTE DE LA CANCHA CASA');
+INSERT INTO `oficiales` VALUES (1274, '20134648', 'Vargas Escalona Nerio Antonio', '1990-01-05', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'chupulun parroquia santa cruz municipio carache', '0426-2441698', 'vargasnerio912@gmail.com', 'activo', 'PET-210002105', NULL, NULL, 'JARDÍN DE INFANCIA BOLIVARIANO AÑO INTERNACIONAL DEL NIÑO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ AV. 13 ESQUINA CALLE 6, FRENTE AL HOSPITAL PEDRO EMILIO CARRILLO');
+INSERT INTO `oficiales` VALUES (1275, '20134811', 'Reyes Gonzalez Daniel Enrique', '1991-01-03', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'SECTRO CERRO SANTA MARIA CHIQUINQUIRA TRUJILLO', '0426-4753278', 'reyesdanieles@gmail.com ', 'activo', 'PET-210001728', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1276, '20135140', 'Nelo Valecillos Roberth Antonio', '1991-06-13', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sabanetas via san lazaro parroquia monseñor carrillo municipio trujillo', '4165641560', 'VALECILLOSROBERT847@GMAIL.COM', 'activo', 'PET-210002170', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1277, '20135401', 'Camargo Lugo Dennys Albeiro', '1991-12-09', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'urbanizacion doña alicia parroquia agua santa municipio miranda', '0416-5785920', 'dennyscamargo15@gmail.com', 'activo', 'PET-210001998', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1278, '20135641', 'Vargas Benitez Nancy Del Carmen', '1991-12-21', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'la recta de monay avenida principal parroquia la paz municipio pampan', '0416-5340802', 'NANCYVARGASB00@GMAIL.COM', 'activo', 'PET-210001855', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1279, '20135678', 'Soto Cabezas Robert Alejandro', '1989-09-22', NULL, NULL, NULL, NULL, '2021-12-16', NULL, 'sector san jose el cruce via bocono parroquia flor de patria municipio pampan', '0412-9937311', 'robertsoto2116@gmail.com', 'activo', 'PET-210002203', NULL, NULL, 'ESCUELA BOLIVARIANA FERNÁNDO SEGNINI LUPI', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR TABOR DERECHA CALLE MORON. FRENTE CALLE LA MORON. IZQUIERDA CALLEJÓN CERRADO CERCA DE LA CAPILLA CASA');
+INSERT INTO `oficiales` VALUES (1280, '20135714', 'Montilla Flores Ranyeli Daigle', '1990-08-11', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'parroquia la paz municipio pampan', '426-1660131', 'ranyelimontilla@gmail.com', 'activo', 'PET-210002187', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1281, '20151338', 'Duran Manzanilla Yegleny Ninoska', '1991-10-10', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'SECTOR INAVI PARROQUIA SABANA DE MENDOZA MUNICIPIO SUCRE', '0424-7204118', 'yeglenis6@gmail.com', 'activo', 'PET-210001789', NULL, NULL, 'ESCUELA BOLIVARIANA LOMA EL PABELLÓN', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR EL RODEO FRENTE CALLE SAN ISIDRO. DERECHA CALLEJÓN CALLEJON. IZQUIERDA CALLEJÓN CALLEJON AL FRENTE DE LA POSADA CASA');
+INSERT INTO `oficiales` VALUES (1282, '20400352', 'Lemus Briceño Alvaro Alejandro', '1990-07-29', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'urbanizacion don tobias calle 7 callejon nuevo parroqia matriz municipio trujillo', '4161745333', 'adrianjosuelemus.33@gmail.com', 'activo', 'PET-210001933', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1283, '20400454', 'Mendoza Briceño Nelson Javier', '1990-07-18', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'centro poblado el cenizo parroquia el cenizo municipio miranda', '0426-2769107', 'marinelaespinoza1@gmail.com', 'activo', 'PET-210002106', NULL, NULL, 'UNIDAD EDUCATIVA BICENTENARIO', ' ESTADO TRUJILLO  MUNICIPIO MIRANDA PARROQUIA EL CENIZO SECTOR CENTRO POBLADO EL CENIZO DERECHA AVENIDA 4. IZQUIERDA AVENIDA 3. FRENTE CALLE 4 DIAGONAL AL ABASTO DOÑA RAMONA CASA');
+INSERT INTO `oficiales` VALUES (1284, '20400524', 'Valera Nuñez Jenni Carolina', '1992-06-23', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'avenida cuatricentenaria las araujas parroquia matriz municipio trujillo', '0414-7112784', 'jennivalera23@gmail.com', 'activo', 'PET-210002085', NULL, NULL, 'ESCUELA BOLIVARIANA TIMIRISIS', ' ESTADO TRUJILLO  MUNICIPIO TRUJILLO  PARROQUIA MONSEÑOR CARRILLO SECTOR TIMIRISIS PARTE ALTA FRENTE CALLE PRINCIPAL PARTE ALTA DE TIMIRISIS CASERIO TIMIRISIS CERCA DE LA CANCHA POR LA VIA DE POLLOS ELADIOS CASA');
+INSERT INTO `oficiales` VALUES (1285, '20400533', 'Pichardo Perez Erika Coromoto', '1991-01-23', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'sector san antonio parroquia flor de patria municipio pampan', '4241635813', 'erikapichardo939@gmail.com', 'activo', 'PET-21000564', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1286, '20401010', 'Urdaneta Valderrama Jesus Alejandro', '1989-11-05', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'sector la rectA DE MONAY parroquia  LA PAZ municipio  PAMPAN', '0426-7026851', 'urdanealejandrz@gmail.com', 'activo', 'PET-210001566', NULL, NULL, 'ESCUELA ESTADAL LUCILA CORONADO', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR LA RECTA FRENTE CALLE LA CANCHA. DERECHA CALLEJÓN EL DIAMANTE. IZQUIERDA TRONCAL 002 FRENTE AL HOTEL EL DIAMANTE CASA');
+INSERT INTO `oficiales` VALUES (1287, '20401184', 'Justo Pacheco Willian Jose', '1992-01-01', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector las viviendas II parroquia san isidro municipio pampanito', '0426/0606240', 'willianjusto1992@gmail.com', 'activo', 'PET-210001417', NULL, NULL, 'ESCUELA BOLIVARIANA FERNÁNDO SEGNINI LUPI', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR TABOR DERECHA CALLE MORON. FRENTE CALLE LA MORON. IZQUIERDA CALLEJÓN CERRADO CERCA DE LA CAPILLA CASA');
+INSERT INTO `oficiales` VALUES (1288, '20401273', 'Duran Mogollon Erick David', '1992-04-03', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector mesa de gabaldon parroquia pampanito municipio pampanito', '4169121372', 'erickmglln@gmail.com', 'activo', 'PET-210001768', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1289, '20401446', 'Villegas Astudillo Luis Enrique', '1990-12-10', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'la haciendita calle san isidro parroquia pampanito municipio pampanito', '0426-0657337', 'luisastudillo246.@gmail.com', 'activo', 'PET-210002126', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO DE SALES PÉREZ', ' ESTADO TRUJILLO  MUNICIPIO PAMPAN PARROQUIA PAMPAN SECTOR SANTA CRUZ FRENTE AVENIDA ANDRE BELLO AL LADO DEL ATENEO DE PAMPAN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1290, '20401785', 'Vazquez Perez Juan Carlos', '1989-02-21', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'SECTOR LANGARITA II CASA S/N LA PAZ PAMPÁN ', '0426-8783495', 'juanvasquez210289@gmail.com', 'activo', 'PET-210002015', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1291, '20402037', 'Rangel Silva Pedro', '1989-08-26', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'sector las malvinas parroquia flor de patria municipio pampan', '0426-6148896', 'rangelsilvaaa739@gmail.com', 'activo', 'PET-210002037', NULL, NULL, 'UNIDAD EDUCATIVA ELVIA MONTILLA DE SANTOS', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA URBANIZACIÓN PABLO EMIGDIO DE LEÓN DERECHA CALLE RÓMULO BETANCOURT. IZQUIERDA CALLE ANDRES BELLO. FRENTE CALLE SIMÓN RODRÍGUEZ SECTOR LAS MALVINAS, A 50 METROS DE LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1292, '20402110', 'Gonzalez Briceño Martin Jose', '1985-10-17', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'pie de sabana frente al estadio casa s/n parroquia jose leonardo suarez municipio carvajal', '0412-1253755', 'martingonza23tlf@gmail.com', 'activo', 'PET-210001683', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1293, '20402519', 'Torres Barreto  Maryeli Beatriz', '1992-07-23', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector 5 casa 36-94 parroquia san luis municipio valera', '0426/7227566', 'torresbarretomaryeli@gmail.com', 'activo', 'PET-210001582', NULL, NULL, 'CENTRO INTEGRAL BOLIVARIANO REINA BARRETO DE MOLINA', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR CUATRO LAS 52 CASAS DERECHA CALLE PRINCIPAL. FRENTE CALLE LA IGLESIA LA BICARIA AL LADO DE LA CANCHA DE SAN LUIS CASA');
+INSERT INTO `oficiales` VALUES (1294, '20402765', 'Valera Rojas Carmen Maria', '1992-04-16', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'las travesias de santa ana parroquia santa ana municipio pampan', '416-3427991', 'valeracarmen068@gmail.com', 'activo', 'PET-210002129', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1295, '20402868', 'Jerez Aldana Hussein Jose', '1992-02-19', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'urbanizacion la floresta calle los cedros casa  n° 169 parroquia pampanito municipio pampanito', '4164850622', 'JEREZHUSSEIN@GMAIL.COM', 'activo', 'PET-210002044', NULL, NULL, 'UNIDAD EDUCATIVA PROFESOR SANTIAGO SANCHEZ', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO URBANIZACIÓN LOS RIOS DERECHA CALLE MIQUIMBOL. IZQUIERDA CALLE MISISI. FRENTE CALLE PRINCIPAL DE LOS RIOS FRENTE A LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1296, '20402926', 'Godoy Godoy Maria Del Carmen', '1990-04-19', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'monay calle el cazabe sector el maracaibito parroquia la paz municipio pampan', '426-4003633', 'mariadelcgodoy8@gmail.com', 'activo', 'PET-210002112', NULL, NULL, 'LICEO BOLIVARIANO MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ URBANIZACIÓN LA PAZ FRENTE VEREDA 10 AL LADO DE LA BODEGA DE LA SEÑORA IRIALA CASA');
+INSERT INTO `oficiales` VALUES (1297, '20402973', 'Bravo Castellanos Ezequiel De Jesus', '1990-09-07', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'SECTOR TUCUTUCU PARROQUIA Y MUNICIPIO TRUJILLO', '0412-6931892', 'ezequieldejesusbravocastellano@gmail.com', 'activo', 'PET-210001801', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1298, '20414678', 'Azuaje Gonzalez Yoiber Daniel', '1992-04-19', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector rincon 3 parroquia el carmen municipio bocono', '0414-7596437', 'Yoiberazuaje3@gmail.com', 'activo', 'PET-210001724', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1299, '20414814', 'Morales Palma Ivon Adriana', '1992-12-21', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'LOMA PABELLON, SECTOR II, PARROQUIA EL CAMEN MUNICIPIO BOCONO', '0424-7413023', 'ivonadrianamorales1992@gmail.com', 'activo', 'PET-210001525', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1300, '20414927', 'Torrealba Carrillo Tamara Andreina', '1991-12-23', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR DIEGO DIAZ  SANTA ANA PAMPAN', '0414-7223896', 'tamaratorrealba06@gmail.com', 'activo', 'PET-210001774', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1301, '20414964', 'Caceres Gomez Carlos Alberto Reinaldo', '1992-04-26', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'PRIMERA SABANA CALLE SAN BENITO, PARROQUIA EL CARMEN MUNICIPIO BOCONÓ', '0424-7013128', 'carlosalbertocaceresgomez412@gmail.com', 'activo', 'PET-210001954', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1302, '20415239', 'Peña Valladares Norelys Del Valle', '1991-05-23', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'SECTOR QUEBRADA SECA PARROQUIA LA PUEBLITA MUNICIPIO RAFAEL RANGEL', '0424-5525474', 'norelyspeñavalladares@gmail.com', 'activo', 'PET-210001833', NULL, NULL, 'ESCUELA BOLIVARIANA LA CUCHILLA DE CAMPO ELIAS', ' ESTADO TRUJILLO  MUNICIPIO J.V. CAMPO ELIAS PARROQUIA CAMPO ELIAS SECTOR CUCHILLA DE CAMPO ELIAS DERECHA CARRETERA VIA CASERIO LA CUCHILLA. IZQUIERDA CARRETERA VIA CASERIO MESA DE GUAITO DEL ESTADO LARA. FRENTE CARRETERA VIA GUAITO EDO LARA ENTRANDO POR EL CEMENTERIO DE CAMPO ELÍAS A 100 METROS EDIFICIO');
+INSERT INTO `oficiales` VALUES (1303, '20415534', 'Urbina Rosales Rafael Simon', '1991-03-09', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'sector san jose parroquia pampan municipio pampan', '4164624118', 'RAFACOMANDO4@GMAIL.COM', 'activo', 'PET-210002162', NULL, NULL, 'ESCUELA BASICA SIN NUMERO COROZO DE SIQUISAY', ' ESTADO  TRUJILLO MUNICIPIO PAMPAN PARROQUIA SANTA ANA SECTOR EL COROZO FRENTE CALLE EL COROZO COROZO DE SIQUISAY A 100 METROS DE LA CRUZ DE LA MISION CASA');
+INSERT INTO `oficiales` VALUES (1304, '20415596', 'Garcia Teran Raiza Andreina', '1991-08-18', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'sector la granja parroquia el carmen municipo bocono', '424-7452976', 'raizaesthefany@gmail', 'activo', 'PET-210002136', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1305, '20428167', 'Mendez Uzcategui Argenis Jose', '1993-01-14', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'avenida principal mesitas de chimpire parroquia jose leonardo suarez municipio san rafael de carvajal', '0426-8445603', 'crismarydominguez@gmail.com', 'activo', 'PET-210001614', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL SALOMÓN BRICEÑO GABALDON', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR LAS MESETAS DE CHIMPIRE IZQUIERDA CALLE PPL. FRENTE CALLE PRINCIPAL. DERECHA CALLEJÓN EL CARMEN A 100 METROS IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1306, '20429253', 'Espinoza Briceño Jesus Miguel', '1990-01-14', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'mesetas de chimpire  parroquia jose leonardo suarez municipio carvajal', '4121744583', 'ESPINOSAJESUS140190@GMAIL.COM', 'activo', 'PET-210002059', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL SALOMÓN BRICEÑO GABALDON', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR LAS MESETAS DE CHIMPIRE IZQUIERDA CALLE PPL. FRENTE CALLE PRINCIPAL. DERECHA CALLEJÓN EL CARMEN A 100 METROS IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1307, '20429388', 'Calderas Fernandez Jose Gabriel', '1989-03-10', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'urbanizacion el castillo parroquia sabana grande municipio bolivar', '0426-4626338', 'gabrieljose255@gmail.com', 'activo', 'PET-210001437', NULL, NULL, 'ESCUELA BOLIVARIANA EL CASTILLO', 'ESTADO TRUJILLO MUNICIPIO BOLIVAR PARROQUIA SABANA GRANDE CASERÍO EL CASTILLO FRENTE CALLE PRINCIPAL A 100 METROS DE LA PARCELITA CASA');
+INSERT INTO `oficiales` VALUES (1308, '20430105', 'Baptista Baptista Carlos Luis', '1987-05-09', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'calle 8 parroquia mercedez diaz municipio valera', '0424-7037464', 'cpetcawui@gmail.com', 'activo', 'PET-210001406', NULL, NULL, 'COMEDOR POPULAR MONSEÑOR MIGUEL ANTONIO MEJIAS', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR EL CENTRO FRENTE AVENIDA 13. DERECHA CALLE 12. IZQUIERDA CALLE 11 FRENTE FUNERARIA DE SAN JOSE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1309, '20430128', 'Moreno Briceño Robert Antonio', '1993-01-23', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'calle principal avenida milton parroquia la quebrada municipio urdaneta', '0414-7503920', 'betaniacarolinaazuaje@gmail.com', 'activo', 'PET-210001927', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1310, '20430592', 'Fernandez Peña Pablo Segundo', '1991-07-05', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'SECTOR SANTA LUCIA PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0426-9144510', 'fernandezpena1308@gmail.com', 'activo', 'PET-210001838', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1311, '20430907', 'Avila Valiente Luis Eduardo', '1990-10-13', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'sector brisas de san benito detraz del hospital de valera parroquia mercedez diaz municipio valera', '426928876', 'LUISAVILA1800@GMAIL.COM', 'activo', 'PET-210002061', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL PADRE BLANCO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR CENTRO IZQUIERDA AVENIDA 13. FRENTE AVENIDA 12. DERECHA CALLE 14 FRENTE FUNERARIA SAN JOSE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1312, '20655157', 'Perez Rondon Robert Daniel', '1992-07-15', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'LA PUEBLITA LA PUEBLITA RAFAEL RANGEL ', '0414-7311069', 'perezrondonperez@gmail.com', 'activo', 'PET-210001750', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1313, '20656593', 'Rangel Wilmer Jose', '1991-02-16', NULL, NULL, NULL, NULL, '2021-12-16', NULL, 'bajada del rio sector san bartolo parroquia campo alegre municipio carvajal', '0426-1685703', 'wilmerrangel 2022@gmail.com', 'activo', 'PET-210001826', NULL, NULL, 'ESCUELA INTEGRAL BOLIVARIANA MARIA DOLORES ARAUJO', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CARVAJAL SECTOR LA HORQUETA FRENTE AVENIDA PRINCIPAL. IZQUIERDA CALLEJÓN MADRID. DERECHA PASAJE SIN NOMBRE A 100 METROS CDI EDIFICIO');
+INSERT INTO `oficiales` VALUES (1314, '20656628', 'Umbria Briceño Kenny Enrique', '1990-05-04', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'SECTOR INAVI  san alejo 2do estacionamiento  PARROQUIA SABANA DE MENDOZA MUNICIPIO SUCRE', '0426-8728394', 'umbriakenny7@gmail.com', 'activo', 'PET-210001416', NULL, NULL, 'CASA DE LA CULTURA DE SABANA DE MENDOZA', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA SABANA DE MENDOZA SECTOR BOLISUC FRENTE AVENIDA BOLÍVAR. DERECHA CALLE BERMUDEZ. IZQUIERDA CALLE CALLE COMERCIO DIAGONAL A LA PLAZA BOLÍVAR EDIFICIO');
+INSERT INTO `oficiales` VALUES (1315, '20660515', 'Ferrini Villegas Gothard Lorenz', '1989-03-12', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'SECTOR LOS MACIEGOS CRUZ CARRILLLO TRUJILLO', '0424-7494305', 'ferrinigothar89@gmail.com ', 'activo', 'PET-210002178', NULL, NULL, 'ESCUELA BOLIVARIANA VIVIENDA RURAL', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO II SECTOR LA VIVIENDA RURAL DERECHA AVENIDA LA FLORIDA. IZQUIERDA CALLE PRINCIPAL LA RECTA DE PAMPANITO. FRENTE CALLE LA MORA PRIMERA PASARELA BAJANDO A 100 METROS DEL CENTRO DE ACOPIO MERCAL CASA');
+INSERT INTO `oficiales` VALUES (1316, '20705104', 'Tillero Teran Alfredo Jose', '1992-09-15', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'avenida las flores parroquia sabana de mendoza municipio sucre', '0414-7504705', 'alfredtillero@gmail.com', 'activo', 'PET-210001871', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1317, '20705160', 'Leon Barreto Ewduar Manuel', '1989-08-13', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'SECTOR PUENTE BLANCO  LA PAZ PAMPÁN ', '0412-6554648', 'ewduarleon166@gmail.com', 'activo', 'PET-210001776', NULL, NULL, 'CASA DE LA CULTURA DE SABANA DE MENDOZA', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA SABANA DE MENDOZA SECTOR BOLISUC FRENTE AVENIDA BOLÍVAR. DERECHA CALLE BERMUDEZ. IZQUIERDA CALLE CALLE COMERCIO DIAGONAL A LA PLAZA BOLÍVAR EDIFICIO');
+INSERT INTO `oficiales` VALUES (1318, '20705219', 'Segovia Briceño Irene Ninoska', '1991-04-28', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'kilometro 23 via la ceiba parroquia junin municipio la ceiba', '0426-2018072', 'labeba_irene.28@gmail.com', 'activo', 'PET-210001791', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1319, '20705412', 'Araujo Materano Alejandro Javier', '1992-08-05', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'LA RECTA DE MONAY  LA PAZ  PAMPAN', '0416-1401940', 'materanoalejandro17@gmail.com', 'activo', 'PET-210001422', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1320, '20705556', 'Montilla Teran Josefina Del Coromoto', '1993-02-01', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'butaque calle las peñitas parroquia pampanito II municio pampanito', '426-4154022', 'Josefinamontilla224@gmail.com', 'activo', 'PET-210002146', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1321, '20706278', 'Fernandez Benitez Miguel Antonio', '1989-05-04', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'sector el calvario parroquia la paz municipio pampan', '4268182069', 'Milanyibastidas2016.@ gmail .com', 'activo', 'PET-210001570', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1322, '20706774', 'Gudiño Urbina Jesus Antonio', '1992-08-05', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'LAS LLANADAS DE MONAY', '0426-8177328', 'jesuantonio777@gmail.com', 'activo', 'PET-210001935', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1323, '20706832', 'Solarte Fernadez Deglys Aldemar', '1991-03-09', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'kilometro 23  parroquia junin municipio la ceiba', '4262651126', 'deglyssolarte@gmail.com', 'activo', 'PET-210001955', NULL, NULL, 'UNIDAD BÁSICA 27 DE JUNIO DE 1870', ' ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUA JUNIN SECTOR LA PLAZA DERECHA CALLE LA ESPERANZA. IZQUIERDA CALLE BENTANCOURT. FRENTE CALLE BOLÍVAR AL LADO DE LA PLAZA BOLÍVAR, JUNIN KILÓMETRO 23 EDIFICIO');
+INSERT INTO `oficiales` VALUES (1324, '20707072', 'Montaña Campos Sofia Yasmin', '1993-11-03', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'SECTOR EL PARAISO CALLE EL TULIPAN PAROQUIA LA PAZ MUNICIPIO PAMPAN', '0426-1088055', 'sofiacampos1193@gmail.com', 'activo', 'PET-210001810', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1325, '20707299', 'Palencia Bastidas Adriana Carolina', '1993-10-04', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector 9 de octubre parroquia 3 esquinas municipio trujilo', '0426-1742841', 'adrivale1430@gmail.com', 'activo', 'PET-210001504', NULL, NULL, 'ESCUELA BOLIVARIANA AMÉRICO BRICEÑO VALERO', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA DERECHA AVENIDA BUEN PASTOR. FRENTE AVENIDA AYACUCHO A UNA CUADRA DE LA IGLESIA SANTA ROSA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1326, '20708024', 'Gutierrez Becerra Carlos Enrique', '1989-10-13', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'la hoyada callejon el progreso parroquia antonio nicolas briceño municipio san rafael de carvajal', '4261503402', 'CARLOSGUTI131089@GMAIL.COM', 'activo', 'PET-210002063', NULL, NULL, 'LICEO BOLIVARIANO JULIO SANCHEZ VIVAS', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL  PARROQUIA ANTONIO NICOLAS  BRICEÑO SECTOR PIE DE SABANA FRENTE AVENIDA PRINCIPAL. DERECHA VEREDA NEGRA UNO. IZQUIERDA PICA PALMA SOLA A 100 METROS DEL STADIUM EDIFICIO');
+INSERT INTO `oficiales` VALUES (1327, '20708198', 'Leon Pacheco Eliana Gabriela', '1992-05-05', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'SECTOR MARACAIBITO CALLE ARAGUANEY PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0416-3099785', 'lianaleon198@gmail.com ', 'activo', 'PET-210001829', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1328, '20709185', 'Fernandez Semprun Carlos Luis', '1994-01-04', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sabana libre calle 24 de julio parroquia sabana libre municipio escuque', '4243135911', 'calosfer1994@gmail.com', 'activo', 'PET-210001562', NULL, NULL, 'ESCUELA BOLIVARIANA DOCTOR ERNERT', ' ESTADO TRUJILLO  MUNICIPIO CARACHE PARROQUIA CARACHE SECTOR CARACHE, CASCO CENTRAL FRENTE AVENIDA 3 LIBERTAD A 50 METROS DE LA IGLESIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1329, '20709793', 'Castellanos Chinchilla Ana Josefina', '1993-03-01', NULL, NULL, NULL, NULL, '2019-06-01', NULL, 'pie de sabana callejon libertador casa n° 25 parroquia antonio nicolas briceño municipio san rafael de carvajal', '0424-7805467', 'castchinana@gmail.com', 'activo', 'PET-210002135', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1330, '20709897', 'Gonzalez Delgado Keily Karina', '1992-08-13', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'CHEJENDE SECTOR LA LAGUNA,CASA S/N,CERCA DE LA ESCUELA CHEGENDE, PARROQUIA BOLIVAR,MUNICIPIO CANDELARIA', '0424-6628403', 'keilygonzdmd@gmail.com', 'activo', 'PET-210001520', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1331, '20709976', 'Zerpa Montilla Dusbardo Jesus', '1991-10-25', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'parroquia la paz municipio pampan', '0426-9307438', 'zerpadusbaldo@gmail.com', 'activo', 'PET-210002001', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1332, '20766211', 'Mendez Baptista Jose Gregorio', '1992-09-24', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'LOMA DE SAN MIGUEL, PARROQUIA SAN MIGUEL', '0414-7348380', 'josegregoriomendez33@gmail.com', 'activo', 'PET-210001546', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1333, '20767369', 'Rosales Benitez Jose Antonio', '1992-08-28', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'LOMAS DE MITINBIS SECTOR LA CAVITA EL CARMEN BOCONO', '0414-6978455', 'joseantoniorosalesbenitez@gmail.com', 'activo', 'PET-210001779', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1334, '20768868', 'Delgado Marin Maria Eglimar', '1992-12-23', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'sector el filo parroquia burbusay municipio bonoco', '0424-7610379', 'mariaeglimardelgadomarin@gmail.com', 'activo', 'PET-210001992', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1335, '20788855', 'Hernandez Mora Joan Andres', '1991-06-28', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'urbanizacion la beatriz parroquia beatriz municipio valera', '4126575863', 'JOANANDRESH7@GMAIL.COM', 'activo', 'PET-210001965', NULL, NULL, 'ESCUELA BOLIVARIANA SAN RAFAEL', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN SAN RAFAEL FRENTE AVENIDA PRINCIPAL. DERECHA BULEVAR VERDURAS FRENTE AL BLOQUE NUMERO10, DIAGONAL A LA IGLESIA SAN RAFAEL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1336, '20789583', 'Abreu Gonzalez Jhonmer Enrique', '1992-02-24', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'la floresta avenida el cementerio sector el gallo parroquia mercedez diaz municipio valera', '0426-2595611', 'paoladelvalleramirezdeabreu@gmail.com', 'activo', 'PET-210001647', NULL, NULL, 'UNIDAD EDUCATIVA LAS MERCEDES', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LAS MERCEDES FRENTE CALLE SIN NOMBRE DETRAS DE LA CANCHA LAS MERCEDES, CERCA DEL DEPOSITO DE LA PEPSI EDIFICIO');
+INSERT INTO `oficiales` VALUES (1337, '20790104', 'Morillo Briceño Carolay Coromoto', '1993-01-07', NULL, NULL, NULL, NULL, '2018-07-19', NULL, 'avenida 9 bajando los bomboros parroquia mercedez diaz municipio valera', '0414-73817777', 'morillocarolay7@gmail.com', 'activo', 'PET-210001983', NULL, NULL, 'UNIDAD EDUCATIVA SAN VICENTE DE PAÚL', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LA PLATA DERECHA AVENIDA 9. FRENTE AVENIDA BOLIVAR AL LADO DE LA IGLESIA EL CARMEN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1338, '20790196', 'Pineda Peña Luis Alfredo', '1992-07-23', NULL, NULL, NULL, NULL, '2017-01-02', NULL, 'urbanizacion casa 2 parroquia san luis municipio valera', '0426-64337251', 'julianaleon2020@gmail.com', 'activo', 'PET-210001740', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1339, '20790671', 'Paredes Azuaje Gabriel Alejandro', '1992-08-23', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'barrio la paz parroquia mercedez diaz municipio valera', '0416-0794035', 'padedeagabriel@gmail.com', 'activo', 'PET-210001948', NULL, NULL, 'JARDIN DE INFANCIA BOLIVARIANA NUESTRA SEÑORA DE LA PAZ', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE CALLE PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1340, '20790894', 'Gelvis Quintero Aron Isai', '1992-01-29', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'parroquia mercedez diaz municipio valera', '0412-1658968', 'aronisai.gelvis@gmail.com', 'activo', 'PET-210002069', NULL, NULL, 'ESCUELA NACIONAL BOLIVARIANA CAJA DE AGUA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ BARRIO CAJA DE AGUA FRENTE AVENIDA PRINCIPAL DE CAJA DE AGUA PARTE MEDIA A 200 METROS DEL FOGON COMUNAL CASA');
+INSERT INTO `oficiales` VALUES (1341, '20790902', 'Perez Gonzalez Giorgino Alejandro', '1994-01-13', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'SECTOR CAJA DE AGUA, PARROQUIA MERCEDES DIAZ, MUNICIPO BOCONÓ', '0424-8328334', 'ginoismaelperezgmail.com', 'activo', 'PET-210001514', NULL, NULL, 'ESCUELA BOLIVARIANA DOCTOR CARACCIOLO PARRA OLMEDO', ' ESTADO TRUJILLO  MUNICIPIO BOCONO PARROQUIA  AYACUCHO SECTOR CENTRO DERECHA CALLE SAN ISIDRO. IZQUIERDA CALLE LOS GUAYABOS. FRENTE CALLE SUCRE AVENIDA PRINCIPAL EL BATATAL, A 2 CUADRAS A LA PLAZA BOLIVAR EDIFICIO');
+INSERT INTO `oficiales` VALUES (1342, '20790914', 'De Sa Mejia Angel Alberto', '1989-01-31', NULL, NULL, NULL, NULL, '2008-02-15', NULL, 'urbanizacion santa cruz parroquia san luis municipio valera', '4126493690', 'ANGELDESA_PILLO@GMAIL.COM', 'activo', 'PET-210001958', NULL, NULL, 'ESCUELA BASICA ELISA PULGAR DE RAMIREZ', ' ESTADO TRUJILLO MUNICIPIO  MIRANDA  PARROQUIA AGUA SANTA SECTOR CASCO CENTRAL DE AGUA SANTA DERECHA CALLE AGUA SANTA. IZQUIERDA CALLE DEMOCRACIA. FRENTE CALLE PRINCIPAL CERCA DE LA MEDICATURA CASA');
+INSERT INTO `oficiales` VALUES (1343, '21061554', 'Briceño Matheus Javier Enrique', '1993-02-23', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1344, '21062682', 'Sulbaran Parra Alexandra Del Valle', '1990-01-30', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector los llanitos parroquia timotes municipio miranda', '0414-1760460', 'ALEXANDRASULBARAN1174@GMAIL.COM', 'activo', 'PET-210001847', NULL, NULL, 'UNIDAD EDUCATIVA FRANCISCO DE PAULA ANDRADE', 'ESTADO MERIDA MUNICIPIO MIRANDA PARROQUIA TIMOTES URBANIZACIÓN LUZ CARABALLO FRENTE AVENIDA URBANIZACION LUZ CARABALLO. DERECHA CARRETERA TRASANDINA. IZQUIERDA CARRETERA EL CEMENTERIO AVENIDA CEMENTERIO TIMOTES EDIFICIO');
+INSERT INTO `oficiales` VALUES (1345, '21062848', 'Moreno Perez Rossjelly Del Pilar', '1991-05-02', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'la floresta conuco la paz via escuque sector 1, parroquia mercedez diaz municipio valera', '0412-2168809', 'morenoperezrossjellydelpilar@gmail.com', 'activo', 'PET-210002035', NULL, NULL, 'ESCUELA NACIONAL CONCENTRADA BOLIVARIANA LAS TRAVESIAS', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR BLANQUITA DE PEREZ LAS TRAVESIAS FRENTE CALLE PRINCIPAL DE LAS TRAVESIAS. DERECHA VEREDA 2. IZQUIERDA VEREDA 1 AL LADO DE LA CANCHA LAS TRAVESIAS CASA');
+INSERT INTO `oficiales` VALUES (1346, '21063142', 'Baptista Rubio Pablo David', '1987-06-29', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'la quinta parroquia cheregue municipio bolivar', '0426-7890375', 'baptistapablo597@gmail.com', 'activo', 'PET-210001624', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1347, '21063530', 'Godoy  Carlos Alfredo', '1991-08-08', NULL, NULL, NULL, NULL, '2020-02-16', NULL, 'SECTOR 5 DE MARZO EL JAGUITO ANDRES BELLO', '0416-8397099', 'carlosalfredogodoy2@gmailcom ', 'activo', 'PET-210001767', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1348, '21063634', 'Azuaje Simanca Yorvelis Carolina', '1992-08-12', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'urbanizacion santa cruz 4ta etapa sector 5 parroquia san luis municipio valera', '0416-0772925', 'yorvelis2020azuaje@gmail.com', 'activo', 'PET-210001617', NULL, NULL, 'UNIDAD EDUCATIVA DR. JOSE GREGORIO HERNANDEZ', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR SANTA CRUZ FRENTE CALLE PRINCIPAL. IZQUIERDA VEREDA N° 12 AL LADO DE LA IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1349, '21063685', 'Castillo Cardozo Freddy Enrique', '1990-12-02', NULL, NULL, NULL, NULL, '2024-03-01', NULL, 'santa cruz 5 etapa calle principal casa n° 14-827 parroquia san luis municipio valera', '0412-6935017', 'freddycastillo3005@gmail.com', 'activo', 'PET-210001703', NULL, NULL, 'UNIDAD EDUCATIVA DR. JOSE GREGORIO HERNANDEZ', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR SANTA CRUZ FRENTE CALLE PRINCIPAL. IZQUIERDA VEREDA N° 12 AL LADO DE LA IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1350, '21064005', 'Ruiz Azuaje Angely Isabel', '1994-05-12', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'sector san pedro parroquia juan ignacio montilla municipio valera', '4264739933', 'angelyazuaje40@gmail.com', 'activo', 'PET-210001398', NULL, NULL, 'ESCUELA BOLIVARIANA CIUDAD DE VALERA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA BARRIO EL MILAGRO FRENTE AVENIDA FINAL MONSENOR FELIX SERRANO. DERECHA PROLONGACIÓN CALLE 8. IZQUIERDA PASAJE 4 FRENTE AL ESTADIO MARIO URDANETA ARAUJO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1351, '21064370', 'Olmos Sanchez Adrian Arturo', '1991-08-21', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'parroquia campo alegre del municipio san rafael de carvajal', '4120737698', 'OLMOSADRIAN859@GMAIL.COM', 'activo', 'PET-210001969', NULL, NULL, 'ESCUELA GRADUADA CUBITA', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR CUBITA DERECHA CALLE LA LAGUNITA. IZQUIERDA CALLE SIN NOMBRE. FRENTE CALLE PRINCIPAL AL LADO AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1352, '21064493', 'Paredes Ramirez Claudia Claret', '1989-07-14', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'calle 8 vereda 3 barrio el milagro parroquia juan ignacio montilla municipio valera', '0424-7125562', 'CLAUDIAPAREDES1489@GMAIL.COM', 'activo', 'PET-210001662', NULL, NULL, 'CASA DEL NIÑO Y ADOLESCENTE TRABAJADOR EL MILAGRO', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA BARRIO EL MILAGRO FRENTE AVENIDA MONSENOR FELIX SERRANO. DERECHA CARRETERA VALERA MERIDA. IZQUIERDA PROLONGACIÓN EL ESTADIUM A 50 METROS DEL ESTADIO MARIO URDANETA ARAUJO CASA');
+INSERT INTO `oficiales` VALUES (1353, '21064828', 'Bracamonte Maria Alejandra', '1991-05-06', NULL, NULL, NULL, NULL, '2024-03-01', NULL, 'barrios el milagro pasaje 1 casa s/n parroquia juan ignacio montilla municipio valera', '4247530705', 'mariaalejandrabracamonte@gmail.com', 'activo', 'PET-210002107', NULL, NULL, 'ESCUELA BOLIVARIANA CIUDAD DE VALERA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA BARRIO EL MILAGRO FRENTE AVENIDA FINAL MONSENOR FELIX SERRANO. DERECHA PROLONGACIÓN CALLE 8. IZQUIERDA PASAJE 4 FRENTE AL ESTADIO MARIO URDANETA ARAUJO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1354, '21064841', 'Veja Padron Luis Eduardo', '1990-05-10', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'parroquia juan ignacio montilla municipio valera', '4266627113', 'luiseduardovejapadron@gmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1355, '21064860', 'Aldana Franco Ernesto Jose', '1992-11-07', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'urbanizacion la floresta parroquia pampanito municipio pampanito', '0426-1691487', 'ernestoaldana346@gmail.com', 'activo', 'PET-210001573', NULL, NULL, 'UNIDAD EDUCATIVA LAS MERCEDES', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LAS MERCEDES FRENTE CALLE SIN NOMBRE DETRAS DE LA CANCHA LAS MERCEDES, CERCA DEL DEPOSITO DE LA PEPSI EDIFICIO');
+INSERT INTO `oficiales` VALUES (1356, '21190720', 'Gomez Briceño Yetsen Antonio', '1989-08-04', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'via principal de agua santa casa s/n parroquia agua santa municipio miranda', '0426/2708232', 'yetsenantonio@gmail.com', 'activo', 'PET-210001598', NULL, NULL, 'GIMNASIO CUBIERTO SABANA DE MENDOZA', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ URBANIZACIÓN VALMORE RODRÍGUEZ DERECHA CALLE 8 Y 9 MERCADO. IZQUIERDA CALLE PRINCIPAL DEL MERCADO. FRENTE CALLE NÚMERO 9 AL LADO DEL MERCADO MUNICIPAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1357, '21195472', 'Guillen Caceres Gustavo Alfonso', '1993-02-18', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'el tablon de monay parroquia la paz municipio pampan', '4123730265', 'GUILLENGUSTAVO007@GMAIL.COM', 'activo', 'PET-210001906', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1358, '21205052', 'Ruiz Montilla Yonathan Anthony', '1993-04-05', NULL, NULL, NULL, NULL, '2022-07-15', NULL, 'sector san isidro parroquia pampanito II municipio pampanito', '0272-6711850', 'yonathanruiz-19@hotmail.com', 'activo', 'PET-210001910', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1359, '21205602', 'Arroyo  Ana Karina', '1991-08-07', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR SAN PABLO PARROQUIA Y MUNICIPIO PAMPAN', '0426-0350441', 'ka83660923@gmail.com', 'activo', 'PET-210001809', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1360, '21205653', 'Graterol Duran Luis Arturo', '1990-10-31', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector jimenez parroquia pampanito municipio pampanito', '0412-6848785', 'LUISGRATEROL366@GMAIL.COM', 'activo', 'PET-210001876', NULL, NULL, 'ESCUELA BOLIVARIANA JUAN IGNACIO MONTILLA', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO SECTOR PAMPANITO IZQUIERDA AVENIDA CARRETERA VIEJA TRUJILLO VALERA. FRENTE AVENIDA RAFAEL ANTONIO AYALA. DERECHA CALLE AYALA DIAGONAL A LA FARMACIA MI FARMACIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1361, '21206020', 'Rojas Villegas Argenis Javier ', '1993-06-10', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'SECTOR MIRAVELITA, TRES ESQUINAS MUNICIPIO TRUJILLO', '0426-6297842', 'argenisrojas1993gmail.com', 'activo', 'PET-210001522', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1362, '21206090', 'Hernandez Villegas Jose Gregorio', '1993-01-21', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'sector san miguel parroquia panamericana municipio carache', '0412-1755365', 'hj482493@gmail.com', 'activo', 'PET-210001503', NULL, NULL, 'UNIDAD EDUCATIVA PROFESOR JOSÉ ALBERTO AZUAJE', ' ESTADO TRUJILLO MUNICIPIO  PAMPANITO PARROQUIA LA CONCEPCION SECTOR LA PEÑITA DERECHA CALLE CANCHA. IZQUIERDA CALLE PEÑA. FRENTE CALLE CIEGA AL LADO DE LA CAPILLA CASA');
+INSERT INTO `oficiales` VALUES (1363, '21206520', 'Urbina Crespo Antoni Jose', '1992-08-10', NULL, NULL, NULL, NULL, '2018-08-01', NULL, 'kilometro 12 parroquia el progreso municipio la ceiba', '0424/4366624', 'antoniurbina21206@gmail.com', 'activo', 'PET-210001932', NULL, NULL, 'UNIDAD BÁSICA ANTONIO ARAUJO SAEZ', 'ESTADO TRUJILLO MUNICIPIO  LA CEIBA PARROQUIA EL PROGRESO SECTOR EL PROGRESO IZQUIERDA CALLE EL ESTADIUM. FRENTE CALLE LAS FLORES KILÓMETRO 12, A MEDIA CUADRA DE LA MEDICATURA CASA');
+INSERT INTO `oficiales` VALUES (1364, '21206749', 'Villegas Vasquez Alexis Javier', '1990-11-23', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'calle libertador parroquia la paz municipio pampan', '0426-7446064', 'aledamianlucas.33@gmail.com', 'activo', 'PET-210001472', NULL, NULL, 'LICEO BOLIVARIANO MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ URBANIZACIÓN LA PAZ FRENTE VEREDA 10 AL LADO DE LA BODEGA DE LA SEÑORA IRIALA CASA');
+INSERT INTO `oficiales` VALUES (1365, '21206923', 'Gudiño Montilla Melvin Orlando', '1994-07-28', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'urbanizacion pablo emilio leon parroquia flor de patria municipio pampan', '0416-4226603', 'melving25@gmail.com', 'activo', 'PET-210002108', NULL, NULL, 'UNIDAD EDUCATIVA ELVIA MONTILLA DE SANTOS', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA URBANIZACIÓN PABLO EMIGDIO DE LEÓN DERECHA CALLE RÓMULO BETANCOURT. IZQUIERDA CALLE ANDRES BELLO. FRENTE CALLE SIMÓN RODRÍGUEZ SECTOR LAS MALVINAS, A 50 METROS DE LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1366, '21207351', 'Ramirez Pichardo Danny Jose', '1992-05-26', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'rurales viejas calle 3 parroquia flor de patria municipio pampan', '4262665751', 'RAMIREZDANNY2692@GMAIL.COM', 'activo', 'PET-210002046', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1367, '21207511', 'Salas Teran Yaudy Yoely', '1994-08-01', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector la rectA DE MONAY parroquia  LA PAZ municipio  PAMPAN', '0426-3748831', 'YAUDYSALAS15@GMAIL.COM', 'activo', 'PET-210001988', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1368, '21207604', 'Olivares Montilla Andreina Coromoto', '1994-07-11', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'SECTOR SABANETA PARROQUIA MONSELOR CARRILLO MUNICIPIO TRUJILLO', '0426-2383609', 'andr97oli@gmail.com', 'activo', 'PET-210001813', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1369, '21207910', 'Saavedra Montilla Leonardo Antonio', '1989-08-22', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector la haciendita parroquia la paz municipio pampan', '426-1380777', 'saavedraleonardo326@gmail.com', 'activo', 'PET-210001403', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1370, '21207931', 'Rosales Cañizalez Carlos Ramon', '1990-08-09', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'cocuizas de monay parroquia la paz municipio pampan', '4269295812', 'ROSALESCANIZALEZCARLOSRAMOS87@GMAIL.COM', 'activo', 'PET-210001974', NULL, NULL, 'ESCUELA BOLIVARIANA SANTA LUCIA DE MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR SANTA LUCIA FRENTE CALLE LAS FLORES. IZQUIERDA TRONCAL 002 A 100 METROS DE LA SUD ESTACION ELECTRICA DE CORPOELEC CASA');
+INSERT INTO `oficiales` VALUES (1371, '21208065', 'Vasquez Godoy Timaury Del Carmen', '1992-10-10', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'SECTOR LA ATALAYA  PAMPÁN  PAMPÁN ', '0416-3456415', 'timaurydelcarmenvasquez@gmail.com', 'activo', 'PET-210001766', NULL, NULL, 'LICEO BOLIVARIANO RAFAEL MARIA URRECHEAGA', ' ESTADO TRUJILLO  MUNICIPIO PAMPAN PARROQUIA PAMPAN SECTOR CALLE ARRIBA FRENTE CALLE SAN RAFAEL AL LADO DEL CENTRO DIAGNÓSTICO INTEGRAL CASA');
+INSERT INTO `oficiales` VALUES (1372, '21255417', 'Santiago Briceño Jesus Francisco', '1992-12-17', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'LAS MESITAS, PARROQUIA GENERAL RIVAS MUNICIPO BOCONÓ', '0424-7142169', 'santiagojesusf30@gmail.com', 'activo', 'PET-210001623', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1373, '21256353', 'Graterol Vargas Wilfredo ', '1992-06-18', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'URB. SIMON BOLIVAR, CERCA DE LA CANCHA FUTBOL BISCUCUY - PORTUGUESA', '0416-5536415', 'corsagraterol97@gmail.com', 'activo', 'PET-210001557', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1374, '21256923', 'Betancourt Balza Roniber ', '1993-07-22', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector loma de pabellon parroquia el carmen municipio bocono', '0424-7488841', 'roniberbetancourt@gmail.com', 'activo', 'PET-210001953', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1375, '21257622', 'Montilla Montilla Francisco Javier', '1993-03-19', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'SECTOR EL JARILLO,CASA S/N,PARROQUIA SAN RAFAEL,MUNICIPIO BOCONO', '0424-7090934', 'javiermontilla1903@mail.com', 'activo', 'PET-210001538', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1376, '21364442', 'Hernandez Quintero Yenderson Enrique', '1993-01-05', NULL, NULL, NULL, NULL, '2022-07-15', NULL, 'sector la juventud parroquia campo alegre municipio carvajal', '4160491635', 'YANDHERNAND@GMAIL.COM', 'activo', 'PET-210002043', NULL, NULL, 'ESCUELA GRADUADA CUBITA', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR CUBITA DERECHA CALLE LA LAGUNITA. IZQUIERDA CALLE SIN NOMBRE. FRENTE CALLE PRINCIPAL AL LADO AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1377, '21364565', 'Gelvis Quintero Isaac Eli', '1990-03-23', NULL, NULL, NULL, NULL, '2021-12-16', NULL, 'sector lomas calle san luis municipio valera', '0412/1712757', 'luisamontilla100@gmail.com', 'activo', 'PET-210001596', NULL, NULL, 'ESCUELA NACIONAL BOLIVARIANA CAJA DE AGUA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ BARRIO CAJA DE AGUA FRENTE AVENIDA PRINCIPAL DE CAJA DE AGUA PARTE MEDIA A 200 METROS DEL FOGON COMUNAL CASA');
+INSERT INTO `oficiales` VALUES (1378, '21364628', 'Barreto Rojas Roberth Leandro', '1992-06-07', NULL, NULL, NULL, NULL, '2020-02-16', NULL, 'las rurales nuevas casa 72-79 parroquia agua santa municipio miranda', '0426-8735055', 'roberthbarreto@gmail.com', 'activo', 'PET-210001859', NULL, NULL, 'ESCUELA BASICA ELISA PULGAR DE RAMIREZ', ' ESTADO TRUJILLO MUNICIPIO  MIRANDA  PARROQUIA AGUA SANTA SECTOR CASCO CENTRAL DE AGUA SANTA DERECHA CALLE AGUA SANTA. IZQUIERDA CALLE DEMOCRACIA. FRENTE CALLE PRINCIPAL CERCA DE LA MEDICATURA CASA');
+INSERT INTO `oficiales` VALUES (1379, '21365024', 'Pacheco Vasquez Yecselin Katiusca', '1991-11-05', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'barrio simon bolivar de la floresta parrorquia mercedes diaz municipio valera', '0426-3745165', 'yecselinpacheco701@gmail.com', 'activo', 'PET-210001721', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1380, '21366505', 'Briceño Ramirez Osmar Jose', '1990-07-30', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'barrio simon bolivar casa 321 parroquia mercedez diaz municipio valera', '0424-7120204', 'bricejose66@gmail.com', 'activo', 'PET-210002125', NULL, NULL, 'UNIDAD EDUCATIVA LAS MERCEDES', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LAS MERCEDES FRENTE CALLE SIN NOMBRE DETRAS DE LA CANCHA LAS MERCEDES, CERCA DEL DEPOSITO DE LA PEPSI EDIFICIO');
+INSERT INTO `oficiales` VALUES (1381, '21366677', 'Saavedra Lovel Franklin David', '1990-06-06', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'avenida 3 cerro la concepcion casa s/n parroquia juan ignacion montilla municipio valera', '0426-7293119', 'SAAVEDRAFRANKLIN677@GMAIL.COM', 'activo', 'PET-210001993', NULL, NULL, 'LICEO CULTURAL BOLIVARIANO MONSEÑOR JOSÉ HUMBERTO CONTRERAS', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LAZO DE LA VEGA DERECHA AVENIDA 16. FRENTE CALLE 15 DIAGONAL A LA AVENIDA LOS PINOS EDIFICIO');
+INSERT INTO `oficiales` VALUES (1382, '21366900', 'Andara Gelvez Alberto Vianet', '1992-11-16', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'barrio caja de agua parte media parroquia mercedez diaz municipio valera', '0412/4555346', 'andaragelvez@gmail.com', 'activo', 'PET-210001421', NULL, NULL, 'ESCUELA NACIONAL BOLIVARIANA CAJA DE AGUA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ BARRIO CAJA DE AGUA FRENTE AVENIDA PRINCIPAL DE CAJA DE AGUA PARTE MEDIA A 200 METROS DEL FOGON COMUNAL CASA');
+INSERT INTO `oficiales` VALUES (1383, '21366931', 'Valero Araujo Yohana Naibe', '1992-05-09', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1384, '21367153', 'Martinez Osecha Agner Danuil', '1993-12-06', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR LAS TERMAS CARRETERA PRINCIPAL, MUNICIPIO MIRANDA ESTADO TRUJILLO', '0426-4326657', 'agnermartinez93@gmail.com', 'activo', 'PET-210001518', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1385, '21457282', 'Villarreal Campos Jose Luis', '1989-12-09', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector el colorado parroquia escuque municipio escuque', '4247462829', 'villarrealcamposjoseluis@gmail.com', 'activo', 'PET-210001583', NULL, NULL, 'ESCUELA BOLIVARIANA TOSTA GARCIA', 'ESTADO TRUJILLO MUNICIPIO URDANETA PARROQUIA LA QUEBRADA SECTOR VILLA SAN ROQUE FRENTE AVENIDA MILTON MAZARRY AL LADO DEL LICEO PATROCINIO PENUELA RUÍZ EDIFICIO');
+INSERT INTO `oficiales` VALUES (1386, '21555467', 'Anzola Falcon Henry Jesus', '1991-08-30', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'sector las malvinas parroquia flor de patria municipio pampan', '416-4039252', 'AnzolahenryJesus53@gmail.com', 'activo', 'PET-21000569', NULL, NULL, 'LICEO BOLIVARIANO HILARIO PIZANI ANSELMI', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA MOTATAN SECTOR CENTRO FRENTE AVENIDA BOLIVAR. DERECHA CALLE 06. IZQUIERDA CALLE 05 AL LADO DE LA ALCALDIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1387, '21589468', 'Salas Rodriguez Yenny Coromoto', '1992-01-22', NULL, NULL, NULL, NULL, '2019-12-01', NULL, 'BATATAL, RIO BLANCO, PARROQUIA AYACUCHO', '0424-7623500', 'salasyenny808@gmail.com', 'activo', 'PET-210001554', NULL, NULL, 'ESCUELA BOLIVARIANA DOCTOR CARACCIOLO PARRA OLMEDO', ' ESTADO TRUJILLO  MUNICIPIO BOCONO PARROQUIA  AYACUCHO SECTOR CENTRO DERECHA CALLE SAN ISIDRO. IZQUIERDA CALLE LOS GUAYABOS. FRENTE CALLE SUCRE AVENIDA PRINCIPAL EL BATATAL, A 2 CUADRAS A LA PLAZA BOLIVAR EDIFICIO');
+INSERT INTO `oficiales` VALUES (1388, '21592099', 'Briceño Mendoza Alexander Jose', '1994-12-09', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'QUEBRADA DE CUEVAS SECTOR EL PUENTE CERCA DEL ABASTO LOS ANDES LA QUEBRADA  URDANETA', '0416-4252154', 'alexanderbriceno858@gmail.com', 'activo', 'PET-210002154', NULL, NULL, 'ESCUELA BOLIVARIANA QUEBRADA DE CUEVAS', 'ESTADO TRUJILLO MUNICIPIO URDANETA PARROQUIA LA QUEBRADA SECTOR QUEBRADA DE CUEVAS FRENTE CALLE LA GALLERA. DERECHA CARRETERA PRINCIPAL, VÍA TIMOTES AL FRENTE DEL ESTACIONAMIENTO DE LA ALCALDIA CASA');
+INSERT INTO `oficiales` VALUES (1389, '22079200', 'Izarra Valles Nestor Luis', '1991-05-09', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'calle principal frente a la plaza macoyal parroquia la paz municipio pampan', '0416-4644517', 'luisizarrav@gmail.com', 'activo', 'PET-210002018', NULL, NULL, 'ESCUELA BOLIVARIANO EL MACOYAL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL MACOYAL FRENTE CALLE PRINCIPAL EL MACOYAL, VÍA LA CATALINA AL LADO DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1390, '22246685', 'Rodriguez Gomez Daniel Alexander', '1994-06-30', NULL, NULL, NULL, NULL, '2019-07-01', NULL, 'agua santa sector doña alicia parroquia agua santa municipio miranda', '4267678418', 'DANIRODRI0420@GMAIL.COM', 'activo', 'PET-210001963', NULL, NULL, 'ESCUELA BASICA ELISA PULGAR DE RAMIREZ', ' ESTADO TRUJILLO MUNICIPIO  MIRANDA  PARROQUIA AGUA SANTA SECTOR CASCO CENTRAL DE AGUA SANTA DERECHA CALLE AGUA SANTA. IZQUIERDA CALLE DEMOCRACIA. FRENTE CALLE PRINCIPAL CERCA DE LA MEDICATURA CASA');
+INSERT INTO `oficiales` VALUES (1391, '22256578', 'Moreno Garcia Edixon Javier', '1992-01-22', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'via principal via sector san marcos de leon parroquia buena vista municipio monte carmelo', '0416-0960341', 'dayanaberfer@gmail.com', 'activo', 'PET-210001938', NULL, NULL, 'ESCUELA BÁSICA CONCENTRADA SAN MARCOS', ' ESTADO TRUJILLO  MUNICIPIO MONTE CARMELO PARROQUIA BUENA VISTA SECTOR SAN MARCOS DE LEÓN DERECHA CALLE LAS MARGARITAS. FRENTE CALLE PRINCIPAL A 50 METROS DE LA IGLESIA CATÓLICA CASA');
+INSERT INTO `oficiales` VALUES (1392, '22424161', 'Duarte Morales Eriuska Massiel', '1994-07-16', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'parroquia sabana libre calle san agustin municipio escuque', '0412-9280015', 'duarteeriuska2022@gmail.com', 'activo', 'PET-210002012', NULL, NULL, 'LICEO BOLIVARIANO SABANA LIBRE', 'ESTADO TRUJILLO MUNICIPIO ESCUQUE PARROQUIA SABANA LIBRE SECTOR BARRIO LINDO FRENTE CALLE VIA A SABANA LIBRE. DERECHA CARRETERA PRINCIPAL VALERA - ISNOTU A 700 METROS DE LA ESCUELA NEPTALI VALERO HURTADO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1393, '22622290', 'Cardozo Caldera Jose Ramon', '1993-05-04', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'LA TUNITA PARTE ALTA PARROQUIA CRISTOBAL MENDOZA MUNICIPIO TRUJILLO', '0426-7562585', 'carzj5753@gmail.com', 'activo', 'PET-210001987', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1394, '22622444', 'Duarte Abreu Eddy Daniel', '1993-05-04', NULL, NULL, NULL, NULL, '2016-05-16', NULL, 'terraza de jalisco parroquia jalisco municipio motatan', '0426-1350963', 'EDDYDANIELDUARTEABREU71@GMAIL.COM', 'activo', 'PET-210001860', NULL, NULL, 'UNIDAD EDUCATIVA SIMON BOLIVAR', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ BARRIO SIMON BOLIVAR IZQUIERDA CALLE SUCRE. FRENTE CALLE PRINCIPAL. DERECHA VEREDA 12 SUBIENDO A 500 METROS DE INDUSTRIAS CARMANIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1395, '22624688', 'Verde Zambrano Johan Jose', '1990-09-30', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'la floresta barrio la paz parroquia mercedez diaz municipio valera', '0416-9747730', 'JOHANVERDE_20@HOTMAIL.COM', 'activo', 'PET-210001815', NULL, NULL, 'COMPLEJO CULTURAL POLINIA SANCHEZ DE OLMOS', ' ESTADO TRUJILLO MUNICIPIO ESCUQUE PARROQUIA ESCUQUE SECTOR LA CALLE DERECHA CALLE SUCRE. IZQUIERDA CALLE NINO JESUS. FRENTE CALLE BOLIVAR FRENTE A LA COMANDANCI A POLICIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1396, '22892453', 'Pinto Briceño Angelo Simon', '1989-10-21', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR LA REPRESA, PARROQUIA Y MUNICIPIO PAMPAN', '0416-3046145', 'angel¿PINTO24¿@HOTMAIL.COM', 'activo', 'PET-210001648', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1397, '22892599', 'Teran Morales Maybelis Margoth', '1991-12-10', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'urbanizacin llanos de monay calle 10 manzana 12 parroquia la paz municipio pampan', '0412-6554558', 'taeran.maybelis2013@gmail.com', 'activo', 'PET-210002139', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1398, '22892732', 'Rojo Torres Rafael Ramon', '1994-05-05', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'sector blanca de perez la floresta parroquia mercedez diaz municipio valera ', '0424-7152812', 'rojorafael917@gmail.com', 'activo', 'PET-210001952', NULL, NULL, 'ESCUELA NACIONAL CONCENTRADA BOLIVARIANA LAS TRAVESIAS', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR BLANQUITA DE PEREZ LAS TRAVESIAS FRENTE CALLE PRINCIPAL DE LAS TRAVESIAS. DERECHA VEREDA 2. IZQUIERDA VEREDA 1 AL LADO DE LA CANCHA LAS TRAVESIAS CASA');
+INSERT INTO `oficiales` VALUES (1399, '22892843', 'Araujo Suarez Anthony Gregorio', '1992-09-10', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'SECTOR MINAS DE MONAY, PARROQUIA ARNOLDO GABALDON, MUNICIPIO CANDELARIA', '0424-7193309', 'anthonyaraujo826@gmail.com', 'activo', 'PET-210001536', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1400, '23250593', 'Barreto Ferrini Yuneiber Antonio', '1994-06-28', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SAN FRANCISCO, VIA BOCONÓ, PARROQUIA PAMPAN MUNICIPIO BOCONÓ', '0426-3207770', 'yuneiberbarreto2@gmail.com', 'activo', 'PET-210001510', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1401, '23250705', 'Paredes Matos Oscarina Carolina', '1992-12-18', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'LA CABAÑA SECTOR 5  MERCEDES DIAZ VALERA', '0414-7233942', 'oscarinaparedes23@gmail.com ', 'activo', 'PET-210001706', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1402, '23254640', 'Luzardo Tolosa Yasmira Irani', '1994-09-25', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'calle principal hugo suarez II parroqia balmore rodriguez municipio sucre', '0414-7428291', 'LUZARDOYASMIRA@GMAIL.COM', 'activo', 'PET-210001854', NULL, NULL, 'ALDEA BOLIVARIANA MUNICIPIO SUCRE', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ SECTOR CASA BLANCA DERECHA CALLE CALLE HUGO SUAREZ. IZQUIERDA CALLE CALLE HUGO SUAREZ. FRENTE CALLE HUGO SUÁREZ SECTOR 5 DE JULIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1403, '23255025', 'Camacaro Castillo Yessica Paola', '1990-05-19', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector los cumbitos casa s/n parroquia el araguaney municipio andres bello', '4129320624', 'yessicama@hotmail.com', 'activo', 'PET-210001604', NULL, NULL, 'UNIDAD EDUCATIVA EL ARAGUANEY', 'ESTADO TRUJILLO MUNICIPIO ANDRES BELLO  PARROQUIA ARAGUANEY SECTOR EL ARAGUANEY DERECHA CALLE PRINCIPAL. IZQUIERDA CALLE PRINCIPAL. FRENTE CARRETERA NACIONAL PANAMERICANA FRENTE A LA IGLESIA EL ARAGUANEY CASA');
+INSERT INTO `oficiales` VALUES (1404, '23480789', 'Villegas Osorio Rosangela ', '1992-09-05', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'terraza de jalisco manzana 12 parroquia jalisco municipio motatan', '0426-3709849', 'villegasrosa395@gmail.com', 'activo', 'PET-210001479', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1405, '23593312', 'Moreno Nava Darwin Daniel', '1994-05-29', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'sector brisas del araguaney apartamento 66 planta baja parroquia jose leonardo suarez municipio san rafael de carvajal', '0412-1270306', 'DARWINMORENO.24.1994@GMAIL.COM', 'activo', 'PET-210001874', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1406, '23593501', 'Valecillos Rozas Jose Gregorio', '1992-11-15', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'URB. ESPERANZA DE DIOS. SECTOR LA FLECHA, VIA PPAL. FRENTE AL GALPON LOS ROMERO, PARROQUIA LA PUERTA, MUNICIPIO VALERA.', '0426-0342193', 'valecillosvalecillos62@gmail.com', 'activo', 'PET-210002207', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1407, '23593959', 'Azuaje  Betania Carolina', '1993-05-14', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'la pedregoza parroquia la quebrada municipio urdaneta', '0414-7503920', 'betaniacarolinaazuaje@gmail.com', 'activo', 'PET-210001918', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1408, '23594199', 'Bencomo Briceño Keimar Alejandra', '1995-07-04', NULL, NULL, NULL, NULL, '2024-06-16', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1409, '23595159', 'Rodriguez Rodriguez Jhonatan Jose', '1994-07-18', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'SECTOR LAS CASITAS MOSQUEI BOCONO', '0424-7117450', 'jhonatanjose87@gmail.com', 'activo', 'PET-210001736', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1410, '23595255', 'Reyes Palencia Dania Arelys', '1992-11-04', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector  tirindi niquitao parroquia monseñor jauregui municipio bocono', '424-7221544', 'arelyspalencia468@gmail.com', 'activo', 'PET-210002138', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1411, '23595892', 'Villegas Garcia Luis Miguel', '1995-03-30', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'PRIMERA SABANA SECTOR EL TENDALITO, CASA S/N, PARROQUIA  EL CARMEN MUNICIPIO BOCONO', '0414-7556841', 'luismgarcia2359@gmail.com', 'activo', 'PET-210001589', NULL, NULL, 'ESCUELA BOLIVARIANA PRESBÍTERO JOSÉ DE JESÚS ESPINOZA', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN URBANIZACIÓN LA ELBA IZQUIERDA CALLE LA INOS. FRENTE CALLE MARIO BRICEÑO IRAGORRI A MEDIA CUADRA DE ESTAMPADOS PALAFITO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1412, '23596219', 'Guerron Gutierres Carlos Enrique', '1992-04-29', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'sector juventud barrio 5 de julio parroquia balmore rodriguez municipio sucre', '0412/3715241', 'guerronc48@gmail.com', 'activo', 'PET-210001423', NULL, NULL, 'ALDEA BOLIVARIANA MUNICIPIO SUCRE', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ SECTOR CASA BLANCA DERECHA CALLE CALLE HUGO SUAREZ. IZQUIERDA CALLE CALLE HUGO SUAREZ. FRENTE CALLE HUGO SUÁREZ SECTOR 5 DE JULIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1413, '23596786', 'Mejia Mejia Eduar Antonio', '1993-03-03', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'la vega de santa ana parroquia santa ana municipio pampan', '0426-4638816', 'eduarmejia694@gmail.com', 'activo', 'PET-210002113', NULL, NULL, 'ESCUELA ESTADAL CONCENTRADA', ' ESTADO  TRUJILLO MUNICIPIO PAMPAN PARROQUIA SANTA ANA CASERÍO LA VEGA DE SANTA ANA FRENTE CALLE VIA PRINCIPAL FRENTE DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1414, '23596817', 'Rojas Reyes Jhon Jairo', '1995-05-08', NULL, NULL, NULL, NULL, '2022-07-15', NULL, 'SECTOR BACHAQUERO LOMA DE BONILLA MUNICIPIO Y PARROQUIA CARACHE', '0426-9022307', 'kendallzohamerojas@gmail.com', 'activo', 'PET-210001823', NULL, NULL, 'UNIDAD EDUCATIVA ELVIA MONTILLA DE SANTOS', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA URBANIZACIÓN PABLO EMIGDIO DE LEÓN DERECHA CALLE RÓMULO BETANCOURT. IZQUIERDA CALLE ANDRES BELLO. FRENTE CALLE SIMÓN RODRÍGUEZ SECTOR LAS MALVINAS, A 50 METROS DE LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1415, '23596829', 'Vasquez Ramirez Jose Gregorio', '1992-12-12', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'comuna 13 de abril  parroquia la concepcion municipio pampanito', '0412-0611575', 'jsevasquezrrss@gmail.com', 'activo', 'PET-210001844', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1416, '23596849', 'Peña Vasquez Yordi Jesus ', '1993-09-25', NULL, NULL, NULL, NULL, '2019-05-01', NULL, 'sector el cementerio parroquia la paz municipio pampan', '0424-7603833', 'ypeña@gamil.com', 'activo', 'PET-210001559', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1417, '23665244', 'Marin Colina Noheli Coromoto', '1993-10-02', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector el guatiry calle el progreso parroquia la paz municipio pampan', '0414-7036619', 'nohelimarincolina@gmail.com', 'activo', 'PET-210001615', NULL, NULL, 'ESCUELA BOLIVARIANA PARA LA DIVERSIDAD FUNCIONAL INTELECTUAL FRAY IGNACIO ALVAREZ', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA LA BEATRIZ URBANIZACIÓN LA BEATRIZ DERECHA AVENIDA FUERZAS ARMADAS. IZQUIERDA AVENIDA JOSE MENDEZ QUIJADA. FRENTE CALLE SIN NOMBRE A 150 METROS DEL HOSPITAL DEL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1418, '23766826', 'Teran Chinchilla Marcos Augusto', '1995-03-05', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'parroquia pueblo nuevo municipio baralt', '0412-7259675', 'markoss.elbigmark@gmail.com', 'activo', 'PET-210001851', NULL, NULL, 'UNIDAD EDUCATIVA NUESTRA SEÑORA DE COROMOTO', 'ESTADO ZULIA MUNICIPIO BARALT PARROQUIA PUEBLO NUEVO SECTOR LA PLANTA FRENTE AVENIDA PRINCIPAL. DERECHA CALLE LA PLANTA. IZQUIERDA CALLE LA PLANTA CALLE 97 SECTOR LA PLANTA, AVENIDA INDEPENDENCIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1419, '23775175', 'Bolivar Barreto Jose David', '1992-05-04', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector las malvinas parroquia flor de patria municipio pampan', '0426-8280723', 'bolivarjose25@gmail.com', 'activo', 'PET-210001930', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1420, '23775613', 'Zerpa Montilla Darwin Jose', '1992-11-01', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'la recta de monay parroquia la paz municipio pampan', '416-5848535', 'zerpa0426@gmail.com', 'activo', 'PET-210001572', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1421, '23775644', 'Dominguez Soto Yordano Jose', '1991-08-23', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'sector valle hondo parroquia santa cruz municipio carache', '0416-5679547', 'yerdanojose1991@gmail.com', 'activo', 'PET-210002076', NULL, NULL, 'UNIDAD EDUCATIVA BÁSICA CONCENTRADA NÚMERO 207-238', ' ESTADO TRUJILLO MUNICIPIO CARACHE PARROQUIA CUICAS CASERÍO VALLE HONDO FRENTE CALLE PRINCIPAL TRASANDINA, VIA CARACHE A 300 METROS DE LA CAPILLA VIRGEN DEL CARMEN CASA');
+INSERT INTO `oficiales` VALUES (1422, '23775850', 'Vinaja Diaz Jose Edixon', '1991-06-20', NULL, NULL, NULL, NULL, '2011-04-01', NULL, 'el tablon de monay parroquia la paz municipio pampan', '0426-1269637', 'jvinaja@gmail.com', 'activo', 'PET-210001893 credencial extraviada', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1423, '23776169', 'Salas Paredes Jesus Alberto', '1990-11-20', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'santa lucia parroquia santa ana municipio pampan estado trujillo', '0412-1676771', 'jesussalasparedes@gmail.com', 'activo', 'PET-210002188', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1424, '23776543', 'Delgado Viloria Jesus Antonio', '1993-09-09', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector san rafael parroquia flor de patria municipio pampan', '0416/0515914', 'jenni.albujas1@gmail.com', 'activo', 'PET-210001415', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1425, '23776748', 'Lizardo Melean Eduard Jose', '1993-04-27', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector la garita I parroquia la paz municipio pampan', '0426-8666460', 'lizardopeduard@gmail.com', 'activo', 'PET-210001485', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1426, '23777958', 'Gonzalez Peña Arturo Eli', '1988-09-10', NULL, NULL, NULL, NULL, '2019-07-01', NULL, 'los sintechos calle n° 2 parroquia mercedez diaz municipio valera', '0412-6616717', 'GONZALESARTURO408@GMAIL.COM', 'activo', 'PET-210001924', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1427, '23778286', 'Pirela Teran Yirvis Jose', '1994-07-01', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'sector la bolivariana parroquia campo alegre municipio san rafael de carvajal', '0412-1329320', 'YIRVISJOSEPIRELATERAN@GMAIL.COM', 'activo', 'PET-210001995', NULL, NULL, 'UNIVERSIDAD NACIONAL EXPERIMENTAL SIMÓN RODRIGUEZ', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA LA BEATRIZ URBANIZACIÓN LA BEATRIZ DERECHA AVENIDA JOSÉ MENDEZ QUIJADA. IZQUIERDA AVENIDA PRINCIPAL DE LA BEATRIZ. FRENTE CALLE SIN NUMERO BLOQUE 45 EDIFICIO');
+INSERT INTO `oficiales` VALUES (1428, '23778446', 'Rondon Paredes Jorge Luis', '1992-09-07', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'calle los algarrobos parte alta parroquia agua santa municipio miranda', '0416-2707454', 'jorgerondon446@gmail.com', 'activo', 'PET-210001613', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1429, '23778544', 'Marmolejo Araujo Saleidy Johana', '1993-03-21', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'las adjuntas diagonal a la cancha parroquia tres de febrero municipio la ceiba', '0424-7254405', 'johanamarmolejo428@gmail.com', 'activo', 'PET-210001451', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1430, '23778600', 'Rojas Villa Greivi Jose', '1994-10-20', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'BARRIO EL MILAGRO, CALLE PRINCIPAL, PASAJE 5, CASA 0-63, PARROQUIA JUAN IGNACIO MONTILLA VALERA', '0424-7011164', 'GREYVIJOSE388@GAMAIL.COM', 'activo', 'PET-210001515', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1431, '23780162', 'Gonzalez Valera Leidimar', '1995-09-15', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'sector el bambu loma isleta parroquia el carmen municipio bocono', '4247234095', 'LEINERTEAMO18@GMAIL.COM', 'activo', 'PET-210001968', NULL, NULL, 'ESCUELA ESTADAL CONCENTRADA NÚMERO 60, LOMA ISLETA I', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR LOMA ISLETA I IZQUIERDA CARRETERA LA LOMA. FRENTE CARRETERA TRES CUARTO. DERECHA TROCHA EL POTRERO URBANIZACIÓN LOMA ISLETA I CASA');
+INSERT INTO `oficiales` VALUES (1432, '23781873', 'Rivas Robert Alexander', '1992-02-11', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'parroquia juan ignacio montilla municipio valera', '0426 3635301', 'robertykeli@gmail.com', 'activo', 'PET-210001867', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1433, '23835459', 'Araujo Rivas Jorge Luis', '1993-07-20', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'sector caja de agua parte alta parroquia mercedez diaz municipio valera', '416-0484739', 'araujojorgeluis63@gmail.com', 'activo', 'PET-210001401', NULL, NULL, 'CASA DE ALIMENTACION SIMÓN BILIVAR II', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR EL ONOTO PARTE ALTA');
+INSERT INTO `oficiales` VALUES (1434, '23838461', 'Acurero Graterol Carlos Alberto', '1993-02-19', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'urbanizacion la floresta parroquia pampanito municipio pampanito', '0416-3741495', 'acurerocarlos269@gmail.com', 'activo', 'PET-210001931', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1435, '23838577', 'Blanco Montilla  Efrain Segundo', '1992-05-25', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SABANA DE MENDOZA VALMORE RODRIGUEZ SUCRE', '0414-7551526', 'efrainblanc92@gmail.com ', 'activo', 'PET-210001428', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1436, '23838772', 'Mejias Peña Carlos Antonio', '1992-12-13', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'kilometro 20 via la ceiba parroquia junin municipio sucre', '0416-3662450', 'CM4487220@GMAIL.COM', 'activo', 'PET-210001843', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1437, '23838830', 'Godoy  Deiver Jhoan', '1992-04-18', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector la haragana parroquia chejende municipio candelaria', '0426-0343033', 'godoydeiver@gmail.com', 'activo', 'PET-210001568', NULL, NULL, 'ESCUELA BOLIVARIANA JOSE FELIPE MARQUEZ', ' ESTADO TRUJILLO MUNICIPIO CANDELARIA PARROQUIA CHEJENDE SECTOR AL ALCABALA FRENTE CALLE COMERCIO DIAGONAL A LA ESTACION DE SERVICIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1438, '23866413', 'Sierra Loyo Albenis Jose', '1996-01-22', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'avenida 15 con calle 9 parroquia mercedez diaz municipio valera', '0424-6394303', 'albenissierra5@gmail.com', 'activo', 'PET-210001599', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1439, '23926121', 'Azuaje Andrade  Yessica Maria', '1994-05-19', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'SECTOR CAMPO ESTRELLA, AVDA PPA, CASA S/N, CERCA DEL AUTO LAVADO, MONAY, TRUJILLO', '0414-7222218', 'azuajeyessica6@gmail.com', 'activo', 'PET-210001639', NULL, NULL, 'ESCUELA BOLIVARIANA CAMPO ESTRELLA', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CAMPO ESTRELLA FRENTE TRONCAL 002 FRENTE DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1440, '23960072', 'González Bastidas María Vanessa', '1994-06-14', NULL, NULL, NULL, NULL, '2018-07-19', NULL, 'la vega de tostos parroquia san jose municipio bocono', '0424-7355029', 'nellybasti18@gmail.com', 'activo', 'PET-210001644', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1441, '23960517', 'Godoy Vazquez Silene Del Carmen', '1995-10-27', NULL, NULL, NULL, NULL, '2019-05-01', NULL, 'sector bisnaca calle la inos parroquia el carmen municipio bocono', '0412-1771466', 'selenegodoy,11@gmail.com', 'activo', 'PET-210002029', NULL, NULL, 'ESCUELA BOLIVARIANA PRESBÍTERO JOSÉ DE JESÚS ESPINOZA', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN URBANIZACIÓN LA ELBA IZQUIERDA CALLE LA INOS. FRENTE CALLE MARIO BRICEÑO IRAGORRI A MEDIA CUADRA DE ESTAMPADOS PALAFITO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1442, '24018595', 'Vasquez Montilla Francisco Antonio', '1988-05-04', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'BARRIO SAN FRANCISCO, CALLE LAS MALBINAS', '0424-5071796', 'franvassusej@gmail.com', 'activo', 'PET-210001651', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1443, '24137673', 'Aldana Vergara Leydi Daniela', '1993-09-04', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'URBANIZACIÓN SAN RAFAEL  FLOR DE PATRIA  PAMPÁN ', '0416-5443759', 'leydidanielaaldana@gmail.com', 'activo', 'PET-210002048', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1444, '24138144', 'Caceres Rondon Rosimar Estefani', '1995-05-31', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'SECTOR POLITOO FLOR DE PATRIA  PAMPAN', '0416-5666401', 'rosimarcaceresestefani28@gmail.com', 'activo', 'PET-210001782', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1445, '24138177', 'Barreto Montilla Yoandri Javier', '1994-12-14', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'urbanizacion pablo emigdio leon parroquia flor de patria municipio pampan', '0414-0809608', 'yoandry.1412@gmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'UNIDAD EDUCATIVA ELVIA MONTILLA DE SANTOS', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA URBANIZACIÓN PABLO EMIGDIO DE LEÓN DERECHA CALLE RÓMULO BETANCOURT. IZQUIERDA CALLE ANDRES BELLO. FRENTE CALLE SIMÓN RODRÍGUEZ SECTOR LAS MALVINAS, A 50 METROS DE LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1446, '24138264', 'Raga Lopez Yarmeliz Veronica', '1994-01-24', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'sector el nuevo amanecer de rosa ines parroquia flor de patria municipio pampan', '0416-679665', 'yarmelizveronicaraga@gmail.com', 'activo', 'PET-210002018', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1447, '24139636', 'Viloria Davila Adrian Enrique', '1993-12-14', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector edgar dias parroquia betijoque municipio rafael rangel', '0426-7640165', 'viloriaadrian38@gmail.com', 'activo', 'PET-210002109', NULL, NULL, 'CASA DE LA CULTURA DE SABANA DE MENDOZA', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA SABANA DE MENDOZA SECTOR BOLISUC FRENTE AVENIDA BOLÍVAR. DERECHA CALLE BERMUDEZ. IZQUIERDA CALLE CALLE COMERCIO DIAGONAL A LA PLAZA BOLÍVAR EDIFICIO');
+INSERT INTO `oficiales` VALUES (1448, '24139659', 'Valero Mendoza Yohan Daniel', '1994-10-15', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1449, '24143730', 'D\' Santiago Martinez Franklin Yelfrey', '1992-08-05', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'URB SIMON BOLIVAR CALLE 4 Y 5 BISCUCUY SUCRE', '0424-5624575', 'dsantiagofranklin020@gmail.com', 'activo', 'PET-210001732', NULL, NULL, 'ESCUELA ROMULO GALLEGOS', ' ESTADO PORTUGUESA MUNICIPIO SUCRE PARROQUIA BISCUCUY URBANIZACIÓN SINECIO CASTILLO FRENTE AVENIDA PRINCIPAL. DERECHA CALLE PRINCIPAL. IZQUIERDA CALLE PRINCIPAL URBANIZACION SINECIO CASTILLO, PRIMERA CALLE, BISCUCUY CASA');
+INSERT INTO `oficiales` VALUES (1450, '24143957', 'De Santiago Montaña Jose Esteban', '1993-04-06', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR EL COROZAL PARROQUIA FLOR DE PATRIA  MUNICPIO PAMPAN', '0412-6888407', 'dsantiagoj869@gmail.com', 'activo', 'PET-210002161', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1451, '24322899', 'Becerra Pargas Pablo Jose', '1993-04-14', NULL, NULL, NULL, NULL, '2024-08-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1452, '24409033', 'Manzanilla Moran Marivi del Valle', '1996-05-21', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector valle blanco parroquia la quedrada municipio urdaneta', '0414-7493623', 'marivimanzanilla.15@gmail.com', 'activo', 'PET-210001411', NULL, NULL, 'CENTRO DE EDUCACIÓN INICIAL ADHEMAR DÁVILA', 'ESTADO TRUJILLO MUNICIPIO URDANETA PARROQUIA LA QUEBRADA SECTOR VILLA SAN ROQUE FRENTE AVENIDA MILTON A 200 METROS DEL LICEO PATROCINIO PEÑUELA RUÍZ CASA');
+INSERT INTO `oficiales` VALUES (1453, '24563471', 'Valero Materano Jose Valentin', '1992-10-10', NULL, NULL, NULL, NULL, '2022-07-15', NULL, 'sector el dique parroquia junin municipio sucre', '4266744830', 'JOSE2424VALERO@GMAIL.COM', 'activo', 'PET-210002045', NULL, NULL, 'UNIDAD BÁSICA 27 DE JUNIO DE 1870', ' ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUA JUNIN SECTOR LA PLAZA DERECHA CALLE LA ESPERANZA. IZQUIERDA CALLE BENTANCOURT. FRENTE CALLE BOLÍVAR AL LADO DE LA PLAZA BOLÍVAR, JUNIN KILÓMETRO 23 EDIFICIO');
+INSERT INTO `oficiales` VALUES (1454, '24565628', 'Delgado Castellanos Yeraldin Del Carmen ', '1996-02-03', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'mesetas de chimpire sector las curvas parroquia jose leonardo suarez municipio carvajal', '4121050952', 'delgadoyeraldin920@gmail.com', 'activo', 'PET-210001684', NULL, NULL, 'UNIDAD EDUCATIVA JOSÉ ANTONIO GALUE', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL TABLON DERECHA CALLE EL AMBULATORIO. FRENTE CALLE PRINCIPAL DEL TABLON AL LADO DE LA CANCHA DEL TABLON EDIFICIO');
+INSERT INTO `oficiales` VALUES (1455, '24566234', 'Materano Materano Luisana Andreina', '1992-11-14', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'la beatriz bloque 31 apartamento 1-1 parroquia la beatriz municipio valera', '0414-2204103', 'materanoluisana09@gmail.com', 'activo', 'PET-210002110', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1456, '24566404', 'Peña Balza Oscar Hilareon', '1992-12-17', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector el serrucho parroquia las llanadas  municipio carvajal', '0416-0922149', 'OSCARPBALZA496.@GMAIL.COM', 'activo', 'PET-210001942', NULL, NULL, 'CENTRO DE EDUCACION INTEGRAL RAFAEL QUEVEDO URBINA', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR CAMPO ALEGRE IZQUIERDA AVENIDA PRINCIPAL. DERECHA CALLE FINAL CALLE QUINTA. FRENTE CALLE CUARTA DETRAS PREFECTURA CAMPO ALEGRE CASA');
+INSERT INTO `oficiales` VALUES (1457, '24566476', 'Ramirez Villarreal Jose Leonardo', '1993-10-21', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR 13 DE MAYO SANTA APOLONIA LA CEIBA', '0414-9771253', 'ramirezvillarrealjoseleonardo@gmail.com ', 'activo', 'PET-210001761', NULL, NULL, 'UNIDAD EDUCATIVA ESTADAL EMIRO FUENMAYOR', ' ESTADO TRUJILLO MUNICIPIO RAFAEL RANGEL PARROQUIA JOSE G HERNANDEZ CASERÍO SAN JUAN DE ISNOTU FRENTE AVENIDA PRINCIPAL DEL SECTOR. DERECHA CALLE LAS RURALES. IZQUIERDA CALLE PRINCIPAL A 50 METROS DE LA PLAZA BOLIVAR DE SAN JUAN CASA');
+INSERT INTO `oficiales` VALUES (1458, '24566796', 'Ruzza Solmayra Karina', '1995-04-27', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'SANTA ANA VIA BOCONÓ, SECTOR LOS CORRALES MUNICIPIO PAMPAN', '0426-6769700', 'solmairaruzza@gmail.com', 'activo', 'PET-210001516', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1459, '24566943', 'Valera Gelvez Maria Esther', '1993-10-11', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'SECTOR PUENTE BLANCO  LA PAZ PAMPÁN ', '0412-6630614', 'gelvezmaria78@gmail.com', 'activo', 'PET-210001778', NULL, NULL, 'ESCUELA BOLIVARIANA PUENTE BLANCO', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR PUENTE BLANCO DERECHA CALLE EL PUENTE. FRENTE CALLE PRINCIPAL. IZQUIERDA CARRETERA TIERRA DESPUES DEL PUENTE BLANCO CRUSE ALA DERECHA A UN KILOMETRO');
+INSERT INTO `oficiales` VALUES (1460, '24566944', 'Valera Gelvez Samuel Antonio', '1992-06-16', NULL, NULL, NULL, NULL, '2024-08-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1461, '24566977', 'Valero Katiusca Carolina', '1994-09-20', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1462, '24567482', 'Vielma Vielma Maria De La Concepción', '1991-08-08', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'SECTOR EL PARAISO CALLE ARAGUANEY PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0416-5664036', 'vielmamariaco8@gmail.com', 'activo', 'PET-210001805', NULL, NULL, 'ESCUELA BOLIVARIANA MINAS DE MONAY', ' ESTADO TRUJILLO MUNICIPIO CANDELARIA PARROQUIA ARNOLDO GABALDON SECTOR LAS RURALES IZQUIERDA CALLE LOS ARAGUANEY. FRENTE CALLE LA CRUZ DE LA MISION AL LADO CANCHA DEPORTIVA CASERIO MINA DE MONAI CASA');
+INSERT INTO `oficiales` VALUES (1463, '24617336', 'Linares Machado Leonel Enrique', '1994-06-28', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'URBANIZACION LA MURALLA, AVENIDA LAS DUNAS, CASA V-09, MUNICIPIO PAMPANITO PARROQUIA PAMPANITO', '0416- 5761448', 'leomachado.0605@gmail.com', 'activo', 'PET-210001388', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1464, '24617457', 'Chinchilla Lopez Raiza Gabriela', '1993-12-29', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'CALLE LAS PALMERAS SECTOR LA CRUZ, PAMPAN MUNICIPIO PAMPAN', '0426-4755046', 'chinchillaraiza@hotmail.com', 'activo', 'PET-210002009', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1465, '24617859', 'Dominguez Crismary Rosaura', '1995-08-01', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'CALLE LA CRUZ, SECTOR LA CUCHILLA MUNICIPIO CARACHE, PARROQUIA SANTA CRUZ', '0426-6347728', 'crismarydominguez@gmail.com', 'activo', 'PET-210001630', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1466, '24617929', 'Salazar Abreu Hugo Alberto', '1993-03-18', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'calle bella vista sector las palmitas parroquia el dividive municipio miranda', '0426-0347704', 'salazarhugo023@gmail.com', 'activo', 'PET-210001459', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1467, '24617981', 'Graterol Paredes Yuleidy Carolina', '1991-03-19', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'SABANETAS VIA LOMA GORDA ANDRES LINARES TRUJILLO', '0426-2271985', 'yuleidygraterol08@gmail.com ', 'activo', 'PET-210002098', NULL, NULL, 'ESCUELA BOLIVARIANA EL CHORRO', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA ANDRES LINARES CASERÍO EL CHORRO FRENTE CARRETERA PRINCIPAL EL CHORRO MÁS ABAJO DE LA CAPILLA CASA');
+INSERT INTO `oficiales` VALUES (1468, '24617984', 'Ruiz Valladares Jilkeinny', '1994-11-18', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'sector la coromoto parroquia pampanito municipio pampanito', '0424-7616526', 'ruizvalladaresjilkeinny@gmail.com', 'activo', 'PET-210001889', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1469, '24618047', 'Ruiz Valladares Junior Jose', '1992-12-19', NULL, NULL, NULL, NULL, '2017-01-02', NULL, 'sector la coromoto parroquia pampanito municipio pampanito', '4129927027', 'junioruizhv23@gmail.com', 'activo', 'PET-210002199', NULL, NULL, 'UNIDAD EDUCATIVA MARÍA BARTOLA BECERRA', ' ESTADO TRUJILLO  MUNICIPIO TRUJILLO  PARROQUIA MONSEÑOR CARRILLO CASERÍO SABANETAS FRENTE CARRETERA PRINCIPAL, VIA LA MACARENA. IZQUIERDA ESCALERA HACIA VÍA CARRETERA PRINCIPAL SABANETAS. DERECHA CAMINO REAL, HACIA EL CASERIO SABANETAS AL LADO DEL AMBULATORIO RURAL TIPO II EDIFICIO');
+INSERT INTO `oficiales` VALUES (1470, '24618104', 'Ortiz Chia Luis Alfonso', '1991-06-18', NULL, NULL, NULL, NULL, '2010-09-01', NULL, NULL, '0416-2607559', 'delfinachia2@gmail.com', 'activo', 'PET-210002200', NULL, NULL, 'SEDE DE PROTECCIÓN CIVIL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL CINE FRENTE CALLE EL CINE DETRÁS DE LA ESCUELA JOSEFINA PIMENTEL CASA');
+INSERT INTO `oficiales` VALUES (1471, '24618482', 'Villegas Araujo Jesus Alberto ', '1996-06-20', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'sector la guaira parroquia chinquinquira municipio trujillo', '0412/4605985', 'jesusville025@gmail.com', 'activo', 'PET-210001433', NULL, NULL, 'UNIDAD EDUCATIVA ROSARIO CARRILLO HEREDIA', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR MUST ABAS FRENTE CALLE PRINCIPAL VIA LA GUAIRA AL LADO DE LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1472, '24618545', 'Milla Rojas Romaury Ramona', '1996-04-01', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'RECTA DE MONAY, CERCA DE LA BLOQUERA  PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0426-2478013', 'romaury2022@gmail.com', 'activo', 'PET-210001832', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1473, '24618633', 'Montilla Duran Victor Daniel', '1994-08-23', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'las cocuizas parroquia el dividive municipio miranda', '0426-9649366', 'victordanielmontilladuran@gmail.com', 'activo', 'PET-210002057', NULL, NULL, 'UNIDAD EDUCATIVA GUZMAN BLANCO', ' ESTADO TRUJILLO  MUNICIPIO  MIRANDA   PARROQUIA EL DIVIDIVE SECTOR COCUIZAS DERECHA CALLE LA CRUZ. IZQUIERDA CALLE LAS FLORES. FRENTE CALLE PRINCIPAL DIAGINAL A LA PREFECTURA CASA');
+INSERT INTO `oficiales` VALUES (1474, '24618710', 'Viera Franco Gregory Alejandro', '1994-08-21', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'VIA AL MONUMENTO DE LA PAZ CHIQUINQUIRA TRUJILLO', '0426-4522534', 'gregorirokuviera@gmail.com', 'activo', 'PET-210001733', NULL, NULL, 'ESCUELA BÁSICA PREBISTERO RAFAEL MARÍA VILLASMIL', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR CALLE ARRIBA FRENTE AVENIDA INDEPENDENCIA. IZQUIERDA CALLE URDANETA ARRIBA DE LA IGLESIA CHIQUINQUIRA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1475, '24618760', 'Peña Carrero Maria Grabiela', '1994-05-03', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'pedroaguacate parroquia jose gregorio hernandez municipio rafael rangel', '0426-5806295', 'nahomydelc@gamail.com', 'activo', 'PET-210002028', NULL, NULL, 'ESCUELA BOLIVARIANA SAMUEL DARIO MALDONADO', ' ESTADO TRUJILLO MUNICIPIO RAFAEL RANGEL PARROQUIA JOSE G HERNANDEZ SECTOR ISNOTU FRENTE AVENIDA PRINCIPAL. IZQUIERDA CARRETERA PRINCIPAL. DERECHA CARRERA PRINCIPAL DIAGONAL AL PARQUE ESTEBAN VALERO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1476, '24618792', 'Mendoza Mendoza Yosmari Del Valle', '1994-10-12', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'sector el hatico parroquia cristobal mendoza municipo trujillo', '0424-7136514', 'yosmarimendoza1210@gmail.com', 'activo', 'PET-210001715', NULL, NULL, 'ESCUELA BOLIVARIANA EL HATÍCO', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA ECTOR EL HATÍCO FRENTE CALLE PRINCIPAL EL QUEMADOR EL HATÍCO, PARTE ALTA ANTIGUO QUEMADOR EDIFICIO');
+INSERT INTO `oficiales` VALUES (1477, '24785411', 'Azuaje Ramirez  Marielvis Carolina', '1994-11-08', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'calle3 parroquia balmore rodriguez municipio sucre', '0424-7134721', 'marielvisazuaje1994@gmail.com', 'activo', 'PET-210001509 credencial extraviada', NULL, NULL, 'UNIVERSIDAD PEDAGOGICA EXPERIMENTAL LIBERTADOR (UPEL)', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ URBANIZACIÓN VALMORE RODRIGUEZ IZQUIERDA CALLE CALLE 4. FRENTE CALLE NUMERO 4 A 100M DEL TERMINAL DE PASAJERO CASA');
+INSERT INTO `oficiales` VALUES (1478, '24786650', 'Molina Mendoza Vidal Alberto', '1996-06-03', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'apartamento cuidad bolivar parroquia maribel marrinque municipio  simon bolivar estado zulia', '0412-1647505', 'VIDAL.ALBERTOMOLINA@GMAIL.COM', 'activo', 'PET-210001862', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1479, '24786767', 'Leon Valera Regulo Antonio', '1994-05-07', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector el paraiso parroquia la paz municipio pampan', '0416-1708305', 'leonregulo1994@gmail.com', 'activo', 'PET-210001502', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1480, '24879152', 'Saavedra Matehus Julio Jose', '1990-03-04', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'CASA DE TABLA SECTOR HUGO RAFAEL  SANTA MARIA DEL HORCON MONTE CARMELO', '0416-7384174', 'juliojosesaavedra1990@gmail.com', 'activo', 'PET-210001731', NULL, NULL, 'ESCUELA ESTADAL SAN MIGUEL', 'ESTADO MERIDA MUNICIPIO JULIO CESAR SALAS PARROQUIA ARAPUEY CASERÍO SAN MIGUEL FRENTE CALLE PRINCIPAL. DERECHA SENDERO NINGUNO. IZQUIERDA SENDERO NINGUNO DIAGONAL AL CEMENTERIO AL LADO DE LA CANCHA TECHADA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1481, '24881001', 'Duran  Jesus Rafael', '1993-04-03', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'sector don lorenzo de monay parroquia la paz municipio pampan', '4143371772', 'JESUSRAFAELD19@GMAIL.COM', 'activo', 'PET-210001972', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1482, '24881721', 'Briceño Simancas Hilda Patricia ', '1994-04-25', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'sector la matera parroquia campo alegre municipio carvajal', '4168753124', 'HILDABRICENO4@GMAIL.COM', 'activo', 'PET-210002053', NULL, NULL, 'LICEO BOLIVARIANO RAFAEL BENITO PERDOMO', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR LA MATERA FRENTE CALLE LA ESMERALDA. DERECHA CAMINO SIN NOMBRE. IZQUIERDA CAMINO SIN NOMBRE A 300 METROS CASA ALIMENTACION EDIFICIO');
+INSERT INTO `oficiales` VALUES (1483, '24897856', 'Montilla Fernandez Juan Carlos', '1988-01-30', NULL, NULL, NULL, NULL, '2022-07-15', NULL, 'SECTOR SANTA CRUZ PARROQUIA SAN LUIS MUNICIPIO VALERA', '0424-7155574', 'juanmontilla231@gmail.com', 'activo', 'PET-210001811', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1484, '24909735', 'Jaimes Gil Yohandry Jose', '1991-12-07', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'calle principal kilometro 12 parroquia el progreso municipio la ceiba', '0416-6757892', 'yohandryjaime24@gmail.com', 'activo', 'PET-210001508', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1485, '25006094', 'Delgado Trejo Naylet Yohana', '1994-08-10', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'LA CHAPA SECTOR LOMA DE LA PAZ CRISTOBAL MENDOZA TRUJILLO', '0412-1651135', 'nayjulian94@gmail.com', 'activo', 'PET-210001744', NULL, NULL, 'ESCUELA ESTADAL CONCENTRADA DOÑA ESTEFANÍA MORÓN DE RUMBOS', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA CASERÍO VEGA DE MORÓN FRENTE CARRETERA VÍA LOMA DE LA PAZ SECTOR TRES FLORES, A 50 METROS DE LA ENTRADA HACIA LA VÍA CHAPA GRANDE CASA');
+INSERT INTO `oficiales` VALUES (1486, '25006430', 'Materano Torres Ramón Arturo', '1995-09-18', NULL, NULL, NULL, NULL, '2020-02-16', NULL, 'pie de timirisis puente de hierro parroquia monseñor carrill municipio trujillo', ' 0416-4243642', 'materanoramon037@gmial.coM', 'activo', 'PET-210002052', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1487, '25006735', 'Montilla Guanda Maryuri Del Valle', '1995-07-18', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'el tablon de monay parroquia la paz municipio pampan', '0426-9309627', 'MARYURI2MONTILLA.1995@GMAIL.COM', 'activo', 'PET-210001846', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1488, '25011586', 'Espinoza Vergara Yhonwuert Miguel', '1995-08-29', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector mikimu la concepcion municipio carache', '4162105223', 'yhonwuarte@gmail.com', 'activo', 'PET-210002071', NULL, NULL, 'ESCUELA BOLIVARIANA LA MORITA', ' ESTADO TRUJILLO  MUNICIPIO CARACHE PARROQUIA CARACHE CASERÍO LA MORITA FRENTE CARRETERA VÍA LA CONCEPCIÓN DE CARACHE A 50 METROS DE LA CAPILLA DE SAN JOSÉ CASA');
+INSERT INTO `oficiales` VALUES (1489, '25170116', 'Hernandez Franco Janison Jose', '1991-10-30', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'las mesetas de chimpire parroquia jose leonardo suarez municipio san rafael de carvajal', '0416-4791955', 'hernandezfrancojanison@gmail.com', 'activo', 'PET-210002077', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL SALOMÓN BRICEÑO GABALDON', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR LAS MESETAS DE CHIMPIRE IZQUIERDA CALLE PPL. FRENTE CALLE PRINCIPAL. DERECHA CALLEJÓN EL CARMEN A 100 METROS IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1490, '25170151', 'Vergara Gelves Liliana Alejandra', '1993-09-14', NULL, NULL, NULL, NULL, '2024-08-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1491, '25172642', 'Rosales Morillo Yosmer Alfredo', '1993-07-21', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'LA AGUADA PARROQUIA CARRILLO MUNICIPIO CANDELARIA', '0426-3244519', 'yosmerrosales601@gmail.com', 'activo', 'PET-210002212', NULL, NULL, 'CENTRO PREESCOLAR BOLIVARIANO ANDRES BELLO', ' ESTADO TRUJILLO  MUNICIPIO  MIRANDA   PARROQUIA EL DIVIDIVE SECTOR BOLIMIR FRENTE AVENIDA BOLIVAR. DERECHA CALLE LAS VEGAS. IZQUIERDA CALLE BOLIMR FRENTE A LA PISTA CASA');
+INSERT INTO `oficiales` VALUES (1492, '25172736', 'Morillo Betancourth  Wuinifer Andreina', '1996-01-01', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'sector las vegas calle 1 municipio el dividive municipio miranda', '0426-6411525', 'tatianamorillo04@gmail.com', 'activo', 'PET-210002177', NULL, NULL, 'MODULO DE SERVICIO LA FLORESTA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT (LOS SINTECHO) FRENTE AVENIDA PRINCIPAL LOS SIN TECHO. IZQUIERDA CARRETERA PRINCIPAL DE LOS SIN TECHO AL LADO DEL AMBULATORIO');
+INSERT INTO `oficiales` VALUES (1493, '25172851', 'Torres Villarreal Yojarby Benito', '1994-03-09', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector el gallo parroquia santa polonia municipio la ceiba', '0416-2715569', 'jojarbitorres@gmail.com', 'activo', 'PET-210002070', NULL, NULL, 'UNIDAD EDUCATIVA BICENTENARIO', ' ESTADO TRUJILLO  MUNICIPIO MIRANDA PARROQUIA EL CENIZO SECTOR CENTRO POBLADO EL CENIZO DERECHA AVENIDA 4. IZQUIERDA AVENIDA 3. FRENTE CALLE 4 DIAGONAL AL ABASTO DOÑA RAMONA CASA');
+INSERT INTO `oficiales` VALUES (1494, '25173279', 'Bencomo Ojeda Gabriel Enrique', '1996-03-06', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'timitisis parte alta via pollos eladio parroquia monseñor estanilao carrillo municipio trujillo', '4122598533', 'bencomo2024ojeda.g@ gmail.com', 'activo', 'PET-210001456', NULL, NULL, 'ESCUELA BOLIVARIANA TIMIRISIS', ' ESTADO TRUJILLO  MUNICIPIO TRUJILLO  PARROQUIA MONSEÑOR CARRILLO SECTOR TIMIRISIS PARTE ALTA FRENTE CALLE PRINCIPAL PARTE ALTA DE TIMIRISIS CASERIO TIMIRISIS CERCA DE LA CANCHA POR LA VIA DE POLLOS ELADIOS CASA');
+INSERT INTO `oficiales` VALUES (1495, '25173387', 'Bastidas Briceño Arianis Caribay', '1996-07-27', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'terraza de jalisco manzana 11 parroquia jalisco municipio motatan', '4264283720', 'ARIANNYSBASTIDAS42@GMAIL.COM', 'activo', 'PET-210002080', NULL, NULL, 'ESCUELA BOLIVARIANA AMÉRICO BRICEÑO VALERO', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA DERECHA AVENIDA BUEN PASTOR. FRENTE AVENIDA AYACUCHO A UNA CUADRA DE LA IGLESIA SANTA ROSA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1496, '25173738', 'Rangel Marin Francisco Javier', '1995-03-27', NULL, NULL, NULL, NULL, '2024-03-01', NULL, 'sector el hatico parroquia cristobal mendoza municipo trujillo', '4247471196', 'rangelmarinfranciscojavier@gmail.com', 'activo', 'PET-210001903', NULL, NULL, 'ESCUELA BOLIVARIANA EL HATÍCO', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR EL HATÍCO FRENTE CALLE PRINCIPAL EL QUEMADOR EL HATÍCO, PARTE ALTA ANTIGUO QUEMADOR EDIFICIO');
+INSERT INTO `oficiales` VALUES (1497, '25173787', 'Salas Teran Randy Joel', '1995-09-21', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'recta de monay parroquia la paz municipio pampan', '0416-4721161', 'RANDYSALAS2109@GMAIL.COM', 'activo', 'PET-210002005', NULL, NULL, 'ESCUELA ESTADAL LUCILA CORONADO', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR LA RECTA FRENTE CALLE LA CANCHA. DERECHA CALLEJÓN EL DIAMANTE. IZQUIERDA TRONCAL 002 FRENTE AL HOTEL EL DIAMANTE CASA');
+INSERT INTO `oficiales` VALUES (1498, '25186390', 'Rojas Uzcategui Onell Jose', '1996-09-27', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'SECTOR DON LORENZO CALLE FRANCISCO DE MIRANDA PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0426-9022307', 'onellrojas3671@gmail.com', 'activo', 'PET-210001808', NULL, NULL, 'ESCUELA BASICA NACIONAL BACHILLER. MARCOS TULIO ANDRADE', 'ESTADO ZULIA MUNICIPIO BARALT PARROQUIA PUEBLO NUEVO SECTOR LOS BARROSO FRENTE AVENIDA PRINCIPAL. DERECHA CALLE LOS BARROSO. IZQUIERDA CALLE LOS BARROSO SECTOR LOS BARROSOS CALLE PRINCIPAL PUEBLO NUEVO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1499, '25192929', 'Romero Gutierrez Jackson Jose', '1994-07-26', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'calle 16 parroquia mercedez diaz municipio valera', '0412-4681503', 'jackimero838@gmail.com', 'activo', 'PET-210001580', NULL, NULL, 'CENTRO DE EDUCACION INICIAL EDUARDO BLANCO', ' ESTADO TRUJILLO MUNICIPIO ESCUQUE PARROQUIA ESCUQUE SECTOR EL CENTRO DERECHA CALLE BOLIVAR. IZQUIERDA CALLE PADRE JUAREZ. FRENTE CALLE MIRAFLORES DIAGONAL AL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1500, '25303036', 'Mejia Sarmiento Yoselby del Carmen', '1992-10-06', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'sector el progreso parte alta parroquia pampan municipio pampan', '0412-5363997', 'mejiayoselby@gmail.com', 'activo', 'PET-210002151', NULL, NULL, 'LICEO BOLIVARIANO RAFAEL MARIA URRECHEAGA', ' ESTADO TRUJILLO  MUNICIPIO PAMPAN   PARROQUIA PAMPAN SECTOR CALLE ARRIBA FRENTE CALLE SAN RAFAEL AL LADO DEL CENTRO DIAGNÓSTICO INTEGRAL CASA');
+INSERT INTO `oficiales` VALUES (1501, '25303351', 'Marin Montilla Edditza Yeraldin', '1994-05-04', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'sector capucal via peraza parroquia flor de patria municipio pampan', '0426-1865640', 'edditza04y@gmail.com ', 'activo', 'PET-210001704', NULL, NULL, 'NUCLEO ESCOLAR RURAL EL CAPUCAL', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA CASERÍO CAPUCAL FRENTE CALLE PRINCIPAL DEL CAPUCAL. DERECHA CARRETERA PRINCIPAL. IZQUIERDA CAMINO CERRADO A 4 KILOMETROS DE LA ENTRADA AL SECTOR DESDE LA TRONCAL 007 CASA');
+INSERT INTO `oficiales` VALUES (1502, '25303480', 'Pirela Briceño Naibi Del Carmen', '1996-07-24', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'las malvinas parroquia flor de patria municipio pampan', '412-0345271', 'Naibipirela2018@gmail.com', 'activo', 'PET-210002132', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1503, '25303522', 'Parraga Bravo Maicol Enrrique', '1995-11-19', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'sector la mesa de los gabaldones parroquia pampanito municipio pampanito', '0416-4066432', 'loravmaria.0581@gmail.com', 'activo', 'PET-210001587', NULL, NULL, 'ESCUELA BOLIVARIANA JUAN IGNACIO MONTILLA', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO SECTOR PAMPANITO IZQUIERDA AVENIDA CARRETERA VIEJA TRUJILLO VALERA. FRENTE AVENIDA RAFAEL ANTONIO AYALA. DERECHA CALLE AYALA DIAGONAL A LA FARMACIA MI FARMACIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1504, '25303686', 'Valero Viloria Yenifer Dayany', '1993-12-20', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'URBANIZACION EL CASTILLO, ZONA BAJA, PAROQUIA SABANA GRANDE, MUNICIPIO BOLIVAR', '0426-4120638', 'yenifervalero7@gmail.com', 'activo', 'PET-210001804', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1505, '25373076', 'Montilla Palma Diego Ignacio', '1996-09-10', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'sector loma de pabellon parroquia el carmen municipio bocono', '4126682450', 'diegoignaciomontilla@gmail.com', 'activo', 'PET-210001676', NULL, NULL, 'ESCUELA BOLIVARIANA LOMA EL PABELLÓN', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR EL RODEO FRENTE CALLE SAN ISIDRO. DERECHA CALLEJÓN CALLEJON. IZQUIERDA CALLEJÓN CALLEJON AL FRENTE DE LA POSADA CASA');
+INSERT INTO `oficiales` VALUES (1506, '25373626', 'Hidalgo Toro Juan Carlos ', '1997-04-12', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'barzalito sector el guayabal parroquia el carmen municipio bocono', '0426-3724507', 'HIDALGOJUANCARLOS363@GMAIL.COM', 'activo', 'PET-210002183', NULL, NULL, 'ESCUELA ESTADAL CONCENTRADA NÚMERO 60, LOMA ISLETA I', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR LOMA ISLETA I IZQUIERDA CARRETERA LA LOMA. FRENTE CARRETERA TRES CUARTO. DERECHA TROCHA EL POTRERO URBANIZACIÓN LOMA ISLETA I CASA');
+INSERT INTO `oficiales` VALUES (1507, '25374489', 'Montilla Rodriguez Jesus Alberto', '1995-08-11', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'sector el cementerio parroquia motatan municipio motatan', '4261219058', 'montillarodriguezjesus@gmail.com', 'activo', 'PET-210001397', NULL, NULL, 'ESCUELA BOLIVARIANA NER 175', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA MOTATAN SECTOR CAJA DE AGUA FRENTE CALLE LA CALLESITA A 50 MTS DE LA CANCHA DEPORTIVA');
+INSERT INTO `oficiales` VALUES (1508, '25374937', 'Gutierrez Cabrita Yonenzo Jesus', '1992-04-02', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'sector las americas parroquia balmore rodriguez municipio sucre', '0424/7176489', 'yonenzog@gmail.com', 'activo', 'PET-210001429', NULL, NULL, 'UNIDAD EDUCATIVA VALMORE RODRIGUEZ', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ URBANIZACIÓN VALMORE RODRÍGUEZ DERECHA CALLE CALLE 3. IZQUIERDA CALLE NÚMERO 5. FRENTE CALLE NÚMERO 4 SABANA DE MENDOZA ENTRE CALLES 4 Y 5 DE JULIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1509, '25454438', 'Garcia Bolivar Ernesto Eduardo', '1995-06-22', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'sector la haciendita parroquia la paz municipio pampan', '0412-1458354', 'garciaeduardo.2315@gmail.com', 'activo', 'PET-210001699', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1510, '25454465', 'Ramirez Milagros Del Valle', '1995-03-18', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'sector colina de guatiri parroquia la paz municipio pampan', '04125-1737679', 'Milira254@gmail.com', 'activo', 'PET-210001780', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1511, '25454767', 'Pacheco Sanchez Jose Gregorio', '1996-09-28', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'el valle de jesus parroquia flor de patria municipio pampan', '0416-4223441', 'josegregoriopachecosanchez@gmail.com', 'activo', 'PET-210001919', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1512, '25454809', 'Santilly Rivas Jhon Jairo', '1996-03-22', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'barrio el milagro calle 8 parroquia juan ignacion montilla  municipio valera', '0426-7894354', 'honsantilly@gmail.com', 'activo', 'PET-210001925', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1513, '25454987', 'Mendez Mejias Brayan Paul', '1994-09-05', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'mesa de gallardo parroquia cruz carrillo municipio trujillo', '0416-1956570', 'paulmendez683@gmail.com', 'activo', 'PET-210001469', NULL, NULL, 'ESCUELA BOLIVARIANA TOBÍAS VALERA MARTÍNEZ', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRUZ CARRILLO URBANIZACIÓN MESA DE GALLARDO FRENTE CALLE PRINCIPAL MESA DE GALLARDO A 100 METROS DEL GERIATRICO ALEJANDRO PROSPERO REVEREN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1514, '25459015', 'Peña Duran Orlando Jesus', '1994-06-23', NULL, NULL, NULL, NULL, '2015-02-16', NULL, 'urbanizacion brisas de la paz apartamento n° 1 parroquia la paz municipio pampan', '4247753528', '157ORLAN@GMAIL.COM', 'activo', 'PET-210001978', NULL, NULL, 'BIBLIOTECA PÚBLICA', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO SECTOR COLÓN IZQUIERDA CALLE RAFAEL CADENAS. FRENTE CALLE COLÓN. DERECHA CARRETERA PRINCIPAL A MEDIA CUADRA DE LA PLAZA BOLIVAR EDIFICIO');
+INSERT INTO `oficiales` VALUES (1515, '25459140', 'Pereira Bastidas Yelitza Del Valle', '1994-10-30', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'SECTOR PIE DE SABANA, CASA N° 06, PARROQUIA JOSE LEONARDO SUAREZ MUNICIPIO CARVAJAL ', '0414-1764587', 'yeli.pereira3@gmail.com', 'activo', 'PET-210001387', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1516, '25459562', 'Ramirez Briceño Jose Manuel', '1992-04-21', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'urbanizacion la arboleda calle principal parroquia carvajal municipio san rafael de carvajal', '0416-8330723', 'osemanuelramirezbriceno22@gmail.com', 'activo', 'PET-210001920', NULL, NULL, 'ESCUELA NACIONAL BOLIVARIANA CAJA DE AGUA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ BARRIO CAJA DE AGUA FRENTE AVENIDA PRINCIPAL DE CAJA DE AGUA PARTE MEDIA A 200 METROS DEL FOGON COMUNAL CASA');
+INSERT INTO `oficiales` VALUES (1517, '25459586', 'Espinoza Espinoza Nathaly Betania', '1995-08-15', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'via principal casa 1 parroquia jalisco municipio motatan', '0416-7906475', 'NATHALYBETANIAESPINOZAESPINOZA@GMAIL.COM', 'activo', 'PET-210002003', NULL, NULL, 'ESCUELA BÁSICA BARRIO NUEVO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE AVENIDA PRINCIPAL DE LOS SIN TECHOS AL LADO DEL ABULATORIO DE LOS SIN TECHO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1518, '25593833', 'Barazarte Graterol Leandra Del Valle', '1996-04-04', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'urbanizacion la muralla calle el pinar parroquia pampanito municipio pampanito', '0426/4089911', 'valle.barazarte.10@gmail.com', 'activo', 'PET-210001434', NULL, NULL, 'SIMONCITO LA MURALLA', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO URBANIZACIÓN LA MURALLA DERECHA CALLE EL CAMPO. IZQUIERDA CALLE LAS DUNAS. FRENTE CALLE LOS MOLINOS FRENTE A LA PLAZA CASA');
+INSERT INTO `oficiales` VALUES (1519, '25593901', 'Perdomo Rondon Reylander Ramon', '1996-10-15', NULL, NULL, NULL, NULL, '2017-01-02', NULL, 'sector las lomas la candelaria parroqui el carmen municipio bocono', '0414-1762345', 'reylanderperdomo@gmail.com', 'activo', 'PET-210002117', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1520, '25604777', 'Vitora Montaña Jhosgreana Yesenia ', '1996-10-09', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'urbanizacion san jose calle principal parroqui y municipio pampan', '0426-1321566', 'JHOSGreanavitora@gmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO DE SALES PÉREZ', ' ESTADO TRUJILLO  MUNICIPIO PAMPAN   PARROQUIA PAMPAN SECTOR SANTA CRUZ FRENTE AVENIDA ANDRE BELLO AL LADO DEL ATENEO DE PAMPAN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1521, '25619788', 'Duran Villegas Yoskarla Karina', '1994-07-06', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'sector vega de santa ana parroquia santa ana municipio pampan', '0416-5244905', 'yoskaduran@gmail.com', 'activo', 'PET-210001448', NULL, NULL, 'ESCUELA ESTADAL CONCENTRADA', ' ESTADO  TRUJILLO MUNICIPIO PAMPAN PARROQUIA SANTA ANA CASERÍO LA VEGA DE SANTA ANA FRENTE CALLE VIA PRINCIPAL FRENTE DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1522, '25619949', 'Araujo Valecillos Juan Daniel', '1997-03-13', NULL, NULL, NULL, NULL, '2017-01-02', NULL, 'SECTOR BOLIMIR AV MIRANDA PARROQUIA EL DIVIDIVE MUNICIPIO MIRANDA', '0412-6550786', 'juanaraujov2025@gmail.com', 'activo', 'PET-210001837', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1523, '25631019', 'Torres Ortega Jose Atilio', '1992-07-09', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'las mesetas de chimpire parroquia jose leonardo suarez municipio san rafael de carvajal', '0414-7074910', 'josetorresortega1992@gmail.com', 'activo', 'PET-210002074', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1524, '25767043', 'Bracamonte Justo Jose Enrique', '1993-10-24', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR PIEDRA DE SAL PARROQUIA GENERAL RIBAS MUNICIPIO BOCONO', '0412-6887093', 'joseenriquebracamonte@gmail.com', 'activo', 'PET-210001806', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1525, '25767342', 'Llavaneras Mejias Yorlan Yossier', '1996-08-17', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'sector cruz verde torococo parroquia carrillo municipio candelaria', '4267284765', 'yllavaneras@gmail.com', 'activo', 'PET-210001571', NULL, NULL, 'ESCUELA ESTADAL CONCENTRADA CRUZ VERDE', ' ESTADO TRUJILLO MUNICIPIO CANDELARIA PARROQUIA CARRILLO CASERÍO CRUZ VERDE FRENTE CARRETERA PRINCIPAL AL LADO DE IGLESIA VIRGEN DE LA ZERPA CASA');
+INSERT INTO `oficiales` VALUES (1526, '25767446', 'Garcia Linares Laleska Paola', '1997-04-10', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'urbanizacion florida II calle los ramos casa 162 parroquia pampanito municipio pampanito', '0416-4024668', 'laleskagarcia97@gmail.com', 'activo', 'PET-210002131', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1527, '25767717', 'Moreno Garcia Harrinson David', '1996-04-26', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'parroquia buena vista municipio monte carmelo', '4169783036', 'MORENOHARRINSON1996@GMAIL.COM', 'activo', 'PET-210002064', NULL, NULL, 'ESCUELA BÁSICA CONCENTRADA SAN MARCOS', ' ESTADO TRUJILLO  MUNICIPIO MONTE CARMELO PARROQUIA BUENA VISTA SECTOR SAN MARCOS DE LEÓN DERECHA CALLE LAS MARGARITAS. FRENTE CALLE PRINCIPAL A 50 METROS DE LA IGLESIA CATÓLICA CASA');
+INSERT INTO `oficiales` VALUES (1528, '25767883', 'Rosario Fajardo Milangela Del Carmen', '1994-06-22', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'sector el algarrogo parroquia chiquinquira municipio trujillo', '026-2648727', 'milarosarro 2025@gmail.com', 'activo', 'PET-210002084', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1529, '25822131', 'Zambrano Delgado Duvan Antonio ', '1997-06-25', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'sector kilometro 23 el silencio parroquia junin municipio sucre', '0426-4167685', 'duvanzambrano67@gmail.com', 'activo', 'PET-210001491', NULL, NULL, 'UNIDAD BÁSICA 27 DE JUNIO DE 1870', ' ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUA JUNIN SECTOR LA PLAZA DERECHA CALLE LA ESPERANZA. IZQUIERDA CALLE BENTANCOURT. FRENTE CALLE BOLÍVAR AL LADO DE LA PLAZA BOLÍVAR, JUNIN KILÓMETRO 23 EDIFICIO');
+INSERT INTO `oficiales` VALUES (1530, '25822290', 'Martinez Briceño Rita Olga', '1995-04-29', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'sector blanca de perez la floresta parroquia mercedez diaz municipio valera ', '4263252925', 'Olgarita1995@gmail.com', 'activo', 'PET-210001410', NULL, NULL, 'UNIDAD EDUCATIVA ESTADAL MONSEÑOR ROJAS CHAPARRO', ' ESTADO TRUJILLO MUNICIPIO  MIRANDA  PARROQUIA AGUA CALIENTE SECTOR LAS TERMAS DERECHA CALLE 3ERA. FRENTE CALLE 2DA. IZQUIERDA CARRETERA VIEJA CERCA DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1531, '25832598', 'Lizcano Sauses Diana Estefania', '1997-03-03', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'urbanizacion la montañita via casino militar calle # 4 casa s/n parroquia mercedez diaz municipio valera', '0424-7166321', 'lizcanod709@gmail.com', 'activo', 'PET-210001719', NULL, NULL, 'CENTRO DE VOTACION LA MONTANITA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LA MONTANITA DERECHA CALLE SN. FRENTE CALLE 2 CALLE BOLIVAR. IZQUIERDA CALLEJÓN SN CERCA DE LA IGLESIA EVANGELICA CASA');
+INSERT INTO `oficiales` VALUES (1532, '25865064', 'Bastidas Gonzalez Miriam Katiuska ', '1994-11-28', NULL, NULL, NULL, NULL, '2020-02-16', NULL, 'BARZALITO, RESIDENCVIA TOSTOS BOCONO ESTADO TRUJILLO', '0416-6726595', 'katiuskabastidas07@gmail.com', 'activo', 'PET-210001534', NULL, NULL, 'CEI LAS ESPERANZAS', ' ESTADO TRUJILLO  MUNICIPIO BOCONO PARROQUIA BOCONO SECTOR BARAZALITO II FRENTE AVENIDA ROTARIA. DERECHA VEREDA 4. IZQUIERDA VEREDA 4 CONJUNTO RESIDENCIAL TOSTOS FRENTE CALLE PRINCIPAL A 200M MERCADO MUNICIPAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1533, '25875431', 'Coronado Ramirez Reison Yenfri', '1997-07-30', NULL, NULL, NULL, NULL, '2018-12-01', NULL, '3 de febrero parroquia tres de febrero municipio la ceiba', '0426-7780755', 'coronadoreison123@gmail.com', 'activo', 'PET-210001602', NULL, NULL, 'UNIDAD EDUCATIVA TRES DE FEBRERO', 'ESTADO TRUJILLO MUNICIPIO LA CEIBA  PARROQUIA TRES DE FEBRERO SECTOR TRES DE FEBRERO FRENTE CARRETERA PRINCIPAL VIA LA CEIBA, TRES DE FEBRERO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1534, '25882121', 'Molina Bencomo Antony Alfred', '1996-05-10', NULL, NULL, NULL, NULL, '2021-01-04', NULL, 'cacao 1 parroquia el baño municipio motatan', '0424-7436192', 'molina.bencomo24@gmail.com', 'activo', 'PET-210002073', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1535, '25882281', 'Yepez Valera Jorge Luis ', '1997-09-08', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'las malvinas parroquia flor de patria municipio pampan', '0426-4168224', 'jorgeyepez631@gmail.com', 'activo', 'PET-210001506', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1536, '25882660', 'Bencomo Bastidas Marlenis Andreina', '1995-09-11', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'sector el carmen parroquia pampan municipio pampan', '0416-0300354', 'marlenibencomo@gmail.com', 'activo', 'PET-210001452', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1537, '25882772', 'Valera Valera Antoni Jose', '1996-01-25', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'la floresta cuarta etapa el naranjal parroquia pampanito municipio pampanito', '0412-3833321', 'Anthonymiha273@gmail.com', 'activo', 'PET-210002121', NULL, NULL, 'LICEO BOLIVARIANO PROFESOR ALFREDO RAMON DELGADO MEJIAS', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO URBANIZACIÓN LOS RIOS FRENTE AVENIDA LA BICHU. DERECHA CARRETERA BOLIVAR. IZQUIERDA CARRETERA PRINCIPAL A 200 DE LA PLAZA BOLIVAR EDIFICIO');
+INSERT INTO `oficiales` VALUES (1538, '25882974', 'Rosario Marquez Carlos Eduardo', '1996-07-25', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'PAMPANITO SECTOR LAS CHAPAS, PARROQUIA PAMPANITO MUNICIPIO PAMPANITO', '0416-0777240', 'cazolo89qgmail.com', 'activo', 'PET-210001638', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1539, '25919114', 'Briceño Moreno Diego Daniel', '1993-04-01', NULL, NULL, NULL, NULL, '2019-05-01', NULL, 'SECTOR LAS MESETAS PARROQUIA CHEJENDE MUNICIPIO CARACHE', '0416-9779099', 'bricenoj047@gmail.com', 'activo', 'PET-210001814', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1540, '25919138', 'Rojas Salas Ariana Patricia', '1995-10-11', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'SECTOR EL PARAÍSO  LA PAZ PAMPÁN ', '0426-2018657', 'rojas.ariana1995@gmail.com', 'activo', 'PET-210001741', NULL, NULL, 'LICEO BOLIVARIANO MONAY', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ URBANIZACIÓN LA PAZ FRENTE VEREDA 10 AL LADO DE LA BODEGA DE LA SEÑORA IRIALA CASA');
+INSERT INTO `oficiales` VALUES (1541, '26002841', 'Rodriguez Perez Daibel Dayana', '1994-06-14', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector el corizo parroquia el dividive municipio miranda', '0426-3913319', 'darbelrodrigueez@gmail.com', 'activo', 'PET-210002152', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1542, '26004076', 'Azuaje Kreilys Coromoto', '1995-02-04', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'la cuchilla parroquia santa cruz municipio carache', '416-1114930', 'kreylisazuaje@gmail.com', 'activo', 'PET-210002140', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1543, '26036246', 'Quintero Castellano Exkerlly Thalia', '1997-08-23', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'sector el progreso via el alta parroquia escuque municipio escuque', '0426-4606671', 'castellanothalia97@gmail.com', 'activo', 'PET-210002041', NULL, NULL, 'CENTRO PREESCOLAR SOPOTOCIENTOS', ' ESTADO TRUJILLO MUNICIPIO ESCUQUE PARROQUIA ESCUQUE SECTOR URBANIZACION FRAY IGNACIO ALVAREZ DERECHA CALLE EL PEPO. IZQUIERDA CALLE PUEBLO NUEVO. FRENTE CALLE PUEBLO NUEVO AL FONDO DEL PARQUE');
+INSERT INTO `oficiales` VALUES (1544, '26046006', 'Suarez Canelo Yenifer Carolina', '1997-12-04', NULL, NULL, NULL, NULL, '2018-07-19', NULL, 'LOMA EL PABELLON PARROQUIA SAN ISIDRO MUNICIPIO BOCONO', '0412-5196268', 'yenifercsuarezc@gmail.com', 'activo', 'PET-210001936', NULL, NULL, 'UNIDAD EDUCATIVA EL BATATILLO', ' ESTADO TRUJILLO MUNICIPIO CANDELARIA PARROQUIA CHEJENDE CASERÍO EL BATATILLO FRENTE CALLE PRINCIPAL CARRETERA PANAMERICANA, SECTOR EL BATATILLO CASA');
+INSERT INTO `oficiales` VALUES (1545, '26046243', 'Madrid Rubio Maria Gabriela', '1996-10-07', NULL, NULL, NULL, NULL, '2024-04-16', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1546, '26046516', 'Caruci Domoromo Jose Andres', '1997-05-07', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'sector zaragoza parroquia  valmore rodriguez municipio sucre', '426-9337698', 'Joseandrescaruci25@gmail.com', 'activo', 'PET-210001648', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1547, '26046839', 'Milla Rojas Reywer Javier', '1998-03-17', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'monseñor camargo calle 2 parroquia pampan municipio pampan', '0426-7614945', 'reywerjaviermilla@gmail.com', 'activo', 'PET-210001856', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1548, '26046904', 'Castellanos Gonzalez Yonathan Alberto', '1997-02-24', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'sector la peñita parroquia la concepcion municipio pampanito', '0416-5693930', 'yonathancastellanos528@gmail.com', 'activo', 'PET-210001949', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1549, '26094073', 'Urquiola Araujo Maria Vanessa', '1995-08-16', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'calle el bucare parroquia sabana libre municipio escuque', '0414-7406982', 'vanessaurquiola64@gmail.com ', 'activo', 'PET-210001898', NULL, NULL, 'ESCUELA BOLIVARIANA NEPTALÍ VALERA HURTADO', 'ESTADO TRUJILLO MUNICIPIO ESCUQUE PARROQUIA SABANA LIBRE SECTOR GRUPO ESCOLAR DERECHA CALLE PRINCIPAL. IZQUIERDA CALLE COMERCIO. FRENTE CALLE GRUPO ESCOLAR SABANA LIBRE AL LADO DEL AMBULATORIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1550, '26094716', 'Pirela Nava Eykel De Jesus', '1998-05-24', NULL, NULL, NULL, NULL, '2017-01-02', NULL, 'el milagro municipio valera', '4122139052', 'eykelpirela98@gmail.com', 'activo', 'PET-210002145', NULL, NULL, 'ESCUELA BOLIVARIANA PASCUAL IGNACIO VILLASMIL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA URBANIZACIÓN BELLA VISTA FRENTE AVENIDA ANDRES BELLO. DERECHA VEREDA 1. IZQUIERDA VEREDA 2 A 20 METROS DEL CENTRO DE DIGNOSTICO INTEGRAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1551, '26100513', 'Palma Quevedo Yoiber Ramón', '1998-02-20', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'parroquia el carmen municipio bocono', '0412/0382860', 'yoiberpalma20@gmail.com', 'activo', 'PET-210001584', NULL, NULL, 'ESCUELA BOLIVARIANA LOMA EL PABELLÓN', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR EL RODEO FRENTE CALLE SAN ISIDRO. DERECHA CALLEJÓN CALLEJON. IZQUIERDA CALLEJÓN CALLEJON AL FRENTE DE LA POSADA CASA');
+INSERT INTO `oficiales` VALUES (1552, '26114192', 'Marquez Bravo Ciro Jose', '1994-06-09', NULL, NULL, NULL, NULL, '2017-01-02', NULL, 'la juventud parroquia betijoque municipio rafael rangel', '0416-7223334', 'ciromarquez@gmail.com', 'activo', 'PET-210001698', NULL, NULL, 'UNIDAD EDUCATIVA SAN VICENTE DE PAÚL', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LA PLATA DERECHA AVENIDA 9. FRENTE AVENIDA BOLIVAR AL LADO DE LA IGLESIA EL CARMEN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1553, '26123237', 'Delgado Delgado Yasmin del Valle', '1996-06-19', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'kilometro 21 via la ceiba parroquia junin municipio sucre', '0416-5170618', 'yasmin_delgado17@gmail.com', 'activo', 'PET-210001005', NULL, NULL, 'UNIDAD BÁSICA 27 DE JUNIO DE 1870', ' ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUA JUNIN SECTOR LA PLAZA DERECHA CALLE LA ESPERANZA. IZQUIERDA CALLE BENTANCOURT. FRENTE CALLE BOLÍVAR AL LADO DE LA PLAZA BOLÍVAR, JUNIN KILÓMETRO 23 EDIFICIO');
+INSERT INTO `oficiales` VALUES (1554, '26123405', 'Ramirez Palomares Jesus Daniel', '1997-10-15', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'SECTOR LAS BRISAS DE CUBA ANTONIO NICOLAS BRICEÑO SAN RAFAEL DE CARVAJAL', '0412-0576563', 'jesusdanielramirez2020@gmail.com', 'activo', 'PET-210001697', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1555, '26123701', 'Laverde Manzanilla Eudomar Alejandro', '1997-12-16', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'sector san jose parroquia mercedez diaz municipio valera', '2712314557', 'alexaviejapaz@gmail.com', 'activo', 'PET-210001578', NULL, NULL, 'UNIDAD EDUCATIVA SAN JOSÉ', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR SAN JOSE FRENTE PROLONGACIÓN FINAL DE LA AVENIDA 10 IGLESIA SAN JOSE, A 100 METROS DEL CUERPO DE INVESTIGACIONES CIENTIFICAS PENALES Y CRIMINALISTICAS VALERA CASA');
+INSERT INTO `oficiales` VALUES (1556, '26191397', 'Cañizales Materano Oscar Eduardo', '1995-06-18', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'sector miquimu via principal parroqia la concepcion municipio carache', '0416-1981741', 'oscar.8913014@gmail.com', 'activo', 'PET-210001470', NULL, NULL, 'ESCUELA BOLIVARIANA MIQUIMU', ' ESTADO TRUJILLO MUNICIPIO  PAMPANITO PARROQUIA LA CONCEPCION CASERÍO MIQUIMU FRENTE CARRETERA PRIMCIPAL MIQUIMU A 500 METROS DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1557, '26191835', 'Mejia Mejia Roseliano Antonio', '1994-08-01', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'sector la vega parroquia santa ana municipio pampan', '0416-5734725', 'rosellianomejia1994@gtmail.com', 'activo', 'PET-210001621', NULL, NULL, 'ESCUELA ESTADAL CONCENTRADA', ' ESTADO  TRUJILLO MUNICIPIO PAMPAN PARROQUIA SANTA ANA CASERÍO LA VEGA DE SANTA ANA FRENTE CALLE VIA PRINCIPAL FRENTE DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1558, '26228294', 'Carrillo Yolany Carolina', '1997-01-25', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'sector la matera parroquia campo alegre municipio carvajal', '0426-4775329', 'yolanycarrillo2017@gmail.com', 'activo', 'PET-210001426', NULL, NULL, 'LICEO BOLIVARIANO RAFAEL BENITO PERDOMO', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR LA MATERA FRENTE CALLE LA ESMERALDA. DERECHA CAMINO SIN NOMBRE. IZQUIERDA CAMINO SIN NOMBRE A 300 METROS CASA ALIMENTACION EDIFICIO');
+INSERT INTO `oficiales` VALUES (1559, '26234916', 'De Santos Araujo Reina', '1998-12-19', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'RINCON 3, VEREDA Dr. JOSE GREGORIO PARROQUIA EL CARMEN MUNICIPIO BOCONÓ', '0424-7162112', 'desantosreina50@gmail.com', 'activo', 'PET-210001529', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1560, '26235537', 'Linares Berrios Elianny Maria', '1997-10-27', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'SECTOR LA ESPERANZA ATRÁS DEL ESTADIO PAMPANITO PAMPANITO', '0416-5972638', 'eliannylinares28@gmail.com', 'activo', 'PET-210001722', NULL, NULL, 'ESCUELA BOLIVARIANA JUAN IGNACIO MONTILLA', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO SECTOR PAMPANITO IZQUIERDA AVENIDA CARRETERA VIEJA TRUJILLO VALERA. FRENTE AVENIDA RAFAEL ANTONIO AYALA. DERECHA CALLE AYALA DIAGONAL A LA FARMACIA MI FARMACIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1561, '26300538', 'Albujas Escalona Jenny Ramona', '1993-10-03', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'sector el valle biscucuy  parroquia  ubencio antonio velazquez municipio sucre', '0414/5118199', 'jenni.albujas1@gmail.com', 'activo', 'PET-210001412', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1562, '26311145', 'Pérez Linares Luis José', '1997-05-07', NULL, NULL, NULL, NULL, '2018-07-19', NULL, 'sector pueblo nuevo parroquia pampanito municipio pampanito', '0426-1773675', 'lui26311145@gmail.com', 'activo', 'PET-210001497', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1563, '26311226', 'Oropeza Valecillos Armando Jose', '1997-04-21', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'sabana grande sector los planes parroquia manuel salvador ulloa municipio candelaria', '0426-2352325', 'anibalorozco98@gmail.com', 'activo', 'PET-210001500', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1564, '26311282', 'Villarreal Briceño Willert Jesus', '1995-07-29', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'SABANA DE MENDOZA VALMORE RODRIGUEZ SUCRE', '0416-3129479', 'villarrealwillert0@gmail.com', 'activo', 'PET-210001726', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1565, '26311344', 'Gudiño Perez Richard Jose', '1996-09-08', NULL, NULL, NULL, NULL, '2016-07-01', NULL, 'recta de monay parroquia la paz municipio pampan', '0426-1724746', 'richardjose.1996@gmail.com', 'activo', 'PET-210002032', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1566, '26311572', 'Soto Lozada Yoselin del Carmen', '1998-04-22', NULL, NULL, NULL, NULL, '2023-08-28', NULL, 'pampanito urbanizacion la muralla calle la bahia parroquia pampanito municipio pampanito', '0426-7682576', 'carmenyose22@gmail.coM', 'activo', 'PET-210001928', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1567, '26311618', 'Fernandez  Karelis Josefina', '1990-07-22', NULL, NULL, NULL, NULL, '2013-08-08', NULL, 'SECTOR EL VALLE CALLE PRINCIPAL PARROQUIA EL DIVIDIVE MUNICIPIO MIRANDA', '0426-2717424', 'fernandezkare26@gmail.com', 'activo', 'PET-210001834', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1568, '26311627', 'Castellano Azuaje Yosleidy Del Valle', '1996-05-31', NULL, NULL, NULL, NULL, '2018-07-19', NULL, 'sector el serrucho parroquia san rafael de carvajal municipio carvajal', '0416-3766085', 'Yosleidycastellanos@gmail.com', 'activo', 'PET-210001660', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1569, '26324311', 'Linares Pacheco Jose Alexander', '1994-01-17', NULL, NULL, NULL, NULL, '2015-09-16', NULL, 'CHANDA SECTOR 1 PARROQUIA Y MUNICIPIO BOCONO', '0416-2617759', 'belkyslinares78@gmail.com', 'activo', 'PET-210001819', NULL, NULL, 'ESCUELA CONCENTRADA NACIONAL SIMÓN BOLÍVAR NER 071', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA SABANA DE MENDOZA SECTOR SIMÓN BOLÍVAR DERECHA CALLE EL CERRO. IZQUIERDA CALLE CALLE PRINCIPAL. FRENTE CALLE NÚMERO 4 BARRIO SIMÓN BOLÍVAR EDIFICIO');
+INSERT INTO `oficiales` VALUES (1570, '26324898', 'Rodriguez  Rodriguez Tunjan', '1996-05-25', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'santa cruz calle principal parroquia san luis municipio valera', '0426-2774846', 'rodriguezesmeral987@gmail.com', 'activo', 'PET-210001486', NULL, NULL, 'UNIDAD EDUCATIVA ESTADAL ROMULO GALLEGOS', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR SAN LUIS IZQUIERDA AVENIDA CARMEN SANCHEZ DE JELAMBI. FRENTE AVENIDA JOSE LUIS FAURET FRENTE AL ESTADIUM CHUCHU PEREZ CASA');
+INSERT INTO `oficiales` VALUES (1571, '26368212', 'Gonzalez Vasquez Enderson Jesus', '1998-06-25', NULL, NULL, NULL, NULL, '2019-01-01', NULL, 'sector calle andres bello motatan casa n° 2 municipio motatan', '0412-7502503', 'endersonjesusgonzalez2017@gmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'ESCUELA BOLIVARIANA ANTONIO NICOLAS BRICEÑO', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA MOTATAN SECTOR ANDRES BELLO DERECHA CALLE ANDRES BELLO. FRENTE CALLE ANDRES BELLO DETRAS DEL ODONTOLOGICO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1572, '26368318', 'Ojeda Morillo Deivin De Jesus ', '1994-07-22', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'VIA PRINCIPAL CALLE LA VIRGEN  EL BAÑO MOTATAN', '0424-7018632', 'ojedadeivin22@gmail.com', 'activo', 'PET-210002034', NULL, NULL, 'ESCUELA BOLIVARIANA EL BAÑO', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA EL BAÑO SECTOR LA PLAZA FRENTE CALLE LA VIRGEN DEL CARMEN AL LADO DE LA CAPILLA VIRGEN DEL CARMEN, FRENTE A LA PLAZA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1573, '26412030', 'Castellanos Gonzalez Luis Enrique', '1996-11-25', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector santa rosa calle el rosario parroquia cristobal mendoza municipio trujillo', '0426-9860761', 'luiscastellanospoli20@gmail.com', 'activo', 'PET-210001558', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1574, '26412296', 'Carrizo Gonzalez Maria Fernanda', '1996-02-29', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'barrio 5 de julio casa  02-64 parroquia balmore rodriguez municipio sucre', '0414-7338619', 'mariafernanda9624@gmail.com', 'activo', 'NO ACREDITADA ESTABA DANDO A LUZ', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1575, '26412759', 'Salcedo Castellanos Heidy Alejandra', '1997-09-08', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'SECTOR LAS MALVINAS PARROQUIA FLOR DE PATRIA  MUNICPIO PAMPAN', '0424-7189476', 'ale.odioza01@gmail.com', 'activo', 'PET-210001828', NULL, NULL, 'ESCUELA BOLIVARIANA CARACHE', ' ESTADO TRUJILLO  MUNICIPIO CARACHE PARROQUIA CARACHE SECTOR BARRANCO FRENTE CALLE PRINCIPAL EL VITORO CASERÍO LOMAS DE BONILLA, A 100 METROS DE LA PARADA DE LOMAS DE BONILLA CASA');
+INSERT INTO `oficiales` VALUES (1576, '26413070', 'Rojas Felix Francisco', '1988-08-28', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'SECTOR LAS RURALES MINAS CERCA DEL LICEO, PARROQUIA ARNOLDO GABALDON  MUNICIPIO CANDELARIA', '0426-9800808', 'gato.rojas@gmail.com', 'activo', 'PET-210001802', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1577, '26413557', 'Perez Vasquez Jean Carlos', '1997-07-31', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'el tablon de monay parroquia la paz municipio pampan', '0416-7736548', 'pjeancarlos733@gmail.com', 'activo', 'PET-210001480', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1578, '26413565', 'Mejia Mejia Rosely Yudith', '1997-07-16', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'sector la vega parroquia santa ana municipio pampan', '0426-4754381', '222ROSELIS333@GMAIL.COM', 'activo', 'PET-210002007', NULL, NULL, 'ESCUELA ESTADAL CONCENTRADA', ' ESTADO  TRUJILLO MUNICIPIO PAMPAN PARROQUIA SANTA ANA CASERÍO LA VEGA DE SANTA ANA FRENTE CALLE VIA PRINCIPAL FRENTE DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1579, '26447634', 'Domoromo Garcia Edison Wilkleman', '1997-12-29', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'arenales sector san rafael via las veritas parroquia espinoza de los monteros municipio torres estado lara', '0412-7283914', 'edisondomoromo13@gmail.com', 'activo', 'PET-210001609', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1580, '26451396', 'Maldonado Hidalgo  Ana Teresa ', '1998-12-07', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'parroquia san jose de tostos municipio bocono', '0424-7736243', 'oficialana2020@gmail.com', 'activo', 'PET-210001901', NULL, NULL, 'ESCUELA BOLIVARIANA EL CHAMIZAL', 'ESTADO TRUJILLO MUNICIPIO BOCONO  PARROQUIA  SAN JOSE SECTOR EL CHAMIZAL FRENTE CARRETERA VÍA TOSTOS-NIQUITAO. DERECHA SENDERO PEÑA. IZQUIERDA SENDERO PEÑA A 800 METROS ANTES DE LA POSADA PARADOR TURÍSTICO CASA');
+INSERT INTO `oficiales` VALUES (1581, '26482516', 'Vergara Aguiar Pablo Miguel', '1999-01-21', NULL, NULL, NULL, NULL, '2022-07-15', NULL, 'sector el cerrito parroquia panamericana municipio carache', '0412-492678', 'selasabetoda.21@gmail.com', 'activo', 'PET-210002033', NULL, NULL, 'UNIDAD EDUCATIVA ESTADAL MIGUEL ENRIQUE GUDIÑO', 'ESTADO TRUJILLO MUNICIPIO CARACHE PARROQUIA PANAMERICANA SECTOR EL JOBO ZAPATERO FRENTE CALLE PRINCIPAL EL JOBO A 200 METROS DE LA PREFECTURA CASA');
+INSERT INTO `oficiales` VALUES (1582, '26488054', 'Bermúdez Terán Wendy Carolina', '1995-09-02', NULL, NULL, NULL, NULL, '2018-07-19', NULL, 'parroquia carache municipio carache', '0414-1585192', 'bermudezwender84@gmail.com', 'activo', 'PET-210001818', NULL, NULL, 'ESCUELA BOLIVARIANA CARACHE', ' ESTADO TRUJILLO  MUNICIPIO CARACHE PARROQUIA CARACHE SECTOR BARRANCO FRENTE CALLE PRINCIPAL EL VITORO CASERÍO LOMAS DE BONILLA, A 100 METROS DE LA PARADA DE LOMAS DE BONILLA CASA');
+INSERT INTO `oficiales` VALUES (1583, '26488314', 'Valero Cáceres Katiuska Daniela', '1998-05-30', NULL, NULL, NULL, NULL, '2021-04-01', NULL, 'urbanizacion santa cruz parroquia san luis municipio valera', '0424-7569289', 'katuska26488314@gmail.com', 'activo', 'PET-210002088', NULL, NULL, 'UNIDAD EDUCATIVA DR. JOSE GREGORIO HERNANDEZ', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR SANTA CRUZ FRENTE CALLE PRINCIPAL. IZQUIERDA VEREDA N° 12 AL LADO DE LA IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1584, '26488655', 'Quintero Montilla Mariely Andreina', '1996-12-15', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'capucal parroquia flor de patria municipio pampan', '0416-0860955', 'marielyndrequinteromon96@gmail.com', 'activo', 'PET-210002181', NULL, NULL, 'NUCLEO ESCOLAR RURAL EL CAPUCAL', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA CASERÍO CAPUCAL FRENTE CALLE PRINCIPAL DEL CAPUCAL. DERECHA CARRETERA PRINCIPAL. IZQUIERDA CAMINO CERRADO A 4 KILOMETROS DE LA ENTRADA AL SECTOR DESDE LA TRONCAL 007 CASA');
+INSERT INTO `oficiales` VALUES (1585, '26488845', 'Plaza Mendez Jesus Alejandro', '1998-10-30', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'sector villa nueva  parroquia la concepcion municipio pampanito', '0416-2381887', 'JESUSPLAZA482@GMAIL.COM', 'activo', 'PET-210001863', NULL, NULL, 'ESCUELA BOLIVARIANA EL RECREO', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ URBANIZACIÓN EL RECREO FRENTE AVENIDA PRINCIPAL. DERECHA CALLE SECTOR EL BOSQUE. IZQUIERDA CAMINO VÍA EL MERCADO PRINCIPAL A 100 METROS DE LA CAPILLA CORAZÓN DE JESÚS EDIFICIO');
+INSERT INTO `oficiales` VALUES (1586, '26503093', 'Gonzalez Mejia Maria Alejandra', '1996-11-25', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'VEGA EL COBRE, PARROQUIA BISCUCUY MUNICIPIO SUCRE', '0412-2005759', 'mariamejias147@gmail.com', 'activo', 'PET-210001526', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1587, '26591031', 'Quintero Briceño Yenson Jose', '1998-08-31', NULL, NULL, NULL, NULL, '2021-01-04', NULL, 'los cerrillos casa s/n parroquia mendoza fria municipio valera', '0424-7135186', 'yeys1995@gmail.com', 'activo', 'PET-210001477', NULL, NULL, 'UNIDAD EDUCATIVA RURAL JOSE FELIX RIBAS', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA MENDOZA SECTOR LOS CERRILLOS FRENTE AVENIDA PRINCIPAL DE LOS CERRILLOS PARTE ALTA. DERECHA CARRETERA VIA MENDOZA FRIA Y LAS DELICIAS FRENTE AL MODULO DE SALUD CASA');
+INSERT INTO `oficiales` VALUES (1588, '26591442', 'Saavedra Teran Yulimar Del Valle', '1996-06-30', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'SECTOR BUTAQUE CALLE LA PEÑITACERCA DEL LICEO PAMPANITO II PAMPANITO', '0426-3768235', 'delvalleyulimar2014@gmail.com', 'activo', 'PET-210002013', NULL, NULL, 'ESCUELA BOLIVARIANA JARDIN DE INFANCIA BUTAQUE', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO II SECTOR BUTAQUE FRENTE CALLE PRINCIPAL. DERECHA CARRETERA TIERRA. IZQUIERDA CALLEJÓN CERRADO AL LADO DE LA CANCHA DEPORTIVA CASA');
+INSERT INTO `oficiales` VALUES (1589, '26641979', 'David Araujo  Anileth Rosario', '1998-03-01', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'LOMA DE MITIMBIS, SECTR SANTO DOMINGO', '0426-8206409', 'andyaguilar110@gmail.com', 'activo', 'PET-210001390', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1590, '26757806', 'Castellanos  Yorbinson Daniel', '1998-09-28', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'EL TABLON DE MONAY, PARROQUIA LA PAZ, MUNICIPIO PAMPAN, ESTADO TRUJILLO', '0416-1811561', 'castellanosyorbinson@gmail.com', 'activo', 'PET-210001535', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1591, '26757877', 'Palomares Villamizar Jhonathan Alexander', '1999-05-02', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'SABANA LIBRE MUNICIPIO ESCUQUE, SECTOR LOS PINOS', '0416-7462519', 'palomaresjhonathan456@gmail.com', 'activo', 'PET-210001389', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1592, '26784607', 'Telles Villegas Wuilyeison Rene', '1999-02-28', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector flor de patria el corozal via bocono parrquia flor de patria municipio pampan', '4167723813', 'TELLESWUILYEISON@GMAIL.COM', 'activo', 'PET-210002169', NULL, NULL, 'ESCUELA CONCENTRADA SIN NUMERO EL COROZAL', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR EL COROZAL DERECHA CALLE ABAJO. IZQUIERDA CALLE COROZAL. FRENTE CARRETERA VIA COROZAL ABAJO VIA BOCONO, AL LADO DEL AMBULATORIO EL COROZAL CASA');
+INSERT INTO `oficiales` VALUES (1593, '26877159', 'Olivares Velásquez Ibrain Antonio', '1998-08-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1594, '26877627', 'Teran Araujo Leonel Adrian', '1996-02-12', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'SECTOR SABANETA, MONSEÑOR CARRILLO, MUNICIPIO BOCONÓ', '0416-1642095', 'leonelniquitao@gmail.com', 'activo', 'PET-210001588', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1595, '26881569', 'Garcia Leon Andres Enrique', '1999-07-01', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'BOCONO ESTADO TRUJILLO  EL CARMEN BOCONO', '0412-6563749', 'andresenrique693@gmail.com', 'activo', 'PET-210001763', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1596, '26881846', 'Ortegano Fernández Wuilfer  Alfredo', '1998-07-23', NULL, NULL, NULL, NULL, '2021-02-16', NULL, 'LOMA EL PABELLON, SECTOR EL PAILON. PARROQUIA EL CARMEN', '0416-9750264', 'wuilfer846@gmail.com', 'activo', 'PET-210001541', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1597, '26962886', 'Berrios Ruzza Marianyeli Del Carmen', '1999-10-15', NULL, NULL, NULL, NULL, '2019-01-01', NULL, 'el valle de san luis sector 2 casa n° 34-61 parroquia san luis municipio valera', '0416-1564652', 'marianyesosa@gmail.com', 'activo', 'PET-210002148', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1598, '27006604', 'Molina Villalta Yorvis Jesus', '1997-12-16', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'distrito capital parroquia la vega municipio libertador', '0412-9731297', 'milinayorvy207@gmail.com', 'activo', 'PET-210001716', NULL, NULL, 'Esta cédula de identidad no se encuentra inscrito en el Registro Electoral.', 'TRUJILLO   ');
+INSERT INTO `oficiales` VALUES (1599, '27021949', 'Mejia Ramirez Moises David', '1997-11-04', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'el tendal parroquia matriz municipio trujillo', '0416-7914951', 'MOISESDAVIDMEJIA07@GMAIL.COM', 'activo', 'PET-210001849', NULL, NULL, 'ESCUELA TECNICA AGROPECUARIA ISAIAS MEDINA ANGARITA', ' ESTADO TACHIRA MUNICIPIO LIBERTADOR  PARROQUIA  ABEJALES SECTOR EL CENTRO 1 FRENTE CALLE 5. DERECHA CARRERA 4. IZQUIERDA CARRERA 5 A 100 METROS DEL CAMPO DEPORTIVO NORAIMA GUERRERO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1600, '27022594', 'Aguilar Perdomo Gleiderbe Jesus', '2000-02-01', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'SECTOR LA HACIENDITA PAMPANITO II PAMPANITO', '0416-0744937', 'gleiderberjesus1@gmail.com', 'activo', 'PET-210001755', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1601, '27029144', 'Urbina Marquez Cristian Jose', '1999-07-12', NULL, NULL, NULL, NULL, '2018-07-16', NULL, 'el turagual sector san antonio casa s/n parroquia jose leonardo suarez municipio san rafael de carvajal', '0416-1477984', 'cristianurbina77@gmail.com', 'activo', 'PET-210001792', NULL, NULL, 'UNIDAD EDUCATIVA SAN VICENTE DE PAÚL', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LA PLATA DERECHA AVENIDA 9. FRENTE AVENIDA BOLIVAR AL LADO DE LA IGLESIA EL CARMEN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1602, '27139863', 'Vargas Ruiz Andres Alejandro', '1999-07-15', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1603, '27152302', 'Baptista Millar Luis Alberto', '2000-03-27', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'sector la quinta parroquia granados municipio bolivar', '0412-7885191', 'hc08722@gmail.com', 'activo', 'PET-210001913', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1604, '27152487', 'Simancas Rivas Francy Andreina', '1999-05-17', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1605, '27152894', 'GIL  REINOSO JORMAN JOSE ', '1997-09-14', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'sector la pica parroquia chejende municipio candelaria', '0416-1824653', 'jreinoso97@gmail.com', 'activo', 'PET-210001894', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1606, '27179375', 'Alvarez Cardozo Carlos Enrique', '1998-09-15', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'sector los barrosos parroquia pueblo nuevo municipio baral estado zulia', '0412-1130651', 'CC2168900@gmail.com', 'activo', 'PET-210001752', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1607, '27245152', 'Ramirez Montilla Teodoro', '1999-06-15', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'barrio simon bolivar de la floresta parrorquia mercedes diaz municipio valera', '0426-7575742', 'loloramirez915@gmail.com', 'activo', 'PET-210001845', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1608, '27245169', 'Linares Abreu Wilmer Jose', '1997-01-20', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'sector el cumbe frente a la cancha parroquia la beatriz municipio valera', '0426-3735216', 'wilmerlinares1j174@gmail.com', 'activo', 'PET-210001665', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1609, '27251036', 'Avila Gamez Dismary Carolina', '1999-11-11', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'sector prado alto parroquia la concepcion municipio pampanito', '0412-7839578', 'dismaryavila123@gmail.com', 'activo', 'PET-210001431', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1610, '27251112', 'Castillo Sanchez Andres José', '1998-09-08', NULL, NULL, NULL, NULL, '2017-12-15', NULL, 'sector  las americas parroquia valmore rodriguez municipio sucre', '0426-7071594', 'andrescastillo2024@gmail.com', 'activo', 'PET-210001628', NULL, NULL, 'UNIDAD BÁSICA MERCEDEZ DIAZ', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA SABANA DE MENDOZA ECTOR PALMA BERICAL DERECHA CALLE URDANETA. FRENTE CALLE LAS PALMITAS A 500 METROS DEL HOSPITAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1611, '27304379', 'Graterol Suarez  Jairo Josue', '1999-03-10', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'campo la estrella avenida principal parroquia la paz municipio baralt', '0412-3645264', 'jgraterolcierra@gmail.com', 'activo', 'PET-210002091', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1612, '27312762', 'Acosta Quintero Maikol Jose', '1999-11-01', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'sector villa nueva venezuela parroquia libertardor municipio lagunillas estado zulia', '0412-6087499', 'herpidioromero.02@gmail.com', 'activo', 'PET-210002039', NULL, NULL, 'GRUPO ESCOLAR MARIA DOLORES DE CASTRO', 'ESTADO ZULIA MUNICIPIO  LAGUNILLAS PARROQUIA LIBERTAD URBANIZACIÓN NUEVA VENEZUELA DERECHA CALLE K. IZQUIERDA CALLE 12. FRENTE CALLE PRINCIPAL E ENTRANDO POR LA VENTA DE REPUESTOS TODOTREN CENTRO COMERCIAL');
+INSERT INTO `oficiales` VALUES (1613, '27363656', 'Villegas Gonzalez Maryelyn Paola', '1999-06-20', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'calle principal parroquia agua santa municipo miranda', '416-9748969', 'maryelinvillegas08@gmail.com', 'activo', 'PET-210002127', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1614, '27363762', 'Briceño Núñez Pedro Felipe', '1999-03-26', NULL, NULL, NULL, NULL, '2018-07-16', NULL, 'sector maracaibo de monay parroquia la paz municipio pampan', '0426-6039629', 'pedro1999fapet@gmail.com', 'activo', 'PET-210001630', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1615, '27363783', 'Gil Duran Yhonkeiver Alejandro', '1999-10-09', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'sector el paraiso parroquia la paz municipio pampan', '0412-9311877', 'YHONGIL53@GMAIL.COM', 'activo', 'PET-210001868', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1616, '27405849', 'Perdomo Graterol Jose Enrique', '2000-03-02', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'mene grande parroquia el libertador municipio baralt', '0412/7240233', 'perdomojose339@gmail.com', 'activo', 'PET-210002209', NULL, NULL, 'ESCUELA BASICA NACIONAL DOCTOR JESUS MARIA PORTILLO', 'ESTADO ZULIA MUNICIPIO BARALT PARROQUIA LIBERTADOR SECTOR MENE GRANDE FRENTE AVENIDA LIBERTADOR. DERECHA CALLE CASA DE LA CULTURA. IZQUIERDA CAMINO SINDICATO PETROLERO AVENIDA PRINCIPAL MENE GRANDE FRENTE AL ICAP EDIFICIO');
+INSERT INTO `oficiales` VALUES (1617, '27415531', 'Mesa Rivas Jose Rafael', '1998-11-13', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'avenida 3 con calle 13 cerro la concepcion parroquia mercedez diaz municipio valera', '0426-7294794', 'meza60658@gmail.com', 'activo', 'PET-210001997', NULL, NULL, 'ESCUELA TÉCNICA ROBINSONIANA ZAMORANA PEDRO GARCÍA LEAL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LAS ACACIAS DERECHA AVENIDA BOLIVARIANA. IZQUIERDA AVENIDA 3. FRENTE CALLE 18 FRENTE AL COLEGIO REPUBLICA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1618, '27452771', 'Pacheco Pacheco Rafael Daniel', '1999-10-29', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'sector casa blanca parroquia la libertad municipio carache', '0416-1712630', 'PACHECORAFAEL874@GMAIL.COM', 'activo', 'PET-210001709', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1619, '27466654', 'Pernia Gudiño Antony Eduardo ', '1999-11-30', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'SECTOR LA RECTA DE MONAY LA PAZ  PAMPAN', '0416-0851856', 'antoniopernia0@gmail.com', 'activo', 'PET-210001754', NULL, NULL, 'ESCUELA ESTADAL LUCILA CORONADO', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR LA RECTA FRENTE CALLE LA CANCHA. DERECHA CALLEJÓN EL DIAMANTE. IZQUIERDA TRONCAL 002 FRENTE AL HOTEL EL DIAMANTE CASA');
+INSERT INTO `oficiales` VALUES (1620, '27466889', 'Morillo Torres Naujys Del Valle', '2000-01-05', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'las terrazas de jalisco 3era etapa parroquia jalisco municipio pampan', '0416-4374673', 'morillonaujys915@gmail.com', 'activo', 'PET-210002213', NULL, NULL, 'UNIDAD EDUCATIVA ESTADAL ROMULO GALLEGOS', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR SAN LUIS IZQUIERDA AVENIDA CARMEN SANCHEZ DE JELAMBI. FRENTE AVENIDA JOSE LUIS FAURET FRENTE AL ESTADIUM CHUCHU PEREZ CASA');
+INSERT INTO `oficiales` VALUES (1621, '27512856', 'Torres Echegaray Brahian Javier', '1998-06-05', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'SECTOR EL PROGRESO PARROQUIA Y MUNICIPIO PAMPAN', '0426-1257234', 'bratorres05@gmail.com', 'activo', 'PET-210001661', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1622, '27512882', 'Villegas Trejo Eliezer Josue', '1999-05-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1623, '27512946', 'Ruzza Alvarado Anderson Jose', '1998-04-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1624, '27533116', 'Colpas Rios Samuel Jose', '1998-05-13', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'las rurales parroquia granados municipio bolivar', '4262067845', 'colpassamuel22@gmail.com', 'activo', 'PET-210001442', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1625, '27557252', 'Manzanilla Molina Enmanuel', '2000-07-05', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'via principal calle los zambranos  parroquia la quedrada municipio urdaneta', '0426-4364143', 'manzanillamolina enmanuel903@gmail.com', 'activo', 'PET-210001682', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1626, '27565094', 'Querales Caldera Gladiuska Manuela', '1999-06-27', NULL, NULL, NULL, NULL, '2023-10-15', NULL, 'parroquia santa isabel municipio andres bello', '0412-0768268', 'gqangelina2020@gmail.com', 'activo', 'PET-210001896', NULL, NULL, 'UNIDAD EDUCATIVA SANTA ROSA', 'ESTADO TRUJILLO  MUNICIPIO  ANDRES BELLO PARROQUIA SANTA ISABEL SECTOR SANTA ROSA FRENTE CARRETERA SANTA ROSA A 200 METROS DE LA ANTENA DIGITEL CASA');
+INSERT INTO `oficiales` VALUES (1627, '27619939', 'Olmos Sosa Paul Esteban', '2001-04-24', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'sector la matera parroquia campo alegre municipio carvajal', '0412-7685848', 'olmopsesteban2001@gmail.com', 'activo', 'PET-210001481', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1628, '27628371', 'Carrero Giorgina Naikari', '1999-10-31', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'urbanizacion brisas de jalisco parroquia jalisco municipio motatan', '0416-4187165', 'GEORGINACARRERO813@GMAIL.COM', 'activo', 'PET-210001914', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1629, '27676399', 'Benitez Plazuela Royberth Eduardo', '2000-10-26', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'las llanadas de monay parroquia la paz municipio monay', '0416-1180884', 'royberth19benit@gmail.com', 'activo', 'PET-210001663', NULL, NULL, 'ESCUELA MARIO BRICEÑO IRAGORRY', 'ESTADO TRUJILLO MUNICIPIO CANDELARIA PARROQUIA SAN JOSE CARRETRA PRINCIPAL VIA LA URBINA, SECTOR SANTA RITA PARROQUIA SAN JOSE');
+INSERT INTO `oficiales` VALUES (1630, '27676866', 'Godoy Carlos Víctor Yoel', '1998-03-24', NULL, NULL, NULL, NULL, '2018-07-19', NULL, 'la cancha sector los mamones parroquia pampanito municipio pampanito', '0426-3770292', 'carlos.27godoy.27@gmail.com', 'activo', 'PET-210001921', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1631, '27776059', 'Quevedo Briceño Jesus Daniel', '2000-07-10', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'LOMA EL PABELLON, PARROQUIA EL CARMEN MUNICIPIO BOCONÓ', '0416-1969345', 'poliquevedo10@gmail.com', 'activo', 'PET-210001556', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1632, '27776404', 'Jaramillo Garcia Victor Manuel', '1998-09-12', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'SECTOR LAS LOMAS  EL CARMEN BOCONO', '0414-2730249', 'jaramillovictor579@gmail.com', 'activo', 'PET-210001751', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1633, '27803624', 'Jaramillo Hernandez Greimara Del Valle', '2000-12-26', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'sector boca del monte parte baja parroquia mosquiy municipio bocono', '0424-7330674', 'greimaradelvallejaramilloherna@gmail.com', 'activo', 'PET-210001396', NULL, NULL, 'ESCUELA BOLIVARIANA RURAL DOCTOR CARLOS BARAZARTE', 'ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA  MOSQUEY SECTOR LAS MATICAS FRENTE CALLE DOCTOR CARLOS BARAZARTE. DERECHA CALLEJÓN CALLEJON. IZQUIERDA CALLEJÓN CALLEJON MOSQUEY SECTOR 4 ESQUINAS CASA');
+INSERT INTO `oficiales` VALUES (1634, '27804111', 'Briceño Briceño Juan Cristobal', '1999-12-08', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'SECTOR WEL VALLE CALLE N° 05  DIVIDIVE MIRANDA', '0426-3018287', 'bricenobricenojuancristobal@gmail.com', 'activo', 'PET-210001746', NULL, NULL, 'CENTRO PREESCOLAR BOLIVARIANO ANDRES BELLO', ' ESTADO TRUJILLO  MUNICIPIO  MIRANDA   PARROQUIA EL DIVIDIVE SECTOR BOLIMIR FRENTE AVENIDA BOLIVAR. DERECHA CALLE LAS VEGAS. IZQUIERDA CALLE BOLIMR FRENTE A LA PISTA CASA');
+INSERT INTO `oficiales` VALUES (1635, '27804895', 'Teran Peña Carlos Luis ', '2000-09-01', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'ZAPATERO PARROQUIA PANAMERICANA MUNICIPIO CARACHE', '0426-6907710', 'carlosluisteranpena@gmail.com', 'activo', 'PET-210001537', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1636, '27888065', 'Simancas Rivas Elianny Coromoto', '2001-01-24', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'sector casa blanca parroquia Balmores rodriguez municipio sucre', '0426-7749021', 'eliannysimancas2001@gmail.com', 'activo', 'PET-210001608', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1637, '27888497', 'Vergara Viloria Yorgany Josue', '1999-11-24', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'urbanizacion el castillo calle n°5 parroquia sabana grande municipio bolivar', '0416-3658575', 'fapettrujillo082@gmail.com', 'activo', 'PET-210001460', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1638, '27888505', 'Paredes Villaet Alfonso Jose', '1999-03-26', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'calle el castillo parroquia sabana grande municipio bolivar', '0416-9985130', 'alfonsoparede344@gmail.com', 'activo', 'PET-210001487', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1639, '27888987', 'Perez Abreu Yorgenis Jose', '2000-11-15', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'sector el mamon parroquia el dividive municipio miranda', '0426-9061631', 'YORGENISFH2@GMAIL.COM  ', 'activo', 'PET-210001899', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1640, '27889730', 'Orosco Torres Anibal Antonio', '1998-09-24', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'sector palo negro parroquia pampanito II municipio pampanito', '0416-4579636', 'armandooropeza771@gmail.com', 'activo', 'PET-210001897', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1641, '27896679', 'Gonzalez Duran Marwin Enrique', '1997-09-29', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'el jobal parroquia jalisco municipio motatan', '0412-0635939', 'marwinenriquegonzalezduran@gmail.com', 'activo', 'PET-210001693', NULL, NULL, 'UNIDAD EDUCATIVA SAN VICENTE DE PAÚL', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LA PLATA DERECHA AVENIDA 9. FRENTE AVENIDA BOLIVAR AL LADO DE LA IGLESIA EL CARMEN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1642, '28002530', 'Perdomo Saavedra Yohalys Nazareth', '2000-03-03', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'CALLE LA ORQUETA LA PAZ  PAMPAN', '0412-1687479', 'perdomoemma18720@gmail.com', 'activo', 'PET-210001923', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1643, '28078191', 'Manzanilla Quintero German Jose', '2000-09-18', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'loma de pabellon parroquia el carmen municipio bocono', '4120642237', 'GERMANMANZANILLA500@GMAIL.COM', 'activo', 'PET-210002186', NULL, NULL, 'ESCUELA BOLIVARIANA LOMA EL PABELLÓN', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR EL RODEO FRENTE CALLE SAN ISIDRO. DERECHA CALLEJÓN CALLEJON. IZQUIERDA CALLEJÓN CALLEJON AL FRENTE DE LA POSADA CASA');
+INSERT INTO `oficiales` VALUES (1644, '28078193', 'Manzanilla Gonzalez Roymer Manuel', '1999-07-18', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector las lomas parroquia el carmen municipio bocono', '4120648948', 'ROYMERMANUELMANZANILLA@GMAIL.COM', 'activo', 'PET-210001966', NULL, NULL, 'ESCUELA BOLIVARIANA LOMA EL PABELLÓN', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR EL RODEO FRENTE CALLE SAN ISIDRO. DERECHA CALLEJÓN CALLEJON. IZQUIERDA CALLEJÓN CALLEJON AL FRENTE DE LA POSADA CASA');
+INSERT INTO `oficiales` VALUES (1645, '28079417', 'Hernandez Araujo Yohan Kender', '1999-11-25', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'sector la montañita parroquia mercedez diaz municipio valera', '4167029020', 'hernandezjhoan21@gmail.com', 'activo', 'PET-210001577', NULL, NULL, 'CENTRO DE VOTACION LA MONTANITA', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LA MONTANITA DERECHA CALLE SN. FRENTE CALLE 2 CALLE BOLIVAR. IZQUIERDA CALLEJÓN SN CERCA DE LA IGLESIA EVANGELICA CASA');
+INSERT INTO `oficiales` VALUES (1646, '28079523', 'Torcate  Olivares Tomas Leonardo', '2000-02-05', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'calle 3 simon bolivar parroquia sabana de mendoza municipio sucre', '0426-9670078', 'tomastorcartetorcate@gmail.com', 'activo', 'PET-210002042', NULL, NULL, 'CENTRO INTEGRAL BOLIVARIANO REINA BARRETO DE MOLINA', ' ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA SAN LUIS SECTOR CUATRO LAS 52 CASAS DERECHA CALLE PRINCIPAL. FRENTE CALLE LA IGLESIA LA BICARIA AL LADO DE LA CANCHA DE SAN LUIS CASA');
+INSERT INTO `oficiales` VALUES (1647, '28096154', 'Velasquez Plaza Jose Ramon', '1997-10-22', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'floreta santa rosalia parte alta parroquia mercedez diaz municipio valera', '0424-7062049', 'luisgerardovelasquezplaza@gmail.com', 'activo', 'PET-210001695', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1648, '28206092', 'Mendez Abreu Gregory Andres', '2001-09-24', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'moron barrio san isidro parroquia mercedez diaz municipio valera', '4167215474', 'Mendezgregory720@gmail.com', 'activo', 'PET-210001681', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1649, '28246861', 'Quevedo Briceño Jose Daniel', '2001-12-09', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'LOMA EL PABELLON, PARROQUIA EL CARMEN MUNICIPIO BOCONÓ', '0416-5186005', 'josedanielquevedo9@gmail.com', 'activo', 'PET-210001527', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1650, '28261481', 'Silva Olmos Jimmy Stevens', '2001-09-29', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector la floresta parroquia mercedez diaz municipio valera', '4261892844', 'UCRPMVALERA@GMAIL.COM', 'activo', 'PET-210002068', NULL, NULL, 'ESCUELA NACIONAL CONCENTRADA BOLIVARIANA LAS TRAVESIAS', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR BLANQUITA DE PEREZ LAS TRAVESIAS FRENTE CALLE PRINCIPAL DE LAS TRAVESIAS. DERECHA VEREDA 2. IZQUIERDA VEREDA 1 AL LADO DE LA CANCHA LAS TRAVESIAS CASA');
+INSERT INTO `oficiales` VALUES (1651, '28281664', 'Quintero Clemente  Jesus Alejandro', '1999-05-23', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'EJE VIAL COMUNA KUIKAS CRISTOBAL MENDOZA TRUJILLO', '0416-0882676', 'quinteroclementejesus289@gmail.com', 'activo', 'PET-210001786', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1652, '28281805', 'Rueda Valera Wuilder Alexander', '2001-02-21', NULL, NULL, NULL, NULL, '2021-01-04', NULL, 'calle las malvinas parroquia flor de patria municipio pampan', '0416-4126238', 'elchflavalera@gmail.com', 'activo', 'PET-210001461', NULL, NULL, 'UNIDAD EDUCATIVA ELVIA MONTILLA DE SANTOS', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA URBANIZACIÓN PABLO EMIGDIO DE LEÓN DERECHA CALLE RÓMULO BETANCOURT. IZQUIERDA CALLE ANDRES BELLO. FRENTE CALLE SIMÓN RODRÍGUEZ SECTOR LAS MALVINAS, A 50 METROS DE LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1653, '28281917', 'Quintero Quintero Cesar Ramón', '1999-04-10', NULL, NULL, NULL, NULL, '2021-01-04', NULL, 'sector el capucal via peraza parroquia flor de patria municipio pampan', '0426-4401063', 'cesarquintero1917@gmail.com', 'activo', 'PET-210002011', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1654, '28322528', 'Artigas Perdomo Jorge Manuel', '2001-03-06', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'urbanizacion aliciaprieti de caldera  parroquia pampanito II municipio pampanito', '0426-0333686', 'JORGEARTIGAS929@GMAIL.COM ', 'activo', 'PET-210001686', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1655, '28438090', 'Peña Bastidas Junior Alexander', '2001-06-04', NULL, NULL, NULL, NULL, '2021-01-04', NULL, 'SECTOR LA REPRESA MESA DE GALLARDO CRUZ CARRILLLO TRUJILLO', '0416-8038160', 'peña63767@gmail.com', 'activo', 'PET-210001747', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1656, '28438337', 'Landaeta  Velásquez Raúl Enrique', '1999-12-10', NULL, NULL, NULL, NULL, '2021-04-16', NULL, 'VIA PRINCIPAL PERAZA FLOR DE PATRIA  PAMPAN', '0424-7255914', 'raulenriquelandaetavelasquez@gmail.com', 'activo', 'PET-210001735', NULL, NULL, 'UNIDAD EDUCATIVA ELVIA MONTILLA DE SANTOS', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA URBANIZACIÓN PABLO EMIGDIO DE LEÓN DERECHA CALLE RÓMULO BETANCOURT. IZQUIERDA CALLE ANDRES BELLO. FRENTE CALLE SIMÓN RODRÍGUEZ SECTOR LAS MALVINAS, A 50 METROS DE LA CANCHA DEPORTIVA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1657, '28438718', 'Pernia Gudiño Eduardo Alexander', '2001-03-10', NULL, NULL, NULL, NULL, '2021-02-16', NULL, ' la recta de monay parroquia la paz municipio pampan', '0426-6335918', '04161969784ep@gmail.com', 'activo', 'PET-210001435', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1658, '28445078', 'Olmos Sanchez Arianis Carolina', '2001-11-29', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'MUNICIPIO CARVAJAL PARROQUIA CAMPO ALEGRE', '0416-5787698', 'arianisolmos2001@gmail.com', 'activo', 'PET-210001591', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1659, '28495747', 'Azuaje Velasquez Katherin Andreina', '1999-01-14', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'BARRIO MOSCÚ II SANTA ISABEL  ANDRÉS BELLO ', '0412-8932679', 'Liceosikatherin16@gmail.com', 'activo', 'PET-210001753', NULL, NULL, 'UNIDAD BÁSICA PASCUAL IGNACIO VILLASMIL', 'ESTADO TRUJILLO  MUNICIPIO  ANDRES BELLO PARROQUIA SANTA ISABEL CASERÍO SANTA ISABEL FRENTE CARRETERA PRINCIPAL DIAGONAL A LA PLAZA DE SANTA ISABEL CASA');
+INSERT INTO `oficiales` VALUES (1660, '28502188', 'Montilla  Duran Sandra Paola', '2001-11-28', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'SECTOR BOCA DEL MONTE, PARROQUI NOSQUEY', '0416-7068625', 'montilladuranpao@gamail.com', 'activo', 'PET-210001513', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1661, '28532115', 'Terán García Samir Jose', '2002-01-15', NULL, NULL, NULL, NULL, '2021-10-01', NULL, 'sector el tendalito  parroquia el carmen municipio bocono', '0426-0483363', 'teransamir23@gmail.com', 'activo', 'PET-210001745', NULL, NULL, 'LICEO BOLIVARIANO ANDRES LOMELLI ROSARIO', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN URBANIZACIÓN SANTA CECILIA IZQUIERDA CARRETERA CECILIA. DERECHA CALLEJÓN SAN JOSE. FRENTE TRONCAL 007 UNIVERSIDAD NACIONAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1662, '28542174', 'Gonzalez Marquez Yordan Maradona', '2000-08-14', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'sector el rinconcito parte alta parroquia valerita municipio miranda', '0412-6712907', 'YORDANGONZALEZZ2000@GMAIL.COM', 'activo', 'PET-210001797', NULL, NULL, 'ESCUELA PRIMARIA BOLIVARIANA VIRGILIO GERMAN DÍAZ', 'ESTADO TRUJILLO MUNICIPIO J.F.MARQUEZ C.  PARROQUIA EL SOCORRO CASERÍO EL PARADERO FRENTE CALLE ARROYO FRENTE A LA ALCALDIA CASA');
+INSERT INTO `oficiales` VALUES (1663, '28663841', 'Villegas Rodriguez Abrahan Alexander', '2002-03-29', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector la haciendita de monay parroquia la paz municipio pampan', '0412-6555941', 'villegasmateo353@gmail.com', 'activo', 'PET-210001603', NULL, NULL, 'UNIDAD EDUCATIVA JOSEFINA PIMENTEL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR CENTRO DERECHA CALLE MARIO BRICENO IRAGORRY. IZQUIERDA CALLE EL CINE. FRENTE CALLE PRINCIPAL AL LADO DE PROTECIÓN CIVIL CASA');
+INSERT INTO `oficiales` VALUES (1664, '28685897', 'Cardenas Cuicas Carmen Rosa', '2003-09-16', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'URBANIZACION BRISAS EL TURAGUAL, EDIF 66, APTO P/BAJA B, SAN RAFAEL DE CARVAJAL, EDO TRUJILLO', '0412-7225285', 'carmenserafinadejesucristo@gmail.com', 'activo', 'PET-210001666', NULL, NULL, 'ESCUELA BASICA BOLIVARIANA ANANIAS COTTE', 'ESTADO LARA  MUNICIPIO TORRES PARROQUIA ESPINOZA LOS MONTEROS CASERÍO ARENALES DERECHA CALLE BOLIVAR. IZQUIERDA CALLE VAPOR. FRENTE CALLE REAL FRENTE A LA PLAZA BOLIVAR ARENALES EDIFICIO');
+INSERT INTO `oficiales` VALUES (1665, '29539642', 'Dominguez Roman Genesis Carolina', '2000-05-08', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'sector el cerrito parroquia panamericana municipio carache', '0416-8738406', 'gcdr78@gmail.com', 'activo', 'PET-210002143', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1666, '29541443', 'Morillo Araujo  Wilfredo Jose', '2001-03-31', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'SECTOR LOS PAJONES  FLOR DE PATRIA  PAMPAN', '0416-8790933', 'morillowilfredo135@gmail.com', 'activo', 'PET-210001783', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1667, '29541497', 'Blanco Niño Rosangely Raymar', '2001-12-03', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'SECTOR PRIMERO DE MAYO, LAS MALVINAS FLOR DE PATRIA', '0412-9965167', 'rosamarblanco15@gmail.com', 'activo', 'PET-210001382', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1668, '29585459', 'Briceño Paredes  Alixon Josue', '2000-12-28', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'via las lomas calle n°1 parroquia mercedez diaz municipio valera', '0424-7390215', 'alixonjosuebriceñoparedes@gmail.com', 'activo', 'PET-210001620', NULL, NULL, 'ESCUELA BÁSICA BARRIO NUEVO', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ URBANIZACIÓN DON ROMULO BETANCOURT DERECHA AVENIDA LOS BAMBUES. FRENTE AVENIDA PRINCIPAL DE LOS SIN TECHOS AL LADO DEL ABULATORIO DE LOS SIN TECHO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1669, '29638201', 'Barrientos Bracamonte Ever Rafael', '2001-01-17', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'ZAPATERO. PARROQUIA CEHEJENDE, MUNICIPIO CARACHE', '0426-4717651', 'ever296barrientos@gmail.com', 'activo', 'PET-210001402', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1670, '29638244', 'Marquez Godoy Yerardy Samuel', '2001-10-06', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'la chapa sector la quebrada La negra parroquia pampanito municipio pampanito', '0416-4640611', 'fantrasamuel20@gmail.com', 'activo', 'PET-210001483', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1671, '29638512', 'Martinez Sulbaran Carlos Daniel', '2002-07-12', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'parroquia buena vista municipio monte carmelo', '0426-6582200', 'martinezcarlosdaniel016@gmail.com', 'activo', 'PET-210001669', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1672, '29638915', 'Peña Hortegano Edwinsom Roberto Carlos', '2002-10-20', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1673, '29718932', 'Rodriguez Teran Jorge Ezequiel', '2002-08-23', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'giraluna florida II parroquia motatan municipio motatan', '0416-5643569', 'JORGETERAN@GMAIL.COM', 'activo', 'PET-210001873', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1674, '29742620', 'Duran Montilla Jeiser Jose', '2001-07-17', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'sector la callesita parroquia motatan municipio motatan', '0416-0738111', 'duranjeiser1707@gmail.com', 'activo', 'PET-210002020', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1675, '29768458', 'Barreto Gonzalez Yulian Roberto', '2003-04-14', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1676, '29802534', 'Aponte Lozada Adrian Jose', '2002-08-07', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'calle principal via la chapa eje vial parroquia pampanit municipio pampanito', '0416-2447096', 'adrianaponte016@gmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'CASA COMUNAL LOMA DE LOS MOMONES', 'ESTADO TRUJILLO MUNICIPIO PAMPANITO PARROQUIA PAMPANITO SECTOR QUEBRADA DE LOS NEGRO LA CHAPA IZQUIERDA CARRETERA PRINCIPAL. FRENTE CARRETERA PRINCIPAL VIA LA CHAPA. DERECHA CAMINO CAMINO DE TIERRA A 500MTS DEL EJE VIAL CASA');
+INSERT INTO `oficiales` VALUES (1677, '29825097', 'Soler  Valera Yorgelis  Michel', '2002-12-15', NULL, NULL, NULL, NULL, '2021-02-16', NULL, 'las mesetas  de chimpire parroquia jose leonardo suarez municipio san rafael de carvajal', '0414-7380801', 'soleryorgelis15122002@gmail.com', 'activo', 'PET-210001700', NULL, NULL, 'NIDAD EDUCATIVA NACIONAL SALOMÓN BRICEÑO GABALDON', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR LAS MESETAS DE CHIMPIRE IZQUIERDA CALLE PPL. FRENTE CALLE PRINCIPAL. DERECHA CALLEJÓN EL CARMEN A 100 METROS IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1678, '29825257', 'Briceño Pimentel Gerzon Humberto', '2001-04-11', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'las llanadas de monay parroquia la paz municipio monay', '4268589317', 'briceñogerzon@gmail.com ', 'activo', 'PET-210001694', NULL, NULL, 'UNIDAD EDUCATIVA SAN VICENTE DE PAÚL', 'ESTADO TRUJILLO MUNICIPIO  VALERA PARROQUIA MERCEDES DIAZ SECTOR LA PLATA DERECHA AVENIDA 9. FRENTE AVENIDA BOLIVAR AL LADO DE LA IGLESIA EL CARMEN EDIFICIO');
+INSERT INTO `oficiales` VALUES (1679, '29825389', 'VILLEGAS ENRIQUE ALONSO ', '2003-01-27', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'SECTOR MIRABEL, EJE VIAL, PARROQUIA TRES ESQUINAS MUNICIPIO TRUJILLO', '0426-2471483', 'villegasenriquealonso@gmail.com', 'activo', 'PET-210001551', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1680, '29874017', 'Méndez Ojeda Johan Andres', '2000-05-11', NULL, NULL, NULL, NULL, '2021-01-04', NULL, 'sector terecio andrade parroquia jose leonardo suarez municipio san rafael de carvajal', '4264144216', 'JOHANMEND807@GMAIL.COM', 'activo', 'PET-210001977', NULL, NULL, 'UNIDAD EDUCATIVA NACIONAL SALOMÓN BRICEÑO GABALDON', ' ESTADO TRUJILLO  MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA JOSE LEONARDO SUAREZ SECTOR LAS MESETAS DE CHIMPIRE IZQUIERDA CALLE PPL. FRENTE CALLE PRINCIPAL. DERECHA CALLEJÓN EL CARMEN A 100 METROS IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1681, '29897855', 'Ochoa Morillo Gabriel Jose', '2001-01-14', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'urbanizacion el castillo calle 5 perroza 6ta parroquia sabana de mendoza municipio bolivar', '0412-1449194', 'holissoynetsa12@gmail.com', 'activo', 'PET-210001507 CREDENCIAL EXTRAVIADA', NULL, NULL, 'ESCUELA BOLIVARIANA EL CASTILLO', 'ESTADO TRUJILLO MUNICIPIO BOLIVAR PARROQUIA SABANA GRANDE CASERÍO EL CASTILLO FRENTE CALLE PRINCIPAL A 100 METROS DE LA PARCELITA CASA');
+INSERT INTO `oficiales` VALUES (1682, '29916726', 'Ramirez Cuantindioy Johandri Jose', '2002-03-03', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'parroquia valmore rodriguez municipio sucre', '0426-7218276', 'ramirezyohaner82@gmail.com', 'activo', 'PET-210001413', NULL, NULL, 'ALDEA BOLIVARIANA MUNICIPIO SUCRE', 'ESTADO TRUJILLO MUNICIPIO SUCRE PARROQUIA VALMORE RODRIGUEZ SECTOR CASA BLANCA DERECHA CALLE CALLE HUGO SUAREZ. IZQUIERDA CALLE CALLE HUGO SUAREZ. FRENTE CALLE HUGO SUÁREZ SECTOR 5 DE JULIO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1683, '29916794', 'Perez Quintero Brayan Alexander', '2001-11-05', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'MUNICIPIO ESCUQUE SECTOR EL PEPO, PARROQUIA ESCUQUE', '0424-7542331', 'perezquinterobrayanlexander@gmail.com', 'activo', 'PET-210001644', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1684, '29917412', 'Lozada Acosta Biaggnely Yovana', '2002-12-15', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'sector tucu tucu parroquia tres esquinas municipio trujillo', '416-4399928', 'lozadabiaggnely06@gmail.com', 'activo', 'PET-210002130', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1685, '29933125', 'Pirela Carrillo Maikel De Jesus', '2002-03-03', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'sector 2 jalisco calle la cruz avenida principal ', '0416-5645569', 'pirelamaik@gmail.com', 'activo', 'PET-210001612', NULL, NULL, 'UNIDAD EDUCATIVA JALISCO', 'ESTADO TRUJILLO MUNICIPIO MOTATAN  PARROQUIA JALISCO SECTOR JALISCO II FRENTE CALLE LA ESCUELA AL LADO DEL AMBULATORIO RURAL III EDIFICIO');
+INSERT INTO `oficiales` VALUES (1686, '29994331', 'Cordero Marin Ronald Jose', '2000-05-16', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'kilometro 12  calle principal parroquia el progreso municipio la ceiba', '0416-8184539', 'corderoronald772@gmail.com', 'activo', 'PET-210001934', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1687, '30024021', 'Mendez  Cesar David', '2003-08-27', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'parroquia flor de patria municipio pampan', '4165349947', 'CESARDAVIDMENDEZ1@GMAIL.COM', 'activo', 'PET-210002081', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1688, '30024218', 'Nuñez Teran Enmanuel David', '2003-06-01', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'OCANTO VIA SAN LAZARO, PARROQUIA CHINQUINQUIRA, ESTADO TRUJILLO', '0416-3787260', 'enmanueldavid218@gmail.com', 'activo', 'PET-210001708', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1689, '30024230', 'Saavedra Fernandez Geovanny Antonio', '2002-01-05', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector la quinta parroquia granados municipio bolivar', '4121732202', 'GEOVANNYSAAVEDRA812@GMAIL.COM', 'activo', 'PET-210001657', NULL, NULL, 'ESCUELA BOLIVARIANA LA QUINTA', 'ESTADO  TRUJILLO MUNICIPIO BOLIVAR PARROQUIA GRANADOS CASERÍO LA QUINTA FRENTE CALLE PRINCIPAL A 50 METROS DE LA PANAMERICANA CASA');
+INSERT INTO `oficiales` VALUES (1690, '30024381', 'Vasquez Valera Keimer Johan', '2002-09-11', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'EL MACOYAL DE MONAY, PARROQUIA LA PAZ, MUNICIPIO PAMPAN', '0416-4732848', 'keimervalera38@gmail.com', 'activo', 'PET-210001524', NULL, NULL, 'ESCUELA BOLIVARIANO EL MACOYAL', ' ESTADO TRUJILLO MUNICIPIO PAMPAN  PARROQUIA LA PAZ SECTOR EL MACOYAL FRENTE CALLE PRINCIPAL EL MACOYAL, VÍA LA CATALINA AL LADO DEL AMBULATORIO CASA');
+INSERT INTO `oficiales` VALUES (1691, '30025217', 'Sequera Castellanos Enyerbe Pastor', '2003-05-30', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'SABANA GRANDE DE MONAY, AVENIDA PRINCIPAL PANAMERICANA', '0426-3228770', 'castellanosenyerbe879@gmail.com', 'activo', 'PET-210001550', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1692, '30060805', 'Saez Ochoa Robert Enrique', '2000-12-13', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1693, '30108210', 'Benitez Gudiño Aidymar Paola', '2004-03-17', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'LOMA EL PABELLON, SECTOR LAS RURALES PARROQUIA EL CARMEN', '0426-2432585', 'benitezaidymar@gmail.com', 'activo', 'PET-210001560', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1694, '30116441', 'Moreno Linares Gustavo Enrique', '2003-11-17', NULL, NULL, NULL, NULL, '2023-10-15', NULL, 'sector la marchantica parroquia mercedez diaz municipio valera', '0416-2150723', 'gustamoreno1711@gmail.com', 'activo', 'PET-210001937', NULL, NULL, 'LICEO BOLIVARIANO ARISTOBULO ISTURIZ', 'ESTADO LARA MUNICIPIO IRIBARREN PARROQUIA TAMACA URBANIZACIÓN AVES DE YUCATAN DERECHA CALLE 2. IZQUIERDA CALLE 1. FRENTE CALLE PRINCIPAL FRENTE A LA PLAZA CENTRAL CASA');
+INSERT INTO `oficiales` VALUES (1695, '30189965', 'Pacheco Rivera Orleidi Daniela', '2002-08-31', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'sector cuatro bocas rurales viejas via caño la candelaria parroquia tres de febrero via la ceiba', '0424-7069256', ' pachecoorleidi@gmail.com', 'activo', 'PET-210001922', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1696, '30202797', 'Pineda Vanegas Angel Jose', '2004-02-11', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'SECTOR BRISA ESTRELLA  LIBERTADOR  BARALT', '0424-6406779', 'angeljosepinedavanegas@gmail.com', 'activo', 'PET-210001738', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1697, '30206320', 'Rangel Morillo Lisander David', '2002-08-03', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'sector  campo verde casa s/n parroquia el libertador municipio baralt', '4127347311', 'LISANDERRANGELM@GMAIL.COM', 'activo', 'PET-210002047', NULL, NULL, 'ESCUELA BASICA NACIONAL DOCTOR JESUS MARIA PORTILLO', 'ESTADO ZULIA MUNICIPIO BARALT PARROQUIA LIBERTADOR SECTOR MENE GRANDE FRENTE AVENIDA LIBERTADOR. DERECHA CALLE CASA DE LA CULTURA. IZQUIERDA CAMINO SINDICATO PETROLERO AVENIDA PRINCIPAL MENE GRANDE FRENTE AL ICAP EDIFICIO');
+INSERT INTO `oficiales` VALUES (1698, '30258919', 'Matheus Pineda Jesus Gabriel', '2004-04-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1699, '30258968', 'Morales Carmona Henry Eduardo', '2001-09-05', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector palo negro parroquia pampanito II municipio pampanito', '0412-9348210', 'hm1596626@gmail.com', 'activo', 'PET-210002155', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1700, '30260494', 'Gonzalez Villegas Carlos Eduardo', '2002-01-22', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector la haciendita calle brisas del paraiso parroquia la paz municipio pampan', '0412-8448810', 'carlosg.cod147@gmail.com', 'activo', 'PET-210001655', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1701, '30296909', 'Gil Montilla Jesus Manuel ', '2002-08-27', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'calle las tinajitas  parroquia la paz municipio pampan', '0412-1326877', 'JESUSMGM2023@GMAIL.COM', 'activo', 'PET-210002092', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1702, '30332955', 'Castillos Mosquera Jorge De Jesus', '2002-07-12', NULL, NULL, NULL, NULL, '2022-02-15', NULL, 'sector las laguras de bombita parroquia urdaneta municipio baralt', '4121653267', 'JESUSCASTI007@GMAIL.COM', 'activo', 'PET-210002173', NULL, NULL, 'UNIDAD EDUCATIVA ESTADAL MAESTRO VICTOR BALLESTRINI', 'ESTADO ZULIA MUNICIPIO BARALT PARROQUIA GENERAL URDANETA SECTOR LA BOMBITA FRENTE CALLE PRINCIPAL. DERECHA PROLONGACIÓN CASERIO. IZQUIERDA CAMINO TIERRA CASERIO LA BOMBITA, VIA 3 DE FEBRERO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1703, '30333122', 'Peña Acosta Jose Armando', '2002-09-22', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'MENE GRANDE, SECTOR EL MILAGRO ESTADO ZULIA', '0424-6890644', 'joseacostaarmando@gmail.com', 'activo', 'PET-210001592', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1704, '30380564', 'FLORES BRICEÑO YORVELYS NAIRI ', '2003-12-30', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'sector las malvinas parroquia flor de patria municipio pampan', '0426-8314580', 'yorvelysf3012@gmail.com', 'activo', 'PET-210001904', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1705, '30381823', 'Pinto Alvarez Carlos Jose', '2003-10-21', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'sector la planta calle san benito parroquia pueblo nuevo municipio baralt', '4124211338', 'PALVAREZCJ7@GMAIL.COM', 'activo', 'PET-210001973', NULL, NULL, 'Esta cédula de identidad no se encuentra inscrito en el Registro Electoral.', 'TRUJILLO   ');
+INSERT INTO `oficiales` VALUES (1706, '30392124', 'Briceño Altuve Reimer Antonio', '2004-05-24', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'calle principal sector 2 parroquia el carmen municipio bocono', '0412-9977770', 'REIMERBRICENO4@GMAIL.COM', 'activo', 'PET-210001852', NULL, NULL, 'ESCUELA BOLIVARIANA LOMA EL PABELLÓN', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR EL RODEO FRENTE CALLE SAN ISIDRO. DERECHA CALLEJÓN CALLEJON. IZQUIERDA CALLEJÓN CALLEJON AL FRENTE DE LA POSADA CASA');
+INSERT INTO `oficiales` VALUES (1707, '30417655', 'SALAS ABREU BRAYAN JOSUE ', '2002-11-01', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'PARROQUIA DIVIDIVE, SECTOR BOLIMIR, CASA S/N', '0426-4757125', 'brayanjosuea9@glail.com', 'activo', 'PET-210001532', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1708, '30437585', 'Luque Peraza Jesus Argenis', '2004-02-12', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'calle 2 sector los silos casa n° 6 parroquia balmore rodriguez municipio sucre', '0424-7159789', 'JESUSARGENISLUQUEPERAZA@GMAIL.COM', 'activo', 'PET-210001861', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1709, '30438149', 'Teran Nieves  Fernando Jose', '2003-04-10', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'sector el jobo parroquia panamericana municipio carache', '0416-1239613', 'FERNAN438NIEVE@GMAIL.COM', 'activo', 'PET-210001850', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1710, '30446356', 'Sarabia Segovia Kleiver Enrique', '2002-11-14', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'menegrande sector pueblo nuevo parroquia pueblo nuevo municipio baralt', '0412-1675918', 'darabiakleiver8@gmail.com', 'activo', 'PET-210002038', NULL, NULL, 'CENTRO DE EDUCACION INICIAL EVENCIO SOTO OCANTO', 'ESTADO ZULIA MUNICIPIO BARALT PARROQUIA PUEBLO NUEVO SECTOR HELIMINE DE FONSECA FRENTE CALLE PRINCIPAL. DERECHA PROLONGACIÓN TERRENO. IZQUIERDA PROLONGACIÓN CASERIO HELIMINE FONSECA 5 ETAPA DETRAS DE LA CANCHA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1711, '30480644', 'Graterol Godoy Ronald Jose', '2000-10-27', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'caranbo 1 parroquia tres de febrero  municipio la ceiba', '4247178054', 'GRATEROLRONAL234@GMAIL.COM', 'activo', 'PET-210001971', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1712, '30491066', 'Trompetero Vazquez Nelvis Josue', '2002-06-16', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'sector el jobo parroquia panamericana municipio carache', '4164702502', 'NELVISTROMPETERO9@GMAIL.COM', 'activo', 'PET-210001967', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1713, '30491097', 'Caceres Marin Yofran Jose', '2003-07-20', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'EL TABLON DE MONAY, PARROQUIA LA PAZ, MUNICIPIO PAMPAN, ESTADO TRUJILLO', '0416-7179284', 'caceresyofran6@gmail.com', 'activo', 'PET-210001542', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1714, '30494216', 'Valecillos Valero Hilary de las Nieves', '2000-03-28', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'calle principal de ciuidad bendita parroquia sanbana grande municipio bolivar', '0412-7265513', 'hilaryvale23@gmail.com', 'activo', 'PET-210002195', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1715, '30558780', 'Blanco Falcon Heyderli Gladiuska', '2004-02-26', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'sector las malvinas parroquia flor de patria municipio pampan', '0416-2124350', 'BLANCOHEYDARLIN@GMAIL.COM', 'activo', 'PET-210001848', NULL, NULL, 'Esta cédula de identidad no se encuentra inscrito en el Registro Electoral.', 'TRUJILLO   ');
+INSERT INTO `oficiales` VALUES (1716, '30579891', 'Perez Alcantara Rayner Jose', '2004-12-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1717, '30670935', 'Zalazar Ruz Andres Daniel', '2003-10-26', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'LA VICTORIA DE CAUS, PARROQUIA CHEJENDE, MUNICIPIO BOLIVAR', '0426-4115903', 'andreszalazar30670@gmail.com', 'activo', 'PET-210001593', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1718, '30671341', 'Pacheco Rivera Orlimar Danielis', '2004-06-23', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'tres de febrero sector 4 bocas rurales viejas parroquia tres de febrero municipio la ceiba', '0424-7213561', 'ORLIMARPACHECO341@GMAIL.COM', 'activo', 'PET-210001883', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1719, '30717796', 'Torres Polin Angelo Eliezer', '2004-07-27', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'urbanizacion el prado parroquia la concepcion municipio pampanito', '0426-4223498', 'thartugo38@gmail.com', 'activo', 'PET-210001457', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1720, '30717866', 'Moreno Gil Jesus Enrique', '2004-07-25', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'tres esquinas sector ali primera parroquia tres esquinas municipio trujillo', '0416-4675913', 'jesusmoreno3066@gmail.com', 'activo', 'PET-210001440', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1721, '30867621', 'Saavedra Perez  Juan Francisco', '2002-05-04', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'CALLE LOS SILOS, FRENTE AL ESTADIO LA BANDERA, VALMORE RODRIGUEZ, SABANA DE MENDOZA EDO TRUJILLO', '0424-7798821', 'saavedrajuan835@gmail.com', 'activo', 'SUSPENDIDO', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1722, '30879874', 'Torres Azuaje Ana Margarita', '2004-04-06', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1723, '30880489', 'MEJIA VILLEGAS BETANIA DEL CARMEN ', '2005-01-20', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'pueblo nuevo calle 98 casa 12 parroquia pueblo nuevo municipio barat', '0412-0775628', 'bcmejiavillegas@gmail.com', 'activo', 'PET-210002087', NULL, NULL, 'Esta cédula de identidad no se encuentra inscrito en el Registro Electoral', 'TRUJILLO   ');
+INSERT INTO `oficiales` VALUES (1724, '30880546', 'Salas Mazzey Yonahiquel Daniel', '2005-06-20', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1725, '30975736', 'Marquez Castellanos Ehiber Josue', '2003-11-05', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'sector caranbu I parroquia tres de febrero municipio la ceiba', '0424-7314076', 'EHIBERMARQUEZ@GMAIL.COM', 'activo', 'PET-210001857', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1726, '31008121', 'Saavedra Fernandez Geolenny Anais', '2004-12-16', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1727, '31017840', 'Lucena Gonzalez Eliosmen Jose', '2004-09-29', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'sector el golfito parroquia pueblo nuevo municipio baralt', '0424-7464856', 'eliosmenlucena565@gmail.com', 'activo', 'PET-210001926', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1728, '31029307', 'Cegarra Quintero Antony Alexander', '2005-01-07', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'la matera callejon san jose sector 2 parroquia carvajal municipio san rafael de carvajal', '0416-4290308', 'ANTONYCEGARRA2005@GMAIL.COM', 'activo', 'PET-210001866', NULL, NULL, 'LICEO BOLIVARIANO RAFAEL BENITO PERDOMO', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR LA MATERA FRENTE CALLE LA ESMERALDA. DERECHA CAMINO SIN NOMBRE. IZQUIERDA CAMINO SIN NOMBRE A 300 METROS CASA ALIMENTACION EDIFICIO');
+INSERT INTO `oficiales` VALUES (1729, '31054528', 'Mendez Marquez Alexander Jose', '2004-05-10', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'capilla niño jesus via al estadio parroquia agua santa municipio miranda', '4269134065', 'ALEXANDERJOSEMENDEZMARQUEZ@GMAIL.COM', 'activo', 'PET-210001970', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1730, '31071380', 'Bastidas Blanco Dairuzca Jocksanith', '2004-01-26', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'EL ESTADIO FLOR DE PATRIA FLOR DE PATRIA  PAMPAN', '0412-7235819', 'daibastidas2004@gmail.com', 'activo', 'PET-210001784', NULL, NULL, 'ESCUELA BOLIVARIANA FRANCISCO JAVIER URBINA', 'ESTADO TRUJILLO MUNICIPIO PAMPAN PARROQUIA FLOR DE PATRIA SECTOR FLOR DE PATRIA DERECHA CALLE AFALTO. IZQUIERDA CALLE AFALTO. FRENTE CALLE PRINCIPAL DE FLOR DE PATRIA AL LADO DE CAFÉ FLOR DE PATRIA EDIFICIO');
+INSERT INTO `oficiales` VALUES (1731, '31094957', 'Escalante Godoy Dayana Josefina', '2005-10-15', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1732, '31095176', 'SOLSONA MORENO ADRIANA CAROLINA ', '2003-05-14', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'santa rosa parte alta parroquia campo alegre municipio san rafel de carvajal', '0424-7527258', 'adrianasolsona1@gmail.com', 'activo', 'PET-210001652', NULL, NULL, 'UNIDAD EDUCATIVA RAFAEL QUEVEDO URBINA', 'ESTADO TRUJILLO MUNICIPIO SAN RAFAEL CARVAJAL PARROQUIA CAMPO ALEGRE SECTOR CAMPO ALEGRE IZQUIERDA AVENIDA PRINCIPAL. DERECHA CALLE SIN NUMERO. FRENTE CALLE QUINTA A 50 METROS DE PREFECTURA CAMPO ALEGRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1733, '31145491', 'Gonzalez Pacheco Oskarlin Andreina', '2006-01-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1734, '31176660', 'Morales Moreno Ronaldo Enrique', '2005-07-20', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'don tobias parroquia matriz municipio trujillo', '4161196412', 'MORALESRONALDO692@GMAIL.COM', 'activo', 'PET-210002171', NULL, NULL, 'LICEO BOLIVARIANO RAMON IGNACIO MENDEZ', 'ESTADO TRUJILLO  MUNICIPIO TRUJILLO PARROQUIA MATRIZ SECTOR LAS ARAUJAS-SAN JACINTO IZQUIERDA AVENIDA MIRABEL. FRENTE AVENIDA DIEGO GARCIA DE PAREDES. DERECHA CALLE MIRABEL AL FRENTE DEL CUERPO DE BOMBEROS DE TRUJILLO Y DIAGONAL AL IPASME EDIFICIO');
+INSERT INTO `oficiales` VALUES (1735, '31177137', 'Pimentel Urbina Luis Fernando', '2005-01-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1736, '31177195', 'Duran Gil Floreanyerli Maria', '2004-01-10', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'el progreso kilometro 12 calle principal casa s/n parroquia el progreso municipio la ceiba', '0414-75853638', 'floreanyelisduran13@gmail.com', 'activo', 'PET-210001540', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1737, '31177330', 'Pirela Mejia Carlos Segundo', '2002-12-31', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1738, '31205988', 'Perez Duran Yuandri Deimar', '2004-08-18', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'calle principal frente a la quesera kilometro 12 parroquia el progreso municipio la ceiba', '0424-7076318', 'PEREZDEIMARDURAN@GMAIL.COM', 'activo', 'PET-210001842', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1739, '31239166', 'Benitez Silva Adrian Jose', '2005-11-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1740, '31317653', 'Marciales Lara Maria Natacha', '2004-05-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1741, '31319785', 'VILLARREAL BRICEÑO ENYERBER DAVID ', '2003-09-12', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'SECTOR EL TABLON DE MONAY PARROQUIA LA PAZ MUNICIPIO PAMPAN', '0416-9931978', 'enyerbervillarreal@gmail.com', 'activo', 'PET-210001830', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1742, '31320067', 'Montilla Romero Junior Jose', '2005-02-13', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1743, '31352377', 'VILORIA MORILLO JOSE DANIEL ', '2003-10-02', NULL, NULL, NULL, NULL, '2023-02-01', NULL, 'SECTOR PUEBLO NUEVO CALLE 98 PARROQUIA PUEBLO NUEVO MUNICIPIO BARALT ESTADO ZULIA', '0426-4105808', 'josedanielviloria31@gmail.com', 'activo', 'PET-210001807', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1744, '31368476', 'Teran Marin Eviss Dayelis', '2004-12-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1745, '31368554', 'Robles Godoy Elianny Nazareth', '2004-05-26', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'el progreso parroquia pampan municipio pampan', '0416-7288275', 'ELIANNYROBLES0@GMAIL.COM', 'activo', 'PET-210001710', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1746, '31368581', 'Chirinos Hernandez Dervis Antonio', '2002-11-10', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'avenida principal tres de febrero parroquia tres de febrero municipio la ceiba', '0424-7484741', 'Chirinosdervis804@gmail.com', 'activo', 'PET-210001875', NULL, NULL, 'UNIDAD EDUCATIVA TRES DE FEBRERO', 'ESTADO TRUJILLO MUNICIPIO LA CEIBA  PARROQUIA TRES DE FEBRERO SECTOR TRES DE FEBRERO FRENTE CARRETERA PRINCIPAL VIA LA CEIBA, TRES DE FEBRERO EDIFICIO');
+INSERT INTO `oficiales` VALUES (1747, '31368999', 'Castellanos Castro Andreina Del Carmen', '2004-12-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1748, '31388880', 'Soto Flores Ilan Gabriel', '2006-02-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1749, '31481575', 'Mendez Ortegano Yonelbyn Josue', '2005-12-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1750, '31482122', 'Castellanos Gudiño Sthefany Andreina', '2005-03-29', NULL, NULL, NULL, NULL, '2024-09-01', NULL, NULL, NULL, NULL, 'activo', 'PERIODO DE PRUEBA', NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1751, '31589838', 'Santos Duran Roswell Jose', '2004-07-20', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'sector san rafael parroquia flor de patria municipio pampan', '0412-5153178', 'rosvelljose2024@gmail.com', 'activo', 'PET-210001586', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1752, '31622542', 'Soler Barrios Hernan Jose', '2003-02-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1753, '31633167', 'Delgado Castellanos Maria Elizabeth', '2004-11-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1754, '31705163', 'Peña Duran Yenifer Carolina', '2005-05-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1755, '31743419', 'Altuve Leon Karlimar Andreina', '2006-11-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1756, '31743615', 'Quintero Quintero Rosmery  Arianny', '2004-07-13', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'la loma de bocono parroquia el carmen municipio bocono', '0416/4490366', 'rosmeryquintero658@gmail.com', 'activo', 'PET-210001539', NULL, NULL, 'ESCUELA BOLIVARIANA LOMA DE MITIMBIS', ' ESTADO TRUJILLO MUNICIPIO BOCONO PARROQUIA EL CARMEN SECTOR EL RIO FRENTE CALLE PRINCIPAL. IZQUIERDA CARRETERA MITIMBIS. DERECHA TROCHA POTRERO AL LADO DE LA IGLESIA CASA');
+INSERT INTO `oficiales` VALUES (1757, '31814674', 'Linares Teran Yonkeiver Antonio', '2006-03-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1758, '31816976', 'Primera Mujica Dahiri Marielis', '2005-11-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1759, '32058351', 'Villa Vázquez Vanesa Elizabeth', '2005-01-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1760, '32083983', 'Torrealba Peley Yujinaiby Del Valle', '2007-01-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1761, '32117849', 'Azuaje Escalona Wuilmer Jose', '2006-12-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1762, '32176395', 'Parra Brito Moises Eduardo', '2004-11-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1763, '32177045', 'Benitez Mujica Franyerson Jose', '2005-08-08', NULL, NULL, NULL, NULL, '2024-02-01', NULL, 'sector el bosque las llandas parroquia san jose municipio candelaria', '4120998516', 'FRANYERSONBENITEZ2005@GMAIL.COM', 'activo', 'PET-210002050', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
+INSERT INTO `oficiales` VALUES (1764, '32263379', 'Briceño Martinez Luisangela', '2004-08-30', NULL, NULL, NULL, NULL, '2022-08-16', NULL, 'sector la florida parroquia manuel salvador ulloa municipio candelaria', '426-4907842', 'rapulsel30082004@gmail.com', 'activo', 'PET-210001643', NULL, NULL, 'UNIDAD EDUCATIVA DR AMILCAR FONSECA', 'ESTADO TRUJILLO MUNICIPIO CANDELARIA PARROQUIA  MANUEL SALVADOR ULLOA SECTOR SABANA GRANDE IZQUIERDA CALLE PRINCIPAL. FRENTE CARRETERA PANAMERICANA. DERECHA TROCHA CVEA CASERIO SABANA GRANDE DE MONAY CASA');
+INSERT INTO `oficiales` VALUES (1765, '32373972', 'Mora Garban Anderson Daniel', '2006-07-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1766, '32452483', 'Gudiño Rivero Yosneiberth Jose', '2006-07-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, '   ');
+INSERT INTO `oficiales` VALUES (1767, '32462123', 'Rojas Venecia Manuel Alexander', '2000-04-15', NULL, NULL, NULL, NULL, '2021-01-04', NULL, 'la juventud parroquia betijoque municipio rafael rangel', '0424-7251691', 'rojasvenecia@gmail.com', 'activo', 'PET-210001685', NULL, NULL, 'ESCUELA BOLIVARIANA LA CANTARRANA', ' ESTADO TRUJILLO  MUNICIPIO RAFAEL RANGEL  PARROQUIA BETIJOQUE SECTOR EL ARENAL FRENTE AVENIDA 6 B A 50 METROS DE LA CANCHA 23 DE ENERO CASA');
+INSERT INTO `oficiales` VALUES (1768, '32776273', 'Espinoza Calderon Stefany Paola', '2006-03-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `oficiales` VALUES (1769, '33639624', 'Valecillos Valero Jhiliany Yohanny', '2006-07-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `oficiales` VALUES (1770, '34940660', 'Mendoza Castellanos Yon Elio', '2006-05-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'activo', NULL, NULL, NULL, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for oficiales_academico
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_academico`;
+CREATE TABLE `oficiales_academico`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NOT NULL,
+  `tipo_formacion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `institucion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fecha_inicio` date NOT NULL,
+  `fecha_fin` date NULL DEFAULT NULL,
+  `descripcion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `titulo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_academico_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_academico
+-- ----------------------------
+INSERT INTO `oficiales_academico` VALUES (5, 1, 'Ingeniería', 'Universidad de los Andes', '2023-03-26', '2025-03-26', 'Carrera de civi', 'Civil');
+
+-- ----------------------------
+-- Table structure for oficiales_armamento
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_armamento`;
+CREATE TABLE `oficiales_armamento`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NOT NULL,
+  `id_arma` int NOT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `estado` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fecha_asignacion` date NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  INDEX `id_arma`(`id_arma` ASC) USING BTREE,
+  CONSTRAINT `oficiales_armamento_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `oficiales_armamento_ibfk_2` FOREIGN KEY (`id_arma`) REFERENCES `armamentos` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_armamento
+-- ----------------------------
+INSERT INTO `oficiales_armamento` VALUES (1, 1, 1, 'Será utilizada como arma de apoyo en contingencia', 'EXCELENTES CODICIONES', '2025-03-26');
+
+-- ----------------------------
+-- Table structure for oficiales_cargos
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_cargos`;
+CREATE TABLE `oficiales_cargos`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NOT NULL,
+  `id_cargo` int NOT NULL,
+  `fecha_inicio` date NOT NULL,
+  `fecha_fin` date NULL DEFAULT NULL,
+  `is_actual` int NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  INDEX `id_cargo`(`id_cargo` ASC) USING BTREE,
+  CONSTRAINT `oficiales_cargos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `oficiales_cargos_ibfk_2` FOREIGN KEY (`id_cargo`) REFERENCES `cargos` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_cargos
+-- ----------------------------
+INSERT INTO `oficiales_cargos` VALUES (2, 1, 3, '2025-03-24', NULL, 1);
+INSERT INTO `oficiales_cargos` VALUES (3, 1, 2, '2025-03-24', '2025-03-24', NULL);
+
+-- ----------------------------
+-- Table structure for oficiales_cursos
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_cursos`;
+CREATE TABLE `oficiales_cursos`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NOT NULL,
+  `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `institucion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `tipo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fecha_inicio` date NOT NULL,
+  `fecha_fin` date NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_cursos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_cursos
+-- ----------------------------
+INSERT INTO `oficiales_cursos` VALUES (3, 1, 'Criminalistica y penal', 'Universidad Nacional Experimental de Seguridad (UNES)', 'Curso', 'is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.', '2025-01-26', '2025-03-26');
+
+-- ----------------------------
+-- Table structure for oficiales_documentos
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_documentos`;
+CREATE TABLE `oficiales_documentos`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NOT NULL,
+  `tipo_documento` enum('Cedula de Identidad','Partida de Nacimiento','Carta de Residencia','Registro de Información Fiscal (RIF)','Referencia Personal 1','Referencia Personal 2','Inscripción en el CNE','Referencia Bancaria','Foto Tipo Carnet 1','Foto Tipo Carnet 2','Foto Cuerpo Completo Fondo Rojo','Tipo de Sangre','Tallas de Uniforme y Calzado','Carnet Laboral') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `archivo_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fecha_subida` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_documentos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_documentos
+-- ----------------------------
+INSERT INTO `oficiales_documentos` VALUES (5, 1, 'Cedula de Identidad', 'archivos/1/Vny2K4YXNwfi551Oga5LlRhzb7y1zYHOLSr27cHr.jpg', '2025-03-26 12:58:40');
+
+-- ----------------------------
+-- Table structure for oficiales_emergencias
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_emergencias`;
+CREATE TABLE `oficiales_emergencias`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NULL DEFAULT NULL,
+  `nombre_completo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `telefono` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `relacion` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `direccion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_emergencias_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_emergencias
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for oficiales_familiares
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_familiares`;
+CREATE TABLE `oficiales_familiares`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NULL DEFAULT NULL,
+  `nombre_completo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `parentesco` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fecha_nacimiento` date NULL DEFAULT NULL,
+  `telefono` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `direccion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_familiares_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_familiares
+-- ----------------------------
+INSERT INTO `oficiales_familiares` VALUES (3, 1, 'Luis Fernando Gómez', 'Hijo(a)', '2025-03-24', '04165324125', 'Trujillo');
+
+-- ----------------------------
+-- Table structure for oficiales_familiares_documentos
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_familiares_documentos`;
+CREATE TABLE `oficiales_familiares_documentos`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NOT NULL,
+  `id_familiar` int NOT NULL,
+  `tipo_documento` enum('Cédula de Identidad de los Padres','Partida de Nacimiento de los Padres','Acta de Matrimonio o Unión Estable de Hecho','Cédula de Identidad del Cónyuge','Partida de Nacimiento del Cónyuge','Foto Tamaño Carnet del Cónyuge','Partida de Nacimiento de los Hijos','Cédula de Identidad de los Hijos','Grupo Sanguíneo','Nivel Educativo y Grado Académico de los Hijos') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `archivo_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fecha_subida` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  INDEX `id_familiar`(`id_familiar` ASC) USING BTREE,
+  CONSTRAINT `oficiales_familiares_documentos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT `oficiales_familiares_documentos_ibfk_2` FOREIGN KEY (`id_familiar`) REFERENCES `oficiales_familiares` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_familiares_documentos
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for oficiales_reconocimientos
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_reconocimientos`;
+CREATE TABLE `oficiales_reconocimientos`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NOT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `fecha` date NOT NULL,
+  `autoridad` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_reconocimientos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_reconocimientos
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for oficiales_salud
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_salud`;
+CREATE TABLE `oficiales_salud`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NULL DEFAULT NULL,
+  `tipo_sangre` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `alergias` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `condiciones_preexistentes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `fecha_revision` date NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_salud_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_salud
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for oficiales_vacaciones
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_vacaciones`;
+CREATE TABLE `oficiales_vacaciones`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NULL DEFAULT NULL,
+  `fecha_emision` date NULL DEFAULT NULL,
+  `fecha_reintegro` date NULL DEFAULT NULL,
+  `estatus` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `is_disfrutadas` int NULL DEFAULT NULL,
+  `descripcion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  CONSTRAINT `oficiales_vacaciones_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_vacaciones
+-- ----------------------------
+INSERT INTO `oficiales_vacaciones` VALUES (2, 1, '2025-03-26', '2025-04-26', 'APROBADAS', 1, NULL);
+
+-- ----------------------------
+-- Table structure for parroquias
+-- ----------------------------
+DROP TABLE IF EXISTS `parroquias`;
+CREATE TABLE `parroquias`  (
+  `id` smallint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `municipio_id` smallint UNSIGNED NOT NULL DEFAULT 0,
+  `atencionfamilias` int UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `municipio_id`(`municipio_id` ASC) USING BTREE,
+  CONSTRAINT `parroquias_ibfk_1` FOREIGN KEY (`municipio_id`) REFERENCES `municipios` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1135 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of parroquias
+-- ----------------------------
+INSERT INTO `parroquias` VALUES (1, 'PQ. ALTAGRACIA', 1, 0);
+INSERT INTO `parroquias` VALUES (2, 'PQ. SUCRE', 1, 0);
+INSERT INTO `parroquias` VALUES (3, 'PQ. 23 DE ENERO', 1, 0);
+INSERT INTO `parroquias` VALUES (4, 'PQ. ANTIMANO', 1, 0);
+INSERT INTO `parroquias` VALUES (5, 'PQ. EL RECREO', 1, 0);
+INSERT INTO `parroquias` VALUES (6, 'PQ. EL VALLE', 1, 0);
+INSERT INTO `parroquias` VALUES (7, 'PQ. LA VEGA', 1, 0);
+INSERT INTO `parroquias` VALUES (8, 'PQ. MACARAO', 1, 0);
+INSERT INTO `parroquias` VALUES (9, 'PQ. CARICUAO', 1, 0);
+INSERT INTO `parroquias` VALUES (10, 'PQ. EL JUNQUITO', 1, 0);
+INSERT INTO `parroquias` VALUES (11, 'PQ. COCHE', 1, 0);
+INSERT INTO `parroquias` VALUES (12, 'PQ. CANDELARIA', 1, 0);
+INSERT INTO `parroquias` VALUES (13, 'PQ. SAN PEDRO', 1, 0);
+INSERT INTO `parroquias` VALUES (14, 'PQ. SAN BERNARDINO', 1, 0);
+INSERT INTO `parroquias` VALUES (15, 'PQ. EL PARAISO', 1, 0);
+INSERT INTO `parroquias` VALUES (16, 'PQ. CATEDRAL', 1, 0);
+INSERT INTO `parroquias` VALUES (17, 'PQ. LA PASTORA', 1, 0);
+INSERT INTO `parroquias` VALUES (18, 'PQ. SAN AGUSTIN', 1, 0);
+INSERT INTO `parroquias` VALUES (19, 'PQ. SAN JOSE', 1, 0);
+INSERT INTO `parroquias` VALUES (20, 'PQ. SAN JUAN', 1, 0);
+INSERT INTO `parroquias` VALUES (21, 'PQ. SANTA ROSALIA', 1, 0);
+INSERT INTO `parroquias` VALUES (22, 'PQ. SANTA TERESA', 1, 0);
+INSERT INTO `parroquias` VALUES (23, 'PQ. VALLE DE LA PASCUA', 2, 0);
+INSERT INTO `parroquias` VALUES (24, 'PQ. ESPINO', 2, 0);
+INSERT INTO `parroquias` VALUES (25, 'PQ. LAS MERCEDES', 3, 0);
+INSERT INTO `parroquias` VALUES (26, 'PQ. STA RITA DE MANAPIRE', 3, 0);
+INSERT INTO `parroquias` VALUES (27, 'PQ. CABRUTA', 3, 0);
+INSERT INTO `parroquias` VALUES (28, 'PQ. EL SOCORRO', 4, 0);
+INSERT INTO `parroquias` VALUES (29, 'PQ. ORTIZ', 5, 0);
+INSERT INTO `parroquias` VALUES (30, 'PQ. SAN FCO. DE TIZNADOS', 5, 0);
+INSERT INTO `parroquias` VALUES (31, 'PQ. SAN JOSE DE TIZNADOS', 5, 0);
+INSERT INTO `parroquias` VALUES (32, 'PQ. S LORENZO DE TIZNADOS', 5, 0);
+INSERT INTO `parroquias` VALUES (33, 'PQ. SANTA MARIA DE IPIRE', 6, 0);
+INSERT INTO `parroquias` VALUES (34, 'PQ. ALTAMIRA', 6, 0);
+INSERT INTO `parroquias` VALUES (35, 'PQ. CHAGUARAMAS', 7, 0);
+INSERT INTO `parroquias` VALUES (36, 'PQ. GUAYABAL', 8, 0);
+INSERT INTO `parroquias` VALUES (37, 'PQ. CAZORLA', 8, 0);
+INSERT INTO `parroquias` VALUES (38, 'PQ. EL SOMBRERO', 9, 0);
+INSERT INTO `parroquias` VALUES (39, 'PQ. SOSA', 9, 0);
+INSERT INTO `parroquias` VALUES (40, 'PQ. CALABOZO', 10, 0);
+INSERT INTO `parroquias` VALUES (41, 'PQ. EL CALVARIO', 10, 0);
+INSERT INTO `parroquias` VALUES (42, 'PQ. EL RASTRO', 10, 0);
+INSERT INTO `parroquias` VALUES (43, 'PQ. GUARDATINAJAS', 10, 0);
+INSERT INTO `parroquias` VALUES (44, 'PQ. ALTAGRACIA DE ORITUCO', 11, 0);
+INSERT INTO `parroquias` VALUES (45, 'PQ. LEZAMA', 11, 0);
+INSERT INTO `parroquias` VALUES (46, 'PQ. LIBERTAD DE ORITUCO', 11, 0);
+INSERT INTO `parroquias` VALUES (47, 'PQ. SAN FCO DE MACAIRA', 11, 0);
+INSERT INTO `parroquias` VALUES (48, 'PQ. SAN RAFAEL DE ORITUCO', 11, 0);
+INSERT INTO `parroquias` VALUES (49, 'PQ. SOUBLETTE', 11, 0);
+INSERT INTO `parroquias` VALUES (50, 'PQ. PASO REAL DE MACAIRA', 11, 0);
+INSERT INTO `parroquias` VALUES (51, 'PQ. TUCUPIDO', 12, 0);
+INSERT INTO `parroquias` VALUES (52, 'PQ. SAN RAFAEL DE LAYA', 12, 0);
+INSERT INTO `parroquias` VALUES (53, 'PQ.SAN JUAN DE LOS MORROS', 13, 0);
+INSERT INTO `parroquias` VALUES (54, 'PQ. PARAPARA', 13, 0);
+INSERT INTO `parroquias` VALUES (55, 'PQ. CANTAGALLO', 13, 0);
+INSERT INTO `parroquias` VALUES (56, 'PQ. ZARAZA', 14, 0);
+INSERT INTO `parroquias` VALUES (57, 'PQ. SAN JOSE DE UNARE', 14, 0);
+INSERT INTO `parroquias` VALUES (58, 'PQ. CAMAGUAN', 15, 0);
+INSERT INTO `parroquias` VALUES (59, 'PQ. PUERTO MIRANDA', 15, 0);
+INSERT INTO `parroquias` VALUES (60, 'PQ. UVERITO', 15, 0);
+INSERT INTO `parroquias` VALUES (61, 'PQ. SAN JOSE DE GUARIBE', 16, 0);
+INSERT INTO `parroquias` VALUES (62, 'PQ. FREITEZ', 17, 0);
+INSERT INTO `parroquias` VALUES (63, 'PQ. JOSE MARIA BLANCO', 17, 0);
+INSERT INTO `parroquias` VALUES (64, 'PQ. CATEDRAL', 18, 0);
+INSERT INTO `parroquias` VALUES (65, 'PQ. JUAREZ', 18, 0);
+INSERT INTO `parroquias` VALUES (66, 'PQ. LA CONCEPCION', 18, 0);
+INSERT INTO `parroquias` VALUES (67, 'PQ. SANTA ROSA', 18, 0);
+INSERT INTO `parroquias` VALUES (68, 'PQ. UNION', 18, 0);
+INSERT INTO `parroquias` VALUES (69, 'PQ. EL CUJI', 18, 0);
+INSERT INTO `parroquias` VALUES (70, 'PQ. TAMACA', 18, 0);
+INSERT INTO `parroquias` VALUES (71, 'PQ. JUAN DE VILLEGAS', 18, 0);
+INSERT INTO `parroquias` VALUES (72, 'PQ. AGUEDO F. ALVARADO', 18, 0);
+INSERT INTO `parroquias` VALUES (73, 'PQ. BUENA VISTA', 18, 0);
+INSERT INTO `parroquias` VALUES (74, 'PQ. JUAN B RODRIGUEZ', 19, 0);
+INSERT INTO `parroquias` VALUES (75, 'PQ. DIEGO DE LOZADA', 19, 0);
+INSERT INTO `parroquias` VALUES (76, 'PQ. SAN MIGUEL', 19, 0);
+INSERT INTO `parroquias` VALUES (77, 'PQ. CUARA', 19, 0);
+INSERT INTO `parroquias` VALUES (78, 'PQ. PARAISO DE SAN JOSE', 19, 0);
+INSERT INTO `parroquias` VALUES (79, 'PQ. TINTORERO', 19, 0);
+INSERT INTO `parroquias` VALUES (80, 'PQ. JOSE BERNARDO DORANTE', 19, 0);
+INSERT INTO `parroquias` VALUES (81, 'PQ. CRNEL. MARIANO PERAZA', 19, 0);
+INSERT INTO `parroquias` VALUES (82, 'PQ. BOLIVAR', 20, 0);
+INSERT INTO `parroquias` VALUES (83, 'PQ. ANZOATEGUI', 20, 0);
+INSERT INTO `parroquias` VALUES (84, 'PQ. GUARICO', 20, 0);
+INSERT INTO `parroquias` VALUES (85, 'PQ. HUMOCARO ALTO', 20, 0);
+INSERT INTO `parroquias` VALUES (86, 'PQ. HUMOCARO BAJO', 20, 0);
+INSERT INTO `parroquias` VALUES (87, 'PQ. MORAN', 20, 0);
+INSERT INTO `parroquias` VALUES (88, 'PQ. HILARIO LUNA Y LUNA', 20, 0);
+INSERT INTO `parroquias` VALUES (89, 'PQ. LA CANDELARIA', 20, 0);
+INSERT INTO `parroquias` VALUES (90, 'PQ. CABUDARE', 21, 0);
+INSERT INTO `parroquias` VALUES (91, 'PQ. JOSE G. BASTIDAS', 21, 0);
+INSERT INTO `parroquias` VALUES (92, 'PQ. AGUA VIVA', 21, 0);
+INSERT INTO `parroquias` VALUES (93, 'PQ. TRINIDAD SAMUEL', 22, 0);
+INSERT INTO `parroquias` VALUES (94, 'PQ. TORRES', 22, 0);
+INSERT INTO `parroquias` VALUES (95, 'PQ. EL BLANCO', 22, 0);
+INSERT INTO `parroquias` VALUES (96, 'PQ. MONTA A VERDE', 22, 0);
+INSERT INTO `parroquias` VALUES (97, 'PQ. HERIBERTO ARROYO', 22, 0);
+INSERT INTO `parroquias` VALUES (98, 'PQ. LAS MERCEDES', 22, 0);
+INSERT INTO `parroquias` VALUES (99, 'PQ. CECILIO ZUBILLAGA', 22, 0);
+INSERT INTO `parroquias` VALUES (100, 'PQ. REYES VARGAS', 22, 0);
+INSERT INTO `parroquias` VALUES (101, 'PQ. ALTAGRACIA', 22, 0);
+INSERT INTO `parroquias` VALUES (102, 'PQ. ANTONIO DIAZ', 22, 0);
+INSERT INTO `parroquias` VALUES (103, 'PQ. CAMACARO', 22, 0);
+INSERT INTO `parroquias` VALUES (104, 'PQ. CASTA#EDA', 22, 0);
+INSERT INTO `parroquias` VALUES (105, 'PQ. CHIQUINQUIRA', 22, 0);
+INSERT INTO `parroquias` VALUES (106, 'PQ. ESPINOZA LOS MONTEROS', 22, 0);
+INSERT INTO `parroquias` VALUES (107, 'PQ. LARA', 22, 0);
+INSERT INTO `parroquias` VALUES (108, 'PQ. MANUEL MORILLO', 22, 0);
+INSERT INTO `parroquias` VALUES (109, 'PQ. MONTES DE OCA', 22, 0);
+INSERT INTO `parroquias` VALUES (110, 'PQ. SIQUISIQUE', 23, 0);
+INSERT INTO `parroquias` VALUES (111, 'PQ. SAN MIGUEL', 23, 0);
+INSERT INTO `parroquias` VALUES (112, 'PQ. XAGUAS', 23, 0);
+INSERT INTO `parroquias` VALUES (113, 'PQ. MOROTURO', 23, 0);
+INSERT INTO `parroquias` VALUES (114, 'PQ. PIO TAMAYO', 24, 0);
+INSERT INTO `parroquias` VALUES (115, 'PQ. YACAMBU', 24, 0);
+INSERT INTO `parroquias` VALUES (116, 'PQ. QBDA. HONDA DE GUACHE', 24, 0);
+INSERT INTO `parroquias` VALUES (117, 'PQ. SARARE', 25, 0);
+INSERT INTO `parroquias` VALUES (118, 'PQ. GUSTAVO VEGAS LEON', 25, 0);
+INSERT INTO `parroquias` VALUES (119, 'PQ. BURIA', 25, 0);
+INSERT INTO `parroquias` VALUES (120, 'PQ. GABRIEL PICON G.', 26, 0);
+INSERT INTO `parroquias` VALUES (121, 'PQ. HECTOR AMABLE MORA', 26, 0);
+INSERT INTO `parroquias` VALUES (122, 'PQ. JOSE NUCETE SARDI', 26, 0);
+INSERT INTO `parroquias` VALUES (123, 'PQ. PULIDO MENDEZ', 26, 0);
+INSERT INTO `parroquias` VALUES (124, 'PQ. PTE. ROMULO GALLEGOS', 26, 0);
+INSERT INTO `parroquias` VALUES (125, 'PQ. PRESIDENTE BETANCOURT', 26, 0);
+INSERT INTO `parroquias` VALUES (126, 'PQ. PRESIDENTE PAEZ', 26, 0);
+INSERT INTO `parroquias` VALUES (127, 'CM. TIMOTES', 27, 0);
+INSERT INTO `parroquias` VALUES (128, 'PQ. ANDRES ELOY BLANCO', 27, 0);
+INSERT INTO `parroquias` VALUES (129, 'PQ. PI#ANGO', 27, 0);
+INSERT INTO `parroquias` VALUES (130, 'PQ. LA VENTA', 27, 0);
+INSERT INTO `parroquias` VALUES (131, 'CM. STA CRUZ DE MORA', 28, 0);
+INSERT INTO `parroquias` VALUES (132, 'PQ. MESA BOLIVAR', 28, 0);
+INSERT INTO `parroquias` VALUES (133, 'PQ. MESA DE LAS PALMAS', 28, 0);
+INSERT INTO `parroquias` VALUES (134, 'CM. STA ELENA DE ARENALES', 29, 0);
+INSERT INTO `parroquias` VALUES (135, 'PQ. ELOY PAREDES', 29, 0);
+INSERT INTO `parroquias` VALUES (136, 'PQ. PQ R DE ALCAZAR', 29, 0);
+INSERT INTO `parroquias` VALUES (137, 'CM. TUCANI', 30, 0);
+INSERT INTO `parroquias` VALUES (138, 'PQ. FLORENCIO RAMIREZ', 30, 0);
+INSERT INTO `parroquias` VALUES (139, 'CM. SANTO DOMINGO', 31, 0);
+INSERT INTO `parroquias` VALUES (140, 'PQ. LAS PIEDRAS', 31, 0);
+INSERT INTO `parroquias` VALUES (141, 'CM. PUEBLO LLANO', 32, 0);
+INSERT INTO `parroquias` VALUES (142, 'CM. MUCUCHIES', 33, 0);
+INSERT INTO `parroquias` VALUES (143, 'PQ. MUCURUBA', 33, 0);
+INSERT INTO `parroquias` VALUES (144, 'PQ. SAN RAFAEL', 33, 0);
+INSERT INTO `parroquias` VALUES (145, 'PQ. CACUTE', 33, 0);
+INSERT INTO `parroquias` VALUES (146, 'PQ. LA TOMA', 33, 0);
+INSERT INTO `parroquias` VALUES (147, 'CM. BAILADORES', 34, 0);
+INSERT INTO `parroquias` VALUES (148, 'PQ. GERONIMO MALDONADO', 34, 0);
+INSERT INTO `parroquias` VALUES (149, 'CM. LAGUNILLAS', 35, 0);
+INSERT INTO `parroquias` VALUES (150, 'PQ. CHIGUARA', 35, 0);
+INSERT INTO `parroquias` VALUES (151, 'PQ. ESTANQUES', 35, 0);
+INSERT INTO `parroquias` VALUES (152, 'PQ. SAN JUAN', 35, 0);
+INSERT INTO `parroquias` VALUES (153, 'PQ. PUEBLO NUEVO DEL SUR', 35, 0);
+INSERT INTO `parroquias` VALUES (154, 'PQ. LA TRAMPA', 35, 0);
+INSERT INTO `parroquias` VALUES (155, 'PQ. EL LLANO', 36, 0);
+INSERT INTO `parroquias` VALUES (156, 'PQ. TOVAR', 36, 0);
+INSERT INTO `parroquias` VALUES (157, 'PQ. EL AMPARO', 36, 0);
+INSERT INTO `parroquias` VALUES (158, 'PQ. SAN FRANCISCO', 36, 0);
+INSERT INTO `parroquias` VALUES (159, 'CM. LA AZULITA', 37, 0);
+INSERT INTO `parroquias` VALUES (160, 'CM. NUEVA BOLIVIA', 38, 0);
+INSERT INTO `parroquias` VALUES (161, 'PQ. INDEPENDENCIA', 38, 0);
+INSERT INTO `parroquias` VALUES (162, 'PQ. MARIA C PALACIOS', 38, 0);
+INSERT INTO `parroquias` VALUES (163, 'PQ. SANTA APOLONIA', 38, 0);
+INSERT INTO `parroquias` VALUES (164, 'CM. STA MARIA DE CAPARO', 39, 0);
+INSERT INTO `parroquias` VALUES (165, 'CM. ARICAGUA', 40, 0);
+INSERT INTO `parroquias` VALUES (166, 'PQ. SAN ANTONIO', 40, 0);
+INSERT INTO `parroquias` VALUES (167, 'CM. ZEA', 41, 0);
+INSERT INTO `parroquias` VALUES (168, 'PQ. CA#O EL TIGRE', 41, 0);
+INSERT INTO `parroquias` VALUES (169, 'CM. CANAGUA', 42, 0);
+INSERT INTO `parroquias` VALUES (170, 'PQ. CAPURI', 42, 0);
+INSERT INTO `parroquias` VALUES (171, 'PQ. CHACANTA', 42, 0);
+INSERT INTO `parroquias` VALUES (172, 'PQ. EL MOLINO', 42, 0);
+INSERT INTO `parroquias` VALUES (173, 'PQ. GUAIMARAL', 42, 0);
+INSERT INTO `parroquias` VALUES (174, 'PQ. MUCUTUY', 42, 0);
+INSERT INTO `parroquias` VALUES (175, 'PQ. MUCUCHACHI', 42, 0);
+INSERT INTO `parroquias` VALUES (176, 'PQ. ACEQUIAS', 43, 0);
+INSERT INTO `parroquias` VALUES (177, 'PQ. JAJI', 43, 0);
+INSERT INTO `parroquias` VALUES (178, 'PQ. LA MESA', 43, 0);
+INSERT INTO `parroquias` VALUES (179, 'PQ. SAN JOSE', 43, 0);
+INSERT INTO `parroquias` VALUES (180, 'PQ. MONTALBAN', 43, 0);
+INSERT INTO `parroquias` VALUES (181, 'PQ. MATRIZ', 43, 0);
+INSERT INTO `parroquias` VALUES (182, 'PQ. FERNANDEZ PE#A', 43, 0);
+INSERT INTO `parroquias` VALUES (183, 'CM. GUARAQUE', 44, 0);
+INSERT INTO `parroquias` VALUES (184, 'PQ. MESA DE QUINTERO', 44, 0);
+INSERT INTO `parroquias` VALUES (185, 'PQ. RIO NEGRO', 44, 0);
+INSERT INTO `parroquias` VALUES (186, 'CM. ARAPUEY', 45, 0);
+INSERT INTO `parroquias` VALUES (187, 'PQ. PALMIRA', 45, 0);
+INSERT INTO `parroquias` VALUES (188, 'CM. TORONDOY', 46, 0);
+INSERT INTO `parroquias` VALUES (189, 'PQ. SAN CRISTOBAL DE T', 46, 0);
+INSERT INTO `parroquias` VALUES (190, 'PQ. ARIAS', 47, 0);
+INSERT INTO `parroquias` VALUES (191, 'PQ. LASSO DE LA VEGA', 47, 0);
+INSERT INTO `parroquias` VALUES (192, 'PQ. CARACCIOLO PARRA P', 47, 0);
+INSERT INTO `parroquias` VALUES (193, 'PQ. MARIANO PICON SALAS', 47, 0);
+INSERT INTO `parroquias` VALUES (194, 'PQ. ANTONIO SPINETTI DINI', 47, 0);
+INSERT INTO `parroquias` VALUES (195, 'PQ. EL MORRO', 47, 0);
+INSERT INTO `parroquias` VALUES (196, 'PQ. LOS NEVADOS', 47, 0);
+INSERT INTO `parroquias` VALUES (197, 'PQ. SAGRARIO', 47, 0);
+INSERT INTO `parroquias` VALUES (198, 'PQ. MILLA', 47, 0);
+INSERT INTO `parroquias` VALUES (199, 'PQ. EL LLANO', 47, 0);
+INSERT INTO `parroquias` VALUES (200, 'PQ. JUAN RODRIGUEZ SUAREZ', 47, 0);
+INSERT INTO `parroquias` VALUES (201, 'PQ. JACINTO PLAZA', 47, 0);
+INSERT INTO `parroquias` VALUES (202, 'PQ. DOMINGO PE#A', 47, 0);
+INSERT INTO `parroquias` VALUES (203, 'PQ. GONZALO PICON FEBRES', 47, 0);
+INSERT INTO `parroquias` VALUES (204, 'PQ. OSUNA RODRIGUEZ', 47, 0);
+INSERT INTO `parroquias` VALUES (205, 'CM. TABAY', 48, 0);
+INSERT INTO `parroquias` VALUES (206, 'PQ. CAUCAGUA', 49, 0);
+INSERT INTO `parroquias` VALUES (207, 'PQ. ARAGUITA', 49, 0);
+INSERT INTO `parroquias` VALUES (208, 'PQ. AREVALO GONZALEZ', 49, 0);
+INSERT INTO `parroquias` VALUES (209, 'PQ. CAPAYA', 49, 0);
+INSERT INTO `parroquias` VALUES (210, 'PQ. PANAQUIRE', 49, 0);
+INSERT INTO `parroquias` VALUES (211, 'PQ. RIBAS', 49, 0);
+INSERT INTO `parroquias` VALUES (212, 'PQ. EL CAFE', 49, 0);
+INSERT INTO `parroquias` VALUES (213, 'PQ. MARIZAPA', 49, 0);
+INSERT INTO `parroquias` VALUES (214, 'PQ. CUA', 50, 0);
+INSERT INTO `parroquias` VALUES (215, 'PQ. NUEVA CUA', 50, 0);
+INSERT INTO `parroquias` VALUES (216, 'PQ. GUATIRE', 51, 0);
+INSERT INTO `parroquias` VALUES (217, 'PQ. BOLIVAR', 51, 0);
+INSERT INTO `parroquias` VALUES (218, 'PQ. CHARALLAVE', 52, 0);
+INSERT INTO `parroquias` VALUES (219, 'PQ. LAS BRISAS', 52, 0);
+INSERT INTO `parroquias` VALUES (220, 'PQ. SAN ANTONIO LOS ALTOS', 53, 0);
+INSERT INTO `parroquias` VALUES (221, 'PQ.SAN JOSE DE BARLOVENTO', 54, 0);
+INSERT INTO `parroquias` VALUES (222, 'PQ. CUMBO', 54, 0);
+INSERT INTO `parroquias` VALUES (223, 'PQ. SAN FCO DE YARE', 55, 0);
+INSERT INTO `parroquias` VALUES (224, 'PQ. S ANTONIO DE YARE', 55, 0);
+INSERT INTO `parroquias` VALUES (225, 'PQ. BARUTA', 56, 0);
+INSERT INTO `parroquias` VALUES (226, 'PQ. EL CAFETAL', 56, 0);
+INSERT INTO `parroquias` VALUES (227, 'PQ. LAS MINAS DE BARUTA', 56, 0);
+INSERT INTO `parroquias` VALUES (228, 'PQ. CARRIZAL', 57, 0);
+INSERT INTO `parroquias` VALUES (229, 'PQ. CHACAO', 58, 0);
+INSERT INTO `parroquias` VALUES (230, 'PQ. EL HATILLO', 59, 0);
+INSERT INTO `parroquias` VALUES (231, 'PQ. HIGUEROTE', 60, 0);
+INSERT INTO `parroquias` VALUES (232, 'PQ. CURIEPE', 60, 0);
+INSERT INTO `parroquias` VALUES (233, 'PQ. TACARIGUA', 60, 0);
+INSERT INTO `parroquias` VALUES (234, 'PQ. MAMPORAL', 61, 0);
+INSERT INTO `parroquias` VALUES (235, 'PQ. CUPIRA', 62, 0);
+INSERT INTO `parroquias` VALUES (236, 'PQ. MACHURUCUTO', 62, 0);
+INSERT INTO `parroquias` VALUES (237, 'PQ. LOS TEQUES', 63, 0);
+INSERT INTO `parroquias` VALUES (238, 'PQ. CECILIO ACOSTA', 63, 0);
+INSERT INTO `parroquias` VALUES (239, 'PQ. PARACOTOS', 63, 0);
+INSERT INTO `parroquias` VALUES (240, 'PQ. SAN PEDRO', 63, 0);
+INSERT INTO `parroquias` VALUES (241, 'PQ. TACATA', 63, 0);
+INSERT INTO `parroquias` VALUES (242, 'PQ. EL JARILLO', 63, 0);
+INSERT INTO `parroquias` VALUES (243, 'PQ. ALTAGRACIA DE LA M', 63, 0);
+INSERT INTO `parroquias` VALUES (244, 'PQ. STA TERESA DEL TUY', 64, 0);
+INSERT INTO `parroquias` VALUES (245, 'PQ. EL CARTANAL', 64, 0);
+INSERT INTO `parroquias` VALUES (246, 'PQ. OCUMARE DEL TUY', 65, 0);
+INSERT INTO `parroquias` VALUES (247, 'PQ. LA DEMOCRACIA', 65, 0);
+INSERT INTO `parroquias` VALUES (248, 'PQ. SANTA BARBARA', 65, 0);
+INSERT INTO `parroquias` VALUES (249, 'PQ. RIO CHICO', 66, 0);
+INSERT INTO `parroquias` VALUES (250, 'PQ. EL GUAPO', 66, 0);
+INSERT INTO `parroquias` VALUES (251, 'PQ.TACARIGUA DE LA LAGUNA', 66, 0);
+INSERT INTO `parroquias` VALUES (252, 'PQ. PAPARO', 66, 0);
+INSERT INTO `parroquias` VALUES (253, 'PQ. SN FERNANDO DEL GUAPO', 66, 0);
+INSERT INTO `parroquias` VALUES (254, 'PQ. SANTA LUCIA', 67, 0);
+INSERT INTO `parroquias` VALUES (255, 'PQ. GUARENAS', 68, 0);
+INSERT INTO `parroquias` VALUES (256, 'PQ. PETARE', 69, 0);
+INSERT INTO `parroquias` VALUES (257, 'PQ. LEONCIO MARTINEZ', 69, 0);
+INSERT INTO `parroquias` VALUES (258, 'PQ. CAUCAGUITA', 69, 0);
+INSERT INTO `parroquias` VALUES (259, 'PQ. FILAS DE MARICHES', 69, 0);
+INSERT INTO `parroquias` VALUES (260, 'PQ. LA DOLORITA', 69, 0);
+INSERT INTO `parroquias` VALUES (261, 'CM. SAN ANTONIO', 70, 0);
+INSERT INTO `parroquias` VALUES (262, 'PQ. SAN FRANCISCO', 70, 0);
+INSERT INTO `parroquias` VALUES (263, 'CM. BARRANCAS', 71, 0);
+INSERT INTO `parroquias` VALUES (264, 'LOS BARRANCOS DE FAJARDO', 71, 0);
+INSERT INTO `parroquias` VALUES (265, 'CM. AGUASAY', 72, 0);
+INSERT INTO `parroquias` VALUES (266, 'CM. SANTA BARBARA', 73, 0);
+INSERT INTO `parroquias` VALUES (267, 'CM. URACOA', 74, 0);
+INSERT INTO `parroquias` VALUES (268, 'CM. CARIPITO', 75, 0);
+INSERT INTO `parroquias` VALUES (269, 'CM. CARIPE', 76, 0);
+INSERT INTO `parroquias` VALUES (270, 'PQ. TERESEN', 76, 0);
+INSERT INTO `parroquias` VALUES (271, 'PQ. EL GUACHARO', 76, 0);
+INSERT INTO `parroquias` VALUES (272, 'PQ. SAN AGUSTIN', 76, 0);
+INSERT INTO `parroquias` VALUES (273, 'PQ. LA GUANOTA', 76, 0);
+INSERT INTO `parroquias` VALUES (274, 'PQ. SABANA DE PIEDRA', 76, 0);
+INSERT INTO `parroquias` VALUES (275, 'CM. CAICARA', 77, 0);
+INSERT INTO `parroquias` VALUES (276, 'PQ. AREO', 77, 0);
+INSERT INTO `parroquias` VALUES (277, 'PQ. SAN FELIX', 77, 0);
+INSERT INTO `parroquias` VALUES (278, 'PQ. VIENTO FRESCO', 77, 0);
+INSERT INTO `parroquias` VALUES (279, 'CM. PUNTA DE MATA', 78, 0);
+INSERT INTO `parroquias` VALUES (280, 'PQ. EL TEJERO', 78, 0);
+INSERT INTO `parroquias` VALUES (281, 'CM. TEMBLADOR', 79, 0);
+INSERT INTO `parroquias` VALUES (282, 'PQ. TABASCA', 79, 0);
+INSERT INTO `parroquias` VALUES (283, 'PQ. LAS ALHUACAS', 79, 0);
+INSERT INTO `parroquias` VALUES (284, 'PQ. CHAGUARAMAS', 79, 0);
+INSERT INTO `parroquias` VALUES (285, 'PQ. EL FURRIAL', 80, 0);
+INSERT INTO `parroquias` VALUES (286, 'PQ. SAN SIMON', 80, 0);
+INSERT INTO `parroquias` VALUES (287, 'PQ. JUSEPIN', 80, 0);
+INSERT INTO `parroquias` VALUES (288, 'PQ. EL COROZO', 80, 0);
+INSERT INTO `parroquias` VALUES (289, 'PQ. SAN VICENTE', 80, 0);
+INSERT INTO `parroquias` VALUES (290, 'PQ. LA PICA', 80, 0);
+INSERT INTO `parroquias` VALUES (291, 'PQ. ALTO DE LOS GODOS', 80, 0);
+INSERT INTO `parroquias` VALUES (292, 'PQ. BOQUERON', 80, 0);
+INSERT INTO `parroquias` VALUES (293, 'PQ. LAS COCUIZAS', 80, 0);
+INSERT INTO `parroquias` VALUES (294, 'PQ. SANTA CRUZ', 80, 0);
+INSERT INTO `parroquias` VALUES (295, 'CM. ARAGUA', 81, 0);
+INSERT INTO `parroquias` VALUES (296, 'PQ. CHAGUARAMAL', 81, 0);
+INSERT INTO `parroquias` VALUES (297, 'PQ. GUANAGUANA', 81, 0);
+INSERT INTO `parroquias` VALUES (298, 'PQ. APARICIO', 81, 0);
+INSERT INTO `parroquias` VALUES (299, 'PQ. TAGUAYA', 81, 0);
+INSERT INTO `parroquias` VALUES (300, 'PQ. EL PINTO', 81, 0);
+INSERT INTO `parroquias` VALUES (301, 'PQ. LA TOSCANA', 81, 0);
+INSERT INTO `parroquias` VALUES (302, 'CM. QUIRIQUIRE', 82, 0);
+INSERT INTO `parroquias` VALUES (303, 'PQ. CACHIPO', 82, 0);
+INSERT INTO `parroquias` VALUES (304, 'CM. LA ASUNCION', 83, 0);
+INSERT INTO `parroquias` VALUES (305, 'CM.LA PLAZA DE PARAGUACHI', 84, 0);
+INSERT INTO `parroquias` VALUES (306, 'CM. VALLE ESP SANTO', 85, 0);
+INSERT INTO `parroquias` VALUES (307, 'PQ. FRANCISCO FAJARDO', 85, 0);
+INSERT INTO `parroquias` VALUES (308, 'CM. SAN JUAN BAUTISTA', 86, 0);
+INSERT INTO `parroquias` VALUES (309, 'PQ. ZABALA', 86, 0);
+INSERT INTO `parroquias` VALUES (310, 'CM. SANTA ANA', 87, 0);
+INSERT INTO `parroquias` VALUES (311, 'PQ. GUEVARA', 87, 0);
+INSERT INTO `parroquias` VALUES (312, 'PQ. MATASIETE', 87, 0);
+INSERT INTO `parroquias` VALUES (313, 'PQ. BOLIVAR', 87, 0);
+INSERT INTO `parroquias` VALUES (314, 'PQ. SUCRE', 87, 0);
+INSERT INTO `parroquias` VALUES (315, 'CM. PAMPATAR', 88, 0);
+INSERT INTO `parroquias` VALUES (316, 'PQ. AGUIRRE', 88, 0);
+INSERT INTO `parroquias` VALUES (317, 'CM. JUAN GRIEGO', 89, 0);
+INSERT INTO `parroquias` VALUES (318, 'PQ. ADRIAN', 89, 0);
+INSERT INTO `parroquias` VALUES (319, 'CM. PORLAMAR', 90, 0);
+INSERT INTO `parroquias` VALUES (320, 'CM. BOCA DEL RIO', 91, 0);
+INSERT INTO `parroquias` VALUES (321, 'PQ. SAN FRANCISCO', 91, 0);
+INSERT INTO `parroquias` VALUES (322, 'CM. SAN PEDRO DE COCHE', 92, 0);
+INSERT INTO `parroquias` VALUES (323, 'PQ. VICENTE FUENTES', 92, 0);
+INSERT INTO `parroquias` VALUES (324, 'CM. PUNTA DE PIEDRAS', 93, 0);
+INSERT INTO `parroquias` VALUES (325, 'PQ. LOS BARALES', 93, 0);
+INSERT INTO `parroquias` VALUES (326, 'CM. ARAURE', 94, 0);
+INSERT INTO `parroquias` VALUES (327, 'PQ. RIO ACARIGUA', 94, 0);
+INSERT INTO `parroquias` VALUES (328, 'CM. AGUA BLANCA', 95, 0);
+INSERT INTO `parroquias` VALUES (329, 'CM. PAPELON', 96, 0);
+INSERT INTO `parroquias` VALUES (330, 'PQ. CA#O DELGADITO', 96, 0);
+INSERT INTO `parroquias` VALUES (331, 'CM. BOCONOITO', 97, 0);
+INSERT INTO `parroquias` VALUES (332, 'PQ. ANTOLIN TOVAR AQUINO', 97, 0);
+INSERT INTO `parroquias` VALUES (333, 'CM. SAN RAFAEL DE ONOTO', 98, 0);
+INSERT INTO `parroquias` VALUES (334, 'PQ. SANTA FE', 98, 0);
+INSERT INTO `parroquias` VALUES (335, 'PQ. THERMO MORLES', 98, 0);
+INSERT INTO `parroquias` VALUES (336, 'CM. EL PLAYON', 99, 0);
+INSERT INTO `parroquias` VALUES (337, 'PQ. FLORIDA', 99, 0);
+INSERT INTO `parroquias` VALUES (338, 'CM. PIRITU', 100, 0);
+INSERT INTO `parroquias` VALUES (339, 'PQ. UVERAL', 100, 0);
+INSERT INTO `parroquias` VALUES (340, 'CM. GUANARE', 101, 0);
+INSERT INTO `parroquias` VALUES (341, 'PQ. CORDOBA', 101, 0);
+INSERT INTO `parroquias` VALUES (342, 'PQ.SAN JUAN GUANAGUANARE', 101, 0);
+INSERT INTO `parroquias` VALUES (343, 'PQ. VIRGEN DE LA COROMOTO', 101, 0);
+INSERT INTO `parroquias` VALUES (344, 'PQ.SAN JOSE DE LA MONTA#A', 101, 0);
+INSERT INTO `parroquias` VALUES (345, 'CM. GUANARITO', 102, 0);
+INSERT INTO `parroquias` VALUES (346, 'PQ.TRINIDAD DE LA CAPILLA', 102, 0);
+INSERT INTO `parroquias` VALUES (347, 'PQ. DIVINA PASTORA', 102, 0);
+INSERT INTO `parroquias` VALUES (348, 'CM. OSPINO', 103, 0);
+INSERT INTO `parroquias` VALUES (349, 'PQ. APARICION', 103, 0);
+INSERT INTO `parroquias` VALUES (350, 'PQ. LA ESTACION', 103, 0);
+INSERT INTO `parroquias` VALUES (351, 'CM. ACARIGUA', 104, 0);
+INSERT INTO `parroquias` VALUES (352, 'PQ. PAYARA', 104, 0);
+INSERT INTO `parroquias` VALUES (353, 'PQ. PIMPINELA', 104, 0);
+INSERT INTO `parroquias` VALUES (354, 'PQ. RAMON PERAZA', 104, 0);
+INSERT INTO `parroquias` VALUES (355, 'CM. BISCUCUY', 105, 0);
+INSERT INTO `parroquias` VALUES (356, 'PQ. CONCEPCION', 105, 0);
+INSERT INTO `parroquias` VALUES (357, 'PQ.SAN RAFAEL PALO ALZADO', 105, 0);
+INSERT INTO `parroquias` VALUES (358, 'PQ. UVENCIO A VELASQUEZ', 105, 0);
+INSERT INTO `parroquias` VALUES (359, 'PQ. SAN JOSE DE SAGUAZ', 105, 0);
+INSERT INTO `parroquias` VALUES (360, 'PQ. VILLA ROSA', 105, 0);
+INSERT INTO `parroquias` VALUES (361, 'CM. VILLA BRUZUAL', 106, 0);
+INSERT INTO `parroquias` VALUES (362, 'PQ. CANELONES', 106, 0);
+INSERT INTO `parroquias` VALUES (363, 'PQ. SANTA CRUZ', 106, 0);
+INSERT INTO `parroquias` VALUES (364, 'PQ. SAN ISIDRO LABRADOR', 106, 0);
+INSERT INTO `parroquias` VALUES (365, 'CM. CHABASQUEN', 107, 0);
+INSERT INTO `parroquias` VALUES (366, 'PQ. PE#A BLANCA', 107, 0);
+INSERT INTO `parroquias` VALUES (367, 'PQ. RIO CARIBE', 108, 0);
+INSERT INTO `parroquias` VALUES (368, 'PQ. SAN JUAN GALDONAS', 108, 0);
+INSERT INTO `parroquias` VALUES (369, 'PQ. PUERTO SANTO', 108, 0);
+INSERT INTO `parroquias` VALUES (370, 'PQ. EL MORRO DE PTO SANTO', 108, 0);
+INSERT INTO `parroquias` VALUES (371, 'PQ. ANTONIO JOSE DE SUCRE', 108, 0);
+INSERT INTO `parroquias` VALUES (372, 'PQ. GUIRIA', 109, 0);
+INSERT INTO `parroquias` VALUES (373, 'PQ. CRISTOBAL COLON', 109, 0);
+INSERT INTO `parroquias` VALUES (374, 'PQ. PUNTA DE PIEDRA', 109, 0);
+INSERT INTO `parroquias` VALUES (375, 'PQ. BIDEAU', 109, 0);
+INSERT INTO `parroquias` VALUES (376, 'PQ. MARI#O', 110, 0);
+INSERT INTO `parroquias` VALUES (377, 'PQ. ROMULO GALLEGOS', 110, 0);
+INSERT INTO `parroquias` VALUES (378, 'PQ. TUNAPUY', 111, 0);
+INSERT INTO `parroquias` VALUES (379, 'PQ. CAMPO ELIAS', 111, 0);
+INSERT INTO `parroquias` VALUES (380, 'PQ. SAN JOSE DE AREOCUAR', 112, 0);
+INSERT INTO `parroquias` VALUES (381, 'PQ. TAVERA ACOSTA', 112, 0);
+INSERT INTO `parroquias` VALUES (382, 'CM. MARIGUITAR', 113, 0);
+INSERT INTO `parroquias` VALUES (383, 'PQ. ARAYA', 114, 0);
+INSERT INTO `parroquias` VALUES (384, 'PQ. MANICUARE', 114, 0);
+INSERT INTO `parroquias` VALUES (385, 'PQ. CHACOPATA', 114, 0);
+INSERT INTO `parroquias` VALUES (386, 'PQ. EL PILAR', 115, 0);
+INSERT INTO `parroquias` VALUES (387, 'PQ. EL RINCON', 115, 0);
+INSERT INTO `parroquias` VALUES (388, 'PQ. GUARAUNOS', 115, 0);
+INSERT INTO `parroquias` VALUES (389, 'PQ. TUNAPUICITO', 115, 0);
+INSERT INTO `parroquias` VALUES (390, 'PQ. UNION', 115, 0);
+INSERT INTO `parroquias` VALUES (391, 'PQ. GRAL FCO. A VASQUEZ', 115, 0);
+INSERT INTO `parroquias` VALUES (392, 'PQ. SANTA CATALINA', 116, 0);
+INSERT INTO `parroquias` VALUES (393, 'PQ. SANTA ROSA', 116, 0);
+INSERT INTO `parroquias` VALUES (394, 'PQ. SANTA TERESA', 116, 0);
+INSERT INTO `parroquias` VALUES (395, 'PQ. BOLIVAR', 116, 0);
+INSERT INTO `parroquias` VALUES (396, 'PQ. MACARAPANA', 116, 0);
+INSERT INTO `parroquias` VALUES (397, 'PQ. YAGUARAPARO', 117, 0);
+INSERT INTO `parroquias` VALUES (398, 'PQ. LIBERTAD', 117, 0);
+INSERT INTO `parroquias` VALUES (399, 'PQ. PAUJIL', 117, 0);
+INSERT INTO `parroquias` VALUES (400, 'PQ. IRAPA', 118, 0);
+INSERT INTO `parroquias` VALUES (401, 'PQ. CAMPO CLARO', 118, 0);
+INSERT INTO `parroquias` VALUES (402, 'PQ. SORO', 118, 0);
+INSERT INTO `parroquias` VALUES (403, 'PQ. SAN ANTONIO DE IRAPA', 118, 0);
+INSERT INTO `parroquias` VALUES (404, 'PQ. MARABAL', 118, 0);
+INSERT INTO `parroquias` VALUES (405, 'CM. SAN ANT DEL GOLFO', 119, 0);
+INSERT INTO `parroquias` VALUES (406, 'PQ. CUMANACOA', 120, 0);
+INSERT INTO `parroquias` VALUES (407, 'PQ. ARENAS', 120, 0);
+INSERT INTO `parroquias` VALUES (408, 'PQ. ARICAGUA', 120, 0);
+INSERT INTO `parroquias` VALUES (409, 'PQ. COCOLLAR', 120, 0);
+INSERT INTO `parroquias` VALUES (410, 'PQ. SAN FERNANDO', 120, 0);
+INSERT INTO `parroquias` VALUES (411, 'PQ. SAN LORENZO', 120, 0);
+INSERT INTO `parroquias` VALUES (412, 'PQ. CARIACO', 121, 0);
+INSERT INTO `parroquias` VALUES (413, 'PQ. CATUARO', 121, 0);
+INSERT INTO `parroquias` VALUES (414, 'PQ. RENDON', 121, 0);
+INSERT INTO `parroquias` VALUES (415, 'PQ. SANTA CRUZ', 121, 0);
+INSERT INTO `parroquias` VALUES (416, 'PQ. SANTA MARIA', 121, 0);
+INSERT INTO `parroquias` VALUES (417, 'PQ. ALTAGRACIA', 122, 0);
+INSERT INTO `parroquias` VALUES (418, 'PQ. AYACUCHO', 122, 0);
+INSERT INTO `parroquias` VALUES (419, 'PQ. SANTA INES', 122, 0);
+INSERT INTO `parroquias` VALUES (420, 'PQ. VALENTIN VALIENTE', 122, 0);
+INSERT INTO `parroquias` VALUES (421, 'PQ. SAN JUAN', 122, 0);
+INSERT INTO `parroquias` VALUES (422, 'PQ.GRAN MARISCAL', 122, 0);
+INSERT INTO `parroquias` VALUES (423, 'PQ. RAUL LEONI', 122, 0);
+INSERT INTO `parroquias` VALUES (424, 'CM. COLON', 123, 0);
+INSERT INTO `parroquias` VALUES (425, 'PQ. RIVAS BERTI', 123, 0);
+INSERT INTO `parroquias` VALUES (426, 'PQ. SAN PEDRO DEL RIO', 123, 0);
+INSERT INTO `parroquias` VALUES (427, 'CM. STA. ANA  DEL TACHIRA', 124, 0);
+INSERT INTO `parroquias` VALUES (428, 'CM. LA FRIA', 125, 0);
+INSERT INTO `parroquias` VALUES (429, 'PQ. BOCA DE GRITA', 125, 0);
+INSERT INTO `parroquias` VALUES (430, 'PQ. JOSE ANTONIO PAEZ', 125, 0);
+INSERT INTO `parroquias` VALUES (431, 'CM. PALMIRA', 126, 0);
+INSERT INTO `parroquias` VALUES (432, 'CM. MICHELENA', 127, 0);
+INSERT INTO `parroquias` VALUES (433, 'CM. ABEJALES', 128, 0);
+INSERT INTO `parroquias` VALUES (434, 'PQ. SAN JOAQUIN DE NAVAY', 128, 0);
+INSERT INTO `parroquias` VALUES (435, 'PQ. DORADAS', 128, 0);
+INSERT INTO `parroquias` VALUES (436, 'PQ. EMETERIO OCHOA', 128, 0);
+INSERT INTO `parroquias` VALUES (437, 'CM. COLONCITO', 129, 0);
+INSERT INTO `parroquias` VALUES (438, 'PQ. LA PALMITA', 129, 0);
+INSERT INTO `parroquias` VALUES (439, 'CM. URE#A', 130, 0);
+INSERT INTO `parroquias` VALUES (440, 'PQ. NUEVA ARCADIA', 130, 0);
+INSERT INTO `parroquias` VALUES (441, 'CM. QUENIQUEA', 131, 0);
+INSERT INTO `parroquias` VALUES (442, 'PQ. SAN PABLO', 131, 0);
+INSERT INTO `parroquias` VALUES (443, 'PQ.ELEAZAR LOPEZ CONTRERA', 131, 0);
+INSERT INTO `parroquias` VALUES (444, 'CM. CORDERO', 132, 0);
+INSERT INTO `parroquias` VALUES (445, 'CM.SAN RAFAEL DEL PINAL', 133, 0);
+INSERT INTO `parroquias` VALUES (446, 'PQ. SANTO DOMINGO', 133, 0);
+INSERT INTO `parroquias` VALUES (447, 'PQ. ALBERTO ADRIANI', 133, 0);
+INSERT INTO `parroquias` VALUES (448, 'CM. SAN ANT DEL TACHIRA', 134, 0);
+INSERT INTO `parroquias` VALUES (449, 'PQ. PALOTAL', 134, 0);
+INSERT INTO `parroquias` VALUES (450, 'PQ. JUAN VICENTE GOMEZ', 134, 0);
+INSERT INTO `parroquias` VALUES (451, 'PQ. ISAIAS MEDINA ANGARIT', 134, 0);
+INSERT INTO `parroquias` VALUES (452, 'CM. CAPACHO VIEJO', 135, 0);
+INSERT INTO `parroquias` VALUES (453, 'PQ. CIPRIANO CASTRO', 135, 0);
+INSERT INTO `parroquias` VALUES (454, 'PQ. MANUEL FELIPE RUGELES', 135, 0);
+INSERT INTO `parroquias` VALUES (455, 'CM. LA TENDIDA', 136, 0);
+INSERT INTO `parroquias` VALUES (456, 'PQ. BOCONO', 136, 0);
+INSERT INTO `parroquias` VALUES (457, 'PQ. HERNANDEZ', 136, 0);
+INSERT INTO `parroquias` VALUES (458, 'CM. SEBORUCO', 137, 0);
+INSERT INTO `parroquias` VALUES (459, 'CM. LAS MESAS', 138, 0);
+INSERT INTO `parroquias` VALUES (460, 'CM. SAN JOSE DE BOLIVAR', 139, 0);
+INSERT INTO `parroquias` VALUES (461, 'CM. EL COBRE', 140, 0);
+INSERT INTO `parroquias` VALUES (462, 'CM. DELICIAS', 141, 0);
+INSERT INTO `parroquias` VALUES (463, 'CM. SAN SIMON', 142, 0);
+INSERT INTO `parroquias` VALUES (464, 'CM. SAN JOSECITO', 143, 0);
+INSERT INTO `parroquias` VALUES (465, 'CM. UMUQUENA', 144, 0);
+INSERT INTO `parroquias` VALUES (466, 'CM. CAPACHO NUEVO', 145, 0);
+INSERT INTO `parroquias` VALUES (467, 'PQ. JUAN GERMAN ROSCIO', 145, 0);
+INSERT INTO `parroquias` VALUES (468, 'PQ. ROMAN CARDENAS', 145, 0);
+INSERT INTO `parroquias` VALUES (469, 'CM. TARIBA', 146, 0);
+INSERT INTO `parroquias` VALUES (470, 'PQ. LA FLORIDA', 146, 0);
+INSERT INTO `parroquias` VALUES (471, 'PQ. AMENODORO RANGEL LAMU', 146, 0);
+INSERT INTO `parroquias` VALUES (472, 'CM. LA GRITA', 147, 0);
+INSERT INTO `parroquias` VALUES (473, 'PQ. EMILIO C. GUERRERO', 147, 0);
+INSERT INTO `parroquias` VALUES (474, 'PQ. MONS. MIGUEL A SALAS', 147, 0);
+INSERT INTO `parroquias` VALUES (475, 'CM. RUBIO', 148, 0);
+INSERT INTO `parroquias` VALUES (476, 'PQ. BRAMON', 148, 0);
+INSERT INTO `parroquias` VALUES (477, 'PQ. LA PETROLEA', 148, 0);
+INSERT INTO `parroquias` VALUES (478, 'PQ. QUINIMARI', 148, 0);
+INSERT INTO `parroquias` VALUES (479, 'CM. LOBATERA', 149, 0);
+INSERT INTO `parroquias` VALUES (480, 'PQ. CONSTITUCION', 149, 0);
+INSERT INTO `parroquias` VALUES (481, 'PQ. LA CONCORDIA', 150, 0);
+INSERT INTO `parroquias` VALUES (482, 'PQ. PEDRO MARIA MORANTES', 150, 0);
+INSERT INTO `parroquias` VALUES (483, 'PQ. SN JUAN BAUTISTA', 150, 0);
+INSERT INTO `parroquias` VALUES (484, 'PQ. SAN SEBASTIAN', 150, 0);
+INSERT INTO `parroquias` VALUES (485, 'PQ. DR. FCO. ROMERO LOBO', 150, 0);
+INSERT INTO `parroquias` VALUES (486, 'CM. PREGONERO', 151, 0);
+INSERT INTO `parroquias` VALUES (487, 'PQ. CARDENAS', 151, 0);
+INSERT INTO `parroquias` VALUES (488, 'PQ. POTOSI', 151, 0);
+INSERT INTO `parroquias` VALUES (489, 'PQ. JUAN PABLO PE#ALOZA', 151, 0);
+INSERT INTO `parroquias` VALUES (490, 'PQ. BETIJOQUE', 152, 0);
+INSERT INTO `parroquias` VALUES (491, 'PQ. JOSE G HERNANDEZ', 152, 0);
+INSERT INTO `parroquias` VALUES (492, 'PQ. LA PUEBLITA', 152, 0);
+INSERT INTO `parroquias` VALUES (493, 'PQ. EL CEDRO', 152, 0);
+INSERT INTO `parroquias` VALUES (494, 'PQ. MONTE CARMELO', 153, 0);
+INSERT INTO `parroquias` VALUES (495, 'PQ. BUENA VISTA', 153, 0);
+INSERT INTO `parroquias` VALUES (496, 'PQ. STA MARIA DEL HORCON', 153, 0);
+INSERT INTO `parroquias` VALUES (497, 'PQ. MOTATAN', 154, 0);
+INSERT INTO `parroquias` VALUES (498, 'PQ. EL BAÑO', 154, 0);
+INSERT INTO `parroquias` VALUES (499, 'PQ. JALISCO', 154, 0);
+INSERT INTO `parroquias` VALUES (500, 'PQ. PAMPAN', 155, 0);
+INSERT INTO `parroquias` VALUES (501, 'PQ. SANTA ANA', 155, 0);
+INSERT INTO `parroquias` VALUES (502, 'PQ. LA PAZ', 155, 0);
+INSERT INTO `parroquias` VALUES (503, 'PQ. FLOR DE PATRIA', 155, 0);
+INSERT INTO `parroquias` VALUES (504, 'PQ. CARVAJAL', 156, 0);
+INSERT INTO `parroquias` VALUES (505, 'PQ. ANTONIO N BRICEñO', 156, 0);
+INSERT INTO `parroquias` VALUES (506, 'PQ. CAMPO ALEGRE', 156, 0);
+INSERT INTO `parroquias` VALUES (507, 'PQ. JOSE LEONARDO SUAREZ', 156, 0);
+INSERT INTO `parroquias` VALUES (508, 'PQ. SABANA DE MENDOZA', 157, 0);
+INSERT INTO `parroquias` VALUES (509, 'PQ. JUNIN', 157, 0);
+INSERT INTO `parroquias` VALUES (510, 'PQ. VALMORE RODRIGUEZ', 157, 0);
+INSERT INTO `parroquias` VALUES (511, 'PQ. EL PARAISO', 157, 0);
+INSERT INTO `parroquias` VALUES (512, 'PQ. SANTA ISABEL', 158, 2731);
+INSERT INTO `parroquias` VALUES (513, 'PQ. ARAGUANEY', 158, 851);
+INSERT INTO `parroquias` VALUES (514, 'PQ. EL JAGUITO', 158, 1784);
+INSERT INTO `parroquias` VALUES (515, 'PQ. LA ESPERANZA', 158, 1684);
+INSERT INTO `parroquias` VALUES (516, 'PQ. SABANA GRANDE', 159, 3252);
+INSERT INTO `parroquias` VALUES (517, 'PQ. CHEREGUE', 159, 2055);
+INSERT INTO `parroquias` VALUES (518, 'PQ. GRANADOS', 159, 0);
+INSERT INTO `parroquias` VALUES (519, 'PQ. EL SOCORRO', 160, 0);
+INSERT INTO `parroquias` VALUES (520, 'PQ. LOS CAPRICHOS', 160, 0);
+INSERT INTO `parroquias` VALUES (521, 'PQ. ANTONIO JOSE DE SUCRE', 160, 0);
+INSERT INTO `parroquias` VALUES (522, 'PQ. CAMPO ELIAS', 161, 0);
+INSERT INTO `parroquias` VALUES (523, 'PQ. ARNOLDO GABALDON', 161, 0);
+INSERT INTO `parroquias` VALUES (524, 'PQ. SANTA APOLONIA', 162, 0);
+INSERT INTO `parroquias` VALUES (525, 'PQ. LA CEIBA', 162, 0);
+INSERT INTO `parroquias` VALUES (526, 'PQ. EL PROGRESO', 162, 0);
+INSERT INTO `parroquias` VALUES (527, 'PQ. TRES DE FEBRERO', 162, 0);
+INSERT INTO `parroquias` VALUES (528, 'PQ. BOCONÓ', 163, 0);
+INSERT INTO `parroquias` VALUES (529, 'PQ. SAN MIGUEL', 163, 0);
+INSERT INTO `parroquias` VALUES (530, 'PQ. GUARAMACAL', 163, 0);
+INSERT INTO `parroquias` VALUES (531, 'PQ. LA VEGA DE GUARAMACAL', 163, 0);
+INSERT INTO `parroquias` VALUES (532, 'PQ. EL CARMEN', 163, 0);
+INSERT INTO `parroquias` VALUES (533, 'PQ. MOSQUEY', 163, 0);
+INSERT INTO `parroquias` VALUES (534, 'PQ. AYACUCHO', 163, 0);
+INSERT INTO `parroquias` VALUES (535, 'PQ. BURBUSAY', 163, 0);
+INSERT INTO `parroquias` VALUES (536, 'PQ. GENERAL RIVAS', 163, 0);
+INSERT INTO `parroquias` VALUES (537, 'PQ. MONSEñOR JAUREGUI', 163, 0);
+INSERT INTO `parroquias` VALUES (538, 'PQ. RAFAEL RANGEL', 163, 0);
+INSERT INTO `parroquias` VALUES (539, 'PQ. SAN JOSE', 163, 0);
+INSERT INTO `parroquias` VALUES (540, 'PQ. PAMPANITO', 164, 0);
+INSERT INTO `parroquias` VALUES (541, 'PQ. PAMPANITO II', 164, 0);
+INSERT INTO `parroquias` VALUES (542, 'PQ. LA CONCEPCION', 164, 0);
+INSERT INTO `parroquias` VALUES (543, 'PQ. CARACHE', 165, 0);
+INSERT INTO `parroquias` VALUES (544, 'PQ. LA CONCEPCION', 165, 0);
+INSERT INTO `parroquias` VALUES (545, 'PQ. CUICAS', 165, 0);
+INSERT INTO `parroquias` VALUES (546, 'PQ. PANAMERICANA', 165, 0);
+INSERT INTO `parroquias` VALUES (547, 'PQ. SANTA CRUZ', 165, 0);
+INSERT INTO `parroquias` VALUES (548, 'PQ. ESCUQUE', 166, 0);
+INSERT INTO `parroquias` VALUES (549, 'PQ. SABANA LIBRE', 166, 0);
+INSERT INTO `parroquias` VALUES (550, 'PQ. LA UNION', 166, 0);
+INSERT INTO `parroquias` VALUES (551, 'PQ. SANTA RITA', 166, 0);
+INSERT INTO `parroquias` VALUES (552, 'PQ. CRISTOBAL MENDOZA', 167, 0);
+INSERT INTO `parroquias` VALUES (553, 'PQ. CHIQUINQUIRA', 167, 0);
+INSERT INTO `parroquias` VALUES (554, 'PQ. MATRIZ', 167, 0);
+INSERT INTO `parroquias` VALUES (555, 'PQ. MONSEÑOR CARRILLO', 167, 0);
+INSERT INTO `parroquias` VALUES (556, 'PQ. CRUZ CARRILLO', 167, 0);
+INSERT INTO `parroquias` VALUES (557, 'PQ. ANDRES LINARES', 167, 0);
+INSERT INTO `parroquias` VALUES (558, 'PQ. TRES ESQUINAS', 167, 0);
+INSERT INTO `parroquias` VALUES (559, 'PQ. LA QUEBRADA', 168, 0);
+INSERT INTO `parroquias` VALUES (560, 'PQ. JAJO', 168, 0);
+INSERT INTO `parroquias` VALUES (561, 'PQ. LA MESA', 168, 0);
+INSERT INTO `parroquias` VALUES (562, 'PQ. SANTIAGO', 168, 0);
+INSERT INTO `parroquias` VALUES (563, 'PQ. CABIMBU', 168, 0);
+INSERT INTO `parroquias` VALUES (564, 'PQ. TUñAME', 168, 0);
+INSERT INTO `parroquias` VALUES (565, 'PQ. MERCEDES DIAZ', 169, 0);
+INSERT INTO `parroquias` VALUES (566, 'PQ. JUAN IGNACIO MONTILLA', 169, 0);
+INSERT INTO `parroquias` VALUES (567, 'PQ. LA BEATRIZ', 169, 0);
+INSERT INTO `parroquias` VALUES (568, 'PQ. MENDOZA', 169, 0);
+INSERT INTO `parroquias` VALUES (569, 'PQ. LA PUERTA', 169, 0);
+INSERT INTO `parroquias` VALUES (570, 'PQ. SAN LUIS', 169, 0);
+INSERT INTO `parroquias` VALUES (571, 'PQ. CHEJENDE', 170, 0);
+INSERT INTO `parroquias` VALUES (572, 'PQ. CARRILLO', 170, 0);
+INSERT INTO `parroquias` VALUES (573, 'PQ. CEGARRA', 170, 0);
+INSERT INTO `parroquias` VALUES (574, 'PQ. BOLIVIA', 170, 0);
+INSERT INTO `parroquias` VALUES (575, 'PQ. MANUEL SALVADOR ULLOA', 170, 0);
+INSERT INTO `parroquias` VALUES (576, 'PQ. SAN JOSE', 170, 0);
+INSERT INTO `parroquias` VALUES (577, 'PQ. ARNOLDO GABALDON', 170, 0);
+INSERT INTO `parroquias` VALUES (578, 'PQ. EL DIVIDIVE', 171, 0);
+INSERT INTO `parroquias` VALUES (579, 'PQ. AGUA CALIENTE', 171, 0);
+INSERT INTO `parroquias` VALUES (580, 'PQ. EL CENIZO', 171, 0);
+INSERT INTO `parroquias` VALUES (581, 'PQ. AGUA SANTA', 171, 0);
+INSERT INTO `parroquias` VALUES (582, 'PQ. VALERITA', 171, 0);
+INSERT INTO `parroquias` VALUES (583, 'PQ. ANACO', 172, 0);
+INSERT INTO `parroquias` VALUES (584, 'PQ. SAN JOAQUIN', 172, 0);
+INSERT INTO `parroquias` VALUES (585, 'CM. MAPIRE', 173, 0);
+INSERT INTO `parroquias` VALUES (586, 'PQ. PIAR', 173, 0);
+INSERT INTO `parroquias` VALUES (587, 'PQ. SN DIEGO DE CABRUTICA', 173, 0);
+INSERT INTO `parroquias` VALUES (588, 'PQ. SANTA CLARA', 173, 0);
+INSERT INTO `parroquias` VALUES (589, 'PQ. UVERITO', 173, 0);
+INSERT INTO `parroquias` VALUES (590, 'PQ. ZUATA', 173, 0);
+INSERT INTO `parroquias` VALUES (591, 'CM. PUERTO PIRITU', 174, 0);
+INSERT INTO `parroquias` VALUES (592, 'PQ. SAN MIGUEL', 174, 0);
+INSERT INTO `parroquias` VALUES (593, 'PQ. SUCRE', 174, 0);
+INSERT INTO `parroquias` VALUES (594, 'CM. EL TIGRE', 175, 0);
+INSERT INTO `parroquias` VALUES (595, 'PQ. POZUELOS', 176, 0);
+INSERT INTO `parroquias` VALUES (596, 'CM PTO. LA CRUZ', 176, 0);
+INSERT INTO `parroquias` VALUES (597, 'CM. SAN JOSE DE GUANIPA', 177, 0);
+INSERT INTO `parroquias` VALUES (598, 'PQ. GUANTA', 178, 0);
+INSERT INTO `parroquias` VALUES (599, 'PQ. CHORRERON', 178, 0);
+INSERT INTO `parroquias` VALUES (600, 'PQ. PIRITU', 179, 0);
+INSERT INTO `parroquias` VALUES (601, 'PQ. SAN FRANCISCO', 179, 0);
+INSERT INTO `parroquias` VALUES (602, 'PQ. LECHERIAS', 180, 0);
+INSERT INTO `parroquias` VALUES (603, 'PQ. EL MORRO', 180, 0);
+INSERT INTO `parroquias` VALUES (604, 'PQ. VALLE GUANAPE', 181, 0);
+INSERT INTO `parroquias` VALUES (605, 'PQ. SANTA BARBARA', 181, 0);
+INSERT INTO `parroquias` VALUES (606, 'PQ. SANTA ANA', 182, 0);
+INSERT INTO `parroquias` VALUES (607, 'PQ. PUEBLO NUEVO', 182, 0);
+INSERT INTO `parroquias` VALUES (608, 'CM. ARAGUA DE BARCELONA', 183, 0);
+INSERT INTO `parroquias` VALUES (609, 'PQ. CACHIPO', 183, 0);
+INSERT INTO `parroquias` VALUES (610, 'PQ. EL CHAPARRO', 184, 0);
+INSERT INTO `parroquias` VALUES (611, 'PQ.TOMAS ALFARO CALATRAVA', 184, 0);
+INSERT INTO `parroquias` VALUES (612, 'PQ. BOCA UCHIRE', 185, 0);
+INSERT INTO `parroquias` VALUES (613, 'PQ. BOCA DE CHAVEZ', 185, 0);
+INSERT INTO `parroquias` VALUES (614, 'PQ. EL CARMEN', 186, 0);
+INSERT INTO `parroquias` VALUES (615, 'PQ. SAN CRISTOBAL', 186, 0);
+INSERT INTO `parroquias` VALUES (616, 'PQ. BERGANTIN', 186, 0);
+INSERT INTO `parroquias` VALUES (617, 'PQ. CAIGUA', 186, 0);
+INSERT INTO `parroquias` VALUES (618, 'PQ. EL PILAR', 186, 0);
+INSERT INTO `parroquias` VALUES (619, 'PQ. NARICUAL', 186, 0);
+INSERT INTO `parroquias` VALUES (620, 'CM. CLARINES', 187, 0);
+INSERT INTO `parroquias` VALUES (621, 'PQ. GUANAPE', 187, 0);
+INSERT INTO `parroquias` VALUES (622, 'PQ. SABANA DE UCHIRE', 187, 0);
+INSERT INTO `parroquias` VALUES (623, 'CM. ONOTO', 188, 0);
+INSERT INTO `parroquias` VALUES (624, 'PQ. SAN PABLO', 188, 0);
+INSERT INTO `parroquias` VALUES (625, 'CM. CANTAURA', 189, 0);
+INSERT INTO `parroquias` VALUES (626, 'PQ. LIBERTADOR', 189, 0);
+INSERT INTO `parroquias` VALUES (627, 'PQ. SANTA ROSA', 189, 0);
+INSERT INTO `parroquias` VALUES (628, 'PQ. URICA', 189, 0);
+INSERT INTO `parroquias` VALUES (629, 'CM. SOLEDAD', 190, 0);
+INSERT INTO `parroquias` VALUES (630, 'PQ. MAMO', 190, 0);
+INSERT INTO `parroquias` VALUES (631, 'CM. SAN MATEO', 191, 0);
+INSERT INTO `parroquias` VALUES (632, 'PQ. EL CARITO', 191, 0);
+INSERT INTO `parroquias` VALUES (633, 'PQ. SANTA INES', 191, 0);
+INSERT INTO `parroquias` VALUES (634, 'CM. PARIAGUAN', 192, 0);
+INSERT INTO `parroquias` VALUES (635, 'PQ. ATAPIRIRE', 192, 0);
+INSERT INTO `parroquias` VALUES (636, 'PQ. BOCA DEL PAO', 192, 0);
+INSERT INTO `parroquias` VALUES (637, 'PQ. EL PAO', 192, 0);
+INSERT INTO `parroquias` VALUES (638, 'CM. AROA', 193, 0);
+INSERT INTO `parroquias` VALUES (639, 'CM. COCOROTE', 194, 0);
+INSERT INTO `parroquias` VALUES (640, 'CM. INDEPENDENCIA', 195, 0);
+INSERT INTO `parroquias` VALUES (641, 'CM. SAN PABLO', 196, 0);
+INSERT INTO `parroquias` VALUES (642, 'CM. YUMARE', 197, 0);
+INSERT INTO `parroquias` VALUES (643, 'CM. FARRIAR', 198, 0);
+INSERT INTO `parroquias` VALUES (644, 'PQ. EL GUAYABO', 198, 0);
+INSERT INTO `parroquias` VALUES (645, 'CM. CHIVACOA', 199, 0);
+INSERT INTO `parroquias` VALUES (646, 'PQ. CAMPO ELIAS', 199, 0);
+INSERT INTO `parroquias` VALUES (647, 'CM. NIRGUA', 200, 0);
+INSERT INTO `parroquias` VALUES (648, 'PQ. SALOM', 200, 0);
+INSERT INTO `parroquias` VALUES (649, 'PQ. TEMERLA', 200, 0);
+INSERT INTO `parroquias` VALUES (650, 'CM. SAN FELIPE', 201, 0);
+INSERT INTO `parroquias` VALUES (651, 'PQ. ALBARICO', 201, 0);
+INSERT INTO `parroquias` VALUES (652, 'PQ. SAN JAVIER', 201, 0);
+INSERT INTO `parroquias` VALUES (653, 'CM. GUAMA', 202, 0);
+INSERT INTO `parroquias` VALUES (654, 'CM. URACHICHE', 203, 0);
+INSERT INTO `parroquias` VALUES (655, 'CM. YARITAGUA', 204, 0);
+INSERT INTO `parroquias` VALUES (656, 'PQ. SAN ANDRES', 204, 0);
+INSERT INTO `parroquias` VALUES (657, 'CM. SABANA DE PARRA', 205, 0);
+INSERT INTO `parroquias` VALUES (658, 'CM. BORAURE', 206, 0);
+INSERT INTO `parroquias` VALUES (659, 'PQ. GENERAL URDANETA', 207, 0);
+INSERT INTO `parroquias` VALUES (660, 'PQ. LIBERTADOR', 207, 0);
+INSERT INTO `parroquias` VALUES (661, 'PQ. MANUEL GUANIPA MATOS', 207, 0);
+INSERT INTO `parroquias` VALUES (662, 'PQ. MARCELINO BRICE#O', 207, 0);
+INSERT INTO `parroquias` VALUES (663, 'PQ. SAN TIMOTEO', 207, 0);
+INSERT INTO `parroquias` VALUES (664, 'PQ. PUEBLO NUEVO', 207, 0);
+INSERT INTO `parroquias` VALUES (665, 'PQ. ANDRES BELLO (KM 48)', 208, 0);
+INSERT INTO `parroquias` VALUES (666, 'PQ. POTRERITOS', 208, 0);
+INSERT INTO `parroquias` VALUES (667, 'PQ. EL CARMELO', 208, 0);
+INSERT INTO `parroquias` VALUES (668, 'PQ. CHIQUINQUIRA', 208, 0);
+INSERT INTO `parroquias` VALUES (669, 'PQ. CONCEPCION', 208, 0);
+INSERT INTO `parroquias` VALUES (670, 'PQ. ELEAZAR LOPEZ C', 209, 0);
+INSERT INTO `parroquias` VALUES (671, 'PQ. ALONSO DE OJEDA', 209, 0);
+INSERT INTO `parroquias` VALUES (672, 'PQ. VENEZUELA', 209, 0);
+INSERT INTO `parroquias` VALUES (673, 'PQ. CAMPO LARA', 209, 0);
+INSERT INTO `parroquias` VALUES (674, 'PQ. LIBERTAD', 209, 0);
+INSERT INTO `parroquias` VALUES (675, 'PQ. UDON PEREZ', 210, 0);
+INSERT INTO `parroquias` VALUES (676, 'PQ. ENCONTRADOS', 210, 0);
+INSERT INTO `parroquias` VALUES (677, 'PQ. DONALDO GARCIA', 211, 0);
+INSERT INTO `parroquias` VALUES (678, 'PQ. SIXTO ZAMBRANO', 211, 0);
+INSERT INTO `parroquias` VALUES (679, 'PQ. EL ROSARIO', 211, 0);
+INSERT INTO `parroquias` VALUES (680, 'PQ. AMBROSIO', 212, 0);
+INSERT INTO `parroquias` VALUES (681, 'PQ. GERMAN RIOS LINARES', 212, 0);
+INSERT INTO `parroquias` VALUES (682, 'PQ. JORGE HERNANDEZ', 212, 0);
+INSERT INTO `parroquias` VALUES (683, 'PQ. LA ROSA', 212, 0);
+INSERT INTO `parroquias` VALUES (684, 'PQ. PUNTA GORDA', 212, 0);
+INSERT INTO `parroquias` VALUES (685, 'PQ. CARMEN HERRERA', 212, 0);
+INSERT INTO `parroquias` VALUES (686, 'PQ. SAN BENITO', 212, 0);
+INSERT INTO `parroquias` VALUES (687, 'PQ. ROMULO BETANCOURT', 212, 0);
+INSERT INTO `parroquias` VALUES (688, 'PQ. ARISTIDES CALVANI', 212, 0);
+INSERT INTO `parroquias` VALUES (689, 'PQ. RAUL CUENCA', 213, 0);
+INSERT INTO `parroquias` VALUES (690, 'PQ. LA VICTORIA', 213, 0);
+INSERT INTO `parroquias` VALUES (691, 'PQ. RAFAEL URDANETA', 213, 0);
+INSERT INTO `parroquias` VALUES (692, 'PQ. JOSE RAMON YEPEZ', 214, 0);
+INSERT INTO `parroquias` VALUES (693, 'PQ. LA CONCEPCION', 214, 0);
+INSERT INTO `parroquias` VALUES (694, 'PQ. SAN JOSE', 214, 0);
+INSERT INTO `parroquias` VALUES (695, 'PQ. MARIANO PARRA LEON', 214, 0);
+INSERT INTO `parroquias` VALUES (696, 'PQ. MONAGAS', 215, 0);
+INSERT INTO `parroquias` VALUES (697, 'PQ. ISLA DE TOAS', 215, 0);
+INSERT INTO `parroquias` VALUES (698, 'PQ. MARCIAL HERNANDEZ', 216, 0);
+INSERT INTO `parroquias` VALUES (699, 'PQ. FRANCISCO OCHOA', 216, 0);
+INSERT INTO `parroquias` VALUES (700, 'PQ. SAN FRANCISCO', 216, 0);
+INSERT INTO `parroquias` VALUES (701, 'PQ. EL BAJO', 216, 0);
+INSERT INTO `parroquias` VALUES (702, 'PQ. DOMITILA FLORES', 216, 0);
+INSERT INTO `parroquias` VALUES (703, 'PQ. LOS CORTIJOS', 216, 0);
+INSERT INTO `parroquias` VALUES (704, 'PQ. BARI', 217, 0);
+INSERT INTO `parroquias` VALUES (705, 'PQ. JESUS M SEMPRUN', 217, 0);
+INSERT INTO `parroquias` VALUES (706, 'PQ. PEDRO LUCAS URRIBARRI', 218, 0);
+INSERT INTO `parroquias` VALUES (707, 'PQ. SANTA RITA', 218, 0);
+INSERT INTO `parroquias` VALUES (708, 'PQ. JOSE CENOVIO URRIBARR', 218, 0);
+INSERT INTO `parroquias` VALUES (709, 'PQ. EL MENE', 218, 0);
+INSERT INTO `parroquias` VALUES (710, 'PQ. SIMON RODRIGUEZ', 219, 0);
+INSERT INTO `parroquias` VALUES (711, 'PQ. CARLOS QUEVEDO', 219, 0);
+INSERT INTO `parroquias` VALUES (712, 'PQ. FRANCISCO J PULGAR', 219, 0);
+INSERT INTO `parroquias` VALUES (713, 'PQ. RAFAEL MARIA BARALT', 220, 0);
+INSERT INTO `parroquias` VALUES (714, 'PQ. MANUEL MANRIQUE', 220, 0);
+INSERT INTO `parroquias` VALUES (715, 'PQ. RAFAEL URDANETA', 220, 0);
+INSERT INTO `parroquias` VALUES (716, 'PQ. SANTA CRUZ DEL ZULIA', 221, 0);
+INSERT INTO `parroquias` VALUES (717, 'PQ. URRIBARRI', 221, 0);
+INSERT INTO `parroquias` VALUES (718, 'PQ. MORALITO', 221, 0);
+INSERT INTO `parroquias` VALUES (719, 'PQ. SAN CARLOS DEL ZULIA', 221, 0);
+INSERT INTO `parroquias` VALUES (720, 'PQ. SANTA BARBARA', 221, 0);
+INSERT INTO `parroquias` VALUES (721, 'PQ. LUIS DE VICENTE', 222, 0);
+INSERT INTO `parroquias` VALUES (722, 'PQ. RICAURTE', 222, 0);
+INSERT INTO `parroquias` VALUES (723, 'PQ. MONS.MARCOS SERGIO G', 222, 0);
+INSERT INTO `parroquias` VALUES (724, 'PQ. SAN RAFAEL', 222, 0);
+INSERT INTO `parroquias` VALUES (725, 'PQ. LAS PARCELAS', 222, 0);
+INSERT INTO `parroquias` VALUES (726, 'PQ. TAMARE', 222, 0);
+INSERT INTO `parroquias` VALUES (727, 'PQ. LA SIERRITA', 222, 0);
+INSERT INTO `parroquias` VALUES (728, 'PQ. BOLIVAR', 223, 0);
+INSERT INTO `parroquias` VALUES (729, 'PQ. CACIQUE MARA', 223, 0);
+INSERT INTO `parroquias` VALUES (730, 'PQ. CECILIO ACOSTA', 223, 0);
+INSERT INTO `parroquias` VALUES (731, 'PQ. RAUL LEONI', 223, 0);
+INSERT INTO `parroquias` VALUES (732, 'PQ. FRANCISCO EUGENIO B', 223, 0);
+INSERT INTO `parroquias` VALUES (733, 'PQ. MANUEL DAGNINO', 223, 0);
+INSERT INTO `parroquias` VALUES (734, 'PQ. LUIS HURTADO HIGUERA', 223, 0);
+INSERT INTO `parroquias` VALUES (735, 'PQ. VENANCIO PULGAR', 223, 0);
+INSERT INTO `parroquias` VALUES (736, 'PQ. ANTONIO BORJAS ROMERO', 223, 0);
+INSERT INTO `parroquias` VALUES (737, 'PQ. SAN ISIDRO', 223, 0);
+INSERT INTO `parroquias` VALUES (738, 'PQ. COQUIVACOA', 223, 0);
+INSERT INTO `parroquias` VALUES (739, 'PQ. CRISTO DE ARANZA', 223, 0);
+INSERT INTO `parroquias` VALUES (740, 'PQ. CHIQUINQUIRA', 223, 0);
+INSERT INTO `parroquias` VALUES (741, 'PQ. SANTA LUCIA', 223, 0);
+INSERT INTO `parroquias` VALUES (742, 'PQ. OLEGARIO VILLALOBOS', 223, 0);
+INSERT INTO `parroquias` VALUES (743, 'PQ. JUANA DE AVILA', 223, 0);
+INSERT INTO `parroquias` VALUES (744, 'PQ.CARACCIOLO PARRA PEREZ', 223, 0);
+INSERT INTO `parroquias` VALUES (745, 'PQ. IDELFONZO VASQUEZ', 223, 0);
+INSERT INTO `parroquias` VALUES (746, 'PQ. FARIA', 224, 0);
+INSERT INTO `parroquias` VALUES (747, 'PQ. SAN ANTONIO', 224, 0);
+INSERT INTO `parroquias` VALUES (748, 'PQ. ANA MARIA CAMPOS', 224, 0);
+INSERT INTO `parroquias` VALUES (749, 'PQ. SAN JOSE', 224, 0);
+INSERT INTO `parroquias` VALUES (750, 'PQ. ALTAGRACIA', 224, 0);
+INSERT INTO `parroquias` VALUES (751, 'PQ. GOAJIRA', 225, 0);
+INSERT INTO `parroquias` VALUES (752, 'PQ. ELIAS SANCHEZ RUBIO', 225, 0);
+INSERT INTO `parroquias` VALUES (753, 'PQ. SINAMAICA', 225, 0);
+INSERT INTO `parroquias` VALUES (754, 'PQ. ALTA GUAJIRA', 225, 0);
+INSERT INTO `parroquias` VALUES (755, 'PQ. SAN JOSE DE PERIJA', 226, 0);
+INSERT INTO `parroquias` VALUES (756, 'PQ.BARTOLOME DE LAS CASAS', 226, 0);
+INSERT INTO `parroquias` VALUES (757, 'PQ. LIBERTAD', 226, 0);
+INSERT INTO `parroquias` VALUES (758, 'PQ. RIO NEGRO', 226, 0);
+INSERT INTO `parroquias` VALUES (759, 'PQ. GIBRALTAR', 227, 0);
+INSERT INTO `parroquias` VALUES (760, 'PQ. HERAS', 227, 0);
+INSERT INTO `parroquias` VALUES (761, 'PQ. M.ARTURO CELESTINO A', 227, 0);
+INSERT INTO `parroquias` VALUES (762, 'PQ. ROMULO GALLEGOS', 227, 0);
+INSERT INTO `parroquias` VALUES (763, 'PQ. BOBURES', 227, 0);
+INSERT INTO `parroquias` VALUES (764, 'PQ. EL BATEY', 227, 0);
+INSERT INTO `parroquias` VALUES (765, 'PQ. FERNANDO GIRON TOVAR', 228, 0);
+INSERT INTO `parroquias` VALUES (766, 'PQ. LUIS ALBERTO GOMEZ', 228, 0);
+INSERT INTO `parroquias` VALUES (767, 'PQ. PARHUE#A', 228, 0);
+INSERT INTO `parroquias` VALUES (768, 'PQ. PLATANILLAL', 228, 0);
+INSERT INTO `parroquias` VALUES (769, 'CM. SAN FERNANDO DE ATABA', 229, 0);
+INSERT INTO `parroquias` VALUES (770, 'PQ. UCATA', 229, 0);
+INSERT INTO `parroquias` VALUES (771, 'PQ. YAPACANA', 229, 0);
+INSERT INTO `parroquias` VALUES (772, 'PQ. CANAME', 229, 0);
+INSERT INTO `parroquias` VALUES (773, 'CM. MAROA', 230, 0);
+INSERT INTO `parroquias` VALUES (774, 'PQ. VICTORINO', 230, 0);
+INSERT INTO `parroquias` VALUES (775, 'PQ. COMUNIDAD', 230, 0);
+INSERT INTO `parroquias` VALUES (776, 'CM. SAN CARLOS DE RIO NEG', 231, 0);
+INSERT INTO `parroquias` VALUES (777, 'PQ. SOLANO', 231, 0);
+INSERT INTO `parroquias` VALUES (778, 'PQ. COCUY', 231, 0);
+INSERT INTO `parroquias` VALUES (779, 'CM. ISLA DE RATON', 232, 0);
+INSERT INTO `parroquias` VALUES (780, 'PQ. SAMARIAPO', 232, 0);
+INSERT INTO `parroquias` VALUES (781, 'PQ. SIPAPO', 232, 0);
+INSERT INTO `parroquias` VALUES (782, 'PQ. MUNDUAPO', 232, 0);
+INSERT INTO `parroquias` VALUES (783, 'PQ. GUAYAPO', 232, 0);
+INSERT INTO `parroquias` VALUES (784, 'CM. SAN JUAN DE MANAPIARE', 233, 0);
+INSERT INTO `parroquias` VALUES (785, 'PQ. ALTO VENTUARI', 233, 0);
+INSERT INTO `parroquias` VALUES (786, 'PQ. MEDIO VENTUARI', 233, 0);
+INSERT INTO `parroquias` VALUES (787, 'PQ. BAJO VENTUARI', 233, 0);
+INSERT INTO `parroquias` VALUES (788, 'CM. LA ESMERALDA', 234, 0);
+INSERT INTO `parroquias` VALUES (789, 'PQ. HUACHAMACARE', 234, 0);
+INSERT INTO `parroquias` VALUES (790, 'PQ. MARAWAKA', 234, 0);
+INSERT INTO `parroquias` VALUES (791, 'PQ. MAVACA', 234, 0);
+INSERT INTO `parroquias` VALUES (792, 'PQ. SIERRA PARIMA', 234, 0);
+INSERT INTO `parroquias` VALUES (793, 'PQ. SAN JOSE', 235, 0);
+INSERT INTO `parroquias` VALUES (794, 'PQ. VIRGEN DEL VALLE', 235, 0);
+INSERT INTO `parroquias` VALUES (795, 'PQ. SAN RAFAEL', 235, 0);
+INSERT INTO `parroquias` VALUES (796, 'PQ. JOSE VIDAL MARCANO', 235, 0);
+INSERT INTO `parroquias` VALUES (797, 'PQ. LEONARDO RUIZ PINEDA', 235, 0);
+INSERT INTO `parroquias` VALUES (798, 'PQ. MONS. ARGIMIRO GARCIA', 235, 0);
+INSERT INTO `parroquias` VALUES (799, 'PQ.MCL.ANTONIO J DE SUCRE', 235, 0);
+INSERT INTO `parroquias` VALUES (800, 'PQ. JUAN MILLAN', 235, 0);
+INSERT INTO `parroquias` VALUES (801, 'PQ. PEDERNALES', 236, 0);
+INSERT INTO `parroquias` VALUES (802, 'PQ. LUIS B PRIETO FIGUERO', 236, 0);
+INSERT INTO `parroquias` VALUES (803, 'PQ. CURIAPO', 237, 0);
+INSERT INTO `parroquias` VALUES (804, 'PQ. SANTOS DE ABELGAS', 237, 0);
+INSERT INTO `parroquias` VALUES (805, 'PQ. MANUEL RENAUD', 237, 0);
+INSERT INTO `parroquias` VALUES (806, 'PQ. PADRE BARRAL', 237, 0);
+INSERT INTO `parroquias` VALUES (807, 'PQ. ANICETO LUGO', 237, 0);
+INSERT INTO `parroquias` VALUES (808, 'PQ. ALMIRANTE LUIS BRION', 237, 0);
+INSERT INTO `parroquias` VALUES (809, 'PQ. IMATACA', 238, 0);
+INSERT INTO `parroquias` VALUES (810, 'PQ. ROMULO GALLEGOS', 238, 0);
+INSERT INTO `parroquias` VALUES (811, 'PQ. JUAN BAUTISTA ARISMEN', 238, 0);
+INSERT INTO `parroquias` VALUES (812, 'PQ. MANUEL PIAR', 238, 0);
+INSERT INTO `parroquias` VALUES (813, 'PQ. 5 DE JULIO', 238, 0);
+INSERT INTO `parroquias` VALUES (814, 'PQ. CARABALLEDA', 239, 0);
+INSERT INTO `parroquias` VALUES (815, 'PQ. PQ RAUL LEONI', 239, 0);
+INSERT INTO `parroquias` VALUES (816, 'PQ. PQ CARLOS SOUBLETTE', 239, 0);
+INSERT INTO `parroquias` VALUES (817, 'PQ. CARAYACA', 239, 0);
+INSERT INTO `parroquias` VALUES (818, 'PQ. CARUAO', 239, 0);
+INSERT INTO `parroquias` VALUES (819, 'PQ. CATIA LA MAR', 239, 0);
+INSERT INTO `parroquias` VALUES (820, 'PQ. LA GUAIRA', 239, 0);
+INSERT INTO `parroquias` VALUES (821, 'PQ. MACUTO', 239, 0);
+INSERT INTO `parroquias` VALUES (822, 'PQ. MAIQUETIA', 239, 0);
+INSERT INTO `parroquias` VALUES (823, 'PQ. NAIGUATA', 239, 0);
+INSERT INTO `parroquias` VALUES (824, 'PQ. EL JUNKO', 239, 0);
+INSERT INTO `parroquias` VALUES (825, 'PQ. ACHAGUAS', 240, 0);
+INSERT INTO `parroquias` VALUES (826, 'PQ. APURITO', 240, 0);
+INSERT INTO `parroquias` VALUES (827, 'PQ. EL YAGUAL', 240, 0);
+INSERT INTO `parroquias` VALUES (828, 'PQ. GUACHARA', 240, 0);
+INSERT INTO `parroquias` VALUES (829, 'PQ. MUCURITAS', 240, 0);
+INSERT INTO `parroquias` VALUES (830, 'PQ. QUESERAS DEL MEDIO', 240, 0);
+INSERT INTO `parroquias` VALUES (831, 'PQ. BRUZUAL', 241, 0);
+INSERT INTO `parroquias` VALUES (832, 'PQ. MANTECAL', 241, 0);
+INSERT INTO `parroquias` VALUES (833, 'PQ. QUINTERO', 241, 0);
+INSERT INTO `parroquias` VALUES (834, 'PQ. SAN VICENTE', 241, 0);
+INSERT INTO `parroquias` VALUES (835, 'PQ. RINCON HONDO', 241, 0);
+INSERT INTO `parroquias` VALUES (836, 'PQ. GUASDUALITO', 242, 0);
+INSERT INTO `parroquias` VALUES (837, 'PQ. ARAMENDI', 242, 0);
+INSERT INTO `parroquias` VALUES (838, 'PQ. EL AMPARO', 242, 0);
+INSERT INTO `parroquias` VALUES (839, 'PQ. SAN CAMILO', 242, 0);
+INSERT INTO `parroquias` VALUES (840, 'PQ. URDANETA', 242, 0);
+INSERT INTO `parroquias` VALUES (841, 'PQ. SAN JUAN DE PAYARA', 243, 0);
+INSERT INTO `parroquias` VALUES (842, 'PQ. CODAZZI', 243, 0);
+INSERT INTO `parroquias` VALUES (843, 'PQ. CUNAVICHE', 243, 0);
+INSERT INTO `parroquias` VALUES (844, 'PQ. ELORZA', 244, 0);
+INSERT INTO `parroquias` VALUES (845, 'PQ. LA TRINIDAD', 244, 0);
+INSERT INTO `parroquias` VALUES (846, 'PQ. SAN FERNANDO', 245, 0);
+INSERT INTO `parroquias` VALUES (847, 'PQ. PE#ALVER', 245, 0);
+INSERT INTO `parroquias` VALUES (848, 'PQ. EL RECREO', 245, 0);
+INSERT INTO `parroquias` VALUES (849, 'PQ. SN RAFAEL DE ATAMAICA', 245, 0);
+INSERT INTO `parroquias` VALUES (850, 'PQ. BIRUACA', 246, 0);
+INSERT INTO `parroquias` VALUES (851, 'CM. LAS DELICIAS', 247, 0);
+INSERT INTO `parroquias` VALUES (852, 'PQ. CHORONI', 247, 0);
+INSERT INTO `parroquias` VALUES (853, 'PQ. MADRE MA DE SAN JOSE', 247, 0);
+INSERT INTO `parroquias` VALUES (854, 'PQ. JOAQUIN CRESPO', 247, 0);
+INSERT INTO `parroquias` VALUES (855, 'PQ. PEDRO JOSE OVALLES', 247, 0);
+INSERT INTO `parroquias` VALUES (856, 'PQ. JOSE CASANOVA GODOY', 247, 0);
+INSERT INTO `parroquias` VALUES (857, 'PQ. ANDRES ELOY BLANCO', 247, 0);
+INSERT INTO `parroquias` VALUES (858, 'PQ. LOS TACARIGUAS', 247, 0);
+INSERT INTO `parroquias` VALUES (859, 'CM. SANTA CRUZ', 248, 0);
+INSERT INTO `parroquias` VALUES (860, 'CM. SAN MATEO', 249, 0);
+INSERT INTO `parroquias` VALUES (861, 'CM. LAS TEJERIAS', 250, 0);
+INSERT INTO `parroquias` VALUES (862, 'PQ. TIARA', 250, 0);
+INSERT INTO `parroquias` VALUES (863, 'CM. EL LIMON', 251, 0);
+INSERT INTO `parroquias` VALUES (864, 'PQ. CA A DE AZUCAR', 251, 0);
+INSERT INTO `parroquias` VALUES (865, 'CM. COLONIA TOVAR', 252, 0);
+INSERT INTO `parroquias` VALUES (866, 'CM. CAMATAGUA', 253, 0);
+INSERT INTO `parroquias` VALUES (867, 'PQ. CARMEN DE CURA', 253, 0);
+INSERT INTO `parroquias` VALUES (868, 'CM. EL CONSEJO', 254, 0);
+INSERT INTO `parroquias` VALUES (869, 'CM. SANTA RITA', 255, 0);
+INSERT INTO `parroquias` VALUES (870, 'PQ. FRANCISCO DE MIRANDA', 255, 0);
+INSERT INTO `parroquias` VALUES (871, 'PQ. MONS FELICIANO G', 255, 0);
+INSERT INTO `parroquias` VALUES (872, 'PQ. OCUMARE DE LA COSTA', 256, 0);
+INSERT INTO `parroquias` VALUES (873, 'CM. TURMERO', 257, 0);
+INSERT INTO `parroquias` VALUES (874, 'PQ. SAMAN DE GUERE', 257, 0);
+INSERT INTO `parroquias` VALUES (875, 'PQ. ALFREDO PACHECO M', 257, 0);
+INSERT INTO `parroquias` VALUES (876, 'PQ. CHUAO', 257, 0);
+INSERT INTO `parroquias` VALUES (877, 'PQ. AREVALO APONTE', 257, 0);
+INSERT INTO `parroquias` VALUES (878, 'CM. LA VICTORIA', 258, 0);
+INSERT INTO `parroquias` VALUES (879, 'PQ. ZUATA', 258, 0);
+INSERT INTO `parroquias` VALUES (880, 'PQ. PAO DE ZARATE', 258, 0);
+INSERT INTO `parroquias` VALUES (881, 'PQ. CASTOR NIEVES RIOS', 258, 0);
+INSERT INTO `parroquias` VALUES (882, 'PQ. LAS GUACAMAYAS', 258, 0);
+INSERT INTO `parroquias` VALUES (883, 'CM. SAN CASIMIRO', 259, 0);
+INSERT INTO `parroquias` VALUES (884, 'PQ. VALLE MORIN', 259, 0);
+INSERT INTO `parroquias` VALUES (885, 'PQ. GUIRIPA', 259, 0);
+INSERT INTO `parroquias` VALUES (886, 'PQ. OLLAS DE CARAMACATE', 259, 0);
+INSERT INTO `parroquias` VALUES (887, 'CM. SAN SEBASTIAN', 260, 0);
+INSERT INTO `parroquias` VALUES (888, 'CM. CAGUA', 261, 0);
+INSERT INTO `parroquias` VALUES (889, 'PQ. BELLA VISTA', 261, 0);
+INSERT INTO `parroquias` VALUES (890, 'CM. BARBACOAS', 262, 0);
+INSERT INTO `parroquias` VALUES (891, 'PQ. SAN FRANCISCO DE CARA', 262, 0);
+INSERT INTO `parroquias` VALUES (892, 'PQ. TAGUAY', 262, 0);
+INSERT INTO `parroquias` VALUES (893, 'PQ. LAS PE#ITAS', 262, 0);
+INSERT INTO `parroquias` VALUES (894, 'CM. VILLA DE CURA', 263, 0);
+INSERT INTO `parroquias` VALUES (895, 'PQ. MAGDALENO', 263, 0);
+INSERT INTO `parroquias` VALUES (896, 'PQ. SAN FRANCISCO DE ASIS', 263, 0);
+INSERT INTO `parroquias` VALUES (897, 'PQ. VALLES DE TUCUTUNEMO', 263, 0);
+INSERT INTO `parroquias` VALUES (898, 'PQ. PQ AUGUSTO MIJARES', 263, 0);
+INSERT INTO `parroquias` VALUES (899, 'CM. PALO NEGRO', 264, 0);
+INSERT INTO `parroquias` VALUES (900, 'PQ. SAN MARTIN DE PORRES', 264, 0);
+INSERT INTO `parroquias` VALUES (901, 'PQ. ARISMENDI', 265, 0);
+INSERT INTO `parroquias` VALUES (902, 'PQ. GUADARRAMA', 265, 0);
+INSERT INTO `parroquias` VALUES (903, 'PQ. LA UNION', 265, 0);
+INSERT INTO `parroquias` VALUES (904, 'PQ. SAN ANTONIO', 265, 0);
+INSERT INTO `parroquias` VALUES (905, 'PQ. TICOPORO', 266, 0);
+INSERT INTO `parroquias` VALUES (906, 'PQ. NICOLAS PULIDO', 266, 0);
+INSERT INTO `parroquias` VALUES (907, 'PQ. ANDRES BELLO', 266, 0);
+INSERT INTO `parroquias` VALUES (908, 'PQ. BARRANCAS', 267, 0);
+INSERT INTO `parroquias` VALUES (909, 'PQ. EL SOCORRO', 267, 0);
+INSERT INTO `parroquias` VALUES (910, 'PQ. MASPARRITO', 267, 0);
+INSERT INTO `parroquias` VALUES (911, 'PQ. EL CANTON', 268, 0);
+INSERT INTO `parroquias` VALUES (912, 'PQ. SANTA CRUZ DE GUACAS', 268, 0);
+INSERT INTO `parroquias` VALUES (913, 'PQ. PUERTO VIVAS', 268, 0);
+INSERT INTO `parroquias` VALUES (914, 'PQ. ALFREDO A LARRIVA', 269, 0);
+INSERT INTO `parroquias` VALUES (915, 'PQ. RAMON I MENDEZ', 269, 0);
+INSERT INTO `parroquias` VALUES (916, 'PQ. ALTO BARINAS', 269, 0);
+INSERT INTO `parroquias` VALUES (917, 'PQ. MANUEL P FAJARDO', 269, 0);
+INSERT INTO `parroquias` VALUES (918, 'PQ. JUAN A RODRIGUEZ D', 269, 0);
+INSERT INTO `parroquias` VALUES (919, 'PQ. DOMINGA ORTIZ P', 269, 0);
+INSERT INTO `parroquias` VALUES (920, 'PQ. BARINAS', 269, 0);
+INSERT INTO `parroquias` VALUES (921, 'PQ. SAN SILVESTRE', 269, 0);
+INSERT INTO `parroquias` VALUES (922, 'PQ. SANTA INES', 269, 0);
+INSERT INTO `parroquias` VALUES (923, 'PQ. SANTA LUCIA', 269, 0);
+INSERT INTO `parroquias` VALUES (924, 'PQ. TORUNOS', 269, 0);
+INSERT INTO `parroquias` VALUES (925, 'PQ. EL CARMEN', 269, 0);
+INSERT INTO `parroquias` VALUES (926, 'PQ. ROMULO BETANCOURT', 269, 0);
+INSERT INTO `parroquias` VALUES (927, 'PQ. CORAZON DE JESUS', 269, 0);
+INSERT INTO `parroquias` VALUES (928, 'PQ. ALTAMIRA', 270, 0);
+INSERT INTO `parroquias` VALUES (929, 'PQ. BARINITAS', 270, 0);
+INSERT INTO `parroquias` VALUES (930, 'PQ. CALDERAS', 270, 0);
+INSERT INTO `parroquias` VALUES (931, 'PQ. SANTA BARBARA', 271, 0);
+INSERT INTO `parroquias` VALUES (932, 'PQ.JOSE IGNACIO DEL PUMAR', 271, 0);
+INSERT INTO `parroquias` VALUES (933, 'PQ. RAMON IGNACIO MENDEZ', 271, 0);
+INSERT INTO `parroquias` VALUES (934, 'PQ. PEDRO BRICE#O MENDEZ', 271, 0);
+INSERT INTO `parroquias` VALUES (935, 'PQ. EL REAL', 272, 0);
+INSERT INTO `parroquias` VALUES (936, 'PQ. LA LUZ', 272, 0);
+INSERT INTO `parroquias` VALUES (937, 'PQ. OBISPOS', 272, 0);
+INSERT INTO `parroquias` VALUES (938, 'PQ. LOS GUASIMITOS', 272, 0);
+INSERT INTO `parroquias` VALUES (939, 'PQ. CIUDAD BOLIVIA', 273, 0);
+INSERT INTO `parroquias` VALUES (940, 'PQ. IGNACIO BRICE#O', 273, 0);
+INSERT INTO `parroquias` VALUES (941, 'PQ. PAEZ', 273, 0);
+INSERT INTO `parroquias` VALUES (942, 'PQ. JOSE FELIX RIBAS', 273, 0);
+INSERT INTO `parroquias` VALUES (943, 'PQ. DOLORES', 274, 0);
+INSERT INTO `parroquias` VALUES (944, 'PQ. LIBERTAD', 274, 0);
+INSERT INTO `parroquias` VALUES (945, 'PQ. PALACIO FAJARDO', 274, 0);
+INSERT INTO `parroquias` VALUES (946, 'PQ. SANTA ROSA', 274, 0);
+INSERT INTO `parroquias` VALUES (947, 'PQ. CIUDAD DE NUTRIAS', 275, 0);
+INSERT INTO `parroquias` VALUES (948, 'PQ. EL REGALO', 275, 0);
+INSERT INTO `parroquias` VALUES (949, 'PQ. PUERTO DE NUTRIAS', 275, 0);
+INSERT INTO `parroquias` VALUES (950, 'PQ. SANTA CATALINA', 275, 0);
+INSERT INTO `parroquias` VALUES (951, 'PQ. RODRIGUEZ DOMINGUEZ', 276, 0);
+INSERT INTO `parroquias` VALUES (952, 'PQ. SABANETA', 276, 0);
+INSERT INTO `parroquias` VALUES (953, 'PQ. SIMON BOLIVAR', 277, 0);
+INSERT INTO `parroquias` VALUES (954, 'PQ. POZO VERDE', 277, 0);
+INSERT INTO `parroquias` VALUES (955, 'PQ. ONCE DE ABRIL', 277, 0);
+INSERT INTO `parroquias` VALUES (956, 'PQ. VISTA AL SOL', 277, 0);
+INSERT INTO `parroquias` VALUES (957, 'PQ. CHIRICA', 277, 0);
+INSERT INTO `parroquias` VALUES (958, 'PQ. DALLA COSTA', 277, 0);
+INSERT INTO `parroquias` VALUES (959, 'PQ. CACHAMAY', 277, 0);
+INSERT INTO `parroquias` VALUES (960, 'PQ. UNIVERSIDAD', 277, 0);
+INSERT INTO `parroquias` VALUES (961, 'PQ. UNARE', 277, 0);
+INSERT INTO `parroquias` VALUES (962, 'PQ. YOCOIMA', 277, 0);
+INSERT INTO `parroquias` VALUES (963, 'CM. EL CALLAO', 278, 0);
+INSERT INTO `parroquias` VALUES (964, 'CM. EL PALMAR', 279, 0);
+INSERT INTO `parroquias` VALUES (965, 'CM. CAICARA DEL ORINOCO', 280, 0);
+INSERT INTO `parroquias` VALUES (966, 'PQ. ASCENSION FARRERAS', 280, 0);
+INSERT INTO `parroquias` VALUES (967, 'PQ. ALTAGRACIA', 280, 0);
+INSERT INTO `parroquias` VALUES (968, 'PQ. LA URBANA', 280, 0);
+INSERT INTO `parroquias` VALUES (969, 'PQ. GUANIAMO', 280, 0);
+INSERT INTO `parroquias` VALUES (970, 'PQ. PIJIGUAOS', 280, 0);
+INSERT INTO `parroquias` VALUES (971, 'PQ. CATEDRAL', 281, 0);
+INSERT INTO `parroquias` VALUES (972, 'PQ. AGUA SALADA', 281, 0);
+INSERT INTO `parroquias` VALUES (973, 'PQ. LA SABANITA', 281, 0);
+INSERT INTO `parroquias` VALUES (974, 'PQ. VISTA HERMOSA', 281, 0);
+INSERT INTO `parroquias` VALUES (975, 'PQ. MARHUANTA', 281, 0);
+INSERT INTO `parroquias` VALUES (976, 'PQ. JOSE ANTONIO PAEZ', 281, 0);
+INSERT INTO `parroquias` VALUES (977, 'PQ. ORINOCO', 281, 0);
+INSERT INTO `parroquias` VALUES (978, 'PQ. PANAPANA', 281, 0);
+INSERT INTO `parroquias` VALUES (979, 'PQ. ZEA', 281, 0);
+INSERT INTO `parroquias` VALUES (980, 'CM. UPATA', 282, 0);
+INSERT INTO `parroquias` VALUES (981, 'PQ. ANDRES ELOY BLANCO', 282, 0);
+INSERT INTO `parroquias` VALUES (982, 'PQ. PEDRO COVA', 282, 0);
+INSERT INTO `parroquias` VALUES (983, 'CM. GUASIPATI', 283, 0);
+INSERT INTO `parroquias` VALUES (984, 'PQ. SALOM', 283, 0);
+INSERT INTO `parroquias` VALUES (985, 'CM. MARIPA', 284, 0);
+INSERT INTO `parroquias` VALUES (986, 'PQ. ARIPAO', 284, 0);
+INSERT INTO `parroquias` VALUES (987, 'PQ. LAS MAJADAS', 284, 0);
+INSERT INTO `parroquias` VALUES (988, 'PQ. MOITACO', 284, 0);
+INSERT INTO `parroquias` VALUES (989, 'PQ. GUARATARO', 284, 0);
+INSERT INTO `parroquias` VALUES (990, 'CM. TUMEREMO', 285, 0);
+INSERT INTO `parroquias` VALUES (991, 'PQ. DALLA COSTA', 285, 0);
+INSERT INTO `parroquias` VALUES (992, 'PQ. SAN ISIDRO', 285, 0);
+INSERT INTO `parroquias` VALUES (993, 'CM. CIUDAD PIAR', 286, 0);
+INSERT INTO `parroquias` VALUES (994, 'PQ. SAN FRANCISCO', 286, 0);
+INSERT INTO `parroquias` VALUES (995, 'PQ. BARCELONETA', 286, 0);
+INSERT INTO `parroquias` VALUES (996, 'PQ. SANTA BARBARA', 286, 0);
+INSERT INTO `parroquias` VALUES (997, 'CM. SANTA ELENA DE UAIREN', 287, 0);
+INSERT INTO `parroquias` VALUES (998, 'PQ. IKABARU', 287, 0);
+INSERT INTO `parroquias` VALUES (999, 'PQ. BEJUMA', 288, 0);
+INSERT INTO `parroquias` VALUES (1000, 'PQ. CANOABO', 288, 0);
+INSERT INTO `parroquias` VALUES (1001, 'PQ. SIMON BOLIVAR', 288, 0);
+INSERT INTO `parroquias` VALUES (1002, 'PQ. MIRANDA', 289, 0);
+INSERT INTO `parroquias` VALUES (1003, 'PQ. U LOS GUAYOS', 290, 0);
+INSERT INTO `parroquias` VALUES (1004, 'PQ. NAGUANAGUA', 291, 0);
+INSERT INTO `parroquias` VALUES (1005, 'PQ. URB SAN DIEGO', 292, 0);
+INSERT INTO `parroquias` VALUES (1006, 'PQ. U TOCUYITO', 293, 0);
+INSERT INTO `parroquias` VALUES (1007, 'PQ. U INDEPENDENCIA', 293, 0);
+INSERT INTO `parroquias` VALUES (1008, 'PQ. GUIGUE', 294, 0);
+INSERT INTO `parroquias` VALUES (1009, 'PQ. BELEN', 294, 0);
+INSERT INTO `parroquias` VALUES (1010, 'PQ. TACARIGUA', 294, 0);
+INSERT INTO `parroquias` VALUES (1011, 'PQ. MARIARA', 295, 0);
+INSERT INTO `parroquias` VALUES (1012, 'PQ. AGUAS CALIENTES', 295, 0);
+INSERT INTO `parroquias` VALUES (1013, 'PQ. GUACARA', 296, 0);
+INSERT INTO `parroquias` VALUES (1014, 'PQ. CIUDAD ALIANZA', 296, 0);
+INSERT INTO `parroquias` VALUES (1015, 'PQ. YAGUA', 296, 0);
+INSERT INTO `parroquias` VALUES (1016, 'PQ. MONTALBAN', 297, 0);
+INSERT INTO `parroquias` VALUES (1017, 'PQ. MORON', 298, 0);
+INSERT INTO `parroquias` VALUES (1018, 'PQ. URAMA', 298, 0);
+INSERT INTO `parroquias` VALUES (1019, 'PQ. DEMOCRACIA', 299, 0);
+INSERT INTO `parroquias` VALUES (1020, 'PQ. FRATERNIDAD', 299, 0);
+INSERT INTO `parroquias` VALUES (1021, 'PQ. GOAIGOAZA', 299, 0);
+INSERT INTO `parroquias` VALUES (1022, 'PQ. JUAN JOSE FLORES', 299, 0);
+INSERT INTO `parroquias` VALUES (1023, 'PQ. BARTOLOME SALOM', 299, 0);
+INSERT INTO `parroquias` VALUES (1024, 'PQ. UNION', 299, 0);
+INSERT INTO `parroquias` VALUES (1025, 'PQ. BORBURATA', 299, 0);
+INSERT INTO `parroquias` VALUES (1026, 'PQ. PATANEMO', 299, 0);
+INSERT INTO `parroquias` VALUES (1027, 'PQ. SAN JOAQUIN', 300, 0);
+INSERT INTO `parroquias` VALUES (1028, 'PQ. CANDELARIA', 301, 0);
+INSERT INTO `parroquias` VALUES (1029, 'PQ. CATEDRAL', 301, 0);
+INSERT INTO `parroquias` VALUES (1030, 'PQ. EL SOCORRO', 301, 0);
+INSERT INTO `parroquias` VALUES (1031, 'PQ. MIGUEL PE#A', 301, 0);
+INSERT INTO `parroquias` VALUES (1032, 'PQ. SAN BLAS', 301, 0);
+INSERT INTO `parroquias` VALUES (1033, 'PQ. SAN JOSE', 301, 0);
+INSERT INTO `parroquias` VALUES (1034, 'PQ. SANTA ROSA', 301, 0);
+INSERT INTO `parroquias` VALUES (1035, 'PQ. RAFAEL URDANETA', 301, 0);
+INSERT INTO `parroquias` VALUES (1036, 'PQ. NEGRO PRIMERO', 301, 0);
+INSERT INTO `parroquias` VALUES (1037, 'PQ. COJEDES', 302, 0);
+INSERT INTO `parroquias` VALUES (1038, 'PQ. JUAN DE MATA SUAREZ', 302, 0);
+INSERT INTO `parroquias` VALUES (1039, 'PQ. TINAQUILLO', 303, 0);
+INSERT INTO `parroquias` VALUES (1040, 'PQ. EL BAUL', 304, 0);
+INSERT INTO `parroquias` VALUES (1041, 'PQ. SUCRE', 304, 0);
+INSERT INTO `parroquias` VALUES (1042, 'PQ. EL PAO', 305, 0);
+INSERT INTO `parroquias` VALUES (1043, 'PQ. LIBERTAD DE COJEDES', 306, 0);
+INSERT INTO `parroquias` VALUES (1044, 'PQ. EL AMPARO', 306, 0);
+INSERT INTO `parroquias` VALUES (1045, 'PQ. SAN CARLOS DE AUSTRIA', 307, 0);
+INSERT INTO `parroquias` VALUES (1046, 'PQ. JUAN ANGEL BRAVO', 307, 0);
+INSERT INTO `parroquias` VALUES (1047, 'PQ. MANUEL MANRIQUE', 307, 0);
+INSERT INTO `parroquias` VALUES (1048, 'PQ. GRL/JEFE JOSE L SILVA', 308, 0);
+INSERT INTO `parroquias` VALUES (1049, 'PQ. MACAPO', 309, 0);
+INSERT INTO `parroquias` VALUES (1050, 'PQ. LA AGUADITA', 309, 0);
+INSERT INTO `parroquias` VALUES (1051, 'PQ. ROMULO GALLEGOS', 310, 0);
+INSERT INTO `parroquias` VALUES (1052, 'PQ. SAN JUAN DE LOS CAYOS', 311, 0);
+INSERT INTO `parroquias` VALUES (1053, 'PQ. CAPADARE', 311, 0);
+INSERT INTO `parroquias` VALUES (1054, 'PQ. LA PASTORA', 311, 0);
+INSERT INTO `parroquias` VALUES (1055, 'PQ. LIBERTADOR', 311, 0);
+INSERT INTO `parroquias` VALUES (1056, 'PQ. SAN ANTONIO', 312, 0);
+INSERT INTO `parroquias` VALUES (1057, 'PQ. SAN GABRIEL', 312, 0);
+INSERT INTO `parroquias` VALUES (1058, 'PQ. SANTA ANA', 312, 0);
+INSERT INTO `parroquias` VALUES (1059, 'PQ. GUZMAN GUILLERMO', 312, 0);
+INSERT INTO `parroquias` VALUES (1060, 'PQ. MITARE', 312, 0);
+INSERT INTO `parroquias` VALUES (1061, 'PQ. SABANETA', 312, 0);
+INSERT INTO `parroquias` VALUES (1062, 'PQ. RIO SECO', 312, 0);
+INSERT INTO `parroquias` VALUES (1063, 'PQ. CABURE', 313, 0);
+INSERT INTO `parroquias` VALUES (1064, 'PQ. CURIMAGUA', 313, 0);
+INSERT INTO `parroquias` VALUES (1065, 'PQ. COLINA', 313, 0);
+INSERT INTO `parroquias` VALUES (1066, 'PQ. TUCACAS', 314, 0);
+INSERT INTO `parroquias` VALUES (1067, 'PQ. BOCA DE AROA', 314, 0);
+INSERT INTO `parroquias` VALUES (1068, 'PQ. PUERTO CUMAREBO', 315, 0);
+INSERT INTO `parroquias` VALUES (1069, 'PQ. LA CIENAGA', 315, 0);
+INSERT INTO `parroquias` VALUES (1070, 'PQ. LA SOLEDAD', 315, 0);
+INSERT INTO `parroquias` VALUES (1071, 'PQ. PUEBLO CUMAREBO', 315, 0);
+INSERT INTO `parroquias` VALUES (1072, 'PQ. ZAZARIDA', 315, 0);
+INSERT INTO `parroquias` VALUES (1073, 'CM. DABAJURO', 316, 0);
+INSERT INTO `parroquias` VALUES (1074, 'PQ. CHICHIRIVICHE', 317, 0);
+INSERT INTO `parroquias` VALUES (1075, 'PQ. BOCA DE TOCUYO', 317, 0);
+INSERT INTO `parroquias` VALUES (1076, 'PQ. TOCUYO DE LA COSTA', 317, 0);
+INSERT INTO `parroquias` VALUES (1077, 'PQ. LOS TAQUES', 318, 0);
+INSERT INTO `parroquias` VALUES (1078, 'PQ. JUDIBANA', 318, 0);
+INSERT INTO `parroquias` VALUES (1079, 'PQ. PIRITU', 319, 0);
+INSERT INTO `parroquias` VALUES (1080, 'PQ. SAN JOSE DE LA COSTA', 319, 0);
+INSERT INTO `parroquias` VALUES (1081, 'PQ. STA.CRUZ DE BUCARAL', 320, 0);
+INSERT INTO `parroquias` VALUES (1082, 'PQ. EL CHARAL', 320, 0);
+INSERT INTO `parroquias` VALUES (1083, 'PQ. LAS VEGAS DEL TUY', 320, 0);
+INSERT INTO `parroquias` VALUES (1084, 'CM. MIRIMIRE', 321, 0);
+INSERT INTO `parroquias` VALUES (1085, 'PQ. SAN LUIS', 322, 0);
+INSERT INTO `parroquias` VALUES (1086, 'PQ. ARACUA', 322, 0);
+INSERT INTO `parroquias` VALUES (1087, 'PQ. LA PE#A', 322, 0);
+INSERT INTO `parroquias` VALUES (1088, 'PQ. JACURA', 323, 0);
+INSERT INTO `parroquias` VALUES (1089, 'PQ. AGUA LINDA', 323, 0);
+INSERT INTO `parroquias` VALUES (1090, 'PQ. ARAURIMA', 323, 0);
+INSERT INTO `parroquias` VALUES (1091, 'CM. YARACAL', 324, 0);
+INSERT INTO `parroquias` VALUES (1092, 'CM. PALMA SOLA', 325, 0);
+INSERT INTO `parroquias` VALUES (1093, 'PQ. SUCRE', 326, 0);
+INSERT INTO `parroquias` VALUES (1094, 'PQ. PECAYA', 326, 0);
+INSERT INTO `parroquias` VALUES (1095, 'PQ. URUMACO', 327, 0);
+INSERT INTO `parroquias` VALUES (1096, 'PQ. BRUZUAL', 327, 0);
+INSERT INTO `parroquias` VALUES (1097, 'CM. TOCOPERO', 328, 0);
+INSERT INTO `parroquias` VALUES (1098, 'PQ. CAPATARIDA', 329, 0);
+INSERT INTO `parroquias` VALUES (1099, 'PQ. BOROJO', 329, 0);
+INSERT INTO `parroquias` VALUES (1100, 'PQ. SEQUE', 329, 0);
+INSERT INTO `parroquias` VALUES (1101, 'PQ. ZAZARIDA', 329, 0);
+INSERT INTO `parroquias` VALUES (1102, 'PQ. BARIRO', 329, 0);
+INSERT INTO `parroquias` VALUES (1103, 'PQ. GUAJIRO', 329, 0);
+INSERT INTO `parroquias` VALUES (1104, 'PQ. NORTE', 330, 0);
+INSERT INTO `parroquias` VALUES (1105, 'PQ. CARIRUBANA', 330, 0);
+INSERT INTO `parroquias` VALUES (1106, 'PQ. PUNTA CARDON', 330, 0);
+INSERT INTO `parroquias` VALUES (1107, 'PQ. SANTA ANA', 330, 0);
+INSERT INTO `parroquias` VALUES (1108, 'PQ. LA VELA DE CORO', 331, 0);
+INSERT INTO `parroquias` VALUES (1109, 'PQ. ACURIGUA', 331, 0);
+INSERT INTO `parroquias` VALUES (1110, 'PQ. GUAIBACOA', 331, 0);
+INSERT INTO `parroquias` VALUES (1111, 'PQ. MACORUCA', 331, 0);
+INSERT INTO `parroquias` VALUES (1112, 'PQ. LAS CALDERAS', 331, 0);
+INSERT INTO `parroquias` VALUES (1113, 'PQ. PEDREGAL', 332, 0);
+INSERT INTO `parroquias` VALUES (1114, 'PQ. AGUA CLARA', 332, 0);
+INSERT INTO `parroquias` VALUES (1115, 'PQ. AVARIA', 332, 0);
+INSERT INTO `parroquias` VALUES (1116, 'PQ. PIEDRA GRANDE', 332, 0);
+INSERT INTO `parroquias` VALUES (1117, 'PQ. PURURECHE', 332, 0);
+INSERT INTO `parroquias` VALUES (1118, 'PQ. PUEBLO NUEVO', 333, 0);
+INSERT INTO `parroquias` VALUES (1119, 'PQ. ADICORA', 333, 0);
+INSERT INTO `parroquias` VALUES (1120, 'PQ. BARAIVED', 333, 0);
+INSERT INTO `parroquias` VALUES (1121, 'PQ. BUENA VISTA', 333, 0);
+INSERT INTO `parroquias` VALUES (1122, 'PQ. JADACAQUIVA', 333, 0);
+INSERT INTO `parroquias` VALUES (1123, 'PQ. MORUY', 333, 0);
+INSERT INTO `parroquias` VALUES (1124, 'PQ. EL VINCULO', 333, 0);
+INSERT INTO `parroquias` VALUES (1125, 'PQ. EL HATO', 333, 0);
+INSERT INTO `parroquias` VALUES (1126, 'PQ. ADAURE', 333, 0);
+INSERT INTO `parroquias` VALUES (1127, 'PQ. CHURUGUARA', 334, 0);
+INSERT INTO `parroquias` VALUES (1128, 'PQ. AGUA LARGA', 334, 0);
+INSERT INTO `parroquias` VALUES (1129, 'PQ. INDEPENDENCIA', 334, 0);
+INSERT INTO `parroquias` VALUES (1130, 'PQ. MAPARARI', 334, 0);
+INSERT INTO `parroquias` VALUES (1131, 'PQ. EL PAUJI', 334, 0);
+INSERT INTO `parroquias` VALUES (1132, 'PQ. MENE DE MAUROA', 335, 0);
+INSERT INTO `parroquias` VALUES (1133, 'PQ. CASIGUA', 335, 0);
+INSERT INTO `parroquias` VALUES (1134, 'PQ. SAN FELIX', 335, 0);
+
+-- ----------------------------
+-- Table structure for password_reset_tokens
+-- ----------------------------
+DROP TABLE IF EXISTS `password_reset_tokens`;
+CREATE TABLE `password_reset_tokens`  (
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`email`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of password_reset_tokens
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for password_resets
+-- ----------------------------
+DROP TABLE IF EXISTS `password_resets`;
+CREATE TABLE `password_resets`  (
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  INDEX `password_resets_email_index`(`email` ASC) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of password_resets
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for personal_access_tokens
+-- ----------------------------
+DROP TABLE IF EXISTS `personal_access_tokens`;
+CREATE TABLE `personal_access_tokens`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `personal_access_tokens_token_unique`(`token` ASC) USING BTREE,
+  INDEX `personal_access_tokens_tokenable_type_tokenable_id_index`(`tokenable_type` ASC, `tokenable_id` ASC) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of personal_access_tokens
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for users
+-- ----------------------------
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `users_email_unique`(`email` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+INSERT INTO `users` VALUES (1, 'Luis Gomez', 'admin@mail.com', NULL, '$2y$12$pNdXa6/Xo5KI6qUN7w9YEO5uQKEhQd9l55Jaf.ZxClYQcTn7l1uE.', NULL, '2025-03-24 15:11:22', '2025-03-26 16:37:29', 'Administrador');
+INSERT INTO `users` VALUES (2, 'Marianny Ávila', 'marianny@mail.com', NULL, '$2y$12$GzXwguuTSD31AP5OCOdlwOM2BVZhFjUEiYo0cV2zgMpKgD9F3KAFO', NULL, '2025-03-26 16:40:09', '2025-03-26 16:40:09', 'Usuario');
+
+SET FOREIGN_KEY_CHECKS = 1;

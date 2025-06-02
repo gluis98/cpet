@@ -14,6 +14,7 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <link rel="stylesheet" href="{{asset('vendor/bootstrap-4.1/bootstrap.min.css')}}">
+    <link rel="shortcut icon" href="{{ asset("images/icon/logo.png")}}" type="image/x-icon">
     
 </head>
 <body class="bg-primary bg-gradient">
@@ -26,7 +27,15 @@
                             <div class="card-header text-center font-weight-bold">Autenticación</div>
 
                             <div class="card-body">
-                                @yield('content')
+                                <div class="row">
+                                    <div class="col-md-6 border-right">
+                                        @yield('content')
+                                    </div>
+                                    <div class="col-md-6 text-center justify-content-center align-self-center">
+                                        <img src="{{asset('images/icon/logo.png')}}" alt="Logo" class="img-fluid" style="object-fit: contain">
+                                        <h4>Cuerpo de Policias del Estado Trujillo</h4>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

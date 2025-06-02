@@ -47,7 +47,7 @@
                     <img src="{{ asset("images/icon/logo.png") }}" alt="Cool Admin"  width="50" height="50" />
                 </a>
                 <span class="h4 ml-4">
-                    CPET
+                    J.A.A
                 </span>
             </div>
             <div class="menu-sidebar2__content js-scrollbar1">

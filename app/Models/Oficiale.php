@@ -29,6 +29,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $estatus
  * @property string|null $numero_placa
  * @property int|null $parroquia_id
+ * @property string|null $fotografia
+ * @property string|null $centro_votacion
+ * @property string|null $direccion_centro
  * 
  * @property Parroquia|null $parroquia
  * @property Collection|OficialesAcademico[] $oficiales_academicos
@@ -71,7 +74,10 @@ class Oficiale extends Model
 		'correo_electronico',
 		'estatus',
 		'numero_placa',
-		'parroquia_id'
+		'parroquia_id',
+		'fotografia',
+		'centro_votacion',
+		'direccion_centro'
 	];
 
 	public function parroquia()

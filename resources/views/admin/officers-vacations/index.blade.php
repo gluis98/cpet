@@ -127,6 +127,12 @@
         var id = "";
         index(); 
 
+        // Run the function on page load
+        toggleCheckbox();
+
+        // Run the function whenever the select value changes
+        $('#estatus').on('change', toggleCheckbox);
+
         $('#btn-add').click(function(e){
             e.preventDefault();
             $('#form-edit').attr('id', 'form-add');
@@ -190,13 +196,14 @@
                 $('#fecha_reintegro').val(data.fecha_reintegro.substr(0,4) + '-' + data.fecha_reintegro.substr(5,2) + '-' + data.fecha_reintegro.substr(8,2));
                 $('#descripcion').val(data.descripcion);
 
+                $('#is_disfrutadas').prop('checked', data.is_disfrutadas == 1);
                 $('#estatus option').each(function() {
                     if($(this).val() == data.estatus){
                         $(this).attr('selected', 'selected');
+                        $('#estatus').trigger('change');
                     }
                 });
 
-                $('#is_disfrutadas').prop('checked', data.is_disfrutadas == 1);
                 
 
                 $('#form-add').attr('id', 'form-edit');
@@ -342,6 +349,7 @@
                         <td class="text-center">${(e.is_disfrutadas) ? "Disfrutadas" : 'Sin disfrutar'}</td>
                         <td class="text-center">${e.estatus}</td>
                         <td class="text-right">
+                            <a href="../../reports/vacation/${e.id}" target="_blank" class="btn btn-dark"><i class="fas fa-print"></i></a>
                             <button class="btn btn-dark edit" data-id="${e.id}"><i class="far fa-edit"></i></button>
                             <button class="btn btn-danger delete" data-id="${e.id}"><i class="far fa-trash-alt"></i></button>
                         </td>
@@ -357,7 +365,14 @@
             });
         }
 
-        
+        function toggleCheckbox() {
+            const status = $('#estatus').val();
+            if (status === 'APROBADAS') {
+                $('#is_disfrutadas').prop('disabled', false);
+            } else {
+                $('#is_disfrutadas').prop('disabled', true).prop('checked', false); // Disable and uncheck
+            }
+        }
     });
 </script>
 @endsection

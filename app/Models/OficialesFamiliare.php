@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $fecha_nacimiento
  * @property string|null $telefono
  * @property string|null $direccion
+ * @property string|null $sexo
+ * @property int|null $edad
  * 
  * @property Oficiale|null $oficiale
  * @property Collection|OficialesFamiliaresDocumento[] $oficiales_familiares_documentos
@@ -33,7 +35,8 @@ class OficialesFamiliare extends Model
 
 	protected $casts = [
 		'id_policia' => 'int',
-		'fecha_nacimiento' => 'datetime'
+		'fecha_nacimiento' => 'datetime',
+		'edad' => 'int'
 	];
 
 	protected $fillable = [
@@ -42,7 +45,9 @@ class OficialesFamiliare extends Model
 		'parentesco',
 		'fecha_nacimiento',
 		'telefono',
-		'direccion'
+		'direccion',
+		'sexo',
+		'edad'
 	];
 
 	public function oficiale()
