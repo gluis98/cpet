@@ -320,7 +320,7 @@
                 
                     data.forEach(e => {
                         template += `
-                        <div class="row border p-3">
+                        <div class="row border p-3 mb-4 shadow">
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-6 h4"><span class="font-weight-bold">${e.titulo}</span> - ${e.tipo_formacion} 
@@ -341,7 +341,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <p class="text-justify">
-                                            ${e.descripcion}
+                                            ${((e.descripcion) ? e.descripcion : 'Sin descripción')}
                                         </p>
                                     </div>
                                 </div>
