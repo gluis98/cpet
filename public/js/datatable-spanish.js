@@ -7,18 +7,101 @@ const t = {
         dom: "<'row' <'col-md-12 text-center'B>>" +
                 "<'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12 text-right'f>>" +
                 "r<'table-scrollable't>" +
-                "<'row mt-3'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12 text-right'p>>",
+                "<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
         "buttons": [
-                    { extend: 'excelHtml5', title: "Excel", titleAttr: 'Exportar a Excel', text: '<i class= "fa fa-file-excel" aria-hidden="true"></i> Exportar a Excel', className: 'btn btn-dark', exportOptions: { columns: ':not(.actions)' }},
-                    { extend: 'pdfHtml5', title: "PDF", titleAttr: 'Exportar a PDF', text: '<i class= "fa fa-file-pdf" aria-hidden="true"></i> Exportar a PDF', className: 'btn btn-dark', exportOptions: { columns: ':not(.actions)' }, customize: function (doc) { 
-                        doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-                        doc.content[1].table.body.forEach(function(row) {
-                            row.forEach(function(cell) {
-                                cell.alignment = 'center';
-                            });
-                        });
-                    }}
-                ],
+        { 
+            extend: 'excelHtml5', 
+            title: title + " " + new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
+            titleAttr: 'Exportar a Excel', 
+            text: '<i class="fa fa-file-excel" aria-hidden="true"></i> Exportar a Excel', 
+            className: 'btn btn-dark', 
+            exportOptions: { columns: ':not(.actions)' }
+        },
+        {
+            extend: 'pdfHtml5',
+            title: title + " " + new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
+            titleAttr: 'Exportar a PDF',
+            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i> Exportar a PDF',
+            className: 'btn btn-dark',
+            exportOptions: { 
+                columns: ':not(.actions)'
+            },
+            orientation: 'landscape',
+            pageSize: 'A4',
+            customize: function(doc) {
+                doc.pageMargins = [20, 40, 20, 20];
+        
+                doc.content[1].table.widths = Array(doc.content[1].table.body[0].length).fill('*');
+                doc.content[1].layout = {
+                    hLineWidth: function(i, node) { return 0.5; },
+                    vLineWidth: function(i, node) { return 0.5; },
+                    hLineColor: function(i, node) { return 'gray'; },
+                    vLineColor: function(i, node) { return 'gray'; },
+                    paddingLeft: function(i, node) { return 8; },
+                    paddingRight: function(i, node) { return 8; },
+                    paddingTop: function(i, node) { return 5; },
+                    paddingBottom: function(i, node) { return 5; }
+                };
+        
+                doc.styles = {
+                    table: {
+                        width: '100%',
+                        margin: [0, 10, 0, 10]
+                    },
+                    tableHeader: {
+                        bold: true,
+                        fontSize: 11,
+                        color: 'black',
+                        fillColor: '#eeeeee',
+                        alignment: 'center'
+                    },
+                    tableBody: {
+                        fontSize: 10,
+                        alignment: 'center'
+                    }
+                };
+        
+                doc.defaultStyle = {
+                    alignment: 'center',
+                    fontSize: 10
+                };
+        
+                // Ajustar imágenes: 80% izquierda (641 puntos), 20% derecha (160 puntos)
+                doc.content.splice(0, 0, {
+                    stack: [
+                        {
+                            columns: [
+                                {
+                                    image: window.leftImageBase64,
+                                    width: 70, // 80% del ancho disponible
+                                    height: 70,
+                                    alignment: 'left'
+                                },
+                                {
+                                    text: [
+                                        { text: 'Cuerpo de Policia del Estado Trujillo', fontSize: 18, bold: true },
+                                        '\n'
+                                    ],
+                                    alignment: 'left',
+                                }
+                            ],
+                            margin: [0, 0, 0, 10]
+                        }
+                    ]
+                });
+        
+                // Encabezado debajo de las imágenes
+                doc.content.splice(1, 0, {
+                    text: [
+                        { text: 'Reporte de ' + title, fontSize: 18, bold: true },
+                        '\n'
+                    ],
+                    alignment: 'center',
+                    margin: [0, 10, 0, 20]
+                });
+            }
+        }
+    ],
         "language": {
               "processing": "Procesando...",
               "lengthMenu": "Mostrar _MENU_ registros",

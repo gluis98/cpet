@@ -41,7 +41,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label" for="tipo_sangre">Tipo de sangre *</label>
-                                <select class="form-control" id="tipo_sangre" name="tipo_sangre" required>
+                                <select class="form-control" id="tipo_sangre" name="tipo_sangre">
                                     <option value>--- SELECCIONE UN TIPO DE SANGRE ---</option>
                                     <option disabled class="text-secondary font-weight-bold">GRUPO A</option>
                                     <option value="A+">A+</option>
@@ -96,8 +96,12 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Estatus *</label>
                                 <select class="form-control" id="estatus" required>
-                                    <option value="Activo">Activo</option>
-                                    <option value="Inactivo">Inactivo</option>
+                                    <option value="Operativo">Operativo</option>
+                                    <option value="No Operativo">No Operativo</option>
+                                    <option value="Retirado">Retirado</option>
+                                    <option value="Suspendido">Suspendido</option>
+                                    <option value="Jubilado">Jubilado</option>
+                                    <option value="Fallecido">Fallecido</option>
                                 </select>
                             </div>
                         </div>
@@ -112,15 +116,15 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label" for="talla_camisa">Talla de camisa *</label>
-                                <input type="text" class="form-control" id="talla_camisa" name="talla_camisa" required placeholder="Ingrese la talla de camisa">
+                                <input type="text" class="form-control" id="talla_camisa" name="talla_camisa" placeholder="Ingrese la talla de camisa">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label" for="talla_pantalon">Talla de pantalón *</label>
-                                <input type="text" class="form-control" id="talla_pantalon" name="talla_pantalon" required placeholder="Ingrese la talla de pantalón">
+                                <input type="text" class="form-control" id="talla_pantalon" name="talla_pantalon" placeholder="Ingrese la talla de pantalón">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label" for="talla_zapatos">Talla de zapatos *</label>
-                                <input type="text" class="form-control" id="talla_zapatos" name="talla_zapatos" required placeholder="Ingrese la talla de zapato">
+                                <input type="text" class="form-control" id="talla_zapatos" name="talla_zapatos" placeholder="Ingrese la talla de zapato">
                             </div>
                         </div>
                     </div>
@@ -134,16 +138,29 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" for="telefono">Teléfono *</label>
-                                <input type="text" class="form-control" id="telefono" name="telefono" required placeholder="Ejemplo: +58 412 1234567">
+                                <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ejemplo: +58 412 1234567">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" for="correo_electronico">Correo Electrónico *</label>
-                                <input type="email" class="form-control" id="correo_electronico" name="correo_electronico" required placeholder="Ingrese el correo electrónico">
+                                <input type="email" class="form-control" id="correo_electronico" name="correo_electronico" placeholder="Ingrese el correo electrónico">
                             </div>
                         </div>
                     </div>
                 </div>
                 
+                <div class="card">
+                    <div class="card-header">
+                        Fotografía
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label" for="fotografia">Seleccione una fotografía para el oficial</label>
+                                <input type="file" class="form-control" id="fotografia" name="fotografia">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <hr>
                 <div class="container-fluid d-grid gap-2 text-right">
@@ -210,10 +227,10 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="text-center" scope="col">Cédula de identidad</th>
-                    <th class="text-center" scope="col">Nombre completo</th>
+                    <th class="text-center" scope="col">N° Credencial</th>
+                    <th class="text-center" scope="col">N° de Cédula</th>
+                    <th class="text-center" scope="col">Nombre y apellido</th>
                     <th class="text-center" scope="col">Teléfono</th>
-                    <th class="text-center" scope="col">Número de placa</th>
                     <th class="text-center" scope="col">Fecha de ingreso</th>
                     <th class="text-center" scope="col">Estatus</th>
                     <th classs="actions" scope="col"></th>
@@ -506,10 +523,10 @@
                 data.forEach(e => {
                     template += `
                     <tr>
+                        <td class="text-center">${(e.numero_placa ? e.numero_placa : 'S/NC')}</td>
                         <td class="text-center">${e.documento_identidad}</td>
                         <td class="text-center">${e.nombre_completo}</td>
                         <td class="text-center">${(e.telefono) ? e.telefono : 'S/T'}</td>
-                        <td class="text-center">${(e.numero_placa ? e.numero_placa : 'S/NC')}</td>
                         <td class="text-center">${(e.fecha_ingreso) ? e.fecha_ingreso.substr(0,4) + '-' + e.fecha_ingreso.substr(5,2) + '-' + e.fecha_ingreso.substr(8,2) : 'S/F'}</td>
                         <td class="text-center">${e.estatus.toUpperCase()}</td>
                         <td class="text-right actions">

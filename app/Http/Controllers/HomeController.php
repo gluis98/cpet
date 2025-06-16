@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    public $leftImagePath;
+    public $rightImagePath;
     /**
      * Create a new controller instance.
      *
@@ -14,7 +16,9 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-    }
+        $this->leftImagePath = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/icon/logo.png')));
+        // $this->rightImagePath = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('')));
+    }   
 
     /**
      * Show the application dashboard.
@@ -36,7 +40,7 @@ class HomeController extends Controller
     public function officers()
     {
         $title = "Oficiales";
-        return view('admin.officers.index', compact('title'));
+        return view('admin.officers.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath]);
     }
 
     public function officers_academy($id)

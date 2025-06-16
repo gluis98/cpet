@@ -416,7 +416,6 @@
     <script src="{{asset("js/main.js")}}"></script>
     <script src="{{asset("js/sweetalert2@11.js") }}"></script>
     <script src="{{asset("js/dataTables.js") }}"></script>
-    <script src="{{asset("js/datatable-spanish.js") }}"></script>
     <script src="{{asset("js/dataTables.bootstrap4.js") }}"></script>
     <script src="{{asset("js/dataTables.responsive.js") }}"></script>
     <script src="{{asset("vendor/datatables-buttons/js/dataTables.buttons.min.js") }}"></script>
@@ -426,6 +425,12 @@
     <script src="{{asset("vendor/datatables-buttons/js/buttons.html5.min.js") }}"></script>
     <script src="{{asset("vendor/datatables-buttons/js/buttons.print.min.js") }}"></script>
     <script src="{{asset("vendor/datatables-buttons/js/buttons.colVis.min.js") }}"></script>
+    <script>
+        var title = "{!! $title !!}";
+        window.leftImageBase64 = "{!! $leftImagePath !!}";
+        
+        </script>
+        <script src="{{asset("js/datatable-spanish.js") }}"></script>
     @yield('scripts')
 </body>
 

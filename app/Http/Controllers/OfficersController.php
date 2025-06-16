@@ -20,6 +20,15 @@ class OfficersController extends Controller
      */
     public function store(Request $request) {
         $oficiales = Oficiale::create($request->all());
+
+        if($request->hasFile('fotografia')) {
+            $file = $request->file('fotografia');
+            $filePath = $file->store('fotografias/'.$oficiales->id, 'public'); // Carpeta "logos" en "storage/app/public"
+
+            // Actualizar el campo "logo" con la ruta del archivo
+            $oficiales->update(['fotografia' => $filePath]);
+        }
+
         return response()->json(['msj' => "Registro realizado con éxito."], 201);
     }
 
@@ -36,6 +45,13 @@ class OfficersController extends Controller
      public function update(Request $request, $id) {
         $oficiales = Oficiale::findOrFail($id);
         $oficiales->update($request->all());
+        if($request->hasFile('fotografia')) {
+            $file = $request->file('fotografia');
+            $filePath = $file->store('fotografias/'.$oficiales->id, 'public'); // Carpeta "logos" en "storage/app/public"
+
+            // Actualizar el campo "logo" con la ruta del archivo
+            $oficiales->update(['fotografia' => $filePath]);
+        }
         return response()->json(['msj' => "Registro actualizado con éxito."], 200);
     }
 
