@@ -47,48 +47,48 @@ class HomeController extends Controller
     {
         $o = \App\Models\Oficiale::find($id);
         $title = "Oficial: " . $o->nombre_completo . " - Datos académicos";
-        return view('admin.officers-academy.index', compact('title', 'id'));
+        return view('admin.officers-academy.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_position($id)
     {
         $o = \App\Models\Oficiale::find($id);
         $title = "Oficial: " . $o->nombre_completo . " - Cargos alcanzados";
-        return view('admin.officers-position.index', compact('title', 'id'));
+        return view('admin.officers-position.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_familly($id)
     {
         $o = \App\Models\Oficiale::find($id);
         $title = "Oficial: " . $o->nombre_completo . " - Familiares";
-        return view('admin.officers-family.index', compact('title', 'id'));
+        return view('admin.officers-family.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_vacations($id)
     {
         $o = \App\Models\Oficiale::find($id);
         $title = "Oficial: " . $o->nombre_completo . " - Vacaciones - Años de servicio: " . (now()->year - $o->fecha_ingreso->year);
-        return view('admin.officers-vacations.index', compact('title', 'id'));
+        return view('admin.officers-vacations.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_courses($id)
     {
         $o = \App\Models\Oficiale::find($id);
         $title = "Oficial: " . $o->nombre_completo . " - Cursos y diplomados";
-        return view('admin.officers-courses.index', compact('title', 'id'));
+        return view('admin.officers-courses.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_awards($id)
     {
         $o = \App\Models\Oficiale::find($id);
         $title = "Oficial: " . $o->nombre_completo . " - Reconocimientos";
-        return view('admin.officers-awards.index', compact('title', 'id'));
+        return view('admin.officers-awards.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_armament($id)
     {
         $o = \App\Models\Oficiale::find($id);
         $title = "Oficial: " . $o->nombre_completo . " - Armamento";
-        return view('admin.officers-armament.index', compact('title', 'id'));
+        return view('admin.officers-armament.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 }
