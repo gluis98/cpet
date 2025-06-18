@@ -200,7 +200,11 @@
                     }
                 });
 
-                
+                if(!{{ auth()->user()->role == 'Administrador' ? 'true' : 'false' }}){
+                    $('#role').attr('disabled', 'disabled');
+                }else{
+                    $('#role').removeAttr('disabled');
+                }
 
                 $('#form-add').attr('id', 'form-edit');
                 $('#btn-submit').attr('class', 'btn btn-dark btn-lg');
