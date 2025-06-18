@@ -28,13 +28,13 @@ class HomeController extends Controller
     public function index()
     {
         $title = "Inicio";
-        return view('home', compact('title'));
+        return view('home', ['title' => $title, 'leftImagePath' => $this->leftImagePath]);
     }
 
     public function users()
     {
         $title = "Usuarios";
-        return view('admin.users.index', compact('title'));
+        return view('admin.users.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath]);
     }
 
     public function officers()
