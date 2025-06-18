@@ -15,13 +15,13 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property string|null $documento_identidad
- * @property string $nombre_completo
- * @property Carbon $fecha_nacimiento
- * @property string $tipo_sangre
+ * @property string|null $nombre_completo
+ * @property Carbon|null $fecha_nacimiento
+ * @property string|null $tipo_sangre
  * @property string|null $talla_camisa
- * @property string $talla_pantalon
+ * @property string|null $talla_pantalon
  * @property string|null $talla_zapatos
- * @property Carbon $fecha_ingreso
+ * @property Carbon|null $fecha_ingreso
  * @property string|null $estado_civil
  * @property string|null $direccion
  * @property string|null $telefono
@@ -96,10 +96,9 @@ class Oficiale extends Model
 					->withPivot('id', 'descripcion', 'estado', 'fecha_asignacion');
 	}
 
-	public function cargos()
+	public function oficiales_cargos()
 	{
-		return $this->belongsToMany(Cargo::class, 'oficiales_cargos', 'id_policia', 'id_cargo')
-					->withPivot('id', 'fecha_inicio', 'fecha_fin', 'is_actual');
+		return $this->hasMany(OficialesCargo::class, 'id_policia');
 	}
 
 	public function oficiales_cursos()

@@ -11,7 +11,7 @@ class OfficersController extends Controller
      * Display a listing of the resource.
      */
     public function index() {
-        return response()->json(Oficiale::all(), 200);
+        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo')->get(), 200);
     }
 
 

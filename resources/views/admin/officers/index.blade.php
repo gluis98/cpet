@@ -232,6 +232,7 @@
                     <th class="text-center" scope="col">Nombre y apellido</th>
                     <th class="text-center" scope="col">Teléfono</th>
                     <th class="text-center" scope="col">Fecha de ingreso</th>
+                    <th class="text-center" scope="col">Jerarquía</th>
                     <th class="text-center" scope="col">Estatus</th>
                     <th classs="actions" scope="col"></th>
                 </tr>
@@ -519,6 +520,7 @@
             fetch('api/officers')
             .then(response => response.json())
             .then(data => {
+                console.log(data)
                 let template = '';
                 data.forEach(e => {
                     template += `
@@ -528,6 +530,7 @@
                         <td class="text-center">${e.nombre_completo}</td>
                         <td class="text-center">${(e.telefono) ? e.telefono : 'S/T'}</td>
                         <td class="text-center">${(e.fecha_ingreso) ? e.fecha_ingreso.substr(0,4) + '-' + e.fecha_ingreso.substr(5,2) + '-' + e.fecha_ingreso.substr(8,2) : 'S/F'}</td>
+                        <td class="text-center">${e.oficiales_cargos.find(c => c.is_actual === 1)?.cargo.nombre_cargo || 'N/A'}</td>
                         <td class="text-center">${e.estatus.toUpperCase()}</td>
                         <td class="text-right actions">
                             <button class="btn btn-dark edit" data-id="${e.id}"  data-toggle="tooltip" data-placement="top" title="Editar oficial"><i class="far fa-edit"></i></button>
