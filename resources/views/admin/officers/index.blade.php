@@ -2,7 +2,85 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{asset('vendor/dropzone/dropzone.min.css')}}">
+<style>
+    .ficha-container {
+            width: 100%;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            border: 2px solid #007bff;
+        }
+        .ficha-header {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .ficha-header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .ficha-photo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            object-fit: cover;
+        }
+        .ficha-body {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .section-title {
+            grid-column: span 2;
+            background: #e7f1ff;
+            color: #004085;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .data-field {
+            display: flex;
+            flex-direction: column;
+        }
+        .data-field label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        .data-field span {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 16px;
+            color: #555;
+            margin-top: 5px;
+        }
+        .full-width {
+            grid-column: span 2;
+        }
+        .ficha-footer {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid #e0e0e0;
+        }
+</style>
 @endsection
+
 
 @section('content')
 {{-- INICIO MODALES --}}
@@ -178,6 +256,108 @@
     </div>
   </div>
 
+ <!-- Modal -->
+ <div class="modal fade" id="modal-ficha" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"></h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="ficha-container">
+                <div class="ficha-header">
+                    <h2 class="text-white h1"><i class="fas fa-user-shield"></i> Ficha del Oficial</h2>
+                    <img src="" alt="Foto del oficial" class="ficha-photo bg-white" id="foto-oficial">
+                </div>
+                <div class="ficha-body">
+                    <!-- Datos Personales -->
+                    <div class="section-title"><i class="fas fa-user"></i> Datos Personales</div>
+                    <div class="data-field">
+                        <label>Cédula</label>
+                        <span id="documento_identidad_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Nombre Completo</label>
+                        <span id="nombre_completo_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Fecha de Nacimiento</label>
+                        <span id="fecha_nacimiento_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Edad</label>
+                        <span id="edad_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Tipo de Sangre</label>
+                        <span id="tipo_sangre_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Estado Civil</label>
+                        <span id="estado_civil_ficha">N/A</span>
+                    </div>
+                    <div class="data-field full-width">
+                        <label>Dirección</label>
+                        <span id="direccion_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Teléfono</label>
+                        <span id="telefono_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Correo Electrónico</label>
+                        <span id="correo_electronico_ficha">N/A</span>
+                    </div>
+                    <div class="data-field full-width">
+                        <label>Centro de Votación</label>
+                        <span id="centro_votacion_ficha">N/A</span>
+                    </div>
+                    <!-- Datos Policiales -->
+                    <div class="section-title"><i class="fas fa-shield-alt"></i> Datos Policiales</div>
+                    <div class="data-field">
+                        <label>Número de Credencial</label>
+                        <span id="numero_placa_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Fecha de Ingreso</label>
+                        <span id="fecha_ingreso_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Estatus</label>
+                        <span id="estatus_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Cargo Actual</label>
+                        <span id="cargo_actual_ficha">N/A</span>
+                    </div>
+                
+                    <!-- Datos de Vestuario -->
+                    <div class="section-title"><i class="fas fa-tshirt"></i> Datos de Vestuario</div>
+                    <div class="data-field">
+                        <label>Talla de Camisa</label>
+                        <span id="talla_camisa_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Talla de Pantalón</label>
+                        <span id="talla_pantalon_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Talla de Zapatos</label>
+                        <span id="talla_zapatos_ficha">N/A</span>
+                    </div>
+                </div>
+                <div class="ficha-footer">
+                    Generado el 18 de junio de 2025 | Sistema de Gestión Policial xAI
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+</div>
 
   <!-- Modal Estudiante-->
 <div class="modal fade" id="modal-archivos" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
@@ -346,6 +526,63 @@
                 $('#btn-submit').text('Actualizar');
                 $('#add').modal('show');
             });
+        });
+
+        $(document).on('click', '.ficha', function(e) {
+            e.preventDefault();
+            id = $(this).data('id');
+            fetch('api/officers/' + id)
+                .then(response => response.json())
+                .then(data => {
+                    // Calcular edad
+                    let edad = 'N/A';
+                    if (data.fecha_nacimiento) {
+                        const hoy = new Date();
+                        const nacimiento = new Date(data.fecha_nacimiento);
+                        edad = hoy.getFullYear() - nacimiento.getFullYear();
+                        const mes = hoy.getMonth() - nacimiento.getMonth();
+                        if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+                            edad--;
+                        }
+                    }
+
+                    // Obtener cargo actual
+                    const cargoActual = data.oficiales_cargos?.find(c => c.is_actual === 1)?.cargo.nombre_cargo || 'N/A';
+
+                    // Actualizar campos del modal
+                    $('#documento_identidad_ficha').text(data.documento_identidad || 'N/A');
+                    $('#nombre_completo_ficha').text(data.nombre_completo || 'N/A');
+                    $('#fecha_nacimiento_ficha').text(data.fecha_nacimiento ? new Date(data.fecha_nacimiento).toLocaleDateString('es-ES') : 'N/A');
+                    $('#edad_ficha').text(edad);
+                    $('#tipo_sangre_ficha').text(data.tipo_sangre || 'N/A');
+                    $('#estado_civil_ficha').text(data.estado_civil || 'N/A');
+                    $('#direccion_ficha').text(data.direccion || 'N/A');
+                    $('#centro_votacion_ficha').text(data.centro_votacion || 'N/A');
+                    $('#telefono_ficha').text(data.telefono || 'N/A');
+                    $('#correo_electronico_ficha').text(data.correo_electronico || 'N/A');
+                    $('#numero_placa_ficha').text(data.numero_placa || 'N/A');
+                    $('#fecha_ingreso_ficha').text(data.fecha_ingreso ? new Date(data.fecha_ingreso).toLocaleDateString('es-ES') : 'N/A');
+                    $('#estatus_ficha').text(data.estatus || 'N/A');
+                    $('#talla_camisa_ficha').text(data.talla_camisa || 'N/A');
+                    $('#talla_pantalon_ficha').text(data.talla_pantalon || 'N/A');
+                    $('#talla_zapatos_ficha').text(data.talla_zapatos || 'N/A');
+                    $('#cargo_actual_ficha').text(cargoActual);
+
+                    // Actualizar fotografía
+                    const fotoOficial = $('#foto-oficial');
+                    fotoOficial.attr('src', data.fotografia ? `storage/${data.fotografia}` : 'images/oficial-icon.png');
+
+                    // Actualizar pie de página con fecha actual
+                    $('.ficha-footer').text(`Generado el ${new Date().toLocaleDateString('es-ES')} | Sistema de Gestión Policial xAI`);
+
+                    // Mostrar el modal (Bootstrap 5)
+                    const modal = new bootstrap.Modal(document.getElementById('modal-ficha'));
+                    modal.show();
+                })
+                .catch(error => {
+                    console.error('Error al obtener los datos del oficial:', error);
+                    alert('No se pudieron cargar los datos del oficial. Por favor, intenta de nuevo.');
+                });
         });
 
         $(document).on('click','.delete', function(e){
@@ -533,6 +770,7 @@
                         <td class="text-center">${e.oficiales_cargos.find(c => c.is_actual === 1)?.cargo.nombre_cargo || 'N/A'}</td>
                         <td class="text-center">${e.estatus.toUpperCase()}</td>
                         <td class="text-right actions">
+                            <button class="btn btn-dark ficha" data-id="${e.id}"  data-toggle="tooltip" data-placement="top" title="Ver oficial"><i class="fas fa-id-card-alt"></i></button>
                             <button class="btn btn-dark edit" data-id="${e.id}"  data-toggle="tooltip" data-placement="top" title="Editar oficial"><i class="far fa-edit"></i></button>
                             <a href="officers/armament/${e.id}" class="btn btn-dark"  data-toggle="tooltip" data-placement="top" title="Armamento"><i class="fas fa-shield-alt"></i></a>
                             <a href="officers/academy/${e.id}" class="btn btn-dark"  data-toggle="tooltip" data-placement="top" title="Formación académica"><i class="fas fa-graduation-cap"></i></a>
