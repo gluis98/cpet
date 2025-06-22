@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Oficiale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class OfficersController extends Controller
 {
@@ -47,11 +48,20 @@ class OfficersController extends Controller
         $oficiales->update($request->all());
         if($request->hasFile('fotografia')) {
             $file = $request->file('fotografia');
-            $filePath = $file->store('fotografias/'.$oficiales->id, 'public'); // Carpeta "logos" en "storage/app/public"
+            // Generar la ruta y almacenar el archivo
+            $filePath = $file->store('fotografias/' . $oficiales->id, 'public');
 
-            // Actualizar el campo "logo" con la ruta del archivo
-            $oficiales->update(['fotografia' => $filePath]);
+            // Actualizar el campo fotografia con la ruta
+            $data['fotografia'] = $filePath;
+
+            // Opcional: Eliminar la fotografía antigua si existe
+            if ($oficiales->fotografia) {
+                Storage::disk('public')->delete($oficiales->fotografia);
+            }
         }
+
+        // Actualizar el registro
+        $oficiales->update($data);
         return response()->json(['msj' => "Registro actualizado con éxito."], 200);
     }
 
