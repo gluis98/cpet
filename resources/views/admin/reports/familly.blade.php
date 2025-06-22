@@ -47,7 +47,7 @@
       margin-bottom: 20mm;
     }
     .report-section h3 {
-      color: #1e90ff;
+      color: #000;
       margin-bottom: 10px;
     }
     .report-table {
@@ -60,7 +60,7 @@
       text-align: left;
     }
     .report-table th {
-      background-color: #1e90ff;
+      background-color: #000;
       color: #fff;
     }
     .report-table td {
@@ -70,6 +70,19 @@
       text-align: center;
       font-size: 12px;
       color: #666;
+    }
+
+    .no-print {
+      display: inline-block;
+      background-color: #000;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 16px;
+      margin-bottom: 10px;
     }
     @media print {
       body {
@@ -92,7 +105,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <img src="https://via.placeholder.com/100" alt="Logo Institución">
+      <img src="{{asset('images/icon/logo.png')}}" alt="Logo Institución">
       <h1>Departamento de Policía</h1>
       <p>Dirección General | Teléfono: 123-456-7890 | Email: info@policia.com</p>
     </div>
@@ -100,78 +113,39 @@
       <h2>Reporte de Familiares</h2>
       <p>Fecha y Hora de Emisión: 21 de junio de 2025, 08:24 PM PDT</p>
     </div>
+    <button class="btn btn-primary no-print" onclick="window.print()">Imprimir Reporte</button>
+    @foreach($oficiales as $officer)
     <div class="report-section">
-      <h3>Oficial: Juan Pérez (Documento: 123456789)</h3>
+      <h3>Oficial: {{$officer->nombre_completo}} (Documento: V{{number_format($officer->documento_identidad)}})</h3>
       <table class="report-table">
         <thead>
           <tr>
             <th>Nombre Completo</th>
             <th>Parentesco</th>
             <th>Fecha Nacimiento</th>
-            <th>Teléfono</th>
-            <th>Dirección</th>
-            <th>Campo Extra 1</th>
-            <th>Campo Extra 2</th>
-            <th>Campo Extra 3</th>
+            <th>Género</th>
+            <th>Edad</th>
           </tr>
         </thead>
         <tbody>
+          @foreach($officer->oficiales_familiares as $family)
           <tr>
-            <td>Juan Gómez</td>
-            <td>Hermano</td>
-            <td>1995-03-15</td>
-            <td>987-654-3210</td>
-            <td>Av. Secundaria #789</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
+            <td>{{$family->nombre_completo}}</td>
+            <td>{{$family->parentesco}}</td>
+            <td>{{ \Carbon\Carbon::parse($family->fecha_nacimiento)->format('d-m-Y') }}</td>
+            <td>{{($family->sexo == 'M' ? 'Masculino' : 'Femenino')}}</td>
+            <td>{{$family->edad}}</td>
           </tr>
-          <tr>
-            <td>María López</td>
-            <td>Madre</td>
-            <td>1965-07-20</td>
-            <td>555-123-4567</td>
-            <td>Calle Tercera #456</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-          </tr>
+          @endforeach
         </tbody>
       </table>
     </div>
-    <div class="report-section">
-      <h3>Oficial: Ana Martínez (Documento: 987654321)</h3>
-      <table class="report-table">
-        <thead>
-          <tr>
-            <th>Nombre Completo</th>
-            <th>Parentesco</th>
-            <th>Fecha Nacimiento</th>
-            <th>Teléfono</th>
-            <th>Dirección</th>
-            <th>Campo Extra 1</th>
-            <th>Campo Extra 2</th>
-            <th>Campo Extra 3</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Carlos Ruiz</td>
-            <td>Padre</td>
-            <td>1960-12-10</td>
-            <td>444-789-1234</td>
-            <td>Av. Principal #101</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    @endforeach
+    <hr>
     <div class="footer">
-      <p>Generado por el Sistema de Gestión de Oficiales - © 2025</p>
+      <p>Generado por el Sistema de Gestión de Oficiales - Desarrollado por: <a href="https://www.instagram.com/adsyssystems/">Adsys Sistemas</a> © 2025</p>
     </div>
   </div>
-  <button class="btn btn-primary no-print" onclick="window.print()">Imprimir Reporte</button>
+  
 </body>
 </html>

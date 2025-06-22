@@ -131,6 +131,10 @@
           <th>Nombre Completo</th>
           <th>Fecha Nacimiento</th>
           <th>Cargo</th>
+          @if (request()->routeIs('report.officers.officers_cargo') )
+          <th>Inicio en el cargo</th>
+          <th>Fin en el cargo</th>
+          @endif
           <th>Tipo Sangre</th>
           {{-- <th>Talla Camisa</th>
           <th>Talla Zapato</th> --}}
@@ -150,7 +154,19 @@
             <td>{{$officer->documento_identidad}}</td>
             <td>{{$officer->nombre_completo}}</td>
             <td>{{ \Carbon\Carbon::parse($officer->fecha_nacimiento)->format('d-m-Y') }}</td>
-            <td>{{ ($officer->oficiales_cargos->where('is_actual', 1)->first() != null) ? $officer->oficiales_cargos->where('is_actual', 1)->first()->cargo->nombre_cargo : "Sin Cargo"}}</td>
+            @if (!request()->routeIs('report.officers.officers_cargo') )
+            <td>{{ ($officer->oficiales_cargos->where('id_cargo', request()->id_cargo)->where('is_actual', 1)->first() != null) ? $officer->oficiales_cargos->where('id_cargo', request()->id_cargo)->where('is_actual', 1)->first()->cargo->nombre_cargo : "Sin Cargo"}}</td>
+            @else
+            <td>
+              {{$officer->oficiales_cargos->where('id_cargo', request()->id_cargo)->first()->cargo->nombre_cargo}}
+            </td>
+            <td>
+              {{ \Carbon\Carbon::parse($officer->oficiales_cargos->where('id_cargo', request()->id_cargo)->first()->fecha_inicio)->format('d-m-Y') }}
+            </td>
+            <td>
+              {{ ($officer->oficiales_cargos->where('id_cargo', request()->id_cargo)->first()->fecha_fin) ? \Carbon\Carbon::parse($officer->oficiales_cargos->where('id_cargo', request()->id_cargo)->first()->fecha_fin)->format('d-m-Y') : "Actual" }}
+            </td>
+            @endif
             <td>{{$officer->tipo_sangre}}</td>
             {{-- <td>{{$officer->talla_camisa}}</td>
             <td>{{$officer->talla_zapato}}</td> --}}

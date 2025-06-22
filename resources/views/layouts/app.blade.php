@@ -58,17 +58,17 @@
               <a class="nav-link" id="cargos-tab" data-toggle="tab" href="#cargos" role="tab" aria-controls="cargos" aria-selected="false">Cargos</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" id="familiares-tab" data-toggle="tab" href="#familiares" role="tab" aria-controls="familiares" aria-selected="false">Familiares</a>
+            </li>
+            {{-- <li class="nav-item">
               <a class="nav-link" id="academico-tab" data-toggle="tab" href="#academico" role="tab" aria-controls="academico" aria-selected="false">Académico</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="cursos-tab" data-toggle="tab" href="#cursos" role="tab" aria-controls="cursos" aria-selected="false">Cursos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="familiares-tab" data-toggle="tab" href="#familiares" role="tab" aria-controls="familiares" aria-selected="false">Familiares</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" id="vacaciones-tab" data-toggle="tab" href="#vacaciones" role="tab" aria-controls="vacaciones" aria-selected="false">Vacaciones</a>
-            </li>
+            </li> --}}
           </ul>
           <div class="tab-content" id="reportesTabContent">
             <!-- Tab Oficiales -->
@@ -142,11 +142,11 @@
                         @csrf
                         <hr>
                         <div class="form-group">
-                            <label for="fechaInicio">Fecha de Nacimiento (Inicio)</label>
+                            <label for="fechaInicio">Fecha desde (Inicio)</label>
                             <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
                           </div>
                           <div class="form-group">
-                            <label for="fechaFin">Fecha de Nacimiento (Fin)</label>
+                            <label for="fechaFin">Fecha hasta (Fin)</label>
                             <input type="date" class="form-control" id="fechaFin" name="fechaFin">
                           </div>
                           <div class="form-group">
@@ -158,14 +158,24 @@
             </div>
             <!-- Tab Cargos -->
             <div class="tab-pane fade" id="cargos" role="tabpanel" aria-labelledby="cargos-tab">
-              <form>
+                <form action="{{ route('report.officers.officers_cargo') }}" method="GET" target="_blank" class="mt-2">
+                @csrf
                 <div class="form-group">
-                  <label for="filtroCargo">Nombre Cargo</label>
-                  <input type="text" class="form-control" id="filtroCargo" placeholder="Filtrar por cargo">
+                  <label for="filtroCargo">Cargo (*)</label>
+                  <select class="form-control" name="id_cargo" required>
+                    <option value="">Seleccione un cargo</option>
+                    @foreach (\App\Models\Cargo::all() as $cargo)
+                      <option value="{{ $cargo->id }}">{{ $cargo->nombre_cargo }}</option>
+                    @endforeach
+                  </select>
                 </div>
                 <div class="form-group">
-                  <label for="filtroFechaInicio">Fecha Inicio</label>
-                  <input type="date" class="form-control" id="filtroFechaInicio">
+                    <label for="fechaInicio">Fecha desde (Inicio)</label>
+                    <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
+                </div>
+                <div class="form-group">
+                    <label for="fechaFin">Fecha hasta (Fin)</label>
+                    <input type="date" class="form-control" id="fechaFin" name="fechaFin">
                 </div>
                 <button type="submit" class="btn btn-primary">Generar Reporte</button>
               </form>
@@ -200,17 +210,27 @@
             </div>
             <!-- Tab Familiares -->
             <div class="tab-pane fade" id="familiares" role="tabpanel" aria-labelledby="familiares-tab">
-              <form>
-                <div class="form-group">
-                  <label for="filtroFamiliarNombre">Nombre Familiar</label>
-                  <input type="text" class="form-control" id="filtroFamiliarNombre" placeholder="Filtrar por nombre">
-                </div>
-                <div class="form-group">
-                  <label for="filtroParentesco">Parentesco</label>
-                  <input type="text" class="form-control" id="filtroParentesco" placeholder="Filtrar por parentesco">
-                </div>
-                <button type="submit" class="btn btn-primary">Generar Reporte</button>
-              </form>
+                <form action="{{ route('report.officers.family_members') }}" method="GET" target="_blank" class="mt-2">
+                    @csrf
+                    <div class="form-group">
+                        <label for="parentesco">Parentesco (*)</label>
+                        <select class="form-control" name="parentesco" required>
+                            <option value>--- SELECCIONE UN PARENTESCO ---</option>
+                            <option value="Padre">Padre</option>
+                            <option value="Madre">Madre</option>
+                            <option value="Hijo(a)">Hijo(a)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaNacimientoInicio">Fecha de Nacimiento (Inicio)</label>
+                        <input type="date" class="form-control"  name="fecha_nacimiento_inicio">
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaNacimientoFin">Fecha de Nacimiento (Fin)</label>
+                        <input type="date" class="form-control" name="fecha_nacimiento_fin">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Generar Reporte</button>
+                </form>
             </div>
             <!-- Tab Vacaciones -->
             <div class="tab-pane fade" id="vacaciones" role="tabpanel" aria-labelledby="vacaciones-tab">

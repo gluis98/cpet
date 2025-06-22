@@ -22,7 +22,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <label class="form-label" for="id_cargo">Parentesco *</label>
+                                <label class="form-label" for="parentesco">Parentesco *</label>
                                 <select class="form-control" id="parentesco" name="parentesco" required>
                                     <option value>--- SELECCIONE UN PARENTESCO ---</option>
                                     <option value="Padre">Padre</option>
