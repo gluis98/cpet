@@ -33,6 +33,10 @@ Route::middleware('auth')->group(function(){
     
     Route::controller(ReportesController::class)->group(function(){
         Route::get('/reports/vacation/{id}', 'vacation')->name('report.vacation');
+        Route::get('/reports/officers', 'officers')->name('report.officers');
+        Route::get('/reports/officers/officers_born_date', 'officers_born_date')->name('report.officers_born_date');
+        Route::get('/reports/officers/ingress_date', 'ingress_date')->name('report.officers.ingress_date');
+        Route::get('/reports/officers/card', 'card')->name('report.officers.card');
     });
    
 });

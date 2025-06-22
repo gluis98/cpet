@@ -39,6 +39,202 @@
 </head>
 
 <body class="animsition">
+    <!-- Modal -->
+    <div class="modal fade" id="reportesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reportesModalLabel">Generar Reportes</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="reportesTabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="oficiales-tab" data-toggle="tab" href="#oficiales" role="tab" aria-controls="oficiales" aria-selected="true">Oficiales</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="cargos-tab" data-toggle="tab" href="#cargos" role="tab" aria-controls="cargos" aria-selected="false">Cargos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="academico-tab" data-toggle="tab" href="#academico" role="tab" aria-controls="academico" aria-selected="false">Académico</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="cursos-tab" data-toggle="tab" href="#cursos" role="tab" aria-controls="cursos" aria-selected="false">Cursos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="familiares-tab" data-toggle="tab" href="#familiares" role="tab" aria-controls="familiares" aria-selected="false">Familiares</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="vacaciones-tab" data-toggle="tab" href="#vacaciones" role="tab" aria-controls="vacaciones" aria-selected="false">Vacaciones</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="reportesTabContent">
+            <!-- Tab Oficiales -->
+            <div class="tab-pane fade show active" id="oficiales" role="tabpanel" aria-labelledby="oficiales-tab">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="font-weight-bold">Ficha de oficial</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('report.officers.card') }}" method="GET" target="_blank" class="mt-2">
+                          @csrf
+                          <hr>
+                          <div class="form-group">
+                              <label for="documento_identidad">Documento de identidad (*)</label>
+                              <input type="text" name="documento_identidad" class="form-control" required placeholder="Ingrese el documento de identidad del oficial. Ejemplo: 12345678">
+                          </div>
+                          <div class="form-group">
+                              <button type="submit" class="btn btn-primary">Generar Reporte</button>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="font-weight-bold">Reporte general de oficiales</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('report.officers') }}" method="GET" target="_blank" class="mt-2">
+                          @csrf
+                          <hr>
+                          <div class="alert alert-info">
+                              <p>Generar reporte de oficiales.</p>
+                          </div>
+                          <div class="form-group">
+                              <button type="submit" class="btn btn-primary">Generar Reporte</button>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                      <h4 class="font-weight-bold">Reporte de oficiales por fecha de nacimiento</h4>
+                    </div>
+                    <div class="card-body">
+                      <form action="{{ route('report.officers_born_date') }}" method="GET" target="_blank" class="mt-2">
+                        @csrf
+                        <hr>
+                        <div class="form-group">
+                          <label for="fechaInicio">Fecha de Nacimiento (Inicio)</label>
+                          <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
+                        </div>
+                        <div class="form-group">
+                          <label for="fechaFin">Fecha de Nacimiento (Fin)</label>
+                          <input type="date" class="form-control" id="fechaFin" name="fechaFin">
+                        </div>
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-primary">Generar Reporte</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-header">
+                      <h4 class="font-weight-bold">Reporte de oficiales por fecha de ingreso</h4>
+                    </div>
+                    <div class="card-body">
+                      <form action="{{ route('report.officers.ingress_date') }}" method="GET" target="_blank" class="mt-2">
+                        @csrf
+                        <hr>
+                        <div class="form-group">
+                            <label for="fechaInicio">Fecha de Nacimiento (Inicio)</label>
+                            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
+                          </div>
+                          <div class="form-group">
+                            <label for="fechaFin">Fecha de Nacimiento (Fin)</label>
+                            <input type="date" class="form-control" id="fechaFin" name="fechaFin">
+                          </div>
+                          <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Generar Reporte</button>
+                          </div>
+                      </form>
+                    </div>
+                  </div>
+            </div>
+            <!-- Tab Cargos -->
+            <div class="tab-pane fade" id="cargos" role="tabpanel" aria-labelledby="cargos-tab">
+              <form>
+                <div class="form-group">
+                  <label for="filtroCargo">Nombre Cargo</label>
+                  <input type="text" class="form-control" id="filtroCargo" placeholder="Filtrar por cargo">
+                </div>
+                <div class="form-group">
+                  <label for="filtroFechaInicio">Fecha Inicio</label>
+                  <input type="date" class="form-control" id="filtroFechaInicio">
+                </div>
+                <button type="submit" class="btn btn-primary">Generar Reporte</button>
+              </form>
+            </div>
+            <!-- Tab Académico -->
+            <div class="tab-pane fade" id="academico" role="tabpanel" aria-labelledby="academico-tab">
+              <form>
+                <div class="form-group">
+                  <label for="filtroTipoFormacion">Tipo Formación</label>
+                  <input type="text" class="form-control" id="filtroTipoFormacion" placeholder="Filtrar por tipo">
+                </div>
+                <div class="form-group">
+                  <label for="filtroInstitucion">Institución</label>
+                  <input type="text" class="form-control" id="filtroInstitucion" placeholder="Filtrar por institución">
+                </div>
+                <button type="submit" class="btn btn-primary">Generar Reporte</button>
+              </form>
+            </div>
+            <!-- Tab Cursos -->
+            <div class="tab-pane fade" id="cursos" role="tabpanel" aria-labelledby="cursos-tab">
+              <form>
+                <div class="form-group">
+                  <label for="filtroCursoNombre">Nombre Curso</label>
+                  <input type="text" class="form-control" id="filtroCursoNombre" placeholder="Filtrar por nombre">
+                </div>
+                <div class="form-group">
+                  <label for="filtroCursoFecha">Fecha Inicio</label>
+                  <input type="date" class="form-control" id="filtroCursoFecha">
+                </div>
+                <button type="submit" class="btn btn-primary">Generar Reporte</button>
+              </form>
+            </div>
+            <!-- Tab Familiares -->
+            <div class="tab-pane fade" id="familiares" role="tabpanel" aria-labelledby="familiares-tab">
+              <form>
+                <div class="form-group">
+                  <label for="filtroFamiliarNombre">Nombre Familiar</label>
+                  <input type="text" class="form-control" id="filtroFamiliarNombre" placeholder="Filtrar por nombre">
+                </div>
+                <div class="form-group">
+                  <label for="filtroParentesco">Parentesco</label>
+                  <input type="text" class="form-control" id="filtroParentesco" placeholder="Filtrar por parentesco">
+                </div>
+                <button type="submit" class="btn btn-primary">Generar Reporte</button>
+              </form>
+            </div>
+            <!-- Tab Vacaciones -->
+            <div class="tab-pane fade" id="vacaciones" role="tabpanel" aria-labelledby="vacaciones-tab">
+              <form>
+                <div class="form-group">
+                  <label for="filtroFechaEmision">Fecha Emisión</label>
+                  <input type="date" class="form-control" id="filtroFechaEmision">
+                </div>
+                <div class="form-group">
+                  <label for="filtroEstatus">Estatus</label>
+                  <input type="text" class="form-control" id="filtroEstatus" placeholder="Filtrar por estatus">
+                </div>
+                <button type="submit" class="btn btn-primary">Generar Reporte</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
     <div class="page-wrapper">
         <!-- MENU SIDEBAR-->
         <aside class="menu-sidebar2">
@@ -131,8 +327,8 @@
                                 </a>
                             </div>
                             <div class="header-button2">
-                                <div class="header-button-item js-item-menu">
-                                    <i class="zmdi zmdi-print"></i>
+                                <div class="header-button-item js-item-menu" id="btn-reports">
+                                    <i class="zmdi zmdi-print" ></i>
                                 </div>
                                 <div class="header-button-item has-noti js-item-menu">
                                     <i class="zmdi zmdi-notifications"></i>
@@ -426,11 +622,18 @@
     <script src="{{asset("vendor/datatables-buttons/js/buttons.print.min.js") }}"></script>
     <script src="{{asset("vendor/datatables-buttons/js/buttons.colVis.min.js") }}"></script>
     <script>
-        var title = "{!! $title !!}";
-        window.leftImageBase64 = "{!! $leftImagePath !!}";
-        
-        </script>
-        <script src="{{asset("js/datatable-spanish.js") }}"></script>
+    var title = "{!! $title !!}";
+    window.leftImageBase64 = "{!! $leftImagePath !!}";
+
+
+    $(document).ready(function() {
+        $('#btn-reports').click(function() {
+            $('#reportesModal').modal('show');
+        });
+    })
+
+    </script>
+    <script src="{{asset("js/datatable-spanish.js") }}"></script>
     @yield('scripts')
 </body>
 
