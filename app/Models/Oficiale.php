@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Collection|OficialesEmergencia[] $oficiales_emergencias
  * @property Collection|OficialesFamiliare[] $oficiales_familiares
  * @property Collection|OficialesFamiliaresDocumento[] $oficiales_familiares_documentos
+ * @property Collection|OficialesRadiograma[] $oficiales_radiogramas
  * @property Collection|OficialesReconocimiento[] $oficiales_reconocimientos
  * @property Collection|OficialesSalud[] $oficiales_saluds
  * @property Collection|OficialesVacacione[] $oficiales_vacaciones
@@ -124,6 +125,11 @@ class Oficiale extends Model
 	public function oficiales_familiares_documentos()
 	{
 		return $this->hasMany(OficialesFamiliaresDocumento::class, 'id_policia');
+	}
+
+	public function oficiales_radiogramas()
+	{
+		return $this->hasMany(OficialesRadiograma::class, 'id_policia');
 	}
 
 	public function oficiales_reconocimientos()

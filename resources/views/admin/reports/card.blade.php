@@ -86,7 +86,7 @@
       list-style: disc;
       padding-left: 20px;
     }
-    .right-section .experience-item, .right-section .formation-item, .right-section .family-item {
+    .right-section .experience-item, .right-section .formation-item, .right-section .family-item, .right-section .vacation-item {
       margin-bottom: 15px;
       border: 1px solid #ccc;
       padding: 10px;
@@ -141,7 +141,8 @@
         <h3>Datos Oficiales</h3>
         <p><strong>Nro. Credencial:</strong> {{ $officer->numero_placa }}</p>
         <p><strong>Fecha de Ingreso:</strong> {{ \Carbon\Carbon::parse($officer->fecha_ingreso)->format('d-m-Y') }}</p>
-        <p><strong>Cargo Actual:</strong> {{ ($officer->oficiales_cargos->where('is_actual', 1)->first() != null) ? $officer->oficiales_cargos->where('is_actual', 1)->first()->cargo->nombre_cargo : "Sin Cargo" }}</p>
+        <p><strong>Jerarquía Actual:</strong> {{ ($officer->oficiales_cargos->where('is_actual', 1)->first() != null) ? $officer->oficiales_cargos->where('is_actual', 1)->first()->cargo->nombre_cargo : "Sin Cargo" }}</p>
+        <p><strong>Estatus:</strong> {{ $officer->estatus}}</p>
         <h3>Datos personales</h3>
         <p><strong>Documento:</strong> {{ $officer->documento_identidad }}</p>
         <p><strong>Correo Electrónico:</strong> {{ $officer->correo_electronico }}</p>
@@ -184,6 +185,19 @@
           </div>
         @endforeach
       @endif
+      @if(count($officer->oficiales_radiogramas) > 0)
+        <h2>Radiogramas</h2>
+        @foreach ($officer->oficiales_radiogramas as $radiograma)
+          <div class="formation-item">
+            <p><strong>Estación:</strong> {{ $radiograma->estacione->estacion }}</p>
+            <p><strong>Fecha Inicio:</strong> {{ \Carbon\Carbon::parse($radiograma->fecha_inicio)->format('d-m-Y') }}</p>
+            <p><strong>Fecha Fin:</strong> {{ ($radiograma->fecha_fin) ? \Carbon\Carbon::parse($radiograma->fecha_fin)->format('d-m-Y') : "Cursando / Sin terminar" }}</p>
+            @if($radiograma->is_actual)
+            <p><strong>Estado:</strong> Presta servicio actualmente</p>
+            @endif
+          </div>
+        @endforeach
+      @endif
       @if(count($officer->oficiales_cursos) > 0)
         <h2>Cursos, capacitaciones y diplomados</h2>
         @foreach ($officer->oficiales_cursos as $curso)
@@ -206,12 +220,19 @@
           </div>
         @endforeach
       @endif
-      <h2>Programador</h2>
-      <div class="experience-item">
-        <p><strong>Vacación:</strong> 2023-07-01 a 2023-07-15</p>
-        <p><strong>Estatus:</strong> Aprobada</p>
-        <p><strong>Descripción:</strong> Vacaciones anuales</p>
-      </div>
+      @if(count($officer->oficiales_vacaciones) > 0)
+        <h2>Vacaciones</h2>
+        @foreach ($officer->oficiales_vacaciones as $vacaciones)
+        <div class="vacation-item">
+          <p><strong>Vacación desde - hasta:</strong> {{$vacaciones->fecha_emision}} a {{$vacaciones->fecha_reintegro}}</p>
+          <p><strong>Estatus:</strong> {{$vacaciones->estatus}}</p>
+          <p><strong>Disfrutadas:</strong> {{($vacaciones->is_disfrutadas) ? "Si" : "No"}}</p>
+          @if($vacaciones->descripcion)
+          <p><strong>Descripción:</strong> {{$vacaciones->descripcion}}</p>
+          @endif
+        </div>
+        @endforeach
+      @endif
     </div>
   </div>
   <button class="btn btn-primary no-print" onclick="window.print()">Imprimir Hoja de Vida</button>
