@@ -91,6 +91,18 @@
       border: 1px solid #ccc;
       padding: 10px;
     }
+    .no-print {
+      display: inline-block;
+      background-color: #000;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
     @media print {
       body {
         margin: 0;
@@ -163,6 +175,7 @@
         <h1>Cuerpo de Policía del Estado Trujillo</h1>
         <p>Dirección General | Teléfono: 123-456-7890 | Email: info@policia.com</p>
     </div>
+    <button class="btn btn-primary no-print" onclick="window.print()">Imprimir Hoja de Vida</button>
       @if(count($officer->oficiales_academicos) > 0)
         <h2>Formación</h2>
         @foreach ($officer->oficiales_academicos as $academico)
@@ -235,6 +248,6 @@
       @endif
     </div>
   </div>
-  <button class="btn btn-primary no-print" onclick="window.print()">Imprimir Hoja de Vida</button>
+  
 </body>
 </html>
