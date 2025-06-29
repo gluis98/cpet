@@ -46,7 +46,8 @@ class OfficersController extends Controller
      public function update(Request $request, $id) {
         $oficiales = Oficiale::findOrFail($id);
         $oficiales->update($request->all());
-        if($request->hasFile('fotografia')) {
+        if($request->hasFile('fotografia') && $request->file('fotografia')->isValid()) {
+            return "Hola";
             $file = $request->file('fotografia');
             // Generar la ruta y almacenar el archivo
             $filePath = $file->store('fotografias/' . $oficiales->id, 'public');
