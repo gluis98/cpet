@@ -52,16 +52,13 @@ class OfficersController extends Controller
             $filePath = $file->store('fotografias/' . $oficiales->id, 'public');
 
             // Actualizar el campo fotografia con la ruta
-            $data['fotografia'] = $filePath;
-
+            $oficiales->fotografia = $filePath;
+            $oficiales->save();
             // Opcional: Eliminar la fotografía antigua si existe
             if ($oficiales->fotografia) {
                 Storage::disk('public')->delete($oficiales->fotografia);
             }
         }
-
-        // Actualizar el registro
-        $oficiales->update($data);
         return response()->json(['msj' => "Registro actualizado con éxito."], 200);
     }
 
