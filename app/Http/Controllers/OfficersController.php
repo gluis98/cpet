@@ -29,7 +29,7 @@ class OfficersController extends Controller
 
             // Verificar que el ID sea válido
             if (empty($oficiales->id)) {
-                Log::error('El ID del modelo Oficiale es nulo o inválido', ['id' => $id]);
+                Log::error('El ID del modelo Oficiale es nulo o inválido', ['id' => $oficiales->id]);
                 return response()->json(['error' => 'El ID del registro no es válido.'], 400);
             }
 
