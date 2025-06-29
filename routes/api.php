@@ -13,6 +13,8 @@ use App\Http\Controllers\OfficersVacationsController;
 use App\Http\Controllers\OfficersAwardsController;
 use App\Http\Controllers\OfficersArmamentController;
 use App\Http\Controllers\ArmamentController;
+use App\Http\Controllers\OfficersRadiogramController;
+use App\Http\Controllers\StationController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -33,6 +35,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('/officers', OfficersController::class);
 Route::apiResource('/positions', PositionsController::class);
 Route::apiResource('/armament', ArmamentController::class);
+Route::apiResource('/stations', StationController::class);
 Route::apiResource('/users', UserController::class);
 Route::post('/users/confirm-password-admin', [UserController::class, 'confirm_password_admin']);
 
@@ -98,4 +101,12 @@ Route::controller(OfficersArmamentController::class)->group(function(){
     Route::get('/officers/armament/{id}', 'show');
     Route::put('/officers/armament/{id}', 'update');
     Route::delete('/officers/armament/{id}', 'destroy');
+});
+
+Route::controller(OfficersRadiogramController::class)->group(function(){
+    Route::get('/officers/radiogram/index/{id}', 'index');
+    Route::post('/officers/radiogram', 'store');
+    Route::get('/officers/radiogram/{id}', 'show');
+    Route::put('/officers/radiogram/{id}', 'update');
+    Route::delete('/officers/radiogram/{id}', 'destroy');
 });

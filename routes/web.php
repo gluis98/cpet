@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function(){
     Route::controller(HomeController::class)->group(function(){
         Route::get('/', 'index')->name('home');
         Route::get('/officers', 'officers')->name('officers');
-        Route::get('/officers/armament/{id}', 'officers_armament')->name('officers.armament');
+        Route::get('/officers/radiogram/{id}', 'officers_radiogram')->name('officers.radiogram');
         Route::get('/officers/academy/{id}', 'officers_academy')->name('officers.academy');
         Route::get('/officers/courses/{id}', 'officers_courses')->name('officers.courses');
         Route::get('/officers/positions/{id}', 'officers_position')->name('officers.positions');
@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function(){
         Route::get('/officers/vacations/{id}', 'officers_vacations')->name('officers.vacations');
         Route::get('/officers/awards/{id}', 'officers_awards')->name('officers.awards');
 
+        Route::get('/stations', 'stations')->name('stations');
         Route::get('/users', 'users')->name('users');
     });
     

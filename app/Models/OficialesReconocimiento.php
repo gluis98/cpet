@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $descripcion
  * @property Carbon $fecha
  * @property string|null $autoridad
+ * @property string|null $tipo
  * 
  * @property Oficiale $oficiale
  *
@@ -36,7 +37,8 @@ class OficialesReconocimiento extends Model
 		'id_policia',
 		'descripcion',
 		'fecha',
-		'autoridad'
+		'autoridad',
+		'tipo'
 	];
 
 	public function oficiale()

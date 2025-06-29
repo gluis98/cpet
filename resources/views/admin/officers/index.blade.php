@@ -180,6 +180,7 @@
                                     <option value="Suspendido">Suspendido</option>
                                     <option value="Jubilado">Jubilado</option>
                                     <option value="Fallecido">Fallecido</option>
+                                    <option value="URRA">URRA</option>
                                 </select>
                             </div>
                         </div>
@@ -257,7 +258,7 @@
   </div>
 
  <!-- Modal -->
- <div class="modal fade" id="modal-ficha" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-ficha" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -328,7 +329,7 @@
                         <span id="estatus_ficha">N/A</span>
                     </div>
                     <div class="data-field">
-                        <label>Cargo Actual</label>
+                        <label>Jerarquía Actual</label>
                         <span id="cargo_actual_ficha">N/A</span>
                     </div>
                 
@@ -354,6 +355,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" onclick="printFicha()">Imprimir Ficha</button>
         </div>
       </div>
     </div>
@@ -365,7 +367,7 @@
       <div class="modal-content" style="width: 1000px !important; margin-left: -100px !important">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Archivos del oficial</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <div class="alert alert-info">
@@ -394,7 +396,7 @@
 <div class="row mb-3">
     <div class="col-md-12">
         <div class="au-breadcrumb-content justify-content-end">
-            <a class="au-btn au-btn-icon au-btn--green" href="#" data-toggle="modal" data-target="#add" id="btn-add">
+            <a class="btn btn-dark btn-lg" href="#" data-toggle="modal" data-target="#add" id="btn-add">
                 <i class="zmdi zmdi-plus"></i>Agregar oficial
             </a>
         </div>
@@ -403,25 +405,23 @@
 <div class="container-fluid">
     <h2>{{$title}}</h2>
     <hr>
-    <div class="responsive-table">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">N° Credencial</th>
-                    <th class="text-center" scope="col">N° de Cédula</th>
-                    <th class="text-center" scope="col">Nombre y apellido</th>
-                    <th class="text-center" scope="col">Teléfono</th>
-                    <th class="text-center" scope="col">Fecha de ingreso</th>
-                    <th class="text-center" scope="col">Jerarquía</th>
-                    <th class="text-center" scope="col">Estatus</th>
-                    <th classs="actions" scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
+    <table class="table table-bordered" id="officers-table">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">N° Credencial</th>
+                <th class="text-center" scope="col">N° de Cédula</th>
+                <th class="text-center" scope="col">Nombre y apellido</th>
+                <th class="text-center" scope="col">Teléfono</th>
+                <th class="text-center" scope="col">Fecha de ingreso</th>
+                <th class="text-center" scope="col">Jerarquía</th>
+                <th class="text-center" scope="col">Estatus</th>
+                <th classs="actions" scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
 
-            </tbody>
-        </table>
-    </div>
+        </tbody>
+    </table>
 </div>
 @endsection
 
@@ -548,7 +548,7 @@
 
                     // Obtener cargo actual
                     const cargoActual = data.oficiales_cargos?.find(c => c.is_actual === 1)?.cargo.nombre_cargo || 'N/A';
-
+                    console.log(data)
                     // Actualizar campos del modal
                     $('#documento_identidad_ficha').text(data.documento_identidad || 'N/A');
                     $('#nombre_completo_ficha').text(data.nombre_completo || 'N/A');
@@ -566,7 +566,7 @@
                     $('#talla_camisa_ficha').text(data.talla_camisa || 'N/A');
                     $('#talla_pantalon_ficha').text(data.talla_pantalon || 'N/A');
                     $('#talla_zapatos_ficha').text(data.talla_zapatos || 'N/A');
-                    $('#cargo_actual_ficha').text(cargoActual);
+                    $('#cargo_actual_ficha').text(cargoActual); 
 
                     // Actualizar fotografía
                     const fotoOficial = $('#foto-oficial');
@@ -753,34 +753,54 @@
             index_archivos(id);
         })
 
-        function index(){
-            fetch('api/officers')
+        
+        
+    });
+    
+    function printFicha() {
+        const fichaContent = document.querySelector('.ficha-container').innerHTML;
+        const originalContent = document.body.innerHTML;
+        document.body.innerHTML = `<div class="ficha-container">${fichaContent}</div>`;
+        window.print();
+        document.body.innerHTML = originalContent;
+    }
+
+    function index() {
+        fetch('api/officers')
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+                console.log(data);
                 let template = '';
                 data.forEach(e => {
                     template += `
                     <tr>
-                        <td class="text-center">${(e.numero_placa ? e.numero_placa : 'S/NC')}</td>
+                        <td class="text-center">${e.numero_placa ? e.numero_placa : 'S/NC'}</td>
                         <td class="text-center">${e.documento_identidad}</td>
                         <td class="text-center">${e.nombre_completo}</td>
-                        <td class="text-center">${(e.telefono) ? e.telefono : 'S/T'}</td>
-                        <td class="text-center">${(e.fecha_ingreso) ? e.fecha_ingreso.substr(0,4) + '-' + e.fecha_ingreso.substr(5,2) + '-' + e.fecha_ingreso.substr(8,2) : 'S/F'}</td>
+                        <td class="text-center">${e.telefono ? e.telefono : 'S/T'}</td>
+                        <td class="text-center">${e.fecha_ingreso ? e.fecha_ingreso.substr(0,4) + '-' + e.fecha_ingreso.substr(5,2) + '-' + e.fecha_ingreso.substr(8,2) : 'S/F'}</td>
                         <td class="text-center">${e.oficiales_cargos.find(c => c.is_actual === 1)?.cargo.nombre_cargo || 'N/A'}</td>
                         <td class="text-center">${e.estatus.toUpperCase()}</td>
                         <td class="text-right actions">
-                            <button class="btn btn-dark ficha" data-id="${e.id}"  data-toggle="tooltip" data-placement="top" title="Ver oficial"><i class="fas fa-id-card-alt"></i></button>
-                            <button class="btn btn-dark edit" data-id="${e.id}"  data-toggle="tooltip" data-placement="top" title="Editar oficial"><i class="far fa-edit"></i></button>
-                            <a href="officers/armament/${e.id}" class="btn btn-dark"  data-toggle="tooltip" data-placement="top" title="Armamento"><i class="fas fa-shield-alt"></i></a>
-                            <a href="officers/academy/${e.id}" class="btn btn-dark"  data-toggle="tooltip" data-placement="top" title="Formación académica"><i class="fas fa-graduation-cap"></i></a>
-                            <a href="officers/courses/${e.id}" class="btn btn-dark"  data-toggle="tooltip" data-placement="top" title="Cursos y diplomados"><i class="fas fa-book-reader"></i></a>
-                            <a href="officers/positions/${e.id}" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Cargos alcanzados"><i class="fas fa-medal"></i></a>
-                            <a href="officers/awards/${e.id}" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Reconocimientos"><i class="fas fa-trophy"></i></a>
-                            <a href="officers/familly/${e.id}" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Hijos y familiares"><i class="fab fa-gratipay"></i></a>
-                            <button data-id="${e.id}" class="btn btn-dark files" data-toggle="tooltip" data-placement="top" title="Archivos del oficial"><i class="fas fa-file"></i></button>
-                            <a href="officers/vacations/${e.id}" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Solicitud de vacaciones"><i class="fas fa-map-marked"></i></a>
-                            <button class="btn btn-danger delete" data-id="${e.id}"><i class="far fa-trash-alt"></i></button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v" data-toggle="tooltip" data-placement="top" title="Más acciones"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                    <button class="btn dropdown-item edit" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Editar oficial"><i class="far fa-edit"></i> Editar</button>
+                                    <button class="btn dropdown-item ficha" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Ver oficial"><i class="fas fa-id-card-alt"></i> Ver oficial</button>
+                                    <a class="btn dropdown-item" href="officers/radiogram/${e.id}" data-toggle="tooltip" data-placement="top" title="Radiograma"><i class="fas fa-street-view"></i> Radiograma</a>
+                                    <a class="btn dropdown-item" href="officers/academy/${e.id}" data-toggle="tooltip" data-placement="top" title="Formación académica"><i class="fas fa-graduation-cap"></i> Formación académica</a>
+                                    <a class="btn dropdown-item" href="officers/courses/${e.id}" data-toggle="tooltip" data-placement="top" title="Cursos y diplomados"><i class="fas fa-book-reader"></i> Cursos y diplomados</a>
+                                    <a class="btn dropdown-item" href="officers/positions/${e.id}" data-toggle="tooltip" data-placement="top" title="Jerarquías obtenidas"><i class="fas fa-medal"></i> Jerarquías obtenidas</a>
+                                    <a class="btn dropdown-item" href="officers/awards/${e.id}" data-toggle="tooltip" data-placement="top" title="Reconocimientos"><i class="fas fa-trophy"></i> Reconocimientos</a>
+                                    <a class="btn dropdown-item" href="officers/familly/${e.id}" data-toggle="tooltip" data-placement="top" title="Hijos y familiares"><i class="fab fa-gratipay"></i> Hijos y familiares</a>
+                                    <button class="btn dropdown-item files" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Archivos del oficial"><i class="fas fa-file"></i> Archivos del oficial</button>
+                                    <a class="btn dropdown-item" href="officers/vacations/${e.id}" data-toggle="tooltip" data-placement="top" title="Solicitud de vacaciones"><i class="fas fa-plane-departure"></i> Solicitud de vacaciones</a>
+                                    <div class="dropdown-divider"></div>
+                                    <button class="btn dropdown-item delete text-danger" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Eliminar oficial"><i class="far fa-trash-alt"></i> Eliminar</button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     `;
@@ -788,41 +808,41 @@
                 $('table').DataTable().destroy();
                 $('tbody').html(template);
                 $('table').DataTable(t);
+
+                // Inicializar tooltips
                 $(function () {
-                    $('[data-toggle="tooltip"]').tooltip()
-                })
+                    $('[data-toggle="tooltip"]').tooltip();
+                });
             });
-        }
+    }
 
-        function index_archivos(id){
-            fetch('api/officers/files/index/' + id)
-            .then(res => res.json())
-            .then(data => {
-                let template ="";
+    function index_archivos(id){
+        fetch('api/officers/files/index/' + id)
+        .then(res => res.json())
+        .then(data => {
+            let template ="";
 
-                if(data.length > 0){
-                    data.forEach(element => {
-                        template += `
-                            <div class="col-12 col-md-4 mb-3">
-                                <div class="img-container">
-                                    <div class="position-relative">
-                                        <a href="{{asset('storage')}}/${element.archivo_url}" download>
-                                            <img src="{{asset('storage')}}/${element.archivo_url}" class="img-fluid border" alt="Previsualización">
-                                        </a>
-                                        <button class="btn btn-dark text-white position-absolute delete-file" style="top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;" data-id="${element.id}" title="Eliminar archivo"><i class="fas fa-times"></i></button>
-                                    </div>
+            if(data.length > 0){
+                data.forEach(element => {
+                    template += `
+                        <div class="col-12 col-md-4 mb-3">
+                            <div class="img-container">
+                                <div class="position-relative">
+                                    <a href="{{asset('storage')}}/${element.archivo_url}" download>
+                                        <img src="{{asset('storage')}}/${element.archivo_url}" class="img-fluid border" alt="Previsualización">
+                                    </a>
+                                    <button class="btn btn-dark text-white position-absolute delete-file" style="top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;" data-id="${element.id}" title="Eliminar archivo"><i class="fas fa-times"></i></button>
                                 </div>
                             </div>
-                        `;
-                    });
-                }else{
-                    template = `<div class='alert alert-light mx-auto'> <p>No hay archivos registrados de éste oficial.</p></div>`;
-                }
+                        </div>
+                    `;
+                });
+            }else{
+                template = `<div class='alert alert-light mx-auto'> <p>No hay archivos registrados de éste oficial.</p></div>`;
+            }
 
-                $('#archivos-index').html(template);
-            });
-        }
-    });
-    
+            $('#archivos-index').html(template);
+        });
+    }
 </script>
 @endsection

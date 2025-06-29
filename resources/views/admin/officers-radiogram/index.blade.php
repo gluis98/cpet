@@ -7,7 +7,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content ">
         <div class="modal-header">
-          <h4 class="modal-title" id="myModalLabel">Registrar armamento</h4>
+          <h4 class="modal-title" id="myModalLabel">Registrar radiograma</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
@@ -22,36 +22,36 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <label class="form-label" for="id_arma">Arma *</label>
-                                <select class="form-control" id="id_arma" name="id_arma" required>
-        
+                                <label class="form-label" for="id_estacion">Estación *</label>
+                                <select class="form-control" id="id_estacion" name="id_estacion" required>
+                                    <option value="">--- CARGANDO ESTACIONES ---</option>
                                 </select>
-                            </div>  
-                        </div>
-                        <div class="row">
-                            <div class=" col-md-12 mb-3">
-                                <label class="form-label" for="fecha_asignacion">Fecha de asignación *</label>
-                                <input type="date" class="form-control" id="fecha_asignacion" name="fecha_asignacion" required>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class=" col-md-12 mb-3">
-                                <label class="form-label" for="descripcion">Descripción</label>
-                                <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
-                            </div>
-                        </div>
-
                         <div class="row">
                             <div class="col-md-12 mb-3">
-                                <label class="form-label" for="estado">Estado *</label>
-                                <select class="form-control" id="estado" name="estado" required>
-                                    <option value>--- SELECCIONE UN ESTATUS ---</option>
-                                    <option value="EXCELENTES CODICIONES">EXCELENTES CODICIONES</option>
-                                    <option value="BUENO">BUENO</option>
-                                    <option value="MEDIO">MEDIO</option>
-                                    <option value="MAL ESTADO">MAL ESTADO</option>
-                                </select>
+                                <label class="form-label" for="fecha_inicio">Fecha Inicio *</label>
+                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label" for="fecha_final">Fecha Final</label>
+                                <input type="date" class="form-control" id="fecha_final" name="fecha_final">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label" for="descripcion">Descripción</label>
+                                <textarea class="form-control" id="descripcion" name="descripcion"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="is_actual" name="is_actual" value="1">
+                                <label class="form-check-label" for="is_actual">
+                                    ¿El oficial está actualmente en esa estación de comando?
+                                </label>
                             </div>  
                         </div>
                     </div>
@@ -82,8 +82,8 @@
             <div class="au-breadcrumb-left">
                 <a href="{{ route('officers') }}" class="btn text-uppercase text-dark"><i class="fas fa-arrow-left"></i> Regresar</a>
             </div>
-            <a class="au-btn au-btn-icon au-btn--green" href="#" data-toggle="modal" data-target="#add" id="btn-add">
-                <i class="zmdi zmdi-plus"></i>Agregar armamento
+            <a class="btn btn-dark btn-lg" href="#" data-toggle="modal" data-target="#add" id="btn-add">
+                <i class="zmdi zmdi-plus"></i>Agregar radiograma
             </a>
         </div>
     </div>
@@ -102,7 +102,7 @@
     $(document).ready(function() {
         var id = "";
         index();
-        index_armamento();
+        index_estaciones();
 
         $('#btn-add').click(function(e){
             e.preventDefault();
@@ -117,7 +117,7 @@
             e.preventDefault();
             let formData = new FormData(this);
                 formData.append('id_policia', '{{ $id }}');
-            fetch('/cpet/public/api/officers/armament', {
+            fetch('/cpet/public/api/officers/radiogram', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -137,7 +137,7 @@
             let formData = new FormData(this);
                 formData.append('_method', 'PUT');
             console.log(id)
-            fetch('/cpet/public/api/officers/armament/'+id, {
+            fetch('/cpet/public/api/officers/radiogram/'+id, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -158,22 +158,23 @@
         $(document).on('click','.edit', function(e){
             e.preventDefault();
             id = $(this).data('id');
-            fetch('/cpet/public/api/officers/armament/'+id)
+            fetch('/cpet/public/api/officers/radiogram/'+id)
             .then(response => response.json())
             .then(data => {
                 
                 id = data.id;
                 
-                $('#tipo option').each(function() {
-                    if($(this).val() == data.tipo){
+                $('#id_estacion option').each(function() {
+                    if($(this).val() == data.id_estacion){
                         $(this).attr('selected', 'selected');
                     }
                 });
 
-                $('#nombre').val(data.nombre);
-                $('#institucion').val(data.institucion);
+                $('#is_actual').prop('checked', data.is_actual == 1);
                 $('#fecha_inicio').val(data.fecha_inicio.substr(0,4) + '-' + data.fecha_inicio.substr(5,2) + '-' + data.fecha_inicio.substr(8,2));
-                $('#fecha_fin').val(data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2));
+                if(data.fecha_fin != null && data.fecha_fin != ""){
+                    $('#fecha_fin').val(data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2));
+                }
                 $('#descripcion').val(data.descripcion);
                 
 
@@ -243,7 +244,7 @@
                                 confirmButtonText: 'Sí, eliminar'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/officers/armament/'+id, {
+                                    fetch('/cpet/public/api/officers/radiogram/'+id, {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -280,7 +281,7 @@
                     confirmButtonText: 'Sí, eliminar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/armament/'+id, {
+                        fetch('/cpet/public/api/officers/radiogram/'+id, {
                             method: 'POST',
                             body: formData
                         }).then(response => response.json())
@@ -298,7 +299,7 @@
         });
 
         function index(){
-            fetch('/cpet/public/api/officers/armament/index/{{ $id }}')
+            fetch('/cpet/public/api/officers/radiogram/index/{{ $id }}')
             .then(response => response.json())
             .then(data => {
                 let template = '';
@@ -313,57 +314,65 @@
                 
                     data.forEach(e => {
                         template += `
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="card mb-3 shadow">
-                                <div class="card-header">
-                                    <i class="fas fa-shield-alt"></i> ${e.armamento.nombre}
-                                    <span class="float-right">${e.armamento.tipo}</span>
+                                <div class="card-header h4">
+                                    <i class="fas fa-map-marker-alt"></i> ${e.estacione.estacion}
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p><strong>Estado:</strong> ${e.estado}</p>
+                                            <p><strong>Estado:</strong> <br>${(e.is_actual) ? '<i class="fas fa-medal text-warning"></i> Cumpliendo servicio' : 'Servicio Cumplido'}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <p><strong>Fecha de asignación:</strong> ${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_asignacion))}
+                                        <div class="col-md-6">
+                                            <p><strong>Fecha de envio:</strong> <br>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_inicio))}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Fecha de reintegro:</strong> ${(e.fecha_fin) ? new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_fin)) : 'Sin fecha'}</p>
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p class="text-justify">${e.descripcion}</p>
+                                            <p class="text-justify">${(e.descripcion) ? e.descripcion : 'Sin descripción'}</p>
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-md-12 text-right">
-                                            <button class="btn btn-dark btn-sm edit" data-id="${e.id}"><i class="fas fa-edit"></i></button>
-                                            <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="fas fa-trash"></i></button>    
+                                            <a href="#" class="btn btn-dark btn-sm" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Imprimir radiograma"><i class="fas fa-print"></i></a>
+                                            <button class="btn btn-dark btn-sm edit" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Editar radiograma"><i class="fas fa-edit"></i></button>
+                                            <button class="btn btn-danger btn-sm delete" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Eliminar radiograma"><i class="fas fa-trash"></i></button>    
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         `;
+
+                        
                     });
                 }
                 $('#academy-container').html(template);
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                })
             });
         }
 
-        function index_armamento(){
-            fetch('/cpet/public/api/armament')
+        function index_estaciones(){
+            fetch('/cpet/public/api/stations')
             .then(response => response.json())
             .then(data => {
-                let template = '<option value>--- SELECCIONE UN ARMAMENTO ---</option>';
+                let template = '<option value>--- SELECCIONE UNA ESTACIÓN ---</option>';
                 data.forEach(e => {
                     template += `
-                        <option value="${e.id}">${e.nombre} - ${e.tipo} - ${e.calibre}</option>
+                        <option value="${e.id}">${e.estacion}</option>
                     `;
                 });
-                $('#id_arma').html(template);
+                $('#id_estacion').html(template);
             });
         }
     });

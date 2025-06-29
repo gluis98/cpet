@@ -28,6 +28,7 @@
                                     <option value="APROBADAS">APROBADAS</option>
                                     <option value="NEGADAS">NEGADAS</option>
                                     <option value="VENCIDAS">VENCIDAS</option>
+                                    <option value="REGLAMENTARIAS">REGLAMENTARIAS</option>
                                     <option value="EN PROCESO">EN PROCESO</option>
                                 </select>
                             </div>  
@@ -38,8 +39,8 @@
                                 <input type="date" class="form-control" id="fecha_emision" name="fecha_emision" required>
                             </div>
                             <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_reintegro">Fecha de reintegro *</label>
-                                <input type="date" class="form-control" id="fecha_reintegro" name="fecha_reintegro" required>
+                                <label class="form-label" for="fecha_reintegro">Fecha de reintegro </label>
+                                <input type="date" class="form-control" id="fecha_reintegro" name="fecha_reintegro">
                             </div>
                         </div>
                         <div class="row">
@@ -85,7 +86,7 @@
             <div class="au-breadcrumb-left">
                 <a href="{{ route('officers') }}" class="btn text-uppercase text-dark"><i class="fas fa-arrow-left"></i> Regresar</a>
             </div>
-            <a class="au-btn au-btn-icon au-btn--green" href="#" data-toggle="modal" data-target="#add" id="btn-add">
+            <a class="btn btn-dark btn-lg" href="#" data-toggle="modal" data-target="#add" id="btn-add">
                 <i class="zmdi zmdi-plus"></i>Agregar solicitud de vacaciones
             </a>
         </div>

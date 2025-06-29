@@ -7,7 +7,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content ">
         <div class="modal-header">
-          <h4 class="modal-title" id="myModalLabel">Registrar usuario</h4>
+          <h4 class="modal-title" id="myModalLabel">Registrar estación</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
@@ -17,60 +17,19 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        Datos del usuario
+                        Datos generales
                     </div>
                     <div class="card-body">
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Nombre de usuario') }}</label>
-
-                            <div class="col-md-8">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                        <div class="row">
+                            <div class=" col-md-12 mb-3">
+                                <label class="form-label" for="estacion">Nombre de la estación</label>
+                                <input type="text" class="form-control" id="estacion" name="estacion" placeholder="Ingresa el nombre de la estación de comando" required>
                             </div>
                         </div>
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Correo electrónico') }}</label>
-
-                            <div class="col-md-8">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="role" class="col-md-4 col-form-label text-md-end">{{ __('Rol') }}</label>
-
-                            <div class="col-md-8">
-                                <select name="role" id="role" class="form-control">
-                                    <option value>--- SELECCIONE UN ROL DE USUARIO</option>
-                                    <option value="Administrador">Administrador</option>
-                                    <option value="Usuario">Usuario</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Contraseña') }}</label>
-
-                            <div class="col-md-8">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                        <div class="row">
+                            <div class=" col-md-12 mb-3">
+                                <label class="form-label" for="descripcion">Descripción</label>
+                                <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Ingresa alguna descripción de la estación">
                             </div>
                         </div>
                     </div>
@@ -102,7 +61,7 @@
                 <a href="{{ route('officers') }}" class="btn text-uppercase text-dark"><i class="fas fa-arrow-left"></i> Regresar</a>
             </div>
             <a class="btn btn-dark btn-lg" href="#" data-toggle="modal" data-target="#add" id="btn-add">
-                <i class="zmdi zmdi-plus"></i>Agregar solicitud de vacaciones
+                <i class="zmdi zmdi-plus"></i>Agregar estación
             </a>
         </div>
     </div>
@@ -110,20 +69,8 @@
 <div class="container-fluid">
     <h2>{{$title}}</h2>
     <hr>
-    <div class="responsive-table">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">Nombre</th>
-                    <th class="text-center" scope="col">Correo electrónico</th>
-                    <th class="text-center" scope="col">Rol</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
+    <div class="container-fluid" id="academy-container">
+        
     </div>
 </div>
 @endsection
@@ -132,7 +79,7 @@
 <script>
     $(document).ready(function() {
         var id = "";
-        index(); 
+        index();
 
         $('#btn-add').click(function(e){
             e.preventDefault();
@@ -146,7 +93,7 @@
         $(document).on('submit','#form-add', function(e){
             e.preventDefault();
             let formData = new FormData(this);
-            fetch('/cpet/public/api/users', {
+            fetch('/cpet/public/api/stations', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -166,7 +113,7 @@
             let formData = new FormData(this);
                 formData.append('_method', 'PUT');
             console.log(id)
-            fetch('/cpet/public/api/users/'+id, {
+            fetch('/cpet/public/api/stations/'+id, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -187,24 +134,16 @@
         $(document).on('click','.edit', function(e){
             e.preventDefault();
             id = $(this).data('id');
-            fetch('/cpet/public/api/users/'+id)
+            fetch('/cpet/public/api/stations/'+id)
             .then(response => response.json())
             .then(data => {
                 
                 id = data.id;
-                $('#name').val(data.name);
-                $('#email').val(data.email);
-                $('#role option').each(function(){
-                    if($(this).val() == data.role){
-                        $(this).attr('selected', 'selected');
-                    }
-                });
 
-                if(!{{ auth()->user()->role == 'Administrador' ? 'true' : 'false' }}){
-                    $('#role').attr('disabled', 'disabled');
-                }else{
-                    $('#role').removeAttr('disabled');
-                }
+
+                $('#estacion').val(data.estacion);
+                $('#descripcion').val(data.descripcion);
+                
 
                 $('#form-add').attr('id', 'form-edit');
                 $('#btn-submit').attr('class', 'btn btn-dark btn-lg');
@@ -272,7 +211,7 @@
                                 confirmButtonText: 'Sí, eliminar'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/users/'+id, {
+                                    fetch('/cpet/public/api/officers/awards/'+id, {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -309,7 +248,7 @@
                     confirmButtonText: 'Sí, eliminar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cpet/public/api/users/'+id, {
+                        fetch('/cpet/public/api/stations/'+id, {
                             method: 'POST',
                             body: formData
                         }).then(response => response.json())
@@ -327,43 +266,42 @@
         });
 
         function index(){
-            fetch('/cpet/public/api/users')
+            fetch('/cpet/public/api/stations')
             .then(response => response.json())
             .then(data => {
-                let template = '', 
-                    disfrutadas = 0,
-                    vencidas = 0;
-                data.forEach(e => {
-                    if(e.is_disfrutadas){
-                        disfrutadas++;
-                    }
-
-                    if(e.estatus == 'Vencidas'){
-                        vencidas++;
-                    }
-
+                let template = '';
+                if(data.length == 0){
                     template += `
-                    <tr>
-                        <td class="text-center">${e.name}</td>
-                        <td class="text-center">${e.email}</td>
-                        <td class="text-center">${e.role}</td>
-                        <td class="text-right">
-                            <button class="btn btn-dark edit" data-id="${e.id}"><i class="far fa-edit"></i></button>
-                            <button class="btn btn-danger delete" data-id="${e.id}"><i class="far fa-trash-alt"></i></button>
-                        </td>
-                    </tr>
-                    `;
-                });
-                $('#vacaciones-disfrutadas').html(disfrutadas);
-                $('#vacaciones-vencidas').html(vencidas);
-
-                $('table').DataTable().destroy();
-                $('tbody').html(template);
-                $('table').DataTable(t);
+                        <div class="row border p-3">
+                            <div class="col-md-12">
+                                <h5 class="text-center text-muted">No hay datos registrados</h5>
+                            </div>
+                        </div>`;
+                }else{
+                
+                    data.forEach(e => {
+                        template += `
+                        <div class="row border p-3">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-6 h4"><i class="fas fa-book-reader"></i> <span class="font-weight-bold">${e.estacion}</span> 
+                                        <button class="btn btn-dark btn-sm edit" data-id="${e.id}"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="fas fa-trash"></i></button>    
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span class="text-muted"><b>Descripcion</b>: ${(e.descripcion) ? e.descripcion : 'Sin descripción'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    });
+                }
+                $('#academy-container').html(template);
             });
         }
-
-        
     });
 </script>
 @endsection

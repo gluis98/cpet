@@ -41,14 +41,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_inicio">Fecha de inicio *</label>
+                            <div class=" col-md-12 mb-3">
+                                <label class="form-label" for="fecha_inicio">Fecha de curso o diplomado *</label>
                                 <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
                             </div>
-                            <div class=" col-md-6 mb-3">
+                            {{-- <div class=" col-md-6 mb-3">
                                 <label class="form-label" for="fecha_fin">Fecha de fin</label>
                                 <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="row">
@@ -85,7 +85,7 @@
             <div class="au-breadcrumb-left">
                 <a href="{{ route('officers') }}" class="btn text-uppercase text-dark"><i class="fas fa-arrow-left"></i> Regresar</a>
             </div>
-            <a class="au-btn au-btn-icon au-btn--green" href="#" data-toggle="modal" data-target="#add" id="btn-add">
+            <a class="btn btn-dark btn-lg" href="#" data-toggle="modal" data-target="#add" id="btn-add">
                 <i class="zmdi zmdi-plus"></i>Agregar curso - diplomado
             </a>
         </div>
@@ -323,8 +323,7 @@
                                         <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="fas fa-trash"></i></button>    
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <span>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_inicio))}</span> - 
-                                        <span>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_fin))}</span>
+                                        <span>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_inicio))}</span>
                                     </div>
                                 </div>
                                 <div class="row">

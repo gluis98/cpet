@@ -22,20 +22,30 @@
                     <div class="card-body">
                         <div class="row">
                             <div class=" col-md-12 mb-3">
-                                <label class="form-label" for="autoridad">Autoridad</label>
-                                <input type="text" class="form-control" id="autoridad" name="autoridad" placeholder="Inspector Rivas">
+                                <label class="form-label" for="tipo">Tipo *</label>
+                                <select class="form-control" id="tipo" name="tipo" required>
+                                    <option>Reconocimiento</option>
+                                    <option>Condecoración</option>
+                                    <option>Felicitaciones</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row">
                             <div class=" col-md-12 mb-3">
-                                <label class="form-label" for="fecha">Fecha de inicio *</label>
+                                <label class="form-label" for="autoridad">Autoridad *</label>
+                                <input type="text" class="form-control" id="autoridad" name="autoridad" placeholder="Inspector Rivas" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class=" col-md-12 mb-3">
+                                <label class="form-label" for="fecha">Fecha de reconocimiento *</label>
                                 <input type="date" class="form-control" id="fecha" name="fecha" required>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class=" col-md-12 mb-3">
-                                <label class="form-label" for="descripcion">Descripción</label>
+                                <label class="form-label" for="descripcion">Descripción *</label>
                                 <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
                             </div>
                         </div>
@@ -67,7 +77,7 @@
             <div class="au-breadcrumb-left">
                 <a href="{{ route('officers') }}" class="btn text-uppercase text-dark"><i class="fas fa-arrow-left"></i> Regresar</a>
             </div>
-            <a class="au-btn au-btn-icon au-btn--green" href="#" data-toggle="modal" data-target="#add" id="btn-add">
+            <a class="btn btn-dark btn-lg" href="#" data-toggle="modal" data-target="#add" id="btn-add">
                 <i class="zmdi zmdi-plus"></i>Agregar reconocimiento
             </a>
         </div>
@@ -306,6 +316,11 @@
                                     </div>
                                     <div class="col-md-6 text-right">
                                         <span>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha))}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span class="text-muted"><b>Tipo</b>: ${e.tipo}</span>
                                     </div>
                                 </div>
                                 <div class="row">

@@ -31,64 +31,71 @@ class HomeController extends Controller
         return view('home', ['title' => $title, 'leftImagePath' => $this->leftImagePath]);
     }
 
-    public function users()
-    {
-        $title = "Usuarios";
-        return view('admin.users.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath]);
-    }
-
     public function officers()
     {
-        $title = "Oficiales";
+        $title = "Funcionarios Policiales";
         return view('admin.officers.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath]);
     }
 
     public function officers_academy($id)
     {
         $o = \App\Models\Oficiale::find($id);
-        $title = "Oficial: " . $o->nombre_completo . " - Datos académicos";
+        $title = "Funcionario Policial: " . $o->nombre_completo . " - Datos académicos";
         return view('admin.officers-academy.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_position($id)
     {
         $o = \App\Models\Oficiale::find($id);
-        $title = "Oficial: " . $o->nombre_completo . " - Cargos alcanzados";
+        $title = "Funcionario Policial: " . $o->nombre_completo . " - Jerarquías obtenidas";
         return view('admin.officers-position.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_familly($id)
     {
         $o = \App\Models\Oficiale::find($id);
-        $title = "Oficial: " . $o->nombre_completo . " - Familiares";
+        $title = "Funcionario Policial: " . $o->nombre_completo . " - Familiares";
         return view('admin.officers-family.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_vacations($id)
     {
         $o = \App\Models\Oficiale::find($id);
-        $title = "Oficial: " . $o->nombre_completo . " - Vacaciones - Años de servicio: " . (now()->year - $o->fecha_ingreso->year);
+        $title = "Funcionario Policial: " . $o->nombre_completo . " - Vacaciones - Años de servicio: " . (now()->year - $o->fecha_ingreso->year);
         return view('admin.officers-vacations.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_courses($id)
     {
         $o = \App\Models\Oficiale::find($id);
-        $title = "Oficial: " . $o->nombre_completo . " - Cursos y diplomados";
+        $title = "Funcionario Policial: " . $o->nombre_completo . " - Cursos y diplomados";
         return view('admin.officers-courses.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
     public function officers_awards($id)
     {
         $o = \App\Models\Oficiale::find($id);
-        $title = "Oficial: " . $o->nombre_completo . " - Reconocimientos";
+        $title = "Funcionario Policial: " . $o->nombre_completo . " - Reconocimientos";
         return view('admin.officers-awards.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
-    public function officers_armament($id)
+    public function officers_radiogram($id)
     {
         $o = \App\Models\Oficiale::find($id);
-        $title = "Oficial: " . $o->nombre_completo . " - Armamento";
-        return view('admin.officers-armament.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
+        $title = "Funcionario Policial: " . $o->nombre_completo . " - Radiograma";
+        return view('admin.officers-radiogram.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
+    }
+
+    // Métodos de vistas de configuración
+    public function stations()
+    {
+        $title = "Estaciones de comando";
+        return view('admin.stations.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath]);
+    }
+
+    public function users()
+    {
+        $title = "Usuarios";
+        return view('admin.users.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath]);
     }
 }

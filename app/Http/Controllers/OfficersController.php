@@ -37,7 +37,7 @@ class OfficersController extends Controller
      * Display the specified resource.
      */
     public function show($id) {
-        return response()->json(Oficiale::findOrFail($id), 200);
+        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo')->findOrFail($id), 200);
     }
 
     /**

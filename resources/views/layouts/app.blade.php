@@ -33,8 +33,17 @@
 
     <!-- Main CSS-->
     <link href="{{asset("css/theme.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("css/dataTables.bootstrap4.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/datatables-buttons/css/buttons.bootstrap4.min.css")}}" rel="stylesheet" media="all">
+    {{-- <link href="{{asset("css/dataTables.bootstrap4.css")}}" rel="stylesheet" media="all">
+    <link href="{{asset("vendor/datatables-buttons/css/buttons.bootstrap4.min.css")}}" rel="stylesheet" media="all"> --}}
+
+        <!-- DataTables Bootstrap 4 CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+
+        <!-- DataTables Buttons CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap4.min.css">
+
+        <!-- DataTables Responsive Bootstrap 4 CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
     @yield('styles')
 </head>
 
@@ -291,7 +300,7 @@
                         </li>
                         <li class="@if(\Route::currentRouteName() == 'officers') active @endif">
                             <a href="{{Route('officers')}}">
-                                <i class="fas fa-user"></i>Oficiales</a>
+                                <i class="fas fa-user"></i>Funcionarios Policiales</a>
                             {{-- <span class="inbox-num">3</span> --}}
                         </li>
                         <li class="has-sub">
@@ -322,6 +331,10 @@
                                     <a href="index4.html">
                                     <i class="fas fa-arrow-right"></i>Parroquias</a>
                                 </li> --}}
+                                <li>
+                                    <a href="{{Route('stations')}}">
+                                    <i class="fas fa-arrow-right"></i>Estaciones de comando</a>
+                                </li>
                                 <li>
                                     <a href="{{Route('users')}}">
                                         <i class="fas fa-arrow-right"></i>Usuarios</a>
@@ -631,16 +644,28 @@
     <!-- Main JS-->
     <script src="{{asset("js/main.js")}}"></script>
     <script src="{{asset("js/sweetalert2@11.js") }}"></script>
-    <script src="{{asset("js/dataTables.js") }}"></script>
-    <script src="{{asset("js/dataTables.bootstrap4.js") }}"></script>
-    <script src="{{asset("js/dataTables.responsive.js") }}"></script>
-    <script src="{{asset("vendor/datatables-buttons/js/dataTables.buttons.min.js") }}"></script>
     <script src="{{asset("vendor/jszip/jszip.min.js") }}"></script>
     <script src="{{asset("vendor/pdfmake/pdfmake.min.js") }}"></script>
     <script src="{{asset('vendor/pdfmake/vfs_fonts.js')}}"></script>
-    <script src="{{asset("vendor/datatables-buttons/js/buttons.html5.min.js") }}"></script>
-    <script src="{{asset("vendor/datatables-buttons/js/buttons.print.min.js") }}"></script>
-    <script src="{{asset("vendor/datatables-buttons/js/buttons.colVis.min.js") }}"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    <!-- DataTables Bootstrap 4 -->
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- DataTables Buttons -->
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+
+    <!-- DataTables Buttons Extensions -->
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js"></script>
+
+    <!-- DataTables Responsive -->
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+    <!-- DataTables Responsive Bootstrap 4 -->
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
     <script>
     var title = "{!! $title !!}";
     window.leftImageBase64 = "{!! $leftImagePath !!}";

@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 16/06/2025 09:36:07
+ Date: 29/06/2025 00:40:30
 */
 
 SET NAMES utf8mb4;
@@ -79,6 +79,22 @@ INSERT INTO `cargos` VALUES (22, 'Sargento Segundo');
 INSERT INTO `cargos` VALUES (23, 'Subinspector');
 INSERT INTO `cargos` VALUES (24, 'Supervisor');
 INSERT INTO `cargos` VALUES (25, 'Supervisor Jefe');
+
+-- ----------------------------
+-- Table structure for estaciones
+-- ----------------------------
+DROP TABLE IF EXISTS `estaciones`;
+CREATE TABLE `estaciones`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `estacion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `descripcion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of estaciones
+-- ----------------------------
+INSERT INTO `estaciones` VALUES (1, 'Trujillo', 'Esta es una descripcion de prueba');
 
 -- ----------------------------
 -- Table structure for estados
@@ -741,7 +757,7 @@ INSERT INTO `oficiales` VALUES (1079, '17605829', 'Parraga Rojas Regulo Jose', '
 INSERT INTO `oficiales` VALUES (1080, '17605963', 'Hernandez Montilla Derwy Antonio', '1986-06-09', NULL, NULL, NULL, NULL, '2009-05-01', NULL, 'agua santa calle los algarrobo parroqui agua santa municipio miranda', '4166755235', 'DERWYHERNANDEZ2020@GMAIL.COM', 'Operativo', 'PET-210001943', NULL, NULL, 'ESCUELA BASICA ELISA PULGAR DE RAMIREZ', ' ESTADO TRUJILLO MUNICIPIO  MIRANDA  PARROQUIA AGUA SANTA SECTOR CASCO CENTRAL DE AGUA SANTA DERECHA CALLE AGUA SANTA. IZQUIERDA CALLE DEMOCRACIA. FRENTE CALLE PRINCIPAL CERCA DE LA MEDICATURA CASA');
 INSERT INTO `oficiales` VALUES (1081, '17696652', 'Benitez Acevedo Jesus Manuel', '1986-10-16', NULL, NULL, NULL, NULL, '2010-09-01', NULL, 'urbanizacion mesetas de moron parroquia mercedez diaz municipio valera', '0424-7451576', 'BENITEZJM1986@GMAIL.COM', 'Operativo', 'PET-210001865', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
 INSERT INTO `oficiales` VALUES (1082, '17755895', 'Montilla Peña Jesus Antonio', '1987-03-27', NULL, NULL, NULL, NULL, '2007-09-01', NULL, 'urbanizacion florida II parroquia motatan municipio motatan', '0416-4736572', 'ANTWANJESUS.23@GMAIL.COM', 'Operativo', 'PET-210002100', NULL, NULL, 'UNIDAD EDUCATIVA PROFESOR JOSÉ ALBERTO AZUAJE', ' ESTADO TRUJILLO MUNICIPIO  PAMPANITO PARROQUIA LA CONCEPCION SECTOR LA PEÑITA DERECHA CALLE CANCHA. IZQUIERDA CALLE PEÑA. FRENTE CALLE CIEGA AL LADO DE LA CAPILLA CASA');
-INSERT INTO `oficiales` VALUES (1083, '17769227', 'Zambrano Peña Ana Gabriela', '1987-10-17', NULL, NULL, NULL, NULL, '2012-08-01', NULL, 'kilometro 23 sector santa lucia calle la floresta parroquia junin municipio sucre', '416-3970067', 'ana.zamb87@gmail.com', 'Operativo', 'PET-210001601', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1083, '17769227', 'Zambrano Peña Ana Gabriela', '1987-10-17', NULL, NULL, NULL, NULL, '2012-08-01', 'Soltero', 'kilometro 23 sector santa lucia calle la floresta parroquia junin municipio sucre', '416-3970067', 'ana.zamb87@gmail.com', 'Operativo', 'PET-210001601', NULL, 'fotografias/1083/Q0QfVDyCxCSmUwsR9fUpSvthZyjZPJuuKZ3a9zqd.jpg', 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
 INSERT INTO `oficiales` VALUES (1084, '17830186', 'Godoy Quintero Loreidis Emmar', '1985-07-16', NULL, NULL, NULL, NULL, '2021-05-01', NULL, 'las mesetas de chimpire calle principal parroquia jose leonardo suarez municipio san rafael de carvajal', '0412-7502299', 'loreidisggodoy8@gmail.com', 'Operativo', 'PET-210001946', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA ');
 INSERT INTO `oficiales` VALUES (1085, '17830299', 'Ruiz Villar Miguel Angel', '1983-05-13', NULL, NULL, NULL, NULL, '2018-12-01', NULL, 'la guaira frente el ambulario parroquia la guaira municipio trujillo', '0416-0831972', 'miguelangelruizvillar305@gmail.com', 'Operativo', 'PET-210002030', NULL, NULL, 'ESCUELA BOLIVARIANA ELOISA FONSECA', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA 6. FRENTE AVENIDA CARACAS DIAGONAL A POLLO SABROSO EDIFICIO');
 INSERT INTO `oficiales` VALUES (1086, '17830536', 'Albarran Jaimes Antonio Ramon', '1986-03-07', NULL, NULL, NULL, NULL, '2005-12-15', NULL, 'las mesetas de chimpire calle principal parroquia jose leonardo suarez municipio san rafael de carvajal', '0426-4343215', 'albarranantonia304@gmail.com', 'Operativo', 'PET-210001468', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
@@ -1232,7 +1248,7 @@ INSERT INTO `oficiales` VALUES (1570, '26324898', 'Rodriguez  Rodriguez Tunjan',
 INSERT INTO `oficiales` VALUES (1571, '26368212', 'Gonzalez Vasquez Enderson Jesus', '1998-06-25', NULL, NULL, NULL, NULL, '2019-01-01', NULL, 'sector calle andres bello motatan casa n° 2 municipio motatan', '0412-7502503', 'endersonjesusgonzalez2017@gmail.com', 'Operativo', 'SUSPENDIDO', NULL, NULL, 'ESCUELA BOLIVARIANA ANTONIO NICOLAS BRICEÑO', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA MOTATAN SECTOR ANDRES BELLO DERECHA CALLE ANDRES BELLO. FRENTE CALLE ANDRES BELLO DETRAS DEL ODONTOLOGICO EDIFICIO');
 INSERT INTO `oficiales` VALUES (1572, '26368318', 'Ojeda Morillo Deivin De Jesus ', '1994-07-22', NULL, NULL, NULL, NULL, '2018-04-16', NULL, 'VIA PRINCIPAL CALLE LA VIRGEN  EL BAÑO MOTATAN', '0424-7018632', 'ojedadeivin22@gmail.com', 'Operativo', 'PET-210002034', NULL, NULL, 'ESCUELA BOLIVARIANA EL BAÑO', 'ESTADO TRUJILLO MUNICIPIO MOTATAN PARROQUIA EL BAÑO SECTOR LA PLAZA FRENTE CALLE LA VIRGEN DEL CARMEN AL LADO DE LA CAPILLA VIRGEN DEL CARMEN, FRENTE A LA PLAZA EDIFICIO');
 INSERT INTO `oficiales` VALUES (1573, '26412030', 'Castellanos Gonzalez Luis Enrique', '1996-11-25', NULL, NULL, NULL, NULL, '2020-08-01', NULL, 'sector santa rosa calle el rosario parroquia cristobal mendoza municipio trujillo', '0426-9860761', 'luiscastellanospoli20@gmail.com', 'Operativo', 'PET-210001558', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
-INSERT INTO `oficiales` VALUES (1574, '26412296', 'Carrizo Gonzalez Maria Fernanda', '1996-02-29', NULL, NULL, NULL, NULL, '2019-08-23', NULL, 'barrio 5 de julio casa  02-64 parroquia balmore rodriguez municipio sucre', '0414-7338619', 'mariafernanda9624@gmail.com', 'Operativo', 'NO ACREDITADA ESTABA DANDO A LUZ', NULL, NULL, 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
+INSERT INTO `oficiales` VALUES (1574, '26412296', 'Carrizo Gonzalez Maria Fernanda', '1996-02-29', NULL, NULL, NULL, NULL, '2019-08-23', 'Soltero', 'barrio 5 de julio casa  02-64 parroquia balmore rodriguez municipio sucre', '0414-7338619', 'mariafernanda9624@gmail.com', 'Operativo', 'NO ACREDITADA ESTABA DANDO A LUZ', NULL, 'fotografias/1574/oSIrswnmvzB787NbARfEFMbaaUrHAoBybU1YeEU7.jpg', 'ESCUELA BOLIVARIANA CARRILLO GUERRA', 'ESTADO TRUJILLO MUNICIPIO TRUJILLO PARROQUIA CRISTOBAL MENDOZA SECTOR SANTA ROSA FRENTE AVENIDA CORO. IZQUIERDA CALLE BATALLA CAMPAL AGUA DE OBISPO AL LADO DE LA CARCEL NACIONAL DIAGONAL A LA CASA SINDICAL EDIFICIO');
 INSERT INTO `oficiales` VALUES (1575, '26412759', 'Salcedo Castellanos Heidy Alejandra', '1997-09-08', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'SECTOR LAS MALVINAS PARROQUIA FLOR DE PATRIA  MUNICPIO PAMPAN', '0424-7189476', 'ale.odioza01@gmail.com', 'Operativo', 'PET-210001828', NULL, NULL, 'ESCUELA BOLIVARIANA CARACHE', ' ESTADO TRUJILLO  MUNICIPIO CARACHE PARROQUIA CARACHE SECTOR BARRANCO FRENTE CALLE PRINCIPAL EL VITORO CASERÍO LOMAS DE BONILLA, A 100 METROS DE LA PARADA DE LOMAS DE BONILLA CASA');
 INSERT INTO `oficiales` VALUES (1576, '26413070', 'Rojas Felix Francisco', '1988-08-28', NULL, NULL, NULL, NULL, '2021-09-01', NULL, 'SECTOR LAS RURALES MINAS CERCA DEL LICEO, PARROQUIA ARNOLDO GABALDON  MUNICIPIO CANDELARIA', '0426-9800808', 'gato.rojas@gmail.com', 'Operativo', 'PET-210001802', NULL, NULL, 'ESCUELA BOLIVARIANA ESTADO CARABOBO', ' ESTADO TRUJILLO MUNICIPIO TRUJILLO  PARROQUIA CHIQUINQUIRA SECTOR PLAZA SUCRE DERECHA AVENIDA INDEPENDENCIA. IZQUIERDA AVENIDA BOLIVAR. FRENTE CALLE OCTAVA SUCRE FRENTE A LA PLAZA SUCRE EDIFICIO');
 INSERT INTO `oficiales` VALUES (1577, '26413557', 'Perez Vasquez Jean Carlos', '1997-07-31', NULL, NULL, NULL, NULL, '2020-01-01', NULL, 'el tablon de monay parroquia la paz municipio pampan', '0416-7736548', 'pjeancarlos733@gmail.com', 'Operativo', 'PET-210001480', NULL, NULL, 'LICEO BOLVARIANO RAFAEL RANGEL', 'ESTADO TRUJILLO MUNICIPIO VALERA PARROQUIA JUAN IGNACIO MONTILLA SECTOR LA PLATA DERECHA AVENIDA CARACAS. FRENTE AVENIDA 6 DIAGONAL AL SEGURO SOCIAL EDIFICIO');
@@ -3173,12 +3189,13 @@ CREATE TABLE `oficiales_cursos`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `id_policia`(`id_policia` ASC) USING BTREE,
   CONSTRAINT `oficiales_cursos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of oficiales_cursos
 -- ----------------------------
 INSERT INTO `oficiales_cursos` VALUES (3, 1, 'Criminalistica y penal', 'Universidad Nacional Experimental de Seguridad (UNES)', 'Curso', 'is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.', '2025-01-26', '2025-03-26');
+INSERT INTO `oficiales_cursos` VALUES (4, 1574, 'Criminal', 'Escuela de oficios', 'Curso', 'Curso que trata sobre tal tal y tal', '2025-06-27', NULL);
 
 -- ----------------------------
 -- Table structure for oficiales_documentos
@@ -3237,7 +3254,7 @@ CREATE TABLE `oficiales_familiares`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `id_policia`(`id_policia` ASC) USING BTREE,
   CONSTRAINT `oficiales_familiares_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1987 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1988 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of oficiales_familiares
@@ -4182,6 +4199,30 @@ CREATE TABLE `oficiales_familiares_documentos`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for oficiales_radiograma
+-- ----------------------------
+DROP TABLE IF EXISTS `oficiales_radiograma`;
+CREATE TABLE `oficiales_radiograma`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_policia` int NOT NULL,
+  `id_estacion` int NOT NULL,
+  `fecha_inicio` date NULL DEFAULT NULL,
+  `fecha_final` date NULL DEFAULT NULL,
+  `is_actual` int NOT NULL,
+  `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `id_policia`(`id_policia` ASC) USING BTREE,
+  INDEX `id_arma`(`id_estacion` ASC) USING BTREE,
+  CONSTRAINT `oficiales_radiograma_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `oficiales_radiograma_ibfk_2` FOREIGN KEY (`id_estacion`) REFERENCES `estaciones` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of oficiales_radiograma
+-- ----------------------------
+INSERT INTO `oficiales_radiograma` VALUES (1, 1574, 1, '2025-06-27', NULL, 1, 'Esta es una descripcion de prueba');
+
+-- ----------------------------
 -- Table structure for oficiales_reconocimientos
 -- ----------------------------
 DROP TABLE IF EXISTS `oficiales_reconocimientos`;
@@ -4191,14 +4232,16 @@ CREATE TABLE `oficiales_reconocimientos`  (
   `descripcion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `fecha` date NOT NULL,
   `autoridad` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `tipo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `id_policia`(`id_policia` ASC) USING BTREE,
   CONSTRAINT `oficiales_reconocimientos_ibfk_1` FOREIGN KEY (`id_policia`) REFERENCES `oficiales` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of oficiales_reconocimientos
 -- ----------------------------
+INSERT INTO `oficiales_reconocimientos` VALUES (2, 1574, 'Condecorado', '2025-06-27', 'INspector Rivas', 'Reconocimiento');
 
 -- ----------------------------
 -- Table structure for oficiales_salud

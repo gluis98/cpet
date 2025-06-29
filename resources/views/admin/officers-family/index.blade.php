@@ -28,6 +28,9 @@
                                     <option value="Padre">Padre</option>
                                     <option value="Madre">Madre</option>
                                     <option value="Hijo(a)">Hijo(a)</option>
+                                    <option value="Esposo(a)">Esposo(a)</option>
+                                    <option value="Conyugue">Conyugue</option>
+                                    <option value="Union Estable de Hechos">Union Estable de Hechos</option>
                                 </select>
                             </div>  
                         </div>
@@ -98,7 +101,7 @@
             <div class="au-breadcrumb-left">
                 <a href="{{ route('officers') }}" class="btn text-uppercase text-dark"><i class="fas fa-arrow-left"></i> Regresar</a>
             </div>
-            <a class="au-btn au-btn-icon au-btn--green" href="#" data-toggle="modal" data-target="#add" id="btn-add">
+            <a class="btn btn-dark btn-lg" href="#" data-toggle="modal" data-target="#add" id="btn-add">
                 <i class="zmdi zmdi-plus"></i>Agregar familiar
             </a>
         </div>
