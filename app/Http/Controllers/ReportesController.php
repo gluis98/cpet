@@ -4,16 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\Oficiale;
 use App\Models\OficialesVacacione;
+use App\Models\Entidad;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class ReportesController extends Controller
 {
+    protected $entidad;
+
+    public function __construct(Entidad $entidad)
+    {
+        $this->entidad = Entidad::first();
+    }
+
     // Esta función sirve para obtener el reporte individual de la boleta de vacaciones de un oficial
     public function vacation($id)
     {
         $oficial = OficialesVacacione::with('oficiale')->findOrFail($id);
-        return view('admin.reports.vacation');
+        $anio = Carbon::parse($oficial->fecha_emision)->format('Y');
+        $dias = 0;
+        $fechaInicio = Carbon::parse($oficial->fecha_emision);
+        $fechaFin = isset($oficial->fecha_reintegro) ? Carbon::parse($oficial->fecha_reintegro) : Carbon::now();
+        while ($fechaInicio->lte($fechaFin)) {
+            if ($fechaInicio->isWeekday()) {
+                $dias++;
+            }
+            $fechaInicio->addDay();
+        }
+        $dias_habiles = $dias;
+        return view('admin.reports.vacation', ['oficial' => $oficial, 'tipo' => 'VACACIONES DEL AÑO ' . $anio . " CON " . $dias_habiles . " DÍAS HÁBILES", 'entidad' => $this->entidad]);
     }
 
     public function card(Request $request)
