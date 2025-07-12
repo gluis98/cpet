@@ -25,6 +25,7 @@
                                 <label class="form-label" for="tipo_formacion">Tipo de formación *</label>
                                 <select class="form-control" id="tipo_formacion" name="tipo_formacion" required>
                                     <option value>--- SELECCIONE UN TIPO DE FORMACIÓN ---</option>
+                                    <option value="Bachiller en Ciencias">Bachiller en Ciencias</option>
                                     <option value="Técnico superior universitario">Técnico superior universitario</option>
                                     <option value="Licenciatura">Licenciatura</option>
                                     <option value="Ingeniería">Ingeniería</option>

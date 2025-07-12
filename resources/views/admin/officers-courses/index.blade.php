@@ -27,6 +27,7 @@
                                     <option value>--- SELECCIONE UN TIPO ---</option>
                                     <option value="Curso">Curso</option>
                                     <option value="Diplomado">Diplomado</option>
+                                    <option value="Taller">Taller</option>
                                 </select>
                             </div>  
                             <div class=" col-md-6">

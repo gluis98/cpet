@@ -34,7 +34,7 @@
                                 <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
                             </div>
                             <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_fin">Fecha de fin *</label>
+                                <label class="form-label" for="fecha_fin">Fecha de fin</label>
                                 <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                         <div class="row">
                             <div class=" col-md-12 mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_actual" name="is_actual">
+                                    <input class="form-check-input" type="checkbox" id="is_actual" name="is_actual" value="1">
                                     <label class="form-check-label" for="is_actual">Cargo actual</label>
                                 </div>
                             </div>
@@ -164,7 +164,10 @@
                 });
 
                 $('#fecha_inicio').val(data.fecha_inicio.substr(0,4) + '-' + data.fecha_inicio.substr(5,2) + '-' + data.fecha_inicio.substr(8,2));
-                $('#fecha_fin').val((!data.is_actual) ? data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2) : '');
+
+                if(data.fecha_fin){
+                    $('#fecha_fin').val((!data.is_actual) ? data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2) : '');
+                }
                 $('#is_actual').prop('checked', data.is_actual == 1);
                 
 
@@ -234,7 +237,7 @@
                                 confirmButtonText: 'Sí, eliminar'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/officers/positions/'+id, {
+                                    fetch('/cpet/public/api/officers/position/'+id, {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -271,8 +274,8 @@
                     confirmButtonText: 'Sí, eliminar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/positions/'+id, {
-                            method: 'POST',
+                        fetch('/cpet/public/api/officers/position/'+id, {
+                            method: 'DELETE',
                             body: formData
                         }).then(response => response.json())
                         .then(data => {

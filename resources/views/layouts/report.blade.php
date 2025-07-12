@@ -131,9 +131,9 @@
             @yield('content')
             <div class="footer fw-bold">
                 <p>CONFORME</p>
-                <p class="text-center">{{$entidad->director_general}}</p>
-                <p class="text-center">DIRECTOR GENERAL DEL CUERPO POLICÍA DEL ESTADO TRUJILLO</p>
-                <p class="text-center">SEGÚN DECRETO N° 3755 DE FECHA 11/08/2022 Y PUBLICADA EN GACETA OFICIAL DEL ESTADO TRUJILLO N° 3839 DE FECHA 11/08/2022</p>
+                <p class="text-center">{{$entidad->director_general}} <br>
+                DIRECTOR GENERAL DEL CUERPO POLICÍA DEL ESTADO TRUJILLO <br>
+                SEGÚN DECRETO N° 3755 DE FECHA 11/08/2022 Y PUBLICADA EN GACETA OFICIAL DEL ESTADO TRUJILLO N° 3839 DE FECHA 11/08/2022</p>
             </div>
             <p>{{ date('d/m/Y') }}</p>
         </div>

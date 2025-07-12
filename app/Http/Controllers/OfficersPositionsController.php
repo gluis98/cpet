@@ -36,6 +36,14 @@ class OfficersPositionsController extends Controller
      public function update(Request $request, $id) {
         $oficiales = OficialesCargo::findOrFail($id);
         $oficiales->update($request->all());
+
+        if(!empty($request->is_actual)){
+            $oficiales->is_actual = 1;
+        }else{
+            $oficiales->is_actual = 0;
+        }
+
+        $oficiales->save();
         return response()->json(['msj' => "Registro actualizado con éxito."], 200);
     }
 

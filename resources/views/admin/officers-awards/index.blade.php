@@ -164,10 +164,8 @@
                     }
                 });
 
-                $('#nombre').val(data.nombre);
-                $('#institucion').val(data.institucion);
-                $('#fecha_inicio').val(data.fecha_inicio.substr(0,4) + '-' + data.fecha_inicio.substr(5,2) + '-' + data.fecha_inicio.substr(8,2));
-                $('#fecha_fin').val(data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2));
+                $('#autoridad').val(data.autoridad);
+                $('#fecha').val(data.fecha.substr(0,4) + '-' + data.fecha.substr(5,2) + '-' + data.fecha.substr(8,2));
                 $('#descripcion').val(data.descripcion);
                 
 
