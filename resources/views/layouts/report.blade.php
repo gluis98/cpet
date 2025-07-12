@@ -135,7 +135,7 @@
                 DIRECTOR GENERAL DEL CUERPO POLICÍA DEL ESTADO TRUJILLO <br>
                 SEGÚN DECRETO N° 3755 DE FECHA 11/08/2022 Y PUBLICADA EN GACETA OFICIAL DEL ESTADO TRUJILLO N° 3839 DE FECHA 11/08/2022</p>
             </div>
-            <p>{{ date('d/m/Y') }}</p>
+            {{-- <p>{{ date('d/m/Y') }}</p> --}}
         </div>
     </div>
 </body>
