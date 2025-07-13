@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Oficiale;
 use App\Models\OficialesVacacione;
 use App\Models\Entidad;
+use App\Models\OficialesRadiograma;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -33,7 +34,24 @@ class ReportesController extends Controller
             $fechaInicio->addDay();
         }
         $dias_habiles = $dias;
-        return view('admin.reports.vacation', ['oficial' => $oficial, 'tipo' => 'VACACIONES DEL AÑO ' . $anio . " CON " . $dias_habiles . " DÍAS HÁBILES", 'entidad' => $this->entidad]);
+        return view('admin.reports.vacation', ['oficial' => $oficial, 'title' => 'BOLETA DE VACACIONES', 'tipo' => 'VACACIONES DEL AÑO ' . $anio . " CON " . $dias_habiles . " DÍAS HÁBILES", 'entidad' => $this->entidad]);
+    }
+
+    public function radiogram($id)
+    {
+        $oficial = OficialesRadiograma::findOrFail($id);
+        $anio = Carbon::parse($oficial->fecha_emision)->format('Y');
+        $dias = 0;
+        $fechaInicio = Carbon::parse($oficial->fecha_emision);
+        $fechaFin = isset($oficial->fecha_reintegro) ? Carbon::parse($oficial->fecha_reintegro) : Carbon::now();
+        while ($fechaInicio->lte($fechaFin)) {
+            if ($fechaInicio->isWeekday()) {
+                $dias++;
+            }
+            $fechaInicio->addDay();
+        }
+        $dias_habiles = $dias;
+        return view('admin.reports.radiogram', ['oficial' => $oficial, 'title' => '', 'tipo' => 'VACACIONES DEL AÑO ' . $anio . " CON " . $dias_habiles . " DÍAS HÁBILES", 'entidad' => $this->entidad]);
     }
 
     public function card(Request $request)

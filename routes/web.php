@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function(){
     
     Route::controller(ReportesController::class)->group(function(){
         Route::get('/reports/vacation/{id}', 'vacation')->name('report.vacation');
+        Route::get('/reports/radiogram/{id}', 'radiogram')->name('report.radiogram');
         Route::get('/reports/officers', 'officers')->name('report.officers');
         Route::get('/reports/officers/officers-born_date', 'officers_born_date')->name('report.officers_born_date');
         Route::get('/reports/officers/ingress-date', 'ingress_date')->name('report.officers.ingress_date');

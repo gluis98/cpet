@@ -91,8 +91,10 @@
 <div class="container-fluid">
     <h2>{{$title}}</h2>
     <hr>
-    <div class="container-fluid" id="academy-container">
-        
+    <div class="container-fluid" >
+        <div class="row" id="radiogram-container">
+
+        </div>
     </div>
 </div>
 @endsection
@@ -342,7 +344,7 @@
                                     <hr>
                                     <div class="row">
                                         <div class="col-md-12 text-right">
-                                            <a href="#" class="btn btn-dark btn-sm" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Imprimir radiograma"><i class="fas fa-print"></i></a>
+                                            <a href="../../reports/radiogram/${e.id}" class="btn btn-dark btn-sm" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Imprimir radiograma" target="_blank"><i class="fas fa-print"></i></a>
                                             <button class="btn btn-dark btn-sm edit" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Editar radiograma"><i class="fas fa-edit"></i></button>
                                             <button class="btn btn-danger btn-sm delete" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Eliminar radiograma"><i class="fas fa-trash"></i></button>    
                                         </div>
@@ -355,7 +357,7 @@
                         
                     });
                 }
-                $('#academy-container').html(template);
+                $('#radiogram-container').html(template);
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip()
                 })

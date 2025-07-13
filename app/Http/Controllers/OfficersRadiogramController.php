@@ -20,6 +20,14 @@ class OfficersRadiogramController extends Controller
      */
     public function store(Request $request) {
         $oficiales = OficialesRadiograma::create($request->all());
+
+        if(!empty($request->is_actual)){
+            $oficiales->is_actual = 1;
+        }else{
+            $oficiales->is_actual = 0;
+        }
+
+        $oficiales->save();
         return response()->json(['msj' => "Registro realizado con éxito."], 201);
     }
 
@@ -36,6 +44,14 @@ class OfficersRadiogramController extends Controller
      public function update(Request $request, $id) {
         $oficiales = OficialesRadiograma::findOrFail($id);
         $oficiales->update($request->all());
+
+        if(!empty($request->is_actual)){
+            $oficiales->is_actual = 1;
+        }else{
+            $oficiales->is_actual = 0;
+        }
+
+        $oficiales->save();
         return response()->json(['msj' => "Registro actualizado con éxito."], 200);
     }
 

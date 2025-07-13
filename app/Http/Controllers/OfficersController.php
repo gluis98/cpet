@@ -13,7 +13,7 @@ class OfficersController extends Controller
      * Display a listing of the resource.
      */
     public function index() {
-        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo')->get(), 200);
+        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo', 'cargos_administrativo')->get(), 200);
     }
 
 
@@ -69,7 +69,7 @@ class OfficersController extends Controller
      * Display the specified resource.
      */
     public function show($id) {
-        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo')->findOrFail($id), 200);
+        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo', 'cargos_administrativo')->findOrFail($id), 200);
     }
 
     /**

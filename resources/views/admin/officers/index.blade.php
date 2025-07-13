@@ -173,7 +173,7 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Estatus *</label>
-                                <select class="form-control" id="estatus" required>
+                                <select class="form-control" id="estatus" required name="estatus">
                                     <option value="Operativo">Operativo</option>
                                     <option value="No Operativo">No Operativo</option>
                                     <option value="Retirado">Retirado</option>
@@ -183,6 +183,15 @@
                                     <option value="URRA">URRA</option>
                                 </select>
                             </div>
+                        </div>
+                        <div class="row">
+                            <label class="form-label">Cargo administrativo *</label>
+                            <select class="form-control" id="cargo_administrativo_id" name="cargo_administrativo_id" required>
+                                <option value>--- SELECCIONE UN CARGO ADMINISTRATIVO ---</option>
+                                @foreach(\App\Models\CargosAdministrativo::orderBy('nombre_cargo', 'ASC')->get() as $ca)
+                                    <option value="{{$ca->id}}">{{$ca->nombre_cargo}}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -332,6 +341,10 @@
                         <label>Jerarquía Actual</label>
                         <span id="cargo_actual_ficha">N/A</span>
                     </div>
+                    <div class="data-field">
+                        <label>Cargo Actual</label>
+                        <span id="cargo_administrativo_actual_ficha">N/A</span>
+                    </div>
                 
                     <!-- Datos de Vestuario -->
                     <div class="section-title"><i class="fas fa-tshirt"></i> Datos de Vestuario</div>
@@ -414,6 +427,7 @@
                 <th class="text-center" scope="col">Teléfono</th>
                 <th class="text-center" scope="col">Fecha de ingreso</th>
                 <th class="text-center" scope="col">Jerarquía</th>
+                <th class="text-center" scope="col">Cargo</th>
                 <th class="text-center" scope="col">Estatus</th>
                 <th classs="actions" scope="col"></th>
             </tr>
@@ -567,7 +581,7 @@
                     $('#talla_pantalon_ficha').text(data.talla_pantalon || 'N/A');
                     $('#talla_zapatos_ficha').text(data.talla_zapatos || 'N/A');
                     $('#cargo_actual_ficha').text(cargoActual); 
-
+                    $('#cargo_administrativo_actual_ficha').text((data.cargos_administrativo) ? data.cargos_administrativo.nombre_cargo : "S/A"); 
                     // Actualizar fotografía
                     const fotoOficial = $('#foto-oficial');
                     fotoOficial.attr('src', data.fotografia ? `storage/${data.fotografia}` : 'images/oficial-icon.png');
@@ -780,6 +794,7 @@
                         <td class="text-center">${e.telefono ? e.telefono : 'S/T'}</td>
                         <td class="text-center">${e.fecha_ingreso ? e.fecha_ingreso.substr(0,4) + '-' + e.fecha_ingreso.substr(5,2) + '-' + e.fecha_ingreso.substr(8,2) : 'S/F'}</td>
                         <td class="text-center">${e.oficiales_cargos.find(c => c.is_actual === 1)?.cargo.nombre_cargo || 'N/A'}</td>
+                        <td class="text-center">${(e.cargos_administrativo) ? e.cargos_administrativo.nombre_cargo : 'S/A'}</td>
                         <td class="text-center">${e.estatus.toUpperCase()}</td>
                         <td class="text-right actions">
                             <div class="btn-group">

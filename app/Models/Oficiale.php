@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Oficiale
  * 
  * @property int $id
+ * @property int|null $cargo_administrativo_id
  * @property string|null $documento_identidad
  * @property string|null $nombre_completo
  * @property Carbon|null $fecha_nacimiento
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $direccion_centro
  * 
  * @property Parroquia|null $parroquia
+ * @property CargosAdministrativo|null $cargos_administrativo
  * @property Collection|OficialesAcademico[] $oficiales_academicos
  * @property Collection|Armamento[] $armamentos
  * @property Collection|Cargo[] $cargos
@@ -55,12 +57,14 @@ class Oficiale extends Model
 	public $timestamps = false;
 
 	protected $casts = [
+		'cargo_administrativo_id' => 'int',
 		'fecha_nacimiento' => 'datetime',
 		'fecha_ingreso' => 'datetime',
 		'parroquia_id' => 'int'
 	];
 
 	protected $fillable = [
+		'cargo_administrativo_id',
 		'documento_identidad',
 		'nombre_completo',
 		'fecha_nacimiento',
@@ -84,6 +88,11 @@ class Oficiale extends Model
 	public function parroquia()
 	{
 		return $this->belongsTo(Parroquia::class);
+	}
+
+	public function cargos_administrativo()
+	{
+		return $this->belongsTo(CargosAdministrativo::class, 'cargo_administrativo_id');
 	}
 
 	public function oficiales_academicos()

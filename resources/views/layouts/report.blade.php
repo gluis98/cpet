@@ -77,6 +77,10 @@
             text-align: center;
         }
 
+        .text-right {
+            text-align: end;
+        }
+
         .fw-bold {
             font-weight: bold;
         }
@@ -126,16 +130,27 @@
                 <img src="{{asset('images/icon/gran-mision.png')}}" alt="Police Logo" class="logo">
             </div>
         </div>
-        <div class="title">BOLETA DE VACACIONES</div>
+        <div class="title">{{$title}}</div>
         <div class="content">
             @yield('content')
+
+            
+            
             <div class="footer fw-bold">
-                <p>CONFORME</p>
-                <p class="text-center">{{$entidad->director_general}} <br>
-                DIRECTOR GENERAL DEL CUERPO POLICÍA DEL ESTADO TRUJILLO <br>
-                SEGÚN DECRETO N° 3755 DE FECHA 11/08/2022 Y PUBLICADA EN GACETA OFICIAL DEL ESTADO TRUJILLO N° 3839 DE FECHA 11/08/2022</p>
+                @if(Route::currentRouteName() == "report.radiogram")
+                <p>CUMPLASE:</p>
+                <p class="text-center">{{$entidad->rrhh}} <br>
+                    DIRECTORA DE LA OFICINA DE TALENTO HUMANO DE LA DIRECCIÓN GENERAL DEL CUERPO DE POLICÍA DEL ESTADO TRUJILLO</p>
+                @endif
+
+                @if(Route::currentRouteName() == "report.vacation")
+                    <p>CONFORME:</p>
+                    <p class="text-center">{{$entidad->director_general}} <br>
+                    DIRECTOR GENERAL DEL CUERPO POLICÍA DEL ESTADO TRUJILLO <br>
+                    SEGÚN DECRETO N° 3755 DE FECHA 11/08/2022 Y PUBLICADA EN GACETA OFICIAL DEL ESTADO TRUJILLO N° 3839 DE FECHA 11/08/2022</p>
+                @endif
             </div>
-            {{-- <p>{{ date('d/m/Y') }}</p> --}}
+            
         </div>
     </div>
 </body>

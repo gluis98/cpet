@@ -154,6 +154,7 @@
         <p><strong>Nro. Credencial:</strong> {{ $officer->numero_placa }}</p>
         <p><strong>Fecha de Ingreso:</strong> {{ \Carbon\Carbon::parse($officer->fecha_ingreso)->format('d-m-Y') }}</p>
         <p><strong>Jerarquía Actual:</strong> {{ ($officer->oficiales_cargos->where('is_actual', 1)->first() != null) ? $officer->oficiales_cargos->where('is_actual', 1)->first()->cargo->nombre_cargo : "Sin Cargo" }}</p>
+        <p><strong>Cargo Actual:</strong> {{ ($officer->cargos_administrativo) ? $officer->cargos_administrativo->nombre_cargo : "Sin Cargo"}}</p>
         <p><strong>Estatus:</strong> {{ $officer->estatus}}</p>
         <h3>Datos personales</h3>
         <p><strong>Documento:</strong> {{ $officer->documento_identidad }}</p>
