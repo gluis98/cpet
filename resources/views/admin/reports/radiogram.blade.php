@@ -16,6 +16,6 @@
     <div><span class="label">Presente:</span></div>
 </div>
 <div class="grid">
-    <div><span class="input-field">PARA SU CONOCIMIENTO Y DEMÁS FINES DE ESTRICTO CUMPLIMIENTO, A PARTIR DE LA PRESENTE FECHA, PRESTARÁ SU SERVICIO EN El/LA {{$oficial->estacione->estacion}}, {{$oficial->descripcion}}, IGUALMENTE HAGO DE SU CONOCIMIENTO QUE DEBERÁ PRESENTARSE EN SU UNIDAD DE DESTINO.</span></div>
+    <div><span class="input-field">PARA SU CONOCIMIENTO Y DEMÁS FINES DE ESTRICTO CUMPLIMIENTO, A PARTIR DE LA PRESENTE FECHA, PRESTARÁ SU SERVICIO EN {{$oficial->estacione->estacion}}, {{$oficial->descripcion}}, IGUALMENTE HAGO DE SU CONOCIMIENTO QUE DEBERÁ PRESENTARSE EN SU UNIDAD DE DESTINO.</span></div>
 </div>
 @endsection
