@@ -86,6 +86,13 @@ class HomeController extends Controller
         return view('admin.officers-radiogram.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
+    public function officers_health($id)
+    {
+        $o = \App\Models\Oficiale::find($id);
+        $title = "Funcionario Policial: " . $o->nombre_completo . " - Reposos Médicos";
+        return view('admin.officers-health.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
+    }
+
     // Métodos de vistas de configuración
     public function stations()
     {

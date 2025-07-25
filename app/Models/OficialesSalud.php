@@ -7,6 +7,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,12 +15,15 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property int|null $id_policia
- * @property string $tipo_sangre
- * @property string|null $alergias
- * @property string|null $condiciones_preexistentes
  * @property Carbon|null $fecha_revision
+ * @property string|null $diagnostico
+ * @property Carbon|null $fecha_reposo_inicio
+ * @property Carbon|null $fecha_reposo_fin
+ * @property int|null $dias_reposo
+ * @property int|null $is_vigente
  * 
  * @property Oficiale|null $oficiale
+ * @property Collection|OficialesSaludReposo[] $oficiales_salud_reposos
  *
  * @package App\Models
  */
@@ -30,19 +34,30 @@ class OficialesSalud extends Model
 
 	protected $casts = [
 		'id_policia' => 'int',
-		'fecha_revision' => 'datetime'
+		'fecha_revision' => 'datetime',
+		'fecha_reposo_inicio' => 'datetime',
+		'fecha_reposo_fin' => 'datetime',
+		'dias_reposo' => 'int',
+		'is_vigente' => 'int'
 	];
 
 	protected $fillable = [
 		'id_policia',
-		'tipo_sangre',
-		'alergias',
-		'condiciones_preexistentes',
-		'fecha_revision'
+		'fecha_revision',
+		'diagnostico',
+		'fecha_reposo_inicio',
+		'fecha_reposo_fin',
+		'dias_reposo',
+		'is_vigente'
 	];
 
 	public function oficiale()
 	{
 		return $this->belongsTo(Oficiale::class, 'id_policia');
+	}
+
+	public function oficiales_salud_reposos()
+	{
+		return $this->hasMany(OficialesSaludReposo::class);
 	}
 }

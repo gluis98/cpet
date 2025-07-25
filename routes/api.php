@@ -14,6 +14,7 @@ use App\Http\Controllers\OfficersAwardsController;
 use App\Http\Controllers\OfficersArmamentController;
 use App\Http\Controllers\ArmamentController;
 use App\Http\Controllers\OfficersRadiogramController;
+use App\Http\Controllers\OfficersHealthController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\UserController;
 
@@ -85,6 +86,8 @@ Route::controller(OfficersFilesController::class)->group(function(){
     Route::get('/officers/files/{id}', 'show');
     Route::put('/officers/files/{id}', 'update');
     Route::delete('/officers/files/{id}', 'destroy');
+    Route::get('/officers/files/reposos/{id}', 'get_reposos');
+    Route::post('/officers/files/reposos/{id}', 'updateReposo');
 });
 
 Route::controller(OfficersVacationsController::class)->group(function(){
@@ -109,4 +112,12 @@ Route::controller(OfficersRadiogramController::class)->group(function(){
     Route::get('/officers/radiogram/{id}', 'show');
     Route::put('/officers/radiogram/{id}', 'update');
     Route::delete('/officers/radiogram/{id}', 'destroy');
+});
+
+Route::controller(OfficersHealthController::class)->group(function(){
+    Route::get('/officers/health/index/{id}', 'index');
+    Route::post('/officers/health', 'store');
+    Route::get('/officers/health/{id}', 'show');
+    Route::put('/officers/health/{id}', 'update');
+    Route::delete('/officers/health/{id}', 'destroy');
 });

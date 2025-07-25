@@ -61,14 +61,14 @@
                             </div>
                             <div class=" col-md-6 mb-3">
                                 <label class="form-label" for="Edad">Edad </label>
-                                <input type="text" class="form-control" id="Edad" name="Edad" required>
+                                <input type="text" class="form-control" id="edad" name="edad" required>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
                             <div class=" col-md-12 mb-3">
                                 <div class=" col-md-12 mb-3">
-                                    <label class="form-label" for="direccion">Dirección *</label>
+                                    <label class="form-label" for="direccion">Dirección</label>
                                     <textarea class="form-control" id="direccion" name="direccion" required></textarea>
                                 </div>
                             </div>
@@ -201,9 +201,15 @@
                 $('#telefono').val(data.telefono);
                 $('#direccion').val(data.direccion);
                 $('#nombre_completo').val(data.nombre_completo);
-
+                $('#edad').val(data.edad);
                 $('#parentesco option').each(function() {
                     if($(this).val() == data.parentesco){
+                        $(this).attr('selected', 'selected');
+                    }
+                });
+
+                $('#sexo option').each(function() {
+                    if($(this).val() == data.sexo){
                         $(this).attr('selected', 'selected');
                     }
                 });

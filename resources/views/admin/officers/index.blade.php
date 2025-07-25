@@ -527,6 +527,13 @@
                         $(this).attr('selected', 'selected');
                     }
                 });
+
+                $('#cargo_administrativo_id option').each(function() {
+                    if($(this).val() == data.cargo_administrativo_id){
+                        $(this).attr('selected', 'selected');
+                    }
+                });
+
                 $('#fecha_ingreso').val(data.fecha_ingreso.substr(0,4) + '-' + data.fecha_ingreso.substr(5,2) + '-' + data.fecha_ingreso.substr(8,2));
                 
                 $('#talla_camisa').val(data.talla_camisa);
@@ -810,6 +817,7 @@
                                     <a class="btn dropdown-item" href="officers/positions/${e.id}" data-toggle="tooltip" data-placement="top" title="Jerarquías obtenidas"><i class="fas fa-medal"></i> Jerarquías obtenidas</a>
                                     <a class="btn dropdown-item" href="officers/awards/${e.id}" data-toggle="tooltip" data-placement="top" title="Reconocimientos"><i class="fas fa-trophy"></i> Reconocimientos</a>
                                     <a class="btn dropdown-item" href="officers/familly/${e.id}" data-toggle="tooltip" data-placement="top" title="Hijos y familiares"><i class="fab fa-gratipay"></i> Hijos y familiares</a>
+                                    <a class="btn dropdown-item" href="officers/health/${e.id}" data-toggle="tooltip" data-placement="top" title="Reposos médicos"><i class="fas fa-medkit"></i> Reposos médicos</a>
                                     <button class="btn dropdown-item files" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Archivos del oficial"><i class="fas fa-file"></i> Archivos del oficial</button>
                                     <a class="btn dropdown-item" href="officers/vacations/${e.id}" data-toggle="tooltip" data-placement="top" title="Solicitud de vacaciones"><i class="fas fa-plane-departure"></i> Solicitud de vacaciones</a>
                                     <div class="dropdown-divider"></div>

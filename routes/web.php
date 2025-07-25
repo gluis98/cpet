@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function(){
         Route::get('/officers/familly/{id}', 'officers_familly')->name('officers.familly');
         Route::get('/officers/vacations/{id}', 'officers_vacations')->name('officers.vacations');
         Route::get('/officers/awards/{id}', 'officers_awards')->name('officers.awards');
+        Route::get('/officers/health/{id}', 'officers_health')->name('officers.health');
 
         Route::get('/stations', 'stations')->name('stations');
         Route::get('/users', 'users')->name('users');
