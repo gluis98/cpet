@@ -346,7 +346,7 @@
                     template += `
                     <tr>
                         <td class="text-center">${e.fecha_emision.substr(0,4) + '-' + e.fecha_emision.substr(5,2) + '-' + e.fecha_emision.substr(8,2)}</td>
-                        <td class="text-center">${e.fecha_reintegro.substr(0,4) + '-' + e.fecha_reintegro.substr(5,2) + '-' + e.fecha_reintegro.substr(8,2)}</td>
+                        <td class="text-center">${(e.fecha_reintegro) ? e.fecha_reintegro.substr(0,4) + '-' + e.fecha_reintegro.substr(5,2) + '-' + e.fecha_reintegro.substr(8,2) : 'S/F'}</td>
                         <td class="text-center">${(e.is_disfrutadas) ? "Disfrutadas" : 'Sin disfrutar'}</td>
                         <td class="text-center">${e.estatus}</td>
                         <td class="text-right">
