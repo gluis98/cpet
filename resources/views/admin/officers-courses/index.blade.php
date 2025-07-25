@@ -283,7 +283,7 @@
                     confirmButtonText: 'Sí, eliminar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/courses/'+id, {
+                        fetch('/cpet/public/api/officers/course/'+id, {
                             method: 'POST',
                             body: formData
                         }).then(response => response.json())
