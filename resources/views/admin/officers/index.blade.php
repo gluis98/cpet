@@ -534,7 +534,7 @@
                     }
                 });
 
-                $('#fecha_ingreso').val(data.fecha_ingreso.substr(0,4) + '-' + data.fecha_ingreso.substr(5,2) + '-' + data.fecha_ingreso.substr(8,2));
+                $('#fecha_ingreso').val((data.fecha_ingreso) ? data.fecha_ingreso.substr(0,4) + '-' + data.fecha_ingreso.substr(5,2) + '-' + data.fecha_ingreso.substr(8,2) : '');
                 
                 $('#talla_camisa').val(data.talla_camisa);
                 $('#talla_pantalon').val(data.talla_pantalon);
