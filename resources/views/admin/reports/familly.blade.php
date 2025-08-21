@@ -116,31 +116,31 @@
     <button class="btn btn-primary no-print" onclick="window.print()">Imprimir Reporte</button>
     @foreach($oficiales as $officer)
     <div class="report-section">
-      <h3>Oficial: {{$officer->nombre_completo}} (Documento: V{{number_format($officer->documento_identidad)}})</h3>
-      <table class="report-table">
-        <thead>
-          <tr>
-            <th>Nombre Completo</th>
-            <th>Parentesco</th>
-            <th>Fecha Nacimiento</th>
-            <th>Género</th>
-            <th>Edad</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($officer->oficiales_familiares as $family)
-          <tr>
-            <td>{{$family->nombre_completo}}</td>
-            <td>{{$family->parentesco}}</td>
-            <td>{{ \Carbon\Carbon::parse($family->fecha_nacimiento)->format('d-m-Y') }}</td>
-            <td>{{($family->sexo == 'M' ? 'Masculino' : 'Femenino')}}</td>
-            <td>{{$family->edad}}</td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
+        <h3>Oficial: {{$officer->nombre_completo}} (Documento: V{{number_format($officer->documento_identidad)}})</h3>
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Nombre Completo</th>
+                    <th>Parentesco</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Género</th>
+                    <th>Edad</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($officer->oficiales_familiares as $family)
+                <tr>
+                    <td>{{$family->nombre_completo}}</td>
+                    <td>{{$family->parentesco}}</td>
+                    <td>{{ \Carbon\Carbon::parse($family->fecha_nacimiento)->format('d-m-Y') }}</td>
+                    <td>{{($family->sexo == 'M' ? 'Masculino' : 'Femenino')}}</td>
+                    <td>{{ \Carbon\Carbon::parse($family->fecha_nacimiento)->age }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-    @endforeach
+@endforeach
     <hr>
     <div class="footer">
       <p>Generado por el Sistema de Gestión de Oficiales - Desarrollado por: <a href="https://www.instagram.com/adsyssystems/">Adsys Sistemas</a> © 2025</p>

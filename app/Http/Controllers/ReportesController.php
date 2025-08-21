@@ -128,8 +128,69 @@ class ReportesController extends Controller
 
     public function family_members(Request $request)
     {
+        // Validar los datos de entrada
+        // $request->validate([
+        //     'parentesco' => 'nullable|string|max:255',
+        //     'fecha_nacimiento_inicio' => 'nullable|date|date_format:Y-m-d',
+        //     'fecha_nacimiento_fin' => 'nullable|date|date_format:Y-m-d|after_or_equal:fecha_nacimiento_inicio',
+        // ]);
+
         // Inicializar la consulta
-        $query = Oficiale::query()->with('oficiales_familiares');
+        $query = Oficiale::query()->with(['oficiales_familiares' => function ($q) use ($request) {
+            // Filtrar por parentesco
+            if ($request->filled('parentesco')) {
+                $q->where('parentesco', $request->parentesco);
+            }
+
+            // Filtrar por fecha de nacimiento
+            $startDate = $request->filled('fecha_nacimiento_inicio') 
+                ? $request->fecha_nacimiento_inicio 
+                : '2015-01-01'; // Por defecto: desde 2015
+
+            $endDate = $request->filled('fecha_nacimiento_fin') 
+                ? $request->fecha_nacimiento_fin 
+                : now()->format('Y-m-d'); // Por defecto: hasta hoy
+
+            // Asegurar que startDate no sea anterior a 2015
+            if (strtotime($startDate) < strtotime('2015-01-01')) {
+                $startDate = '2015-01-01';
+            }
+
+            // Aplicar filtro de fecha con whereBetween
+            $q->whereBetween('fecha_nacimiento', [$startDate, $endDate]);
+
+            // Condición explícita para excluir fechas anteriores a 2015
+            $q->where('fecha_nacimiento', '>=', '2015-01-01');
+
+            // Depurar el filtro de fechas
+            Log::info('Filtro de fechas aplicado en oficiales_familiares: ', [
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+            ]);
+        }]);
+
+        // Filtrar oficiales que tengan familiares que cumplan con los criterios
+        $query->whereHas('oficiales_familiares', function ($q) use ($request) {
+            // Repetir los mismos filtros para whereHas
+            if ($request->filled('parentesco')) {
+                $q->where('parentesco', $request->parentesco);
+            }
+
+            $startDate = $request->filled('fecha_nacimiento_inicio') 
+                ? $request->fecha_nacimiento_inicio 
+                : '2015-01-01';
+
+            $endDate = $request->filled('fecha_nacimiento_fin') 
+                ? $request->fecha_nacimiento_fin 
+                : now()->format('Y-m-d');
+
+            if (strtotime($startDate) < strtotime('2015-01-01')) {
+                $startDate = '2015-01-01';
+            }
+
+            $q->whereBetween('fecha_nacimiento', [$startDate, $endDate]);
+            $q->where('fecha_nacimiento', '>=', '2015-01-01');
+        });
 
         // Depurar los valores recibidos
         Log::info('Filtros recibidos: ', [
@@ -138,23 +199,11 @@ class ReportesController extends Controller
             'fecha_nacimiento_fin' => $request->fecha_nacimiento_fin,
         ]);
 
-        // Aplicar todos los filtros dentro de un solo whereHas
-        $query->whereHas('oficiales_familiares', function ($q) use ($request) {
-            // Filtrar por Parentesco
-            if ($request->has('parentesco') && !empty($request->parentesco)) {
-                $q->where('parentesco', $request->parentesco);
-            }
-
-            // Filtrar por Fecha de Nacimiento (rango) usando whereBetween
-            if ($request->has('fecha_nacimiento_inicio') && !empty($request->fecha_nacimiento_inicio)) {
-                $startDate = $request->fecha_nacimiento_inicio;
-                $endDate = $request->has('fecha_nacimiento_fin') && !empty($request->fecha_nacimiento_fin)
-                    ? $request->fecha_nacimiento_fin
-                    : $startDate; // Si no hay fin, usa la fecha de inicio como límite
-                $q->whereBetween('fecha_nacimiento', [$startDate, $endDate]);
-                Log::info('Filtro aplicado: fecha_nacimiento BETWEEN ' . $startDate . ' AND ' . $endDate);
-            }
-        });
+        // Depurar la consulta SQL generada
+        Log::info('Consulta SQL: ', [
+            'query' => $query->toSql(),
+            'bindings' => $query->getBindings(),
+        ]);
 
         // Obtener los resultados
         $oficiales = $query->get();
@@ -163,8 +212,16 @@ class ReportesController extends Controller
         Log::info('Resultados obtenidos: ', $oficiales->map(function ($oficial) {
             return [
                 'id' => $oficial->id,
+                'nombre' => $oficial->nombre_completo,
+                'documento' => $oficial->documento_identidad,
                 'familiares' => $oficial->oficiales_familiares->map(function ($familiar) {
-                    return ['nombre' => $familiar->nombre_completo, 'fecha_nacimiento' => $familiar->fecha_nacimiento];
+                    return [
+                        'nombre' => $familiar->nombre_completo,
+                        'fecha_nacimiento' => $familiar->fecha_nacimiento,
+                        'parentesco' => $familiar->parentesco,
+                        'sexo' => $familiar->sexo,
+                        'edad' => $familiar->edad,
+                    ];
                 })->all(),
             ];
         })->all());
