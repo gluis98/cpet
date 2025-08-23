@@ -203,16 +203,34 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label" for="talla_camisa">Talla de camisa *</label>
+                                <label class="form-label" for="talla_camisa">Talla de camisa</label>
                                 <input type="text" class="form-control" id="talla_camisa" name="talla_camisa" placeholder="Ingrese la talla de camisa">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label" for="talla_pantalon">Talla de pantalón *</label>
+                                <label class="form-label" for="talla_pantalon">Talla de pantalón</label>
                                 <input type="text" class="form-control" id="talla_pantalon" name="talla_pantalon" placeholder="Ingrese la talla de pantalón">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label" for="talla_zapatos">Talla de zapatos *</label>
+                                <label class="form-label" for="talla_zapatos">Talla de zapatos</label>
                                 <input type="text" class="form-control" id="talla_zapatos" name="talla_zapatos" placeholder="Ingrese la talla de zapato">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label" for="talla_kepin_toka">Talla de KEPIN/TOKA</label>
+                                <input type="text" class="form-control" id="talla_kepin_toka" name="talla_kepin_toka" placeholder="Ingrese la talla de kepin toka">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label" for="talla_saco">Talla de saco</label>
+                                <input type="text" class="form-control" id="talla_saco" name="talla_saco" placeholder="Ingrese la talla de saco">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="talla_falda">Talla de falda</label>
+                                <input type="text" class="form-control" id="talla_falda" name="talla_falda" placeholder="Ingrese la talla de falda">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="talla_gorra">Talla de gorra</label>
+                                <input type="text" class="form-control" id="talla_gorra" name="talla_gorra" placeholder="Ingrese la talla de gorra">
                             </div>
                         </div>
                     </div>
@@ -360,6 +378,27 @@
                         <label>Talla de Zapatos</label>
                         <span id="talla_zapatos_ficha">N/A</span>
                     </div>
+                    <div class="data-field">
+                        <label>Talla de Saco</label>
+                        <span id="talla_saco_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Talla de Kepin/Toka</label>
+                        <span id="talla_kepin_toka_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Talla de Tacón</label>
+                        <span id="talla_tacon_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Talla de Falda</label>
+                        <span id="talla_falda_ficha">N/A</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Talla de Gorra</label>
+                        <span id="talla_gorra_ficha">N/A</span>
+                    </div>
+                    
                 </div>
                 <div class="ficha-footer">
                     Generado el 18 de junio de 2025 | Sistema de Gestión Policial xAI
@@ -539,6 +578,11 @@
                 $('#talla_camisa').val(data.talla_camisa);
                 $('#talla_pantalon').val(data.talla_pantalon);
                 $('#talla_zapatos').val(data.talla_zapatos);
+                $('#talla_saco').val(data.talla_saco);
+                $('#talla_kepin_toka').val(data.talla_kepin_toka);
+                $('#talla_tacon').val(data.talla_tacon);
+                $('#talla_falda').val(data.talla_falda);
+                $('#talla_gorra').val(data.talla_gorra);
                 $('#telefono').val(data.telefono);
                 $('#correo_electronico').val(data.correo_electronico);
 
@@ -587,6 +631,11 @@
                     $('#talla_camisa_ficha').text(data.talla_camisa || 'N/A');
                     $('#talla_pantalon_ficha').text(data.talla_pantalon || 'N/A');
                     $('#talla_zapatos_ficha').text(data.talla_zapatos || 'N/A');
+                    $('#talla_saco').text(data.talla_saco || 'N/A');
+                    $('#talla_kepin_toka_ficha').text(data.talla_kepin_toka || 'N/A');
+                    $('#talla_tacon_ficha').text(data.talla_tacon || 'N/A');
+                    $('#talla_falda_ficha').text(data.talla_falda || 'N/A');
+                    $('#talla_gorra_ficha').text(data.talla_gorra || 'N/A');
                     $('#cargo_actual_ficha').text(cargoActual); 
                     $('#cargo_administrativo_actual_ficha').text((data.cargos_administrativo) ? data.cargos_administrativo.nombre_cargo : "S/A"); 
                     // Actualizar fotografía

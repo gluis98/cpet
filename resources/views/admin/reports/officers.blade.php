@@ -61,7 +61,7 @@
     }
     .report-table td {
       background-color: #f9f9f9;
-      font-size: 10px;
+      font-size: 8px;
     }
     .footer {
       text-align: center;
@@ -136,13 +136,19 @@
           <th>Fin en el cargo</th>
           @endif
           <th>Tipo Sangre</th>
-          {{-- <th>Talla Camisa</th>
-          <th>Talla Zapato</th> --}}
+          <th>Talla Camisa</th>
+          <th>Talla Pantalon</th>
+          <th>Talla Zapato</th>
+          <th>Talla Saco</th>
+          <th>Talla Kepin/Toka</th>
+          <th>Talla Tacón</th>
+          <th>Talla Falda</th>
+          <th>Talla Gorra</th>
           <th>Fecha Ingreso</th>
           <th>Estado Civil</th>
           <th colspan="3">Dirección</th>
           <th>Teléfono</th>
-          {{-- <th>Correo Electrónico</th> --}}
+          <th>Correo Electrónico</th>
           <th>Estatus Encomienda</th>
           <th>Centro Votación</th>
         </tr>
@@ -168,13 +174,19 @@
             </td>
             @endif
             <td>{{$officer->tipo_sangre}}</td>
-            {{-- <td>{{$officer->talla_camisa}}</td>
-            <td>{{$officer->talla_zapato}}</td> --}}
+            <td>{{ $officer->talla_camisa ?? 'S/I' }}</td>
+            <td>{{ $officer->talla_pantalon ?? 'S/I' }}</td>
+            <td>{{ $officer->talla_zapato ?? 'S/I' }}</td>
+            <td>{{ $officer->talla_saco ?? 'S/I' }}</td>
+            <td>{{ $officer->talla_kepin_toka ?? 'S/I' }}</td>
+            <td>{{ $officer->talla_tacon ?? 'S/I' }}</td>
+            <td>{{ $officer->talla_falda ?? 'S/I' }}</td>
+            <td>{{ $officer->talla_gorra ?? 'S/I' }}</td>
             <td>{{ \Carbon\Carbon::parse($officer->fecha_ingreso)->format('d-m-Y') }}</td>
             <td>{{$officer->estado_civil}}</td>
             <td colspan="3">{{$officer->direccion}}</td>
             <td>{{$officer->telefono}}</td>
-            {{-- <td>{{$officer->correo_electronico}}</td> --}}
+            <td>{{$officer->correo_electronico}}</td>
             <td>{{$officer->estatus}}</td>
             <td>{{$officer->centro_votacion}}</td>
         </tr>

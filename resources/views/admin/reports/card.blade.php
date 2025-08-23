@@ -163,10 +163,17 @@
         <p><strong>Dirección:</strong> {{ $officer->direccion }}</p>
         <h3>Competencias</h3>
         <ul>
-          <li><strong>Tipado Sangre:</strong> {{ $officer->tipo_sangre }}</li>
-          <li><strong>Talla Camisa:</strong> {{ $officer->talla_camisa }}</li>
-          <li><strong>Talla Zapato:</strong> {{ $officer->talla_zapato }}</li>
-          <li><strong>Estado Civil:</strong> {{ $officer->estado_civil }}</li>
+          <li><strong>Tipado Sangre:</strong> {!! $officer->tipo_sangre ?? '<i>S/I</i>' !!}</li>
+          <li><strong>Talla Camisa:</strong> {!! $officer->talla_camisa ?? '<i>S/I</i>' !!}</li>
+          <li><strong>Talla Pantalón:</strong> {!! $officer->talla_pantalon ?? '<i>S/I</i>' !!}</li>
+          <li><strong>Talla Zapato:</strong> {!! $officer->talla_zapato ?? '<i>S/I</i>' !!}</li>
+          <li><strong>Talla Saco:</strong> {!! $officer->talla_saco ?? '<i>S/I</i>' !!}</li>
+          <li><strong>Talla Kepin/Toka:</strong> {!! $officer->talla_kepin_toka ?? '<i>S/I</i>' !!}</li>
+          <li><strong>Talla Tacón:</strong> {!! $officer->talla_tacon ?? '<i>S/I</i>' !!}</li>
+          <li><strong>Talla Falda:</strong> {!! $officer->talla_falda ?? '<i>S/I</i>' !!}</li>
+          <li><strong>Talla Gorra:</strong> {!! $officer->talla_gorra ?? '<i>S/I</i>' !!}</li>
+          <li><strong>Estado Civil:</strong> {!! $officer->estado_civil ?? '<i>S/I</i>' !!}</li>
+
         </ul>
       </div>
     </div>
