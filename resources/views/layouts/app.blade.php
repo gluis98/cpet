@@ -124,7 +124,7 @@
                         <h4 class="font-weight-bold">Reporte de oficiales por tallas</h4>
                     </div>
                     <div class="card-body">
-                        <form method="GET" action="reports/officers/sizes">
+                        <form method="GET" action="reports/officers/sizes-officers">
                             @csrf                        
                             @foreach([
                                 'talla_camisa', 'talla_pantalon', 'talla_zapato', 'talla_saco',
