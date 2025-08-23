@@ -121,6 +121,28 @@
 
                 <div class="card">
                     <div class="card-header">
+                        <h4 class="font-weight-bold">Reporte de oficiales por tallas</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="GET" action="reports/officers/sizes">
+                            @csrf                        
+                            @foreach([
+                                'talla_camisa', 'talla_pantalon', 'talla_zapato', 'talla_saco',
+                                'talla_kepin_toka', 'talla_tacon', 'talla_falda', 'talla_gorra'
+                            ] as $campo)
+                                <div class="form-group">
+                                    <label for="{{ $campo }}">{{ ucfirst(str_replace('_', ' ', $campo)) }}</label>
+                                    <input type="text" name="{{ $campo }}" class="form-control" value="{{ request($campo) }}">
+                                </div>
+                            @endforeach
+                        
+                            <button type="submit" class="btn btn-primary">Filtrar</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
                       <h4 class="font-weight-bold">Reporte de oficiales por fecha de nacimiento</h4>
                     </div>
                     <div class="card-body">

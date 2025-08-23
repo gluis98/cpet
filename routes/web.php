@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function(){
         Route::get('/reports/officers/card', 'card')->name('report.officers.card');
         Route::get('/reports/officers/officers-cargo', 'officers_cargo')->name('report.officers.officers_cargo');
         Route::get('/reports/officers/family-members', 'family_members')->name('report.officers.family_members');
+        Route::get('/reports/officers/sizes-officers', 'sizes')->name('report.officers.sizes');
     });
    
 });

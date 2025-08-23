@@ -229,4 +229,33 @@ class ReportesController extends Controller
         // Pasar los datos a la vista
         return view('admin.reports.familly', compact('oficiales'));
     }
+
+    public function sizes(Request $request)
+    {
+        $query = Oficiale::query();
+
+        // Campos simples
+        $campos = [
+            'tipo_sangre',
+            'estado_civil',
+            'talla_camisa',
+            'talla_pantalon',
+            'talla_zapato',
+            'talla_saco',
+            'talla_kepin_toka',
+            'talla_tacon',
+            'talla_falda',
+            'talla_gorra',
+        ];
+
+        foreach ($campos as $campo) {
+            if ($request->filled($campo)) {
+                $query->where($campo, $request->$campo);
+            }
+        }
+
+        $oficiales = $query->get();
+
+        return view('admin.reports.officers', compact('oficiales'));
+    }
 }

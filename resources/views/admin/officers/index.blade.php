@@ -631,7 +631,7 @@
                     $('#talla_camisa_ficha').text(data.talla_camisa || 'N/A');
                     $('#talla_pantalon_ficha').text(data.talla_pantalon || 'N/A');
                     $('#talla_zapatos_ficha').text(data.talla_zapatos || 'N/A');
-                    $('#talla_saco').text(data.talla_saco || 'N/A');
+                    $('#talla_saco_ficha').text(data.talla_saco || 'N/A');
                     $('#talla_kepin_toka_ficha').text(data.talla_kepin_toka || 'N/A');
                     $('#talla_tacon_ficha').text(data.talla_tacon || 'N/A');
                     $('#talla_falda_ficha').text(data.talla_falda || 'N/A');
