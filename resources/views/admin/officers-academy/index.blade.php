@@ -25,6 +25,8 @@
                                 <label class="form-label" for="tipo_formacion">Tipo de formación *</label>
                                 <select class="form-control" id="tipo_formacion" name="tipo_formacion" required>
                                     <option value>--- SELECCIONE UN TIPO DE FORMACIÓN ---</option>
+                                    <option value="Primaria">Primaria</option>
+                                    <option value="Bachillerato">Bachillerato</option>
                                     <option value="Bachiller en Ciencias">Bachiller en Ciencias</option>
                                     <option value="Técnico superior universitario">Técnico superior universitario</option>
                                     <option value="Licenciatura">Licenciatura</option>
@@ -125,7 +127,7 @@
             e.preventDefault();
             let formData = new FormData(this);
                 formData.append('id_policia', '{{ $id }}');
-            fetch('/cpet/public/api/officers/academy', {
+            fetch('{{ url("api/officers/academy") }}', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -145,7 +147,7 @@
             let formData = new FormData(this);
                 formData.append('_method', 'PUT');
             console.log(id)
-            fetch('/cpet/public/api/officers/academy/'+id, {
+            fetch('{{ url("api/officers/academy") }}/'+id, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -166,7 +168,7 @@
         $(document).on('click','.edit', function(e){
             e.preventDefault();
             id = $(this).data('id');
-            fetch('/cpet/public/api/officers/academy/'+id)
+            fetch('{{ url("api/officers/academy") }}/'+id)
             .then(response => response.json())
             .then(data => {
                 
@@ -213,7 +215,7 @@
                     if (result.isConfirmed) {
                         let form = new FormData();
                             form.append('password', result.value);
-                        request = fetch('/cpet/public/api/users/confirm-password-admin', {
+                        request = fetch('{{ url("api/users/confirm-password-admin") }}', {
                                         method: "POST",
                                         body: form
                                     }).then(response => response.json())
@@ -251,7 +253,7 @@
                                 confirmButtonText: 'Sí, eliminar'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/officers/academy/'+id, {
+                                    fetch('{{ url("api/officers/academy") }}/'+id, {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -288,7 +290,7 @@
                     confirmButtonText: 'Sí, eliminar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/academy/'+id, {
+                        fetch('{{ url("api/officers/academy") }}/'+id, {
                             method: 'POST',
                             body: formData
                         }).then(response => response.json())
@@ -306,7 +308,7 @@
         });
 
         function index(){
-            fetch('/cpet/public/api/officers/academy/index/{{ $id }}')
+            fetch('{{ url("api/officers/academy/index/" . $id) }}')
             .then(response => response.json())
             .then(data => {
                 let template = '';

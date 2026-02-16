@@ -85,7 +85,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                <form id="myDropzone" class="dropzone" action="/cpet/public/api/officers/health/files/add-files/{{ $id }}" method="post" enctype="multipart/form-data">
+                <form id="myDropzone" class="dropzone" action="{{ url('api/officers/files/reposos/' . $id) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="fallback">
                         <input name="file" type="file" multiple />
@@ -164,7 +164,7 @@
             e.preventDefault();
             let formData = new FormData(this);
                 formData.append('id_policia', "{{ $id }}");
-            fetch('/cpet/public/api/officers/health', {
+            fetch('{{ url("api/officers/health") }}', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -183,7 +183,7 @@
             e.preventDefault();
             let formData = new FormData(this);
             formData.append('_method', 'PUT');
-            fetch('/cpet/public/api/officers/health/' + id, {
+            fetch('{{ url("api/officers/health") }}/' + id, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -204,7 +204,7 @@
         $(document).on('click','.edit', function(e){
             e.preventDefault();
             id = $(this).data('id');
-            fetch('/cpet/public/api/officers/health/' + id)
+            fetch('{{ url("api/officers/health") }}/' + id)
             .then(response => response.json())
             .then(data => {
                 $('#id_policia').val(data.id_policia);
@@ -237,7 +237,7 @@
                 confirmButtonText: 'Sí, eliminar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch('/cpet/public/api/officers/health/' + id, {
+                    fetch('{{ url("api/officers/health") }}/' + id, {
                         method: 'POST',
                         body: formData
                     }).then(response => response.json())
@@ -254,7 +254,7 @@
         });
 
         function index(){
-            fetch('/cpet/public/api/officers/health/index/' + '{{ $id }}')
+            fetch('{{ url("api/officers/health/index/" . $id) }}')
             .then(response => response.json())
             .then(data => {
                 let template = '';
@@ -288,7 +288,7 @@
             loadFilePreview(id)
             if (!Dropzone.instances.length) { 
                 const dropzone =  new Dropzone('#myDropzone', {
-                    url: '/cpet/public/api/officers/files/reposos/'+id,  // URL donde se enviarán los archivos
+                    url: '{{ url("api/officers/files/reposos") }}/'+id,  // URL donde se enviarán los archivos
                     method: 'POST', //Método por el cual se enviarán los archivos
                     paramName: 'archivos',          // El nombre del campo de archivo en el backend
                     maxFilesize: 2,             // Tamaño máximo en MB
@@ -306,14 +306,14 @@
         })
 
         function loadFilePreview(id) {
-            fetch('/cpet/public/api/officers/files/reposos/' + id)
+            fetch('{{ url("api/officers/files/reposos") }}/' + id)
             .then(response => response.json())
             .then(data => {
                 let preview = '';
                 data.forEach(file => {
                     preview += `
                     <div class="list-group-item">
-                        <a href="/cpet/public/storage/${file.archivo}" target="_blank" class="btn btn-success btn-sm">Descargar</a>
+                        <a href="{{ url('storage') }}/${file.archivo}" target="_blank" class="btn btn-success btn-sm">Descargar</a>
                         <button class="btn btn-danger btn-sm delete-file" data-id="${file.id}">Eliminar</button>
                         <span>${file.archivo}</span>
                     </div>
@@ -326,7 +326,7 @@
                     let fileId = $(this).data('id');
                     let formData = new FormData();
                     formData.append('_method', 'DELETE');
-                    fetch(`/cpet/public/api/officers/health/files/add-files/${fileId}`, {
+                    fetch('{{ url("api/officers/files/add-files") }}/' + fileId, {
                         method: 'POST',
                         body: formData
                     }).then(response => response.json())
@@ -336,7 +336,7 @@
                             icon: "success",
                             draggable: true
                         });
-                        loadFilePreview(fileId);
+                        loadFilePreview(id);
                     });
                 });
             });
