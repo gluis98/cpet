@@ -11,9 +11,86 @@ class OfficersController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * Optimizado para DataTables server-side processing
      */
-    public function index() {
-        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo', 'cargos_administrativo')->get(), 200);
+    public function index(Request $request) {
+        // Si no es una petición DataTables, retornar todos los datos (para compatibilidad)
+        if (!$request->has('draw')) {
+            return response()->json(
+                Oficiale::select('id', 'numero_placa', 'documento_identidad', 'nombre_completo', 
+                                'telefono', 'fecha_ingreso', 'estatus', 'cargo_administrativo_id')
+                    ->with([
+                        'oficiales_cargos' => function($query) {
+                            $query->select('id', 'id_policia', 'id_cargo', 'is_actual')
+                                  ->where('is_actual', 1);
+                        },
+                        'oficiales_cargos.cargo:id,nombre_cargo',
+                        'cargos_administrativo:id,nombre_cargo'
+                    ])
+                    ->get(), 
+                200
+            );
+        }
+
+        // Server-side processing para DataTables
+        $draw = $request->get('draw');
+        $start = $request->get('start');
+        $length = $request->get('length');
+        $search = $request->get('search')['value'] ?? '';
+        $orderColumn = $request->get('order')[0]['column'] ?? 0;
+        $orderDir = $request->get('order')[0]['dir'] ?? 'asc';
+
+        $columns = [
+            'numero_placa',
+            'documento_identidad', 
+            'nombre_completo',
+            'telefono',
+            'fecha_ingreso',
+            'id', // jerarquía (relación)
+            'cargo_administrativo_id', // cargo (relación)
+            'estatus'
+        ];
+
+        $query = Oficiale::select(
+            'id', 'numero_placa', 'documento_identidad', 'nombre_completo',
+            'telefono', 'fecha_ingreso', 'estatus', 'cargo_administrativo_id'
+        )->with([
+            'oficiales_cargos' => function($q) {
+                $q->select('id', 'id_policia', 'id_cargo', 'is_actual')
+                  ->where('is_actual', 1)
+                  ->with('cargo:id,nombre_cargo');
+            },
+            'cargos_administrativo:id,nombre_cargo'
+        ]);
+
+        // Búsqueda global
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('nombre_completo', 'like', "%{$search}%")
+                  ->orWhere('documento_identidad', 'like', "%{$search}%")
+                  ->orWhere('numero_placa', 'like', "%{$search}%")
+                  ->orWhere('telefono', 'like', "%{$search}%")
+                  ->orWhere('estatus', 'like', "%{$search}%");
+            });
+        }
+
+        $totalRecords = Oficiale::count();
+        $filteredRecords = $query->count();
+
+        // Ordenamiento
+        if (isset($columns[$orderColumn]) && $orderColumn < 5) {
+            $query->orderBy($columns[$orderColumn], $orderDir);
+        }
+
+        // Paginación
+        $data = $query->skip($start)->take($length)->get();
+
+        return response()->json([
+            'draw' => intval($draw),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $filteredRecords,
+            'data' => $data
+        ]);
     }
 
 

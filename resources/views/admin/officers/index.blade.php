@@ -488,7 +488,7 @@
     Dropzone.autoDiscover = false;  // Deshabilita la detección automática de formularios
     $(document).ready(function() {
         var id = "";
-        index();
+        initDataTable();
         $('#btn-add').click(function(e){
             e.preventDefault();
             $('#form-edit').attr('id', 'form-add');
@@ -512,16 +512,25 @@
                     icon: "success",
                     draggable: true
                 });
-                index();
+                // Recargar tabla manteniendo página actual
+                officersTable.ajax.reload(null, false);
+            }).catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error al guardar',
+                    text: 'Ha ocurrido un error. Por favor, intente nuevamente.',
+                    icon: "error"
+                });
             });
         });
 
         $(document).on('submit','#form-edit', function(e){
             e.preventDefault();
             let formData = new FormData(this);
-                formData.append('_method', 'PUT');
-            console.log(id)
-            fetch('api/officers/'+id, {
+            formData.append('_method', 'PUT');
+            let currentId = id; // Guardar el ID antes de limpiarlo
+            
+            fetch('api/officers/' + currentId, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
@@ -534,8 +543,17 @@
                 $('#add').modal('hide');
                 $('#form-edit').trigger('reset');
                 $('#form-edit').attr('id', 'form-add');
+                
+                // Actualizar solo la fila modificada (MANTIENE PÁGINA Y BÚSQUEDA)
+                updateRow(currentId);
                 id = "";
-                index();
+            }).catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error al actualizar',
+                    text: 'Ha ocurrido un error. Por favor, intente nuevamente.',
+                    icon: "error"
+                });
             });
         });
 
@@ -681,7 +699,7 @@
                     if (result.isConfirmed) {
                         let form = new FormData();
                             form.append('password', result.value);
-                        request = fetch('/cpet/public/api/users/confirm-password-admin', {
+                        request = fetch('{{ url("api/users/confirm-password-admin") }}', {
                                         method: "POST",
                                         body: form
                                     }).then(response => response.json())
@@ -719,7 +737,7 @@
                                 confirmButtonText: 'Sí, eliminar'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/officers/'+id, {
+                                    fetch('{{ url("api/officers") }}/'+id, {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -736,7 +754,7 @@
                                             icon: "success",
                                             draggable: true
                                         });
-                                        index();
+                                        officersTable.ajax.reload(null, false);
                                     });
                                 }
                             });
@@ -756,7 +774,7 @@
                     confirmButtonText: 'Sí, eliminar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/'+id, {
+                        fetch('{{ url("api/officers") }}/'+id, {
                             method: 'POST',
                             body: formData
                         }).then(response => response.json())
@@ -766,7 +784,7 @@
                                 icon: "success",
                                 draggable: true
                             });
-                            index();
+                            officersTable.ajax.reload(null, false);
                         });
                     }
                 });
@@ -810,7 +828,7 @@
 
             if (!Dropzone.instances.length) { 
                 const dropzone =  new Dropzone('#myDropzone', {
-                    url: '/cpet/public/api/officers/files/add-files/'+id,  // URL donde se enviarán los archivos
+                    url: '{{ url("api/officers/files/add-files") }}/'+id,  // URL donde se enviarán los archivos
                     method: 'POST', //Método por el cual se enviarán los archivos
                     paramName: 'archivos',          // El nombre del campo de archivo en el backend
                     maxFilesize: 2,             // Tamaño máximo en MB
@@ -840,57 +858,158 @@
         document.body.innerHTML = originalContent;
     }
 
-    function index() {
-        fetch('api/officers')
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                let template = '';
-                data.forEach(e => {
-                    template += `
-                    <tr>
-                        <td class="text-center">${e.numero_placa ? e.numero_placa : 'S/NC'}</td>
-                        <td class="text-center">${e.documento_identidad}</td>
-                        <td class="text-center">${e.nombre_completo}</td>
-                        <td class="text-center">${e.telefono ? e.telefono : 'S/T'}</td>
-                        <td class="text-center">${e.fecha_ingreso ? e.fecha_ingreso.substr(0,4) + '-' + e.fecha_ingreso.substr(5,2) + '-' + e.fecha_ingreso.substr(8,2) : 'S/F'}</td>
-                        <td class="text-center">${e.oficiales_cargos.find(c => c.is_actual === 1)?.cargo.nombre_cargo || 'N/A'}</td>
-                        <td class="text-center">${(e.cargos_administrativo) ? e.cargos_administrativo.nombre_cargo : 'S/A'}</td>
-                        <td class="text-center">${e.estatus.toUpperCase()}</td>
-                        <td class="text-right actions">
+    // Variable global para el DataTable
+    let officersTable;
+
+    function initDataTable() {
+        officersTable = $('#officers-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: 'api/officers',
+                type: 'GET',
+                data: function(d) {
+                    console.log('DataTables request:', d);
+                    return d;
+                },
+                error: function(xhr, error, code) {
+                    console.error('Error en DataTables:', error, code);
+                }
+            },
+            columns: [
+                { 
+                    data: 'numero_placa',
+                    className: 'text-center',
+                    render: function(data) {
+                        return data ? data : 'S/NC';
+                    }
+                },
+                { 
+                    data: 'documento_identidad',
+                    className: 'text-center'
+                },
+                { 
+                    data: 'nombre_completo',
+                    className: 'text-center'
+                },
+                { 
+                    data: 'telefono',
+                    className: 'text-center',
+                    render: function(data) {
+                        return data ? data : 'S/T';
+                    }
+                },
+                { 
+                    data: 'fecha_ingreso',
+                    className: 'text-center',
+                    render: function(data) {
+                        return data ? data.substr(0,10) : 'S/F';
+                    }
+                },
+                { 
+                    data: 'oficiales_cargos',
+                    className: 'text-center',
+                    orderable: false,
+                    render: function(data) {
+                        let cargo = data && data.length > 0 ? data.find(c => c.is_actual === 1) : null;
+                        return cargo && cargo.cargo ? cargo.cargo.nombre_cargo : 'N/A';
+                    }
+                },
+                { 
+                    data: 'cargos_administrativo',
+                    className: 'text-center',
+                    orderable: false,
+                    render: function(data) {
+                        return data ? data.nombre_cargo : 'S/A';
+                    }
+                },
+                { 
+                    data: 'estatus',
+                    className: 'text-center',
+                    render: function(data) {
+                        return data ? data.toUpperCase() : '';
+                    }
+                },
+                { 
+                    data: 'id',
+                    className: 'text-right actions',
+                    orderable: false,
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return `
                             <div class="btn-group">
                                 <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-ellipsis-v" data-toggle="tooltip" data-placement="top" title="Más acciones"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                    <button class="btn dropdown-item edit" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Editar oficial"><i class="far fa-edit"></i> Editar</button>
-                                    <button class="btn dropdown-item ficha" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Ver oficial"><i class="fas fa-id-card-alt"></i> Ver oficial</button>
-                                    <a class="btn dropdown-item" href="officers/radiogram/${e.id}" data-toggle="tooltip" data-placement="top" title="Radiograma"><i class="fas fa-street-view"></i> Radiograma</a>
-                                    <a class="btn dropdown-item" href="officers/academy/${e.id}" data-toggle="tooltip" data-placement="top" title="Formación académica"><i class="fas fa-graduation-cap"></i> Formación académica</a>
-                                    <a class="btn dropdown-item" href="officers/courses/${e.id}" data-toggle="tooltip" data-placement="top" title="Cursos y diplomados"><i class="fas fa-book-reader"></i> Cursos y diplomados</a>
-                                    <a class="btn dropdown-item" href="officers/positions/${e.id}" data-toggle="tooltip" data-placement="top" title="Jerarquías obtenidas"><i class="fas fa-medal"></i> Jerarquías obtenidas</a>
-                                    <a class="btn dropdown-item" href="officers/awards/${e.id}" data-toggle="tooltip" data-placement="top" title="Reconocimientos"><i class="fas fa-trophy"></i> Reconocimientos</a>
-                                    <a class="btn dropdown-item" href="officers/familly/${e.id}" data-toggle="tooltip" data-placement="top" title="Hijos y familiares"><i class="fab fa-gratipay"></i> Hijos y familiares</a>
-                                    <a class="btn dropdown-item" href="officers/health/${e.id}" data-toggle="tooltip" data-placement="top" title="Reposos médicos"><i class="fas fa-medkit"></i> Reposos médicos</a>
-                                    <button class="btn dropdown-item files" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Archivos del oficial"><i class="fas fa-file"></i> Archivos del oficial</button>
-                                    <a class="btn dropdown-item" href="officers/vacations/${e.id}" data-toggle="tooltip" data-placement="top" title="Solicitud de vacaciones"><i class="fas fa-plane-departure"></i> Solicitud de vacaciones</a>
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <button class="btn dropdown-item edit" data-id="${data}"><i class="far fa-edit"></i> Editar</button>
+                                    <button class="btn dropdown-item ficha" data-id="${data}"><i class="fas fa-id-card-alt"></i> Ver oficial</button>
+                                    <a class="btn dropdown-item" href="officers/radiogram/${data}"><i class="fas fa-street-view"></i> Radiograma</a>
+                                    <a class="btn dropdown-item" href="officers/academy/${data}"><i class="fas fa-graduation-cap"></i> Formación académica</a>
+                                    <a class="btn dropdown-item" href="officers/courses/${data}"><i class="fas fa-book-reader"></i> Cursos y diplomados</a>
+                                    <a class="btn dropdown-item" href="officers/positions/${data}"><i class="fas fa-medal"></i> Jerarquías obtenidas</a>
+                                    <a class="btn dropdown-item" href="officers/awards/${data}"><i class="fas fa-trophy"></i> Reconocimientos</a>
+                                    <a class="btn dropdown-item" href="officers/familly/${data}"><i class="fab fa-gratipay"></i> Hijos y familiares</a>
+                                    <a class="btn dropdown-item" href="officers/health/${data}"><i class="fas fa-medkit"></i> Reposos médicos</a>
+                                    <button class="btn dropdown-item files" data-id="${data}"><i class="fas fa-file"></i> Archivos del oficial</button>
+                                    <a class="btn dropdown-item" href="officers/vacations/${data}"><i class="fas fa-plane-departure"></i> Solicitud de vacaciones</a>
                                     <div class="dropdown-divider"></div>
-                                    <button class="btn dropdown-item delete text-danger" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Eliminar oficial"><i class="far fa-trash-alt"></i> Eliminar</button>
+                                    <button class="btn dropdown-item delete text-danger" data-id="${data}"><i class="far fa-trash-alt"></i> Eliminar</button>
                                 </div>
                             </div>
-                        </td>
-                    </tr>
-                    `;
-                });
-                $('table').DataTable().destroy();
-                $('tbody').html(template);
-                $('table').DataTable(t);
+                        `;
+                    }
+                }
+            ],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+            },
+            pageLength: 25,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
+            order: [[2, 'asc']], // Ordenar por nombre
+            stateSave: true, // Guarda el estado (página, búsqueda, etc.)
+            stateDuration: 60 * 60, // Guardar estado por 1 hora
+            drawCallback: function() {
+                // Reinicializar tooltips después de cada redibujado
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        });
+    }
 
-                // Inicializar tooltips
-                $(function () {
-                    $('[data-toggle="tooltip"]').tooltip();
+    // Función para actualizar una fila específica sin recargar toda la tabla
+    function updateRow(officerId) {
+        fetch('api/officers/' + officerId)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Datos actualizados:', data);
+                
+                // Buscar la fila en el DataTable
+                let rowIndex = officersTable.rows().indexes().filter(function(idx) {
+                    return officersTable.row(idx).data().id === officerId;
                 });
+
+                if (rowIndex.length > 0) {
+                    // Actualizar los datos de la fila
+                    officersTable.row(rowIndex[0]).data(data).draw(false);
+                    console.log('Fila actualizada exitosamente');
+                } else {
+                    // Si no encuentra la fila, recargar la tabla actual
+                    console.log('Fila no encontrada, recargando tabla');
+                    officersTable.ajax.reload(null, false); // false = mantener la página actual
+                }
+            })
+            .catch(error => {
+                console.error('Error al actualizar fila:', error);
+                // En caso de error, recargar la tabla
+                officersTable.ajax.reload(null, false);
             });
+    }
+
+    // Función legacy para compatibilidad (ahora solo recarga el DataTable)
+    function index() {
+        if (officersTable) {
+            officersTable.ajax.reload(null, false); // false = mantener página actual
+        }
     }
 
     function index_archivos(id){
