@@ -3,6 +3,41 @@
 @section('styles')
 <link rel="stylesheet" href="{{asset('vendor/dropzone/dropzone.min.css')}}">
 <style>
+    /* Estilos para la tabla - 100% de ancho */
+    #officers-table {
+        width: 100% !important;
+    }
+    
+    #officers-table_wrapper {
+        width: 100%;
+    }
+    
+    .dataTables_wrapper {
+        width: 100%;
+    }
+    
+    table.dataTable {
+        width: 100% !important;
+        max-width: 100%;
+    }
+    
+    /* Asegurar que el contenedor también use 100% */
+    .container-fluid {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    /* Responsive para columnas */
+    @media (max-width: 768px) {
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+    }
+
+    /* Estilos de la ficha */
     .ficha-container {
             width: 100%;
             background: #fff;
@@ -461,7 +496,7 @@
 <div class="container-fluid">
     <h2>{{$title}}</h2>
     <hr>
-    <table class="table table-bordered" id="officers-table">
+    <table class="table table-bordered" id="officers-table" style="width: 100%;">
         <thead>
             <tr>
                 <th class="text-center" scope="col">N° Credencial</th>
@@ -472,7 +507,7 @@
                 <th class="text-center" scope="col">Jerarquía</th>
                 <th class="text-center" scope="col">Cargo</th>
                 <th class="text-center" scope="col">Estatus</th>
-                <th classs="actions" scope="col"></th>
+                <th class="text-center actions" scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -969,9 +1004,26 @@
             order: [[2, 'asc']], // Ordenar por nombre
             stateSave: true, // Guarda el estado (página, búsqueda, etc.)
             stateDuration: 60 * 60, // Guardar estado por 1 hora
+            autoWidth: false, // Desactiva el cálculo automático de ancho
+            responsive: true, // Hace la tabla responsive
+            scrollX: false, // Desactiva el scroll horizontal
+            columnDefs: [
+                { width: "10%", targets: 0 }, // N° Credencial
+                { width: "10%", targets: 1 }, // Cédula
+                { width: "20%", targets: 2 }, // Nombre
+                { width: "10%", targets: 3 }, // Teléfono
+                { width: "10%", targets: 4 }, // Fecha ingreso
+                { width: "12%", targets: 5 }, // Jerarquía
+                { width: "12%", targets: 6 }, // Cargo
+                { width: "8%", targets: 7 },  // Estatus
+                { width: "8%", targets: 8 }   // Acciones
+            ],
             drawCallback: function() {
                 // Reinicializar tooltips después de cada redibujado
                 $('[data-toggle="tooltip"]').tooltip();
+                
+                // Asegurar que la tabla use 100% del ancho
+                $('#officers-table').css('width', '100%');
             }
         });
     }
