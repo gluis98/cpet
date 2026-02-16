@@ -315,15 +315,21 @@
                 </div>
                 <nav class="navbar-sidebar2">
                     <ul class="list-unstyled navbar__list">
-                        <li class="@if(\Route::currentRouteName() == 'dashboard') active @endif">
-                            <a href="inbox.html">
-                                <i class="fas fa-home"></i>Inicio</a>
-                            {{-- <span class="inbox-num">3</span> --}}
+                        <li class="@if(\Route::currentRouteName() == 'home') active @endif">
+                            <a href="{{ route('home') }}">
+                                <i class="fas fa-home"></i>Dashboard</a>
+                            @php
+                                $notifCount = \App\Models\OficialesSalud::where('is_vigente', 1)
+                                    ->whereDate('fecha_reposo_fin', \Carbon\Carbon::tomorrow()->format('Y-m-d'))
+                                    ->count();
+                            @endphp
+                            @if($notifCount > 0)
+                                <span class="inbox-num">{{ $notifCount }}</span>
+                            @endif
                         </li>
                         <li class="@if(\Route::currentRouteName() == 'officers') active @endif">
                             <a href="{{Route('officers')}}">
                                 <i class="fas fa-user"></i>Funcionarios Policiales</a>
-                            {{-- <span class="inbox-num">3</span> --}}
                         </li>
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
@@ -387,39 +393,47 @@
                                 </div>
                                 <div class="header-button-item has-noti js-item-menu">
                                     <i class="zmdi zmdi-notifications"></i>
+                                    @php
+                                        $tomorrow = \Carbon\Carbon::tomorrow();
+                                        $notificacionesNav = \App\Models\OficialesSalud::with('oficiale')
+                                            ->where('is_vigente', 1)
+                                            ->whereDate('fecha_reposo_fin', $tomorrow->format('Y-m-d'))
+                                            ->get();
+                                    @endphp
+                                    @if($notificacionesNav->count() > 0)
+                                        <span class="quantity">{{ $notificacionesNav->count() }}</span>
+                                    @endif
                                     <div class="notifi-dropdown js-dropdown">
                                         <div class="notifi__title">
-                                            <p>Tienes 1 notificación(es)</p>
+                                            <p>Tienes {{ $notificacionesNav->count() }} notificación(es)</p>
                                         </div>
-                                        {{-- <div class="notifi__item">
-                                            <div class="bg-c1 img-cir img-40">
-                                                <i class="zmdi zmdi-email-open"></i>
+                                        
+                                        @if($notificacionesNav->count() > 0)
+                                            @foreach($notificacionesNav as $notif)
+                                            <div class="notifi__item">
+                                                <div class="bg-c1 img-cir img-40">
+                                                    <i class="zmdi zmdi-account-circle"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p><strong>{{ $notif->oficiale->nombre_completo }}</strong> se reincorpora mañana</p>
+                                                    <span class="date">Reposo finaliza: {{ \Carbon\Carbon::parse($notif->fecha_reposo_fin)->format('d/m/Y') }}</span>
+                                                </div>
                                             </div>
-                                            <div class="content">
-                                                <p>You got a email notification</p>
-                                                <span class="date">April 12, 2018 06:50</span>
+                                            @endforeach
+                                        @else
+                                            <div class="notifi__item">
+                                                <div class="bg-c3 img-cir img-40">
+                                                    <i class="zmdi zmdi-check-circle"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>No hay notificaciones pendientes</p>
+                                                    <span class="date">{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="notifi__item">
-                                            <div class="bg-c2 img-cir img-40">
-                                                <i class="zmdi zmdi-account-box"></i>
-                                            </div>
-                                            <div class="content">
-                                                <p>Your account has been blocked</p>
-                                                <span class="date">April 12, 2018 06:50</span>
-                                            </div>
-                                        </div> --}}
-                                        <div class="notifi__item">
-                                            <div class="bg-c3 img-cir img-40">
-                                                <i class="zmdi zmdi-file-text"></i>
-                                            </div>
-                                            <div class="content">
-                                                <p>Nueva solicitud de vacaciones</p>
-                                                <span class="date">{{ \Carbon\Carbon::now()->format('d \d\e F \d\e\l Y \a \\l\a\s H:i') }}</span>
-                                            </div>
-                                        </div>
+                                        @endif
+                                        
                                         <div class="notifi__footer">
-                                            <a href="#">Todas las notificaciones</a>
+                                            <a href="{{ route('home') }}">Ver Dashboard</a>
                                         </div>
                                     </div>
                                 </div>

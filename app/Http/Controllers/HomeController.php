@@ -27,8 +27,44 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $title = "Inicio";
-        return view('home', ['title' => $title, 'leftImagePath' => $this->leftImagePath]);
+        $title = "Dashboard";
+        
+        // Estadísticas generales
+        $totalOfficers = \App\Models\Oficiale::count();
+        $operativos = \App\Models\Oficiale::where('estatus', 'Operativo')->count();
+        $noOperativos = \App\Models\Oficiale::where('estatus', 'No Operativo')->count();
+        $jubilados = \App\Models\Oficiale::where('estatus', 'Jubilado')->count();
+        
+        // Funcionarios en reposo (vigentes)
+        $funcionariosReposo = \App\Models\OficialesSalud::with('oficiale')
+            ->where('is_vigente', 1)
+            ->orderBy('fecha_reposo_fin', 'asc')
+            ->get();
+        
+        // Funcionarios en servicio (radiogramas activos)
+        $funcionariosServicio = \App\Models\OficialesRadiograma::with(['oficiale', 'estacione'])
+            ->where('is_actual', 1)
+            ->orderBy('fecha_inicio', 'desc')
+            ->get();
+        
+        // Notificaciones: Funcionarios que se reincorporan mañana
+        $tomorrow = \Carbon\Carbon::tomorrow();
+        $notificaciones = \App\Models\OficialesSalud::with('oficiale')
+            ->where('is_vigente', 1)
+            ->whereDate('fecha_reposo_fin', $tomorrow->format('Y-m-d'))
+            ->get();
+        
+        return view('home', [
+            'title' => $title,
+            'leftImagePath' => $this->leftImagePath,
+            'totalOfficers' => $totalOfficers,
+            'operativos' => $operativos,
+            'noOperativos' => $noOperativos,
+            'jubilados' => $jubilados,
+            'funcionariosReposo' => $funcionariosReposo,
+            'funcionariosServicio' => $funcionariosServicio,
+            'notificaciones' => $notificaciones
+        ]);
     }
 
     public function officers()
