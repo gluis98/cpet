@@ -153,6 +153,10 @@
                                 <label class="form-label" for="direccion">Dirección</label>
                                 <textarea class="form-control" id="direccion" name="direccion" placeholder="Ingrese la dirección"></textarea>
                             </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label" for="centro_votacion">Centro de Votación</label>
+                                <input type="text" class="form-control" id="centro_votacion" name="centro_votacion" placeholder="Ingrese el centro de votación">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -554,6 +558,7 @@
                     }
                 });
                 $('#direccion').val(data.direccion);
+                $('#centro_votacion').val(data.centro_votacion);
                 $('#estado_civil option').each(function() {
                     if($(this).val() == data.estado_civil){
                         $(this).attr('selected', 'selected');

@@ -176,6 +176,14 @@
                     draggable: true
                 });
                 index();
+            }).catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error al guardar',
+                    text: 'Ha ocurrido un error. Por favor, intente nuevamente.',
+                    icon: "error",
+                    draggable: true
+                });
             });
         });
 
@@ -183,6 +191,7 @@
             e.preventDefault();
             let formData = new FormData(this);
             formData.append('_method', 'PUT');
+            formData.append('id_policia', "{{ $id }}");
             fetch('{{ url("api/officers/health") }}/' + id, {
                 method: 'POST',
                 body: formData
@@ -198,6 +207,14 @@
                 $('#form-edit').attr('id', 'form-add');
                 id = "";
                 index();
+            }).catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error al actualizar',
+                    text: 'Ha ocurrido un error. Por favor, intente nuevamente.',
+                    icon: "error",
+                    draggable: true
+                });
             });
         });
 
@@ -205,7 +222,12 @@
             e.preventDefault();
             id = $(this).data('id');
             fetch('{{ url("api/officers/health") }}/' + id)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Reposo no encontrado');
+                }
+                return response.json();
+            })
             .then(data => {
                 $('#id_policia').val(data.id_policia);
                 $('#fecha_revision').val(data.fecha_revision.substr(0,4) + '-' + data.fecha_revision.substr(5,2) + '-' + data.fecha_revision.substr(8,2));
@@ -219,6 +241,15 @@
                 $('#btn-submit').attr('class', 'btn btn-dark btn-lg');
                 $('#btn-submit').text('Actualizar');
                 $('#add').modal('show');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'No se pudo cargar el reposo. ' + error.message,
+                    icon: "error",
+                    draggable: true
+                });
             });
         });
 
