@@ -232,6 +232,12 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="row mt-3">
+                            <label class="form-label">Tipo de Cargo</label>
+                            <select class="form-control" id="tipo_cargo_id" name="tipo_cargo_id">
+                                <option value>--- SELECCIONE UN TIPO DE CARGO ---</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                
@@ -402,6 +408,10 @@
                         <label>Cargo Actual</label>
                         <span id="cargo_administrativo_actual_ficha">N/A</span>
                     </div>
+                    <div class="data-field">
+                        <label>Tipo de Cargo</label>
+                        <span id="tipo_cargo_ficha">N/A</span>
+                    </div>
                 
                     <!-- Datos de Vestuario -->
                     <div class="section-title"><i class="fas fa-tshirt"></i> Datos de Vestuario</div>
@@ -524,6 +534,23 @@
     $(document).ready(function() {
         var id = "";
         initDataTable();
+        loadTiposCargos();
+
+        function loadTiposCargos() {
+            fetch('api/tipos-cargos')
+                .then(response => response.json())
+                .then(data => {
+                    let options = '<option value>--- SELECCIONE UN TIPO DE CARGO ---</option>';
+                    data.forEach(tipo => {
+                        options += `<option value="${tipo.id}">${tipo.nombre}</option>`;
+                    });
+                    $('#tipo_cargo_id').html(options);
+                })
+                .catch(error => {
+                    console.error('Error al cargar tipos de cargos:', error);
+                });
+        }
+
         $('#btn-add').click(function(e){
             e.preventDefault();
             $('#form-edit').attr('id', 'form-add');
@@ -631,6 +658,12 @@
                     }
                 });
 
+                $('#tipo_cargo_id option').each(function() {
+                    if($(this).val() == data.tipo_cargo_id){
+                        $(this).attr('selected', 'selected');
+                    }
+                });
+
                 $('#fecha_ingreso').val((data.fecha_ingreso) ? data.fecha_ingreso.substr(0,4) + '-' + data.fecha_ingreso.substr(5,2) + '-' + data.fecha_ingreso.substr(8,2) : '');
                 
                 $('#talla_camisa').val(data.talla_camisa);
@@ -696,6 +729,7 @@
                     $('#talla_gorra_ficha').text(data.talla_gorra || 'N/A');
                     $('#cargo_actual_ficha').text(cargoActual); 
                     $('#cargo_administrativo_actual_ficha').text((data.cargos_administrativo) ? data.cargos_administrativo.nombre_cargo : "S/A"); 
+                    $('#tipo_cargo_ficha').text((data.tipo_cargo) ? data.tipo_cargo.nombre : "N/A");
                     // Actualizar fotografía
                     const fotoOficial = $('#foto-oficial');
                     fotoOficial.attr('src', data.fotografia ? `storage/${data.fotografia}` : 'images/oficial-icon.png');

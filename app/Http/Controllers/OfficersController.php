@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Oficiale;
+use App\Models\TipoCargo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -146,7 +147,14 @@ class OfficersController extends Controller
      * Display the specified resource.
      */
     public function show($id) {
-        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo', 'cargos_administrativo')->findOrFail($id), 200);
+        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo', 'cargos_administrativo', 'tipo_cargo')->findOrFail($id), 200);
+    }
+
+    /**
+     * Get all tipos de cargos.
+     */
+    public function getTiposCargos() {
+        return response()->json(TipoCargo::orderBy('nombre')->get(), 200);
     }
 
     /**

@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('/officers', OfficersController::class);
+Route::get('/tipos-cargos', [OfficersController::class, 'getTiposCargos']);
 Route::apiResource('/positions', PositionsController::class);
 Route::apiResource('/armament', ArmamentController::class);
 Route::apiResource('/stations', StationController::class);

@@ -56,22 +56,22 @@ class ReportesController extends Controller
 
     public function card(Request $request)
     {
-        $oficial = Oficiale::where('documento_identidad', $request->documento_identidad)->orderBy('documento_identidad')->first();
+        $oficial = Oficiale::with('tipo_cargo')->where('documento_identidad', $request->documento_identidad)->orderBy('documento_identidad')->first();
         return view('admin.reports.card', ['officer' => $oficial]);
     }  
 
     public function officers()
     {
-        $oficial = Oficiale::orderBy('documento_identidad')->get();
+        $oficial = Oficiale::with('tipo_cargo')->orderBy('documento_identidad')->get();
         return view('admin.reports.officers', ['oficiales' => $oficial]);
     }  
 
     public function officers_born_date(Request $request)
     {   
-        $oficial = Oficiale::whereBetween('fecha_nacimiento', [$request->fechaInicio, $request->fechaFin])->orderBy('documento_identidad')->get();
+        $oficial = Oficiale::with('tipo_cargo')->whereBetween('fecha_nacimiento', [$request->fechaInicio, $request->fechaFin])->orderBy('documento_identidad')->get();
 
         if($request->fechaInicio == $request->fechaFin){
-            $oficial = Oficiale::where('fecha_nacimiento', $request->fechaInicio)->orderBy('documento_identidad')->get();
+            $oficial = Oficiale::with('tipo_cargo')->where('fecha_nacimiento', $request->fechaInicio)->orderBy('documento_identidad')->get();
         }
 
         return view('admin.reports.officers', ['oficiales' => $oficial]);
@@ -79,10 +79,10 @@ class ReportesController extends Controller
 
     public function ingress_date(Request $request)
     {   
-        $oficial = Oficiale::whereBetween('fecha_ingreso', [$request->fechaInicio, $request->fechaFin])->orderBy('documento_identidad')->get();
+        $oficial = Oficiale::with('tipo_cargo')->whereBetween('fecha_ingreso', [$request->fechaInicio, $request->fechaFin])->orderBy('documento_identidad')->get();
 
         if($request->fechaInicio == $request->fechaFin){
-            $oficial = Oficiale::where('fecha_ingreso', $request->fechaInicio)->orderBy('documento_identidad')->get();
+            $oficial = Oficiale::with('tipo_cargo')->where('fecha_ingreso', $request->fechaInicio)->orderBy('documento_identidad')->get();
         }
 
         return view('admin.reports.officers', ['oficiales' => $oficial]);
@@ -91,7 +91,7 @@ class ReportesController extends Controller
     public function officers_cargo(Request $request)
     {
         // Inicializar la consulta
-        $query = Oficiale::query()->with('oficiales_cargos.cargo');
+        $query = Oficiale::query()->with('oficiales_cargos.cargo', 'tipo_cargo');
 
         // Filtrar por ID de cargo (si está presente)
         if ($request->has('id_cargo') && !empty($request->id_cargo) && $request->id_cargo != "") {
@@ -232,7 +232,7 @@ class ReportesController extends Controller
 
     public function sizes(Request $request)
     {
-        $query = Oficiale::query();
+        $query = Oficiale::query()->with('tipo_cargo');
 
         // Campos simples
         $campos = [

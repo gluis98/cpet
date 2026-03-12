@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property int|null $cargo_administrativo_id
+ * @property int|null $tipo_cargo_id
  * @property string|null $documento_identidad
  * @property string|null $nombre_completo
  * @property Carbon|null $fecha_nacimiento
@@ -36,6 +37,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property Parroquia|null $parroquia
  * @property CargosAdministrativo|null $cargos_administrativo
+ * @property TipoCargo|null $tipo_cargo
  * @property Collection|OficialesAcademico[] $oficiales_academicos
  * @property Collection|Armamento[] $armamentos
  * @property Collection|Cargo[] $cargos
@@ -58,6 +60,7 @@ class Oficiale extends Model
 
 	protected $casts = [
 		'cargo_administrativo_id' => 'int',
+		'tipo_cargo_id' => 'int',
 		'fecha_nacimiento' => 'datetime',
 		'fecha_ingreso' => 'datetime',
 		'parroquia_id' => 'int'
@@ -65,6 +68,7 @@ class Oficiale extends Model
 
 	protected $fillable = [
 		'cargo_administrativo_id',
+		'tipo_cargo_id',
 		'documento_identidad',
 		'nombre_completo',
 		'fecha_nacimiento',
@@ -98,6 +102,11 @@ class Oficiale extends Model
 	public function cargos_administrativo()
 	{
 		return $this->belongsTo(CargosAdministrativo::class, 'cargo_administrativo_id');
+	}
+
+	public function tipo_cargo()
+	{
+		return $this->belongsTo(TipoCargo::class, 'tipo_cargo_id');
 	}
 
 	public function oficiales_academicos()
