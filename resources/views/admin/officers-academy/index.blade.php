@@ -26,6 +26,7 @@
                                 <select class="form-control" id="tipo_formacion" name="tipo_formacion" required>
                                     <option value>--- SELECCIONE UN TIPO DE FORMACIÓN ---</option>
                                     <option value="Primaria">Primaria</option>
+                                    <option value="Secundaria">Secundaria</option>
                                     <option value="Bachillerato">Bachillerato</option>
                                     <option value="Bachiller en Ciencias">Bachiller en Ciencias</option>
                                     <option value="Técnico superior universitario">Técnico superior universitario</option>
