@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('oficiales') || Schema::hasColumn('oficiales', 'sexo')) {
+            return;
+        }
+
         Schema::table('oficiales', function (Blueprint $table) {
             $table->enum('sexo', ['Masculino', 'Femenino'])->nullable()->after('fecha_nacimiento');
         });
@@ -15,6 +19,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasTable('oficiales') || ! Schema::hasColumn('oficiales', 'sexo')) {
+            return;
+        }
+
         Schema::table('oficiales', function (Blueprint $table) {
             $table->dropColumn('sexo');
         });
