@@ -4,17 +4,7 @@
 
 @section('content')
 <div class="auth-panel">
-    <div class="auth-brand">
-        <div class="auth-brand__mark" aria-hidden="true">
-            @if (file_exists(public_path('images/icon/logo.png')))
-                <img src="{{ asset('images/icon/logo.png') }}" alt="">
-            @else
-                <span>CPET</span>
-            @endif
-        </div>
-        <h2 class="auth-brand__name">CPET</h2>
-        <p class="auth-brand__tag">Policía del Estado Trujillo</p>
-    </div>
+    @include('partials.auth-brand')
 
     <div class="auth-heading">
         <h1>Recuperar contraseña</h1>

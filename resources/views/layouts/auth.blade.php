@@ -11,15 +11,32 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    @if (file_exists(public_path('images/icon/logo.png')))
+    @php
+        $authLogoPng = public_path('images/icon/logo.png');
+        $authLogoSvg = public_path('images/icon/logo.svg');
+    @endphp
+    @if (file_exists($authLogoPng))
         <link rel="shortcut icon" href="{{ asset('images/icon/logo.png') }}" type="image/x-icon">
-    @endif
-
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css'])
+    @elseif (file_exists($authLogoSvg))
+        <link rel="shortcut icon" href="{{ asset('images/icon/logo.svg') }}" type="image/svg+xml">
     @endif
 
     <style>
+        html,
+        body.auth-body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background: #07101c;
+        }
+
+        .auth-shell,
+        .auth-shell *,
+        .auth-shell *::before,
+        .auth-shell *::after {
+            box-sizing: border-box;
+        }
+
         .auth-shell {
             min-height: 100vh;
             display: flex;
@@ -56,11 +73,18 @@
             position: relative;
             z-index: 1;
             width: min(100%, 420px);
+            max-width: 100%;
             background: #f7f9fb;
             border-radius: 1rem;
             box-shadow: 0 24px 48px rgba(10, 22, 40, 0.28);
             padding: 2.25rem 2rem 2rem;
             animation: auth-rise 0.5s ease-out both;
+            overflow: hidden;
+        }
+
+        .auth-panel form {
+            width: 100%;
+            min-width: 0;
         }
 
         @keyframes auth-rise {
@@ -123,7 +147,10 @@
         .auth-field input[type="text"],
         .auth-field input[type="email"],
         .auth-field input[type="password"] {
+            display: block;
             width: 100%;
+            max-width: 100%;
+            min-width: 0;
             padding: 0.72rem 0.9rem;
             border: 1px solid #c5d0db;
             border-radius: 0.5rem;
@@ -132,6 +159,8 @@
             font-size: 0.95rem;
             color: #0f172a;
             transition: border-color 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
         }
         .auth-field input:focus {
             outline: none;
@@ -193,7 +222,7 @@
     </style>
     @yield('styles')
 </head>
-<body>
+<body class="auth-body">
     <div class="auth-shell">
         @yield('content')
         <p class="auth-foot">© {{ date('Y') }} Policía del Estado Trujillo · CPET</p>
