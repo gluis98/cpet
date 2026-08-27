@@ -28,6 +28,8 @@ class HomeController extends Controller
     public function index()
     {
         $title = "Dashboard";
+
+        \App\Support\ReposoEstatusSync::sincronizarFinalizados();
         
         // Estadísticas generales
         $totalOfficers = \App\Models\Oficiale::count();
@@ -37,7 +39,8 @@ class HomeController extends Controller
         
         // Funcionarios en reposo (vigentes)
         $funcionariosReposo = \App\Models\OficialesSalud::with('oficiale')
-            ->where('is_vigente', 1)
+            ->whereIn('is_vigente', [1, 2])
+            ->orderByRaw('fecha_reposo_fin IS NULL')
             ->orderBy('fecha_reposo_fin', 'asc')
             ->get();
         
@@ -129,6 +132,25 @@ class HomeController extends Controller
         return view('admin.officers-health.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
+    public function officers_icap($id)
+    {
+        $o = \App\Models\Oficiale::find($id);
+        $title = "Funcionario Policial: " . $o->nombre_completo . " - ICAP";
+        return view('admin.officers-icap.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id' => $id]);
+    }
+
+    public function officers_urra($id)
+    {
+        $o = \App\Models\Oficiale::findOrFail($id);
+        $title = 'Funcionario: '.$o->nombre_completo.' - URRA';
+
+        return view('admin.officers-urra.index', [
+            'title' => $title,
+            'leftImagePath' => $this->leftImagePath,
+            'id' => $id,
+        ]);
+    }
+
     // Métodos de vistas de configuración
     public function stations()
     {
@@ -140,5 +162,53 @@ class HomeController extends Controller
     {
         $title = "Usuarios";
         return view('admin.users.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath]);
+    }
+
+    public function config_discapacidades()
+    {
+        return view('admin.config.catalogo', [
+            'title' => 'Discapacidades',
+            'subtitle' => 'Catálogo usado en familiares de funcionarios',
+            'singular' => 'discapacidad',
+            'placeholder' => 'Ejemplo: Visual, Motora, Auditiva…',
+            'apiEndpoint' => '/discapacidades',
+            'leftImagePath' => $this->leftImagePath,
+        ]);
+    }
+
+    public function config_cursos()
+    {
+        return view('admin.config.catalogo', [
+            'title' => 'Cursos y diplomados',
+            'subtitle' => 'Catálogo de nombres usados en cursos y diplomados de funcionarios',
+            'singular' => 'curso / diplomado',
+            'placeholder' => 'Ejemplo: Criminalística y penalidad',
+            'apiEndpoint' => '/catalogo-cursos',
+            'leftImagePath' => $this->leftImagePath,
+        ]);
+    }
+
+    public function config_cargos()
+    {
+        return view('admin.config.catalogo', [
+            'title' => 'Cargos',
+            'subtitle' => 'Jerarquías policiales usadas en el historial de cargos del funcionario',
+            'singular' => 'cargo',
+            'placeholder' => 'Ejemplo: Inspector, Comisario…',
+            'apiEndpoint' => '/cargos',
+            'leftImagePath' => $this->leftImagePath,
+        ]);
+    }
+
+    public function config_cargos_administrativos()
+    {
+        return view('admin.config.catalogo', [
+            'title' => 'Cargos administrativos',
+            'subtitle' => 'Catálogo del cargo del funcionario (el tipo Policial / Administrativo / Obrero se define al crear el funcionario)',
+            'singular' => 'cargo administrativo',
+            'placeholder' => 'Ejemplo: Asistente administrativo, Mecánico…',
+            'apiEndpoint' => '/cargos-administrativos',
+            'leftImagePath' => $this->leftImagePath,
+        ]);
     }
 }

@@ -30,9 +30,19 @@
                                     <option value="Taller">Taller</option>
                                 </select>
                             </div>  
-                            <div class=" col-md-6">
-                                <label class="form-label" for="nombre">Nombre de curso/diplomado</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ejemplo: Criminalistica y penalidad">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="catalogo_curso_id">Nombre de curso/diplomado *</label>
+                                <div class="input-group">
+                                    <select class="form-control" id="catalogo_curso_id" name="catalogo_curso_id" required>
+                                        <option value="">--- SELECCIONE ---</option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-secondary" id="btn-add-curso" title="Agregar curso/diplomado">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Si no aparece en la lista, pulsa + para agregarlo.</small>
                             </div>
                         </div>
                         <div class="row">
@@ -46,10 +56,21 @@
                                 <label class="form-label" for="fecha_inicio">Fecha de curso o diplomado *</label>
                                 <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
                             </div>
-                            {{-- <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_fin">Fecha de fin</label>
-                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
-                            </div> --}}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="duracion_tipo">Tiempo de duración *</label>
+                                <select class="form-control" id="duracion_tipo" name="duracion_tipo" required>
+                                    <option value="">--- SELECCIONE ---</option>
+                                    <option value="Años">Años</option>
+                                    <option value="Meses">Meses</option>
+                                    <option value="Horas">Horas</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="duracion_valor">Cantidad *</label>
+                                <input type="number" class="form-control" id="duracion_valor" name="duracion_valor" min="1" max="9999" required placeholder="Ejemplo: 3">
+                            </div>
                         </div>
 
                         <div class="row">
@@ -105,12 +126,32 @@
 <script>
     $(document).ready(function() {
         var id = "";
+        var apiBase = @json(url('api'));
         index();
+
+        $(document).on('cpet:refresh-table', index);
+
+        function loadCatalogoCursos(selectedId) {
+            return CpetCatalog.loadSelect($('#catalogo_curso_id'), apiBase + '/catalogo-cursos', selectedId);
+        }
+
+        loadCatalogoCursos();
+
+        $('#btn-add-curso').on('click', function () {
+            CpetCatalog.promptAdd({
+                title: 'Nuevo curso / diplomado',
+                placeholder: 'Ejemplo: Criminalística y penalidad',
+                postUrl: apiBase + '/catalogo-cursos',
+                $select: $('#catalogo_curso_id'),
+                successMessage: 'Curso/diplomado agregado',
+            });
+        });
 
         $('#btn-add').click(function(e){
             e.preventDefault();
             $('#form-edit').attr('id', 'form-add');
             $('#form-add').trigger('reset');
+            loadCatalogoCursos();
             $('#btn-submit').text('Guardar');
             $('#btn-submit').attr('css', 'btn btn-primary btn-lg');
             $('#add').modal('show'); 
@@ -120,18 +161,12 @@
             e.preventDefault();
             let formData = new FormData(this);
                 formData.append('id_policia', '{{ $id }}');
-            fetch('/cpet/public/api/officers/course', {
+            fetch(apiBase + '/officers/course', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                $('#add').modal('hide');
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
-                });
-                index();
+                CpetModule.afterSave({ message: data.msj, refresh: index });
             });
         });
 
@@ -140,21 +175,19 @@
             let formData = new FormData(this);
                 formData.append('_method', 'PUT');
             console.log(id)
-            fetch('/cpet/public/api/officers/course/'+id, {
+            fetch(apiBase + '/officers/course/'+id, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
+                CpetModule.afterSave({
+                    message: data.msj,
+                    refresh: index,
+                    onReset: function () {
+                        $('#form-edit').trigger('reset').attr('id', 'form-add');
+                        id = '';
+                    }
                 });
-                $('#add').modal('hide');
-                $('#form-edit').trigger('reset');
-                $('#form-edit').attr('id', 'form-add');
-                id = "";
-                index();
             });
         });
 
@@ -173,10 +206,13 @@
                     }
                 });
 
-                $('#nombre').val(data.nombre);
+                loadCatalogoCursos(data.catalogo_curso_id).then(function () {
+                    $('#catalogo_curso_id').val(data.catalogo_curso_id || '');
+                });
                 $('#institucion').val(data.institucion);
-                $('#fecha_inicio').val(data.fecha_inicio.substr(0,4) + '-' + data.fecha_inicio.substr(5,2) + '-' + data.fecha_inicio.substr(8,2));
-                $('#fecha_fin').val(data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2));
+                $('#fecha_inicio').val(data.fecha_inicio ? String(data.fecha_inicio).substr(0, 10) : '');
+                $('#duracion_tipo').val(data.duracion_tipo || '');
+                $('#duracion_valor').val(data.duracion_valor || '');
                 $('#descripcion').val(data.descripcion);
                 
 
@@ -208,7 +244,7 @@
                     if (result.isConfirmed) {
                         let form = new FormData();
                             form.append('password', result.value);
-                        request = fetch('/cpet/public/api/users/confirm-password-admin', {
+                        request = fetch(apiBase + '/users/confirm-password-admin', {
                                         method: "POST",
                                         body: form
                                     }).then(response => response.json())
@@ -246,7 +282,7 @@
                                 confirmButtonText: 'Sí, eliminar'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/officers/course/'+id, {
+                                    fetch(apiBase + '/officers/course/'+id, {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -258,12 +294,7 @@
                                         })
                                     }).then(response => response.json())
                                     .then(data => {
-                                        Swal.fire({
-                                            title: data.msj,
-                                            icon: "success",
-                                            draggable: true
-                                        });
-                                        index();
+                                        CpetModule.afterSave({ message: data.msj, refresh: index });
                                     });
                                 }
                             });
@@ -283,17 +314,12 @@
                     confirmButtonText: 'Sí, eliminar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/course/'+id, {
+                        fetch(apiBase + '/officers/course/'+id, {
                             method: 'POST',
                             body: formData
                         }).then(response => response.json())
                         .then(data => {
-                            Swal.fire({
-                                title: data.msj,
-                                icon: "success",
-                                draggable: true
-                            });
-                            index();
+                            CpetModule.afterSave({ message: data.msj, refresh: index });
                         });
                     }
                 });
@@ -301,7 +327,7 @@
         });
 
         function index(){
-            fetch('/cpet/public/api/officers/course/index/{{ $id }}')
+            fetch(apiBase + '/officers/course/index/{{ $id }}')
             .then(response => response.json())
             .then(data => {
                 let template = '';
@@ -315,11 +341,12 @@
                 }else{
                 
                     data.forEach(e => {
+                        const nombreCurso = e.catalogo_curso?.nombre || e.nombre || 'Sin nombre';
                         template += `
-                        <div class="row border p-3">
+                        <div class="row border p-3 mb-3">
                             <div class="col-md-12">
                                 <div class="row">
-                                    <div class="col-md-6 h4"><i class="fas fa-book-reader"></i> <span class="font-weight-bold">${e.nombre}</span> - ${e.tipo} 
+                                    <div class="col-md-6 h4"><i class="fas fa-book-reader"></i> <span class="font-weight-bold">${nombreCurso}</span> - ${e.tipo}
                                         <button class="btn btn-dark btn-sm edit" data-id="${e.id}"><i class="fas fa-edit"></i></button>
                                         <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="fas fa-trash"></i></button>    
                                     </div>
@@ -329,7 +356,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <span class="text-muted">${e.institucion}</span>
+                                        <span class="text-muted">${e.institucion || 'Sin institución'}</span>
+                                        ${e.duracion_valor && e.duracion_tipo ? '<span class="badge badge-secondary ml-2">Duración: ' + e.duracion_valor + ' ' + e.duracion_tipo + '</span>' : ''}
                                     </div>
                                 </div>
                                 <hr>

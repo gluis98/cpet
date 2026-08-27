@@ -1,722 +1,323 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-    <!-- Required meta tags-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="au theme template">
-    <meta name="author" content="Hau Nguyen">
-    <meta name="keywords" content="au theme template">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>CPET — {{ $title ?? 'Sistema' }}</title>
 
-    <!-- Title Page-->
-    <title>CPET - {{$title}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ asset('images/icon/logo.png') }}" type="image/x-icon">
 
-    <!-- Fontfaces CSS-->
-    <link href="{{asset("css/font-face.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/fontawesome-free/css/all.min.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/mdi-font/css/material-design-iconic-font.min.css")}}" rel="stylesheet" media="all">
-    <link rel="shortcut icon" href="{{ asset("images/icon/logo.png") }}" type="image/x-icon">
+    {{-- Bootstrap 4 (modales / DataTables / vistas legacy) --}}
+    <link href="{{ asset('vendor/bootstrap-4.1/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/select2/select2.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
 
-    <!-- Bootstrap CSS-->
-    <link href="{{asset("vendor/bootstrap-4.1/bootstrap.min.css")}}" rel="stylesheet" media="all">
-
-    <!-- Vendor CSS-->
-    <link href="{{asset("vendor/animsition/animsition.min.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/wow/animate.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/css-hamburgers/hamburgers.min.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/slick/slick.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/select2/select2.min.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/perfect-scrollbar/perfect-scrollbar.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/vector-map/jqvmap.min.css")}}" rel="stylesheet" media="all">
-
-    <!-- Main CSS-->
-    <link href="{{asset("css/theme.css")}}" rel="stylesheet" media="all">
-    {{-- <link href="{{asset("css/dataTables.bootstrap4.css")}}" rel="stylesheet" media="all">
-    <link href="{{asset("vendor/datatables-buttons/css/buttons.bootstrap4.min.css")}}" rel="stylesheet" media="all"> --}}
-
-        <!-- DataTables Bootstrap 4 CSS -->
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
-
-        <!-- DataTables Buttons CSS -->
-        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap4.min.css">
-
-        <!-- DataTables Responsive Bootstrap 4 CSS -->
-        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('styles')
+
 </head>
+<body class="app-shell font-sans antialiased">
+@php
+    $notifCount = \App\Models\OficialesSalud::where('is_vigente', 1)
+        ->whereDate('fecha_reposo_fin', \Carbon\Carbon::tomorrow()->format('Y-m-d'))
+        ->count();
+    $notificacionesNav = \App\Models\OficialesSalud::with('oficiale')
+        ->where('is_vigente', 1)
+        ->whereDate('fecha_reposo_fin', \Carbon\Carbon::tomorrow()->format('Y-m-d'))
+        ->get();
+    $funcionariosOpen = request()->is('officers/tipo*') || request()->is('officers/ficha*') || request()->is('officers/search*');
+    $configOpen = request()->is('stations*') || request()->is('users*') || request()->is('config*');
+@endphp
 
-<body class="animsition">
-    <!-- Modal -->
-    <div class="modal fade" id="reportesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="reportesModalLabel">Generar Reportes</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<div class="app-content-shell min-h-screen lg:pl-[17.5rem]">
+    <div id="sidebar-overlay" class="fixed inset-0 z-40 bg-slate-900/55 opacity-0 pointer-events-none transition-opacity lg:hidden"></div>
+
+    <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-50 flex w-[17.5rem] -translate-x-full flex-col overflow-hidden shadow-2xl transition-transform duration-300 lg:translate-x-0"
+           style="background: linear-gradient(175deg, #0a1a2e 0%, #0f2744 42%, #163556 100%);">
+        <div class="pointer-events-none absolute inset-0 opacity-40"
+             style="background-image: radial-gradient(circle at 20% 0%, rgba(212,168,75,0.22), transparent 42%), radial-gradient(circle at 100% 80%, rgba(47,111,173,0.35), transparent 45%);"></div>
+
+        {{-- Branding --}}
+        <div class="relative z-10 flex items-center gap-3 px-5 pb-5 pt-5">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/10 p-1.5 shadow-inner ring-1 ring-white/20">
+                <img src="{{ asset('images/icon/logo.png') }}" alt="CPET" class="h-full w-full rounded-xl object-cover">
+            </div>
+            <div class="min-w-0 flex-1 leading-tight">
+                <p class="text-[1.15rem] font-bold tracking-[0.06em] text-white">CPET</p>
+                <p class="sidebar-muted mt-0.5 text-[11px] font-medium uppercase tracking-wider">Policía Edo. Trujillo</p>
+            </div>
+            <button type="button" id="sidebar-close" class="rounded-lg p-2 lg:hidden" aria-label="Cerrar menú">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-        <div class="modal-body">
-          <ul class="nav nav-tabs" id="reportesTabs" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" id="oficiales-tab" data-toggle="tab" href="#oficiales" role="tab" aria-controls="oficiales" aria-selected="true">Oficiales</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="cargos-tab" data-toggle="tab" href="#cargos" role="tab" aria-controls="cargos" aria-selected="false">Cargos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="familiares-tab" data-toggle="tab" href="#familiares" role="tab" aria-controls="familiares" aria-selected="false">Familiares</a>
-            </li>
-            {{-- <li class="nav-item">
-              <a class="nav-link" id="academico-tab" data-toggle="tab" href="#academico" role="tab" aria-controls="academico" aria-selected="false">Académico</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="cursos-tab" data-toggle="tab" href="#cursos" role="tab" aria-controls="cursos" aria-selected="false">Cursos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="vacaciones-tab" data-toggle="tab" href="#vacaciones" role="tab" aria-controls="vacaciones" aria-selected="false">Vacaciones</a>
-            </li> --}}
-          </ul>
-          <div class="tab-content" id="reportesTabContent">
-            <!-- Tab Oficiales -->
-            <div class="tab-pane fade show active" id="oficiales" role="tabpanel" aria-labelledby="oficiales-tab">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="font-weight-bold">Ficha de oficial</h4>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('report.officers.card') }}" method="GET" target="_blank" class="mt-2">
-                          @csrf
-                          <hr>
-                          <div class="form-group">
-                              <label for="documento_identidad">Documento de identidad (*)</label>
-                              <input type="text" name="documento_identidad" class="form-control" required placeholder="Ingrese el documento de identidad del oficial. Ejemplo: 12345678">
-                          </div>
-                          <div class="form-group">
-                              <button type="submit" class="btn btn-primary">Generar Reporte</button>
-                          </div>
-                        </form>
-                    </div>
-                </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="font-weight-bold">Reporte general de oficiales</h4>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('report.officers') }}" method="GET" target="_blank" class="mt-2">
-                          @csrf
-                          <hr>
-                          <div class="alert alert-info">
-                              <p>Generar reporte de oficiales.</p>
-                          </div>
-                          <div class="form-group">
-                              <button type="submit" class="btn btn-primary">Generar Reporte</button>
-                          </div>
-                        </form>
-                    </div>
+        {{-- Usuario --}}
+        <div class="relative z-10 mx-4 mb-3 rounded-2xl border border-white/10 bg-white/5 px-3.5 py-3 backdrop-blur-sm">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/avatar.png') }}" alt="" class="h-10 w-10 rounded-full object-cover ring-2 ring-accent-400/50">
+                <div class="min-w-0">
+                    <p class="truncate text-sm font-semibold text-white">{{ auth()->user()->name }}</p>
+                    <p class="sidebar-muted truncate text-[11px]">{{ auth()->user()->email ?? 'Sesión activa' }}</p>
                 </div>
+            </div>
+        </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="font-weight-bold">Reporte de oficiales por tallas</h4>
-                    </div>
-                    <div class="card-body">
-                        <form method="GET" action="reports/officers/sizes-officers">
-                            @csrf                        
-                            @foreach([
-                                'talla_camisa', 'talla_pantalon', 'talla_zapato', 'talla_saco',
-                                'talla_kepin_toka', 'talla_tacon', 'talla_falda', 'talla_gorra'
-                            ] as $campo)
-                                <div class="form-group">
-                                    <label for="{{ $campo }}">{{ ucfirst(str_replace('_', ' ', $campo)) }}</label>
-                                    <input type="text" name="{{ $campo }}" class="form-control" value="{{ request($campo) }}">
-                                </div>
-                            @endforeach
-                        
-                            <button type="submit" class="btn btn-primary">Filtrar</button>
-                        </form>
-                    </div>
-                </div>
+        <nav class="relative z-10 flex-1 space-y-1 overflow-y-auto px-3 py-2 text-sm">
+            <p class="sidebar-muted px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.14em]">Menú</p>
 
-                <div class="card">
-                    <div class="card-header">
-                      <h4 class="font-weight-bold">Reporte de oficiales por fecha de nacimiento</h4>
-                    </div>
-                    <div class="card-body">
-                      <form action="{{ route('report.officers_born_date') }}" method="GET" target="_blank" class="mt-2">
-                        @csrf
-                        <hr>
-                        <div class="form-group">
-                          <label for="fechaInicio">Fecha de Nacimiento (Inicio)</label>
-                          <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
-                        </div>
-                        <div class="form-group">
-                          <label for="fechaFin">Fecha de Nacimiento (Fin)</label>
-                          <input type="date" class="form-control" id="fechaFin" name="fechaFin">
-                        </div>
-                        <div class="form-group">
-                          <button type="submit" class="btn btn-primary">Generar Reporte</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
+            <a href="{{ route('home') }}"
+               class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition {{ Route::currentRouteName() === 'home' ? 'nav-link-active' : '' }}">
+                <span class="sidebar-icon flex h-8 w-8 items-center justify-center rounded-lg bg-white/5"><i class="fas fa-home text-sm"></i></span>
+                <span class="flex-1 font-medium">Dashboard</span>
+                @if($notifCount > 0)
+                    <span class="rounded-full bg-accent-500 px-2 py-0.5 text-[11px] font-bold text-brand-900">{{ $notifCount }}</span>
+                @endif
+            </a>
 
-                  <div class="card">
-                    <div class="card-header">
-                      <h4 class="font-weight-bold">Reporte de oficiales por fecha de ingreso</h4>
-                    </div>
-                    <div class="card-body">
-                      <form action="{{ route('report.officers.ingress_date') }}" method="GET" target="_blank" class="mt-2">
-                        @csrf
-                        <hr>
-                        <div class="form-group">
-                            <label for="fechaInicio">Fecha desde (Inicio)</label>
-                            <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
-                          </div>
-                          <div class="form-group">
-                            <label for="fechaFin">Fecha hasta (Fin)</label>
-                            <input type="date" class="form-control" id="fechaFin" name="fechaFin">
-                          </div>
-                          <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Generar Reporte</button>
-                          </div>
-                      </form>
-                    </div>
-                  </div>
+            <div class="nav-group {{ $funcionariosOpen ? 'nav-sub-open' : '' }}">
+                <button type="button" class="nav-toggle flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition {{ $funcionariosOpen ? 'nav-link-active' : '' }}">
+                    <span class="sidebar-icon flex h-8 w-8 items-center justify-center rounded-lg bg-white/5"><i class="fas fa-users text-sm"></i></span>
+                    <span class="flex-1 font-medium">Funcionarios</span>
+                    <i class="fas fa-chevron-down sidebar-muted text-[10px] transition-transform {{ $funcionariosOpen ? 'rotate-180' : '' }}"></i>
+                </button>
+                <div class="nav-sub ml-3 space-y-0.5 border-l border-white/10 py-1 pl-3">
+                    <a href="{{ route('officers.tipo', 'policial') }}"
+                       class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->is('officers/tipo/policial*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-shield-alt sidebar-icon w-4 text-center text-xs"></i> Policial
+                    </a>
+                    <a href="{{ route('officers.tipo', 'administrativo') }}"
+                       class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->is('officers/tipo/administrativo*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-briefcase sidebar-icon w-4 text-center text-xs"></i> Administrativo
+                    </a>
+                    <a href="{{ route('officers.tipo', 'obrero') }}"
+                       class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->is('officers/tipo/obrero*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-tools sidebar-icon w-4 text-center text-xs"></i> Obrero
+                    </a>
+                </div>
             </div>
-            <!-- Tab Cargos -->
-            <div class="tab-pane fade" id="cargos" role="tabpanel" aria-labelledby="cargos-tab">
-                <form action="{{ route('report.officers.officers_cargo') }}" method="GET" target="_blank" class="mt-2">
-                @csrf
-                <div class="form-group">
-                  <label for="filtroCargo">Cargo (*)</label>
-                  <select class="form-control" name="id_cargo" required>
-                    <option value="">Seleccione un cargo</option>
-                    @foreach (\App\Models\Cargo::all() as $cargo)
-                      <option value="{{ $cargo->id }}">{{ $cargo->nombre_cargo }}</option>
-                    @endforeach
-                  </select>
+
+            <div class="nav-group {{ $configOpen ? 'nav-sub-open' : '' }}">
+                <button type="button" class="nav-toggle flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition {{ $configOpen ? 'nav-link-active' : '' }}">
+                    <span class="sidebar-icon flex h-8 w-8 items-center justify-center rounded-lg bg-white/5"><i class="fas fa-cog text-sm"></i></span>
+                    <span class="flex-1 font-medium">Configuraciones</span>
+                    <i class="fas fa-chevron-down sidebar-muted text-[10px] transition-transform {{ $configOpen ? 'rotate-180' : '' }}"></i>
+                </button>
+                <div class="nav-sub ml-3 space-y-0.5 border-l border-white/10 py-1 pl-3">
+                    <a href="{{ route('stations') }}"
+                       class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->is('stations*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-building sidebar-icon w-4 text-center text-xs"></i> Estaciones
+                    </a>
+                    <a href="{{ route('users') }}"
+                       class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->is('users*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-user-cog sidebar-icon w-4 text-center text-xs"></i> Usuarios
+                    </a>
+                    <a href="{{ route('config.discapacidades') }}"
+                       class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->is('config/discapacidades*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-wheelchair sidebar-icon w-4 text-center text-xs"></i> Discapacidades
+                    </a>
+                    <a href="{{ route('config.cursos') }}"
+                       class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->is('config/cursos*') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-book sidebar-icon w-4 text-center text-xs"></i> Cursos / diplomados
+                    </a>
+                    <a href="{{ route('config.cargos') }}"
+                       class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->routeIs('config.cargos') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-medal sidebar-icon w-4 text-center text-xs"></i> Cargos
+                    </a>
+                    <a href="{{ route('config.cargos_administrativos') }}"
+                       class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->routeIs('config.cargos_administrativos') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-briefcase sidebar-icon w-4 text-center text-xs"></i> Cargos administrativos
+                    </a>
                 </div>
-                <div class="form-group">
-                    <label for="fechaInicio">Fecha desde (Inicio)</label>
-                    <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
-                </div>
-                <div class="form-group">
-                    <label for="fechaFin">Fecha hasta (Fin)</label>
-                    <input type="date" class="form-control" id="fechaFin" name="fechaFin">
-                </div>
-                <button type="submit" class="btn btn-primary">Generar Reporte</button>
-              </form>
             </div>
-            <!-- Tab Académico -->
-            <div class="tab-pane fade" id="academico" role="tabpanel" aria-labelledby="academico-tab">
-              <form>
-                <div class="form-group">
-                  <label for="filtroTipoFormacion">Tipo Formación</label>
-                  <input type="text" class="form-control" id="filtroTipoFormacion" placeholder="Filtrar por tipo">
-                </div>
-                <div class="form-group">
-                  <label for="filtroInstitucion">Institución</label>
-                  <input type="text" class="form-control" id="filtroInstitucion" placeholder="Filtrar por institución">
-                </div>
-                <button type="submit" class="btn btn-primary">Generar Reporte</button>
-              </form>
-            </div>
-            <!-- Tab Cursos -->
-            <div class="tab-pane fade" id="cursos" role="tabpanel" aria-labelledby="cursos-tab">
-              <form>
-                <div class="form-group">
-                  <label for="filtroCursoNombre">Nombre Curso</label>
-                  <input type="text" class="form-control" id="filtroCursoNombre" placeholder="Filtrar por nombre">
-                </div>
-                <div class="form-group">
-                  <label for="filtroCursoFecha">Fecha Inicio</label>
-                  <input type="date" class="form-control" id="filtroCursoFecha">
-                </div>
-                <button type="submit" class="btn btn-primary">Generar Reporte</button>
-              </form>
-            </div>
-            <!-- Tab Familiares -->
-            <div class="tab-pane fade" id="familiares" role="tabpanel" aria-labelledby="familiares-tab">
-                <form action="{{ route('report.officers.family_members') }}" method="GET" target="_blank" class="mt-2">
-                    @csrf
-                    <div class="form-group">
-                        <label for="parentesco">Parentesco (*)</label>
-                        <select class="form-control" name="parentesco" required>
-                            <option value>--- SELECCIONE UN PARENTESCO ---</option>
-                            <option value="Padre">Padre</option>
-                            <option value="Madre">Madre</option>
-                            <option value="Hijo(a)">Hijo(a)</option>
-                        </select>
+        </nav>
+
+        <div class="relative z-10 border-t border-white/10 p-4">
+            <a href="#"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+               class="logout-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition">
+                <i class="fas fa-sign-out-alt w-5 text-center"></i>
+                Cerrar sesión
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+        </div>
+    </aside>
+
+    <div class="flex min-h-screen w-full min-w-0 flex-col">
+        <header class="app-topbar sticky top-0 z-30 w-full border-b border-slate-200/70 bg-white shadow-sm">
+            <div class="flex h-[4.25rem] w-full items-center gap-3 px-4 sm:px-6 lg:px-8">
+                <button type="button" id="sidebar-open" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50 lg:hidden" aria-label="Abrir menú">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <form method="GET" action="{{ route('officers.search') }}" class="hidden min-w-0 flex-1 items-center sm:flex sm:max-w-lg">
+                    <div class="relative w-full">
+                        <i class="fas fa-search pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+                        <input type="search" name="q" value="{{ request('q') }}"
+                               placeholder="Buscar cédula o nombre…"
+                               class="w-full rounded-xl border border-slate-200 bg-slate-50/80 py-2.5 pl-10 pr-3 text-sm text-slate-800 shadow-inner outline-none transition focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-100">
                     </div>
-                    <div class="form-group">
-                        <label for="fechaNacimientoInicio">Fecha de Nacimiento (Inicio)</label>
-                        <input type="date" class="form-control"  name="fecha_nacimiento_inicio">
-                    </div>
-                    <div class="form-group">
-                        <label for="fechaNacimientoFin">Fecha de Nacimiento (Fin)</label>
-                        <input type="date" class="form-control" name="fecha_nacimiento_fin">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Generar Reporte</button>
                 </form>
-            </div>
-            <!-- Tab Vacaciones -->
-            <div class="tab-pane fade" id="vacaciones" role="tabpanel" aria-labelledby="vacaciones-tab">
-              <form>
-                <div class="form-group">
-                  <label for="filtroFechaEmision">Fecha Emisión</label>
-                  <input type="date" class="form-control" id="filtroFechaEmision">
-                </div>
-                <div class="form-group">
-                  <label for="filtroEstatus">Estatus</label>
-                  <input type="text" class="form-control" id="filtroEstatus" placeholder="Filtrar por estatus">
-                </div>
-                <button type="submit" class="btn btn-primary">Generar Reporte</button>
-              </form>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-    <div class="page-wrapper">
-        <!-- MENU SIDEBAR-->
-        <aside class="menu-sidebar2">
-            <div class="logo text-white">
-                <a href="#">
-                    <img src="{{ asset("images/icon/logo.png") }}" alt="Cool Admin"  width="50" height="50" />
-                </a>
-                <span class="h4 ml-4">
-                    J.A.A
-                </span>
-            </div>
-            <div class="menu-sidebar2__content js-scrollbar1">
-                <div class="account2">
-                    <div class="image img-cir img-120">
-                        <img src="{{ asset("images/avatar.png") }}" alt="Usuario" />
-                    </div>
-                    <h4 class="name">{{auth()->user()->name}}</h4>
-                    <a href="#"
-                        onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
-                        {{ __('Salir') }}
-                    </a>
 
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </div>
-                <nav class="navbar-sidebar2">
-                    <ul class="list-unstyled navbar__list">
-                        <li class="@if(\Route::currentRouteName() == 'home') active @endif">
-                            <a href="{{ route('home') }}">
-                                <i class="fas fa-home"></i>Dashboard</a>
-                            @php
-                                $notifCount = \App\Models\OficialesSalud::where('is_vigente', 1)
-                                    ->whereDate('fecha_reposo_fin', \Carbon\Carbon::tomorrow()->format('Y-m-d'))
-                                    ->count();
-                            @endphp
-                            @if($notifCount > 0)
-                                <span class="inbox-num">{{ $notifCount }}</span>
-                            @endif
-                        </li>
-                        <li class="@if(\Route::currentRouteName() == 'officers') active @endif">
-                            <a href="{{Route('officers')}}">
-                                <i class="fas fa-user"></i>Funcionarios Policiales</a>
-                        </li>
-                        <li class="has-sub">
-                            <a class="js-arrow" href="#">
-                                <i class="fas fa-cog"></i>Configuraciones
-                                <span class="arrow">
-                                    <i class="fas fa-angle-down"></i>
+                <div class="ml-auto flex shrink-0 items-center gap-2">
+                    <button type="button" id="btn-bulk-import" title="Carga masiva"
+                            class="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 shadow-sm transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-800">
+                        <i class="fas fa-file-excel text-brand-600"></i>
+                        <span class="hidden sm:inline">Carga masiva</span>
+                    </button>
+
+                    <button type="button" id="btn-reports" title="Reportes"
+                            class="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-sm font-medium text-slate-700 shadow-sm transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-800">
+                        <i class="fas fa-print text-brand-600"></i>
+                        <span class="hidden sm:inline">Reportes</span>
+                    </button>
+
+                    <div class="relative" id="notif-wrap">
+                        <button type="button" id="notif-toggle" title="Notificaciones"
+                                class="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-brand-300 hover:bg-brand-50 hover:text-brand-800">
+                            <i class="fas fa-bell"></i>
+                            @if($notificacionesNav->count() > 0)
+                                <span class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent-500 px-1 text-[10px] font-bold text-brand-900 ring-2 ring-white">
+                                    {{ $notificacionesNav->count() }}
                                 </span>
-                            </a>
-                            <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                {{-- <li>
-                                    <a href="index.html">
-                                        <i class="fas fa-arrow-right"></i>Profesiones</a>
-                                </li>
-                                <li>
-                                    <a href="index2.html">
-                                        <i class="fas fa-arrow-right"></i>Cursos</a>
-                                </li>
-                                <li>
-                                    <a href="index3.html">
-                                        <i class="fas fa-arrow-right"></i>Estados</a>
-                                </li>
-                                <li>
-                                    <a href="index4.html">
-                                        <i class="fas fa-arrow-right"></i>Municipios</a>
-                                </li>
-                                <li>
-                                    <a href="index4.html">
-                                    <i class="fas fa-arrow-right"></i>Parroquias</a>
-                                </li> --}}
-                                <li>
-                                    <a href="{{Route('stations')}}">
-                                    <i class="fas fa-arrow-right"></i>Estaciones de comando</a>
-                                </li>
-                                <li>
-                                    <a href="{{Route('users')}}">
-                                        <i class="fas fa-arrow-right"></i>Usuarios</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
+                            @endif
+                        </button>
+                        <div id="notif-panel" class="absolute right-0 top-full z-50 mt-2 hidden w-80 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                            <div class="border-b border-slate-100 bg-gradient-to-r from-brand-50 to-white px-4 py-3 text-sm font-semibold text-brand-800">
+                                {{ $notificacionesNav->count() }} notificación(es)
+                            </div>
+                            <div class="max-h-72 overflow-y-auto">
+                                @forelse($notificacionesNav as $notif)
+                                    <div class="border-b border-slate-50 px-4 py-3 text-sm">
+                                        <p class="font-medium text-slate-800">{{ $notif->oficiale->nombre_completo ?? 'Funcionario' }}</p>
+                                        <p class="text-xs text-slate-500">Se reincorpora mañana · {{ \Carbon\Carbon::parse($notif->fecha_reposo_fin)->format('d/m/Y') }}</p>
+                                    </div>
+                                @empty
+                                    <div class="px-4 py-6 text-center text-sm text-slate-500">Sin notificaciones pendientes</div>
+                                @endforelse
+                            </div>
+                            <a href="{{ route('home') }}" class="block border-t border-slate-100 px-4 py-2.5 text-center text-sm font-semibold text-brand-700 hover:bg-brand-50">Ver dashboard</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </aside>
-        <!-- END MENU SIDEBAR-->
+        </header>
 
-        <!-- PAGE CONTAINER-->
-        <div class="page-container2">
-            <!-- HEADER DESKTOP-->
-            <header class="header-desktop2">
-                <div class="section__content section__content--p30">
-                    <div class="container-fluid">
-                        <div class="header-wrap2">
-                            <div class="logo d-block d-lg-none">
-                                <a href="#">
-                                    <img src="images/icon/logo-white.png" alt="CoolAdmin" />
-                                </a>
-                            </div>
-                            <div class="header-button2">
-                                <div class="header-button-item js-item-menu" id="btn-reports">
-                                    <i class="zmdi zmdi-print" ></i>
-                                </div>
-                                <div class="header-button-item has-noti js-item-menu">
-                                    <i class="zmdi zmdi-notifications"></i>
-                                    @php
-                                        $tomorrow = \Carbon\Carbon::tomorrow();
-                                        $notificacionesNav = \App\Models\OficialesSalud::with('oficiale')
-                                            ->where('is_vigente', 1)
-                                            ->whereDate('fecha_reposo_fin', $tomorrow->format('Y-m-d'))
-                                            ->get();
-                                    @endphp
-                                    @if($notificacionesNav->count() > 0)
-                                        <span class="quantity">{{ $notificacionesNav->count() }}</span>
-                                    @endif
-                                    <div class="notifi-dropdown js-dropdown">
-                                        <div class="notifi__title">
-                                            <p>Tienes {{ $notificacionesNav->count() }} notificación(es)</p>
-                                        </div>
-                                        
-                                        @if($notificacionesNav->count() > 0)
-                                            @foreach($notificacionesNav as $notif)
-                                            <div class="notifi__item">
-                                                <div class="bg-c1 img-cir img-40">
-                                                    <i class="zmdi zmdi-account-circle"></i>
-                                                </div>
-                                                <div class="content">
-                                                    <p><strong>{{ $notif->oficiale->nombre_completo }}</strong> se reincorpora mañana</p>
-                                                    <span class="date">Reposo finaliza: {{ \Carbon\Carbon::parse($notif->fecha_reposo_fin)->format('d/m/Y') }}</span>
-                                                </div>
-                                            </div>
-                                            @endforeach
-                                        @else
-                                            <div class="notifi__item">
-                                                <div class="bg-c3 img-cir img-40">
-                                                    <i class="zmdi zmdi-check-circle"></i>
-                                                </div>
-                                                <div class="content">
-                                                    <p>No hay notificaciones pendientes</p>
-                                                    <span class="date">{{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</span>
-                                                </div>
-                                            </div>
-                                        @endif
-                                        
-                                        <div class="notifi__footer">
-                                            <a href="{{ route('home') }}">Ver Dashboard</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            <aside class="menu-sidebar2 js-right-sidebar d-block d-lg-none">
-                <div class="logo">
-                    <a href="#">
-                        <img src="images/icon/logo-white.png" alt="Cool Admin" />
-                    </a>
-                </div>
-                <div class="menu-sidebar2__content js-scrollbar2">
-                    <div class="account2">
-                        <div class="image img-cir img-120">
-                            <img src="images/icon/avatar-big-01.jpg" alt="John Doe" />
-                        </div>
-                        <h4 class="name">john doe</h4>
-                        <a href="#">Sign out</a>
-                    </div>
-                    <nav class="navbar-sidebar2">
-                        <ul class="list-unstyled navbar__list">
-                            <li class="active has-sub">
-                                <a class="js-arrow" href="#">
-                                    <i class="fas fa-tachometer-alt"></i>Dashboard
-                                    <span class="arrow">
-                                        <i class="fas fa-angle-down"></i>
-                                    </span>
-                                </a>
-                                <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                    <li>
-                                        <a href="index.html">
-                                            <i class="fas fa-tachometer-alt"></i>Dashboard 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="index2.html">
-                                            <i class="fas fa-tachometer-alt"></i>Dashboard 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="index3.html">
-                                            <i class="fas fa-tachometer-alt"></i>Dashboard 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="index4.html">
-                                            <i class="fas fa-tachometer-alt"></i>Dashboard 4</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="inbox.html">
-                                    <i class="fas fa-chart-bar"></i>Inbox</a>
-                                <span class="inbox-num">3</span>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fas fa-shopping-basket"></i>eCommerce</a>
-                            </li>
-                            <li class="has-sub">
-                                <a class="js-arrow" href="#">
-                                    <i class="fas fa-trophy"></i>Features
-                                    <span class="arrow">
-                                        <i class="fas fa-angle-down"></i>
-                                    </span>
-                                </a>
-                                <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                    <li>
-                                        <a href="table.html">
-                                            <i class="fas fa-table"></i>Tables</a>
-                                    </li>
-                                    <li>
-                                        <a href="form.html">
-                                            <i class="far fa-check-square"></i>Forms</a>
-                                    </li>
-                                    <li>
-                                        <a href="calendar.html">
-                                            <i class="fas fa-calendar-alt"></i>Calendar</a>
-                                    </li>
-                                    <li>
-                                        <a href="map.html">
-                                            <i class="fas fa-map-marker-alt"></i>Maps</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="has-sub">
-                                <a class="js-arrow" href="#">
-                                    <i class="fas fa-copy"></i>Pages
-                                    <span class="arrow">
-                                        <i class="fas fa-angle-down"></i>
-                                    </span>
-                                </a>
-                                <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                    <li>
-                                        <a href="login.html">
-                                            <i class="fas fa-sign-in-alt"></i>Login</a>
-                                    </li>
-                                    <li>
-                                        <a href="register.html">
-                                            <i class="fas fa-user"></i>Register</a>
-                                    </li>
-                                    <li>
-                                        <a href="forget-pass.html">
-                                            <i class="fas fa-unlock-alt"></i>Forget Password</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="has-sub">
-                                <a class="js-arrow" href="#">
-                                    <i class="fas fa-desktop"></i>UI Elements
-                                    <span class="arrow">
-                                        <i class="fas fa-angle-down"></i>
-                                    </span>
-                                </a>
-                                <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                    <li>
-                                        <a href="button.html">
-                                            <i class="fab fa-flickr"></i>Button</a>
-                                    </li>
-                                    <li>
-                                        <a href="badge.html">
-                                            <i class="fas fa-comment-alt"></i>Badges</a>
-                                    </li>
-                                    <li>
-                                        <a href="tab.html">
-                                            <i class="far fa-window-maximize"></i>Tabs</a>
-                                    </li>
-                                    <li>
-                                        <a href="card.html">
-                                            <i class="far fa-id-card"></i>Cards</a>
-                                    </li>
-                                    <li>
-                                        <a href="alert.html">
-                                            <i class="far fa-bell"></i>Alerts</a>
-                                    </li>
-                                    <li>
-                                        <a href="progress-bar.html">
-                                            <i class="fas fa-tasks"></i>Progress Bars</a>
-                                    </li>
-                                    <li>
-                                        <a href="modal.html">
-                                            <i class="far fa-window-restore"></i>Modals</a>
-                                    </li>
-                                    <li>
-                                        <a href="switch.html">
-                                            <i class="fas fa-toggle-on"></i>Switchs</a>
-                                    </li>
-                                    <li>
-                                        <a href="grid.html">
-                                            <i class="fas fa-th-large"></i>Grids</a>
-                                    </li>
-                                    <li>
-                                        <a href="fontawesome.html">
-                                            <i class="fab fa-font-awesome"></i>FontAwesome</a>
-                                    </li>
-                                    <li>
-                                        <a href="typo.html">
-                                            <i class="fas fa-font"></i>Typography</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </aside>
-            <!-- END HEADER DESKTOP-->
-
-            <!-- BREADCRUMB-->
-            <section class="au-breadcrumb m-t-75 border-bottom">
-                <div class="section__content section__content--p30">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="au-breadcrumb-content">
-                                    <div class="au-breadcrumb-left">
-                                        <span class="au-breadcrumb-span">Estás aquí:</span>
-                                        <ul class="list-unstyled list-inline au-breadcrumb__list">
-                                            <li class="list-inline-item active">
-                                                <a href="#">Inicio</a>
-                                            </li>
-                                            @if(\Route::currentRouteName() != 'home')
-                                            <li class="list-inline-item seprate">
-                                                <span>/</span>
-                                            </li>
-                                            <li class="list-inline-item">{{$title}}</li>
-                                            @endif
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- END BREADCRUMB-->
-
-            {{-- MAIN CONTENT --}}
-            <section class="container-fluid bg-white shadow p-4">
-                @yield('content')
-            </section>
-            {{-- END MAIN CONTENT --}}
-
-            <section>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="copyright">
-                                <p>Copyright © 2025 CPET. Todos los derechos reservados. Desarrollado por: <a href="https://www.instagram.com/adsyssystems/" target="_blank">Adsys Sistemas</a>.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- END PAGE CONTAINER-->
+        <div class="mt-4 border-b border-slate-200/50 bg-white/60 px-4 py-3 backdrop-blur-sm sm:mt-5 sm:px-6 lg:px-8">
+            <nav class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+                <a href="{{ route('home') }}" class="font-semibold text-brand-700 hover:text-accent-600">Inicio</a>
+                @if(($title ?? '') !== 'Dashboard' && Route::currentRouteName() !== 'home')
+                    <span class="text-slate-300">/</span>
+                    <span class="truncate font-medium text-slate-700">{{ $title }}</span>
+                @endif
+            </nav>
         </div>
 
+        <main class="flex-1 px-4 pb-6 pt-4 sm:px-6 sm:pt-5 lg:px-8">
+            <div class="rounded-2xl border border-white/80 bg-white/95 p-5 shadow-[0_12px_40px_rgba(15,39,68,0.08)] ring-1 ring-slate-200/60 sm:p-7">
+                @yield('content')
+            </div>
+        </main>
+
+        <footer class="px-4 py-5 text-center text-xs text-slate-500 sm:px-6 lg:px-8">
+            © {{ date('Y') }} CPET · Policía del Estado Trujillo ·
+            <a href="https://www.instagram.com/adsyssystems/" target="_blank" rel="noopener" class="font-medium text-brand-700 hover:text-accent-600">Adsys Sistemas</a>
+        </footer>
     </div>
+</div>
 
-    <!-- Jquery JS-->
-    <script src="{{asset("vendor/jquery-3.2.1.min.js")}}"></script>
-    <!-- Bootstrap JS-->
-    <script src="{{asset("vendor/bootstrap-4.1/popper.min.js")}}"></script>
-    <script src="{{asset("vendor/bootstrap-4.1/bootstrap.min.js")}}"></script>
-    <!-- Vendor JS       -->
-    <script src="{{asset("vendor/slick/slick.min.js")}}">
-    </script>
-    <script src="{{asset("vendor/wow/wow.min.js")}}"></script>
-    <script src="{{asset("vendor/animsition/animsition.min.js")}}"></script>
-    <script src="{{asset("vendor/bootstrap-progressbar/bootstrap-progressbar.min.js")}}">
-    </script>
-    <script src="{{asset("vendor/counter-up/jquery.waypoints.min.js")}}"></script>
-    <script src="{{asset("vendor/counter-up/jquery.counterup.min.js")}}">
-    </script>
-    <script src="{{asset("vendor/circle-progress/circle-progress.min.js")}}"></script>
-    <script src="{{asset("vendor/perfect-scrollbar/perfect-scrollbar.js")}}"></script>
-    <script src="{{asset("vendor/chartjs/Chart.bundle.min.js")}}"></script>
-    <script src="{{asset("vendor/select2/select2.min.js")}}">
-    </script>
-    <script src="{{asset("vendor/vector-map/jquery.vmap.js")}}"></script>
-    <script src="{{asset("vendor/vector-map/jquery.vmap.min.js")}}"></script>
-    <script src="{{asset("vendor/vector-map/jquery.vmap.sampledata.js")}}"></script>
-    <script src="{{asset("vendor/vector-map/jquery.vmap.world.js")}}"></script>
+@include('partials.reportes-modal')
+@include('partials.carga-masiva-modal')
 
-    <!-- Main JS-->
-    <script src="{{asset("js/main.js")}}"></script>
-    <script src="{{asset("js/sweetalert2@11.js") }}"></script>
-    <script src="{{asset("vendor/jszip/jszip.min.js") }}"></script>
-    <script src="{{asset("vendor/pdfmake/pdfmake.min.js") }}"></script>
-    <script src="{{asset('vendor/pdfmake/vfs_fonts.js')}}"></script>
-    <!-- DataTables -->
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('vendor/jquery-3.2.1.min.js') }}"></script>
+<script src="{{ asset('vendor/bootstrap-4.1/popper.min.js') }}"></script>
+<script src="{{ asset('vendor/bootstrap-4.1/bootstrap.min.js') }}"></script>
+<script src="{{ asset('vendor/select2/select2.min.js') }}"></script>
+<script src="{{ asset('js/sweetalert2@11.js') }}"></script>
+<script src="{{ asset('js/cpet-catalog-select.js') }}"></script>
+<script src="{{ asset('vendor/jszip/jszip.min.js') }}"></script>
+<script src="{{ asset('vendor/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ asset('vendor/pdfmake/vfs_fonts.js') }}"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
+<script src="{{ asset('js/datatable-spanish.js') }}"></script>
+<script src="{{ asset('js/cpet-module-table.js') }}"></script>
 
-    <!-- DataTables Bootstrap 4 -->
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+<script>
+    var title = @json($title ?? '');
+    window.leftImageBase64 = @json($leftImagePath ?? '');
 
-    <!-- DataTables Buttons -->
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    (function () {
+        var sidebar = document.getElementById('app-sidebar');
+        var overlay = document.getElementById('sidebar-overlay');
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+        }
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+        document.getElementById('sidebar-open')?.addEventListener('click', openSidebar);
+        document.getElementById('sidebar-close')?.addEventListener('click', closeSidebar);
+        overlay?.addEventListener('click', closeSidebar);
 
-    <!-- DataTables Buttons Extensions -->
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js"></script>
+        document.querySelectorAll('.nav-toggle').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var group = btn.closest('.nav-group');
+                group.classList.toggle('nav-sub-open');
+                var chevron = btn.querySelector('.fa-chevron-down');
+                if (chevron) chevron.classList.toggle('rotate-180');
+            });
+        });
 
-    <!-- DataTables Responsive -->
-    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+        var notifToggle = document.getElementById('notif-toggle');
+        var notifPanel = document.getElementById('notif-panel');
+        notifToggle?.addEventListener('click', function (e) {
+            e.stopPropagation();
+            notifPanel.classList.toggle('hidden');
+        });
+        document.addEventListener('click', function () {
+            notifPanel?.classList.add('hidden');
+        });
 
-    <!-- DataTables Responsive Bootstrap 4 -->
-    <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
-    <script>
-    var title = "{!! $title !!}";
-    window.leftImageBase64 = "{!! $leftImagePath !!}";
-
-
-    $(document).ready(function() {
-        $('#btn-reports').click(function() {
+        $('#btn-reports').on('click', function () {
             $('#reportesModal').modal('show');
         });
-    })
 
-    </script>
-    <script src="{{asset("js/datatable-spanish.js") }}"></script>
-    @yield('scripts')
+        $('#btn-bulk-import').on('click', function () {
+            $('#cargaMasivaModal').modal('show');
+        });
+
+        // Evita que el backdrop tape el diálogo cuando el modal está dentro del layout
+        $(document).on('show.bs.modal', '.modal', function () {
+            if (this.parentElement !== document.body) {
+                document.body.appendChild(this);
+            }
+        });
+
+        // Bootstrap 4 bloquea el foco fuera del .modal; SweetAlert2 se renderiza en body.
+        // Sin esto no se puede escribir, pegar ni seleccionar texto en inputs de Swal.
+        $(document).on('focusin.modal', function (e) {
+            if ($(e.target).closest('.swal2-container').length) {
+                e.stopImmediatePropagation();
+            }
+        });
+    })();
+</script>
+@yield('scripts')
 </body>
-
 </html>
-<!-- end document-->

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property int|null $cargo_administrativo_id
- * @property int|null $tipo_cargo_id
+ * @property string|null $tipo_funcionario
  * @property string|null $documento_identidad
  * @property string|null $nombre_completo
  * @property Carbon|null $fecha_nacimiento
@@ -37,7 +37,6 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property Parroquia|null $parroquia
  * @property CargosAdministrativo|null $cargos_administrativo
- * @property TipoCargo|null $tipo_cargo
  * @property Collection|OficialesAcademico[] $oficiales_academicos
  * @property Collection|Armamento[] $armamentos
  * @property Collection|Cargo[] $cargos
@@ -60,39 +59,88 @@ class Oficiale extends Model
 
 	protected $casts = [
 		'cargo_administrativo_id' => 'int',
-		'tipo_cargo_id' => 'int',
 		'fecha_nacimiento' => 'datetime',
 		'fecha_ingreso' => 'datetime',
-		'parroquia_id' => 'int'
+		'parroquia_id' => 'int',
+		'sabe_conducir' => 'boolean',
+		'tipos_conduccion' => 'array',
 	];
 
 	protected $fillable = [
 		'cargo_administrativo_id',
-		'tipo_cargo_id',
+		'tipo_funcionario',
 		'documento_identidad',
 		'nombre_completo',
 		'fecha_nacimiento',
+		'sexo',
 		'tipo_sangre',
 		'talla_camisa',
 		'talla_pantalon',
 		'talla_zapatos',
-		'talla_saco' , 
+		'talla_saco',
 		'talla_kepin_toka',
-		'talla_tacon', 
-		'talla_falda', 
+		'talla_tacon',
+		'talla_falda',
 		'talla_gorra',
 		'fecha_ingreso',
 		'estado_civil',
 		'direccion',
+		'tipo_vivienda',
+		'direccion_vivienda',
+		'sabe_conducir',
+		'tipos_conduccion',
 		'telefono',
+		'telefono_residencial',
 		'correo_electronico',
 		'estatus',
 		'numero_placa',
 		'parroquia_id',
 		'fotografia',
 		'centro_votacion',
-		'direccion_centro'
+		'direccion_centro',
 	];
+
+	public const TIPOS_FUNCIONARIO = [
+		'policial' => 'Policial',
+		'administrativo' => 'Administrativo',
+		'obrero' => 'Obrero',
+	];
+
+	public const SEXOS = [
+		'Masculino',
+		'Femenino',
+	];
+
+	public const ESTATUS = [
+		'Operativo',
+		'No Operativo',
+		'En Reposo',
+		'Retirado',
+		'Suspendido',
+		'Jubilado',
+		'Fallecido',
+		'URRA',
+	];
+
+	public const TIPOS_VIVIENDA = [
+		'Propia',
+		'Alquilada',
+		'No posee',
+	];
+
+	public const TIPOS_CONDUCCION = [
+		'Vehículo',
+		'Moto',
+		'Jack',
+		'Grúa',
+	];
+
+	public static function normalizeTipo(?string $tipo): string
+	{
+		$key = strtolower((string) $tipo);
+
+		return self::TIPOS_FUNCIONARIO[$key] ?? 'Policial';
+	}
 
 	public function parroquia()
 	{
@@ -102,11 +150,6 @@ class Oficiale extends Model
 	public function cargos_administrativo()
 	{
 		return $this->belongsTo(CargosAdministrativo::class, 'cargo_administrativo_id');
-	}
-
-	public function tipo_cargo()
-	{
-		return $this->belongsTo(TipoCargo::class, 'tipo_cargo_id');
 	}
 
 	public function oficiales_academicos()
@@ -168,5 +211,10 @@ class Oficiale extends Model
 	public function oficiales_vacaciones()
 	{
 		return $this->hasMany(OficialesVacacione::class, 'id_policia');
+	}
+
+	public function oficiales_urras()
+	{
+		return $this->hasMany(OficialesUrra::class, 'id_policia');
 	}
 }

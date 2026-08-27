@@ -33,18 +33,30 @@ class OficialesCurso extends Model
 	protected $casts = [
 		'id_policia' => 'int',
 		'fecha_inicio' => 'datetime',
-		'fecha_fin' => 'datetime'
+		'fecha_fin' => 'datetime',
+		'duracion_valor' => 'int',
+		'catalogo_curso_id' => 'int',
 	];
 
 	protected $fillable = [
 		'id_policia',
 		'nombre',
+		'catalogo_curso_id',
 		'institucion',
 		'tipo',
 		'descripcion',
 		'fecha_inicio',
-		'fecha_fin'
+		'fecha_fin',
+		'duracion_valor',
+		'duracion_tipo',
 	];
+
+	public const DURACION_TIPOS = ['Años', 'Meses', 'Horas'];
+
+	public function catalogoCurso()
+	{
+		return $this->belongsTo(CatalogoCurso::class, 'catalogo_curso_id');
+	}
 
 	public function oficiale()
 	{

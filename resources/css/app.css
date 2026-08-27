@@ -1,0 +1,424 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@source "../../views/**/*.blade.php";
+@source "../js/**/*.js";
+
+@theme {
+    --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+    --color-brand-50: #eef4fb;
+    --color-brand-100: #d9e7f5;
+    --color-brand-200: #b6d0ea;
+    --color-brand-300: #84b0da;
+    --color-brand-400: #4f8cc4;
+    --color-brand-500: #2f6fad;
+    --color-brand-600: #1f568f;
+    --color-brand-700: #1a4574;
+    --color-brand-800: #183b61;
+    --color-brand-900: #0f2744;
+    --color-accent-400: #d4a84b;
+    --color-accent-500: #c4922e;
+    --color-accent-600: #a67822;
+    --color-surface: #e8eef5;
+    --color-ink: #0f172a;
+}
+
+@layer base {
+    html {
+        font-family: var(--font-sans);
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        @apply text-ink antialiased;
+        font-family: var(--font-sans);
+        background-color: #e8eef5;
+        background-image:
+            radial-gradient(ellipse 80% 50% at 100% -10%, rgba(47, 111, 173, 0.12), transparent 55%),
+            radial-gradient(ellipse 60% 40% at 0% 100%, rgba(196, 146, 46, 0.08), transparent 50%),
+            linear-gradient(180deg, #eef3f9 0%, #e2eaf3 100%);
+        background-attachment: fixed;
+    }
+}
+
+/* Barra superior: ancho del área de contenido (no del viewport completo) */
+.app-shell .app-topbar {
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 30 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* Columna de contenido a la derecha del sidebar (desktop) */
+@media (min-width: 1024px) {
+    .app-shell .app-content-shell {
+        padding-left: 17.5rem !important;
+    }
+}
+
+/*
+ * Estilos FUERA de @layer para ganar a Bootstrap 4 (CSS sin capas).
+ * Sin esto, los enlaces del sidebar quedan azules (#007bff).
+ */
+#app-sidebar,
+#app-sidebar a,
+#app-sidebar a:hover,
+#app-sidebar a:focus,
+#app-sidebar a:visited,
+#app-sidebar button {
+    color: #f1f5f9 !important;
+    text-decoration: none !important;
+}
+
+#app-sidebar a span,
+#app-sidebar button span {
+    color: inherit !important;
+}
+
+#app-sidebar .sidebar-muted {
+    color: rgba(241, 245, 249, 0.55) !important;
+}
+
+#app-sidebar .sidebar-icon {
+    color: #d4a84b !important;
+}
+
+#app-sidebar a:hover,
+#app-sidebar button:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+}
+
+#app-sidebar .nav-link-active,
+#app-sidebar a.nav-link-active,
+#app-sidebar button.nav-link-active {
+    background: linear-gradient(90deg, rgba(196, 146, 46, 0.28), rgba(255, 255, 255, 0.08)) !important;
+    color: #fff !important;
+    box-shadow: inset 3px 0 0 #d4a84b;
+}
+
+#app-sidebar .logout-link:hover {
+    background: rgba(239, 68, 68, 0.22) !important;
+    color: #fecaca !important;
+}
+
+/* Botones del sistema — anulan Bootstrap */
+.app-shell .btn,
+.app-shell a.btn,
+.app-shell button.btn,
+.app-shell input.btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    min-height: 2.5rem;
+    padding: 0.55rem 1.15rem !important;
+    border-radius: 0.65rem !important;
+    border: 1px solid transparent !important;
+    font-family: inherit !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0.01em;
+    box-shadow: 0 1px 2px rgba(15, 39, 68, 0.08);
+    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease, filter 0.15s ease !important;
+    text-decoration: none !important;
+}
+
+.app-shell .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(15, 39, 68, 0.14);
+}
+
+.app-shell .btn:active {
+    transform: translateY(0);
+}
+
+.app-shell .btn-lg {
+    min-height: 2.85rem;
+    padding: 0.7rem 1.4rem !important;
+    font-size: 0.95rem !important;
+    border-radius: 0.75rem !important;
+}
+
+.app-shell .btn-sm {
+    min-height: 2rem;
+    padding: 0.35rem 0.75rem !important;
+    font-size: 0.8rem !important;
+}
+
+.app-shell .btn-primary,
+.app-shell .btn-dark {
+    background: linear-gradient(180deg, #1f568f 0%, #183b61 100%) !important;
+    color: #fff !important;
+    border-color: #153456 !important;
+}
+
+.app-shell .btn-primary:hover,
+.app-shell .btn-dark:hover,
+.app-shell .btn-primary:focus,
+.app-shell .btn-dark:focus {
+    background: linear-gradient(180deg, #2f6fad 0%, #1a4574 100%) !important;
+    color: #fff !important;
+    filter: brightness(1.05);
+}
+
+.app-shell .btn-secondary,
+.app-shell .btn-default {
+    background: #fff !important;
+    color: #1a4574 !important;
+    border-color: #c5d0db !important;
+}
+
+.app-shell .btn-secondary:hover,
+.app-shell .btn-default:hover {
+    background: #f1f5f9 !important;
+    color: #0f2744 !important;
+    border-color: #94a3b8 !important;
+}
+
+.app-shell .btn-success {
+    background: linear-gradient(180deg, #059669 0%, #047857 100%) !important;
+    color: #fff !important;
+    border-color: #065f46 !important;
+}
+
+.app-shell .btn-warning {
+    background: linear-gradient(180deg, #d4a84b 0%, #c4922e 100%) !important;
+    color: #1a1408 !important;
+    border-color: #a67822 !important;
+}
+
+.app-shell .btn-danger,
+.app-shell .btn-outline-danger {
+    background: #fff !important;
+    color: #b91c1c !important;
+    border-color: #fca5a5 !important;
+}
+
+.app-shell .btn-danger:hover,
+.app-shell .btn-outline-danger:hover {
+    background: #fef2f2 !important;
+    color: #991b1b !important;
+}
+
+.app-shell .btn-info {
+    background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%) !important;
+    color: #fff !important;
+}
+
+.app-shell .btn-link {
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #1f568f !important;
+    border: 0 !important;
+}
+
+.app-shell .btn-link:hover {
+    color: #c4922e !important;
+    transform: none;
+    box-shadow: none !important;
+}
+
+/* Formularios y componentes */
+.app-shell .form-control,
+.app-shell .form-select,
+.app-shell select.form-control,
+.app-shell textarea.form-control,
+.app-shell input.form-control {
+    width: 100%;
+    border-radius: 0.65rem !important;
+    border: 1px solid #c9d5e3 !important;
+    background: #fff !important;
+    padding: 0.6rem 0.85rem !important;
+    font-size: 0.875rem !important;
+    color: #0f172a !important;
+    box-shadow: 0 1px 2px rgba(15, 39, 68, 0.04);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.app-shell .form-control:focus,
+.app-shell .form-select:focus {
+    border-color: #4f8cc4 !important;
+    box-shadow: 0 0 0 3px rgba(47, 111, 173, 0.18) !important;
+    outline: none;
+}
+
+.app-shell .card {
+    border-radius: 1rem !important;
+    border: 1px solid rgba(148, 163, 184, 0.35) !important;
+    background: #fff !important;
+    box-shadow: 0 8px 24px rgba(15, 39, 68, 0.06) !important;
+    overflow: hidden;
+}
+
+.app-shell .card-header {
+    border-bottom: 1px solid #e8eef5 !important;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    padding: 0.9rem 1.1rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    color: #1a4574 !important;
+}
+
+.app-shell .card-body {
+    padding: 1.1rem !important;
+}
+
+.app-shell .table {
+    width: 100%;
+    font-size: 0.875rem;
+}
+
+.app-shell .table thead th {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    font-weight: 600 !important;
+    border-bottom: 1px solid #dbe4ef !important;
+    padding: 0.75rem 0.85rem !important;
+    white-space: nowrap;
+}
+
+.app-shell .table td {
+    border-bottom: 1px solid #eef2f7 !important;
+    padding: 0.75rem 0.85rem !important;
+    vertical-align: middle !important;
+    color: #334155;
+}
+
+.app-shell .table-hover tbody tr:hover {
+    background: #f8fafc !important;
+}
+
+.app-shell .alert {
+    border-radius: 0.75rem !important;
+    padding: 0.85rem 1rem !important;
+    font-size: 0.875rem !important;
+    margin-bottom: 1rem;
+    border-width: 1px !important;
+}
+
+.app-shell .alert-info {
+    background: #eef4fb !important;
+    color: #183b61 !important;
+    border-color: #b6d0ea !important;
+}
+
+.app-shell .alert-success {
+    background: #ecfdf5 !important;
+    color: #065f46 !important;
+    border-color: #a7f3d0 !important;
+}
+
+.app-shell .alert-danger {
+    background: #fef2f2 !important;
+    color: #991b1b !important;
+    border-color: #fecaca !important;
+}
+
+.app-shell .alert-warning {
+    background: #fffbeb !important;
+    color: #92400e !important;
+    border-color: #fde68a !important;
+}
+
+.app-shell .nav-tabs {
+    border-bottom: 1px solid #dbe4ef !important;
+    gap: 0.25rem;
+}
+
+.app-shell .nav-tabs .nav-link {
+    border: 0 !important;
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+    padding: 0.55rem 1rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: #64748b !important;
+}
+
+.app-shell .nav-tabs .nav-link.active {
+    background: #1a4574 !important;
+    color: #fff !important;
+}
+
+.app-shell .modal-content {
+    border: 0 !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 25px 50px rgba(15, 39, 68, 0.25) !important;
+    overflow: hidden;
+}
+
+.app-shell .modal-header {
+    border-bottom: 1px solid #e8eef5 !important;
+    background: #fff !important;
+}
+
+.app-shell .dropdown-menu {
+    border-radius: 0.75rem !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 12px 28px rgba(15, 39, 68, 0.12) !important;
+    padding: 0.4rem !important;
+}
+
+.app-shell .dropdown-item {
+    border-radius: 0.45rem !important;
+    font-size: 0.875rem !important;
+    color: #334155 !important;
+    padding: 0.5rem 0.75rem !important;
+}
+
+.app-shell .dropdown-item:hover {
+    background: #eef4fb !important;
+    color: #1a4574 !important;
+}
+
+.app-shell .dataTables_wrapper .dataTables_filter input,
+.app-shell .dataTables_wrapper .dataTables_length select {
+    border-radius: 0.55rem !important;
+    border: 1px solid #c9d5e3 !important;
+    padding: 0.35rem 0.65rem !important;
+    font-size: 0.875rem !important;
+}
+
+.app-shell .page-link {
+    color: #1a4574 !important;
+}
+
+.app-shell .badge {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.nav-sub-open > .nav-sub {
+    display: block !important;
+}
+
+.nav-sub {
+    display: none;
+}
+
+/* SweetAlert2: permitir seleccionar, copiar y pegar en inputs */
+.swal2-container,
+.swal2-popup,
+.swal2-title,
+.swal2-html-container,
+.swal2-input,
+.swal2-textarea {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+
+.swal2-input,
+.swal2-textarea {
+    pointer-events: auto !important;
+}

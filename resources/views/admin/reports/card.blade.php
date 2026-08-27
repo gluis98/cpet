@@ -155,7 +155,7 @@
         <p><strong>Fecha de Ingreso:</strong> {{ \Carbon\Carbon::parse($officer->fecha_ingreso)->format('d-m-Y') }}</p>
         <p><strong>Jerarquía Actual:</strong> {{ ($officer->oficiales_cargos->where('is_actual', 1)->first() != null) ? $officer->oficiales_cargos->where('is_actual', 1)->first()->cargo->nombre_cargo : "Sin Cargo" }}</p>
         <p><strong>Cargo Actual:</strong> {{ ($officer->cargos_administrativo) ? $officer->cargos_administrativo->nombre_cargo : "Sin Cargo"}}</p>
-        <p><strong>Tipo de Cargo:</strong> {{ ($officer->tipo_cargo) ? $officer->tipo_cargo->nombre : "N/A"}}</p>
+        <p><strong>Tipo de funcionario:</strong> {{ $officer->tipo_funcionario ?? 'N/A' }}</p>
         <p><strong>Estatus:</strong> {{ $officer->estatus}}</p>
         <h3>Datos personales</h3>
         <p><strong>Documento:</strong> {{ $officer->documento_identidad }}</p>
@@ -191,8 +191,7 @@
           <div class="formation-item">
             <p><strong>Tipo Formación:</strong> {{ $academico->tipo_formacion }}</p>
             <p><strong>Institución:</strong> {{ $academico->institucion }}</p>
-            <p><strong>Fecha Inicio:</strong> {{ \Carbon\Carbon::parse($academico->fecha_inicio)->format('d-m-Y') }}</p>
-            <p><strong>Fecha Fin:</strong> {{ ($academico->fecha_fin) ? \Carbon\Carbon::parse($academico->fecha_fin)->format('d-m-Y') : "Cursando / Sin terminar" }}</p>
+            <p><strong>Año de Graduación:</strong> {{ $academico->fecha_fin ? \Carbon\Carbon::parse($academico->fecha_fin)->format('Y') : 'S/F' }}</p>
             <p><strong>Título:</strong> {{ $academico->titulo }}</p>
           </div>
         @endforeach

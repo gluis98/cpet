@@ -43,7 +43,8 @@ class OficialesAcademico extends Model
 		'fecha_inicio',
 		'fecha_fin',
 		'descripcion',
-		'titulo'
+		'titulo',
+		'documento_fondo_negro',
 	];
 
 	public function oficiale()

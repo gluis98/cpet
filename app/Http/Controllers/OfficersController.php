@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Oficiale;
-use App\Models\TipoCargo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -54,29 +53,57 @@ class OfficersController extends Controller
 
         $query = Oficiale::select(
             'id', 'numero_placa', 'documento_identidad', 'nombre_completo',
-            'telefono', 'fecha_ingreso', 'estatus', 'cargo_administrativo_id'
+            'telefono', 'fecha_ingreso', 'estatus', 'cargo_administrativo_id', 'tipo_funcionario'
         )->with([
-            'oficiales_cargos' => function($q) {
+            'oficiales_cargos' => function ($q) {
                 $q->select('id', 'id_policia', 'id_cargo', 'is_actual')
-                  ->where('is_actual', 1)
-                  ->with('cargo:id,nombre_cargo');
+                    ->where('is_actual', 1)
+                    ->with('cargo:id,nombre_cargo');
             },
-            'cargos_administrativo:id,nombre_cargo'
+            'cargos_administrativo:id,nombre_cargo',
         ]);
 
-        // Búsqueda global
-        if (!empty($search)) {
-            $query->where(function($q) use ($search) {
-                $q->where('nombre_completo', 'like', "%{$search}%")
-                  ->orWhere('documento_identidad', 'like', "%{$search}%")
-                  ->orWhere('numero_placa', 'like', "%{$search}%")
-                  ->orWhere('telefono', 'like', "%{$search}%")
-                  ->orWhere('estatus', 'like', "%{$search}%");
+        if ($request->filled('tipo_funcionario')) {
+            $query->where('tipo_funcionario', Oficiale::normalizeTipo($request->get('tipo_funcionario')));
+        }
+
+        if ($request->filled('estatus')) {
+            $query->where('estatus', $request->get('estatus'));
+        }
+
+        // Búsqueda global en todas las columnas visibles (+ contacto relacionado)
+        if (! empty($search)) {
+            $term = trim($search);
+            $query->where(function ($q) use ($term) {
+                $q->where('numero_placa', 'like', "%{$term}%")
+                    ->orWhere('documento_identidad', 'like', "%{$term}%")
+                    ->orWhere('nombre_completo', 'like', "%{$term}%")
+                    ->orWhere('telefono', 'like', "%{$term}%")
+                    ->orWhere('telefono_residencial', 'like', "%{$term}%")
+                    ->orWhere('correo_electronico', 'like', "%{$term}%")
+                    ->orWhere('estatus', 'like', "%{$term}%")
+                    ->orWhere('fecha_ingreso', 'like', "%{$term}%")
+                    ->orWhereHas('oficiales_cargos', function ($cargoQuery) use ($term) {
+                        $cargoQuery->where('is_actual', 1)
+                            ->whereHas('cargo', function ($q) use ($term) {
+                                $q->where('nombre_cargo', 'like', "%{$term}%");
+                            });
+                    })
+                    ->orWhereHas('cargos_administrativo', function ($q) use ($term) {
+                        $q->where('nombre_cargo', 'like', "%{$term}%");
+                    });
             });
         }
 
-        $totalRecords = Oficiale::count();
-        $filteredRecords = $query->count();
+        $baseCount = Oficiale::query();
+        if ($request->filled('tipo_funcionario')) {
+            $baseCount->where('tipo_funcionario', Oficiale::normalizeTipo($request->get('tipo_funcionario')));
+        }
+        if ($request->filled('estatus')) {
+            $baseCount->where('estatus', $request->get('estatus'));
+        }
+        $totalRecords = $baseCount->count();
+        $filteredRecords = (clone $query)->count();
 
         // Ordenamiento
         if (isset($columns[$orderColumn]) && $orderColumn < 5) {
@@ -147,14 +174,7 @@ class OfficersController extends Controller
      * Display the specified resource.
      */
     public function show($id) {
-        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo', 'cargos_administrativo', 'tipo_cargo')->findOrFail($id), 200);
-    }
-
-    /**
-     * Get all tipos de cargos.
-     */
-    public function getTiposCargos() {
-        return response()->json(TipoCargo::orderBy('nombre')->get(), 200);
+        return response()->json(Oficiale::with('oficiales_cargos', 'oficiales_cargos.cargo', 'cargos_administrativo')->findOrFail($id), 200);
     }
 
     /**

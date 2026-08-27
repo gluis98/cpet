@@ -15,6 +15,9 @@ use App\Http\Controllers\OfficersArmamentController;
 use App\Http\Controllers\ArmamentController;
 use App\Http\Controllers\OfficersRadiogramController;
 use App\Http\Controllers\OfficersHealthController;
+use App\Http\Controllers\OfficersIcapController;
+use App\Http\Controllers\OfficersUrraController;
+use App\Http\Controllers\CatalogosController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\UserController;
 
@@ -34,7 +37,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('/officers', OfficersController::class);
-Route::get('/tipos-cargos', [OfficersController::class, 'getTiposCargos']);
 Route::apiResource('/positions', PositionsController::class);
 Route::apiResource('/armament', ArmamentController::class);
 Route::apiResource('/stations', StationController::class);
@@ -81,6 +83,32 @@ Route::controller(OfficersFamillyController::class)->group(function(){
     Route::delete('/officers/familly/{id}', 'destroy');
 });
 
+Route::controller(CatalogosController::class)->group(function () {
+    Route::get('/discapacidades', 'discapacidadesIndex');
+    Route::post('/discapacidades', 'discapacidadesStore');
+    Route::get('/discapacidades/{id}', 'discapacidadesShow');
+    Route::put('/discapacidades/{id}', 'discapacidadesUpdate');
+    Route::delete('/discapacidades/{id}', 'discapacidadesDestroy');
+
+    Route::get('/catalogo-cursos', 'cursosIndex');
+    Route::post('/catalogo-cursos', 'cursosStore');
+    Route::get('/catalogo-cursos/{id}', 'cursosShow');
+    Route::put('/catalogo-cursos/{id}', 'cursosUpdate');
+    Route::delete('/catalogo-cursos/{id}', 'cursosDestroy');
+
+    Route::get('/cargos', 'cargosIndex');
+    Route::post('/cargos', 'cargosStore');
+    Route::get('/cargos/{id}', 'cargosShow');
+    Route::put('/cargos/{id}', 'cargosUpdate');
+    Route::delete('/cargos/{id}', 'cargosDestroy');
+
+    Route::get('/cargos-administrativos', 'cargosAdministrativosIndex');
+    Route::post('/cargos-administrativos', 'cargosAdministrativosStore');
+    Route::get('/cargos-administrativos/{id}', 'cargosAdministrativosShow');
+    Route::put('/cargos-administrativos/{id}', 'cargosAdministrativosUpdate');
+    Route::delete('/cargos-administrativos/{id}', 'cargosAdministrativosDestroy');
+});
+
 Route::controller(OfficersFilesController::class)->group(function(){
     Route::get('/officers/files/index/{id}', 'index');
     Route::post('/officers/files/add-files/{id}', 'store');
@@ -121,4 +149,26 @@ Route::controller(OfficersHealthController::class)->group(function(){
     Route::get('/officers/health/{id}', 'show');
     Route::put('/officers/health/{id}', 'update');
     Route::delete('/officers/health/{id}', 'destroy');
+});
+
+Route::controller(OfficersIcapController::class)->group(function(){
+    Route::get('/officers/icap/expedientes/index/{id}', 'indexExpedientes');
+    Route::post('/officers/icap/expedientes', 'storeExpediente');
+    Route::get('/officers/icap/expedientes/{id}', 'showExpediente');
+    Route::put('/officers/icap/expedientes/{id}', 'updateExpediente');
+    Route::delete('/officers/icap/expedientes/{id}', 'destroyExpediente');
+
+    Route::get('/officers/icap/sobreviviente/index/{id}', 'indexSobreviviente');
+    Route::post('/officers/icap/sobreviviente', 'storeSobreviviente');
+    Route::get('/officers/icap/sobreviviente/{id}', 'showSobreviviente');
+    Route::put('/officers/icap/sobreviviente/{id}', 'updateSobreviviente');
+    Route::delete('/officers/icap/sobreviviente/{id}', 'destroySobreviviente');
+});
+
+Route::controller(OfficersUrraController::class)->group(function () {
+    Route::get('/officers/urra/index/{id}', 'index');
+    Route::post('/officers/urra', 'store');
+    Route::get('/officers/urra/{id}', 'show');
+    Route::put('/officers/urra/{id}', 'update');
+    Route::delete('/officers/urra/{id}', 'destroy');
 });

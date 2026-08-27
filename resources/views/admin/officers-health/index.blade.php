@@ -39,8 +39,9 @@
                                 <input type="date" class="form-control" id="fecha_reposo_inicio" name="fecha_reposo_inicio" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label" for="fecha_reposo_fin">Fecha Reposo Fin *</label>
-                                <input type="date" class="form-control" id="fecha_reposo_fin" name="fecha_reposo_fin" required>
+                                <label class="form-label" for="fecha_reposo_fin">Fecha Reposo Fin <span id="fecha-fin-required">*</span></label>
+                                <input type="date" class="form-control" id="fecha_reposo_fin" name="fecha_reposo_fin">
+                                <small class="text-muted" id="fecha-fin-help" style="display:none;">En reposo continuo se registra al regresar el funcionario.</small>
                             </div>
                         </div>
                         <div class="row">
@@ -51,10 +52,11 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" for="is_vigente">¿Vigente? *</label>
+                                <label class="form-label" for="is_vigente">Estado del reposo *</label>
                                 <select class="form-control" id="is_vigente" name="is_vigente" required>
-                                    <option value="1">Sí</option>
-                                    <option value="0">No</option>
+                                    <option value="1">Vigente (con fecha fin)</option>
+                                    <option value="2">Continuo (sin fecha fin)</option>
+                                    <option value="0">Finalizado / No vigente</option>
                                 </select>
                             </div>
                         </div>
@@ -121,7 +123,7 @@
     <h2>{{$title}}</h2>
     <hr>
     <div class="responsive-table">
-        <table class="table table-bordered">
+        <table id="health-table" class="table table-bordered">
             <thead>
                 <tr>
                     <th class="text-center" scope="col">Fecha Revisión</th>
@@ -129,7 +131,7 @@
                     <th class="text-center" scope="col">Fecha Reposo Inicio</th>
                     <th class="text-center" scope="col">Fecha Reposo Fin</th>
                     <th class="text-center" scope="col">Días Reposo</th>
-                    <th class="text-center" scope="col">¿Vigente?</th>
+                    <th class="text-center" scope="col">Estado</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -149,12 +151,38 @@
     Dropzone.autoDiscover = false;
     $(document).ready(function() {
         var id = "";
-        index(); 
+        index();
+
+        $(document).on('cpet:refresh-table', index);
+
+        function vigenciaLabel(value) {
+            if (String(value) === '2') return 'Continuo';
+            if (String(value) === '1') return 'Vigente';
+            return 'Finalizado';
+        }
+
+        function syncVigenciaUI() {
+            const vigente = $('#is_vigente').val();
+            const esContinuo = vigente === '2';
+            const requiereFin = vigente === '1';
+
+            $('#fecha_reposo_fin').prop('required', requiereFin);
+            $('#fecha-fin-required').toggle(requiereFin);
+            $('#fecha-fin-help').toggle(esContinuo);
+
+            if (esContinuo) {
+                $('#fecha_reposo_fin').val('');
+                $('#dias_reposo').val('');
+            }
+        }
+
+        $('#is_vigente').on('change', syncVigenciaUI);
 
         $('#btn-add').click(function(e){
             e.preventDefault();
             $('#form-edit').attr('id', 'form-add');
             $('#form-add').trigger('reset');
+            syncVigenciaUI();
             $('#btn-submit').text('Guardar');
             $('#btn-submit').attr('class', 'btn btn-primary btn-lg');
             $('#add').modal('show'); 
@@ -169,13 +197,7 @@
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                $('#add').modal('hide');
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
-                });
-                index();
+                CpetModule.afterSave({ message: data.msj, refresh: index });
             }).catch(error => {
                 console.error('Error:', error);
                 Swal.fire({
@@ -197,16 +219,14 @@
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
+                CpetModule.afterSave({
+                    message: data.msj,
+                    refresh: index,
+                    onReset: function () {
+                        $('#form-edit').trigger('reset').attr('id', 'form-add');
+                        id = '';
+                    }
                 });
-                $('#add').modal('hide');
-                $('#form-edit').trigger('reset');
-                $('#form-edit').attr('id', 'form-add');
-                id = "";
-                index();
             }).catch(error => {
                 console.error('Error:', error);
                 Swal.fire({
@@ -235,7 +255,8 @@
                 $('#fecha_reposo_fin').val(data.fecha_reposo_fin ? data.fecha_reposo_fin.substr(0,4) + '-' + data.fecha_reposo_fin.substr(5,2) + '-' + data.fecha_reposo_fin.substr(8,2) : '');
                 $('#dias_reposo').val(data.dias_reposo);
                 $('#diagnostico').val(data.diagnostico);
-                $('#is_vigente').val(data.is_vigente);
+                $('#is_vigente').val(String(data.is_vigente));
+                syncVigenciaUI();
 
                 $('#form-add').attr('id', 'form-edit');
                 $('#btn-submit').attr('class', 'btn btn-dark btn-lg');
@@ -273,12 +294,7 @@
                         body: formData
                     }).then(response => response.json())
                     .then(data => {
-                        Swal.fire({
-                            title: data.msj,
-                            icon: "success",
-                            draggable: true
-                        });
-                        index();
+                        CpetModule.afterSave({ message: data.msj, refresh: index });
                     });
                 }
             });
@@ -295,9 +311,9 @@
                         <td class="text-center">${new Date(e.fecha_revision).toLocaleDateString('es-ES', {year: 'numeric', month: '2-digit', day: '2-digit'})}</td>
                         <td class="text-center">${e.diagnostico}</td>
                         <td class="text-center">${e.fecha_reposo_inicio ? new Date(e.fecha_reposo_inicio).toLocaleDateString('es-ES', {year: 'numeric', month: '2-digit', day: '2-digit'}) : ''}</td>
-                        <td class="text-center">${e.fecha_reposo_fin ? new Date(e.fecha_reposo_fin).toLocaleDateString('es-ES', {year: 'numeric', month: '2-digit', day: '2-digit'}) : ''}</td>
-                        <td class="text-center">${e.dias_reposo}</td>
-                        <td class="text-center">${e.is_vigente ? 'Sí' : 'No'}</td>
+                        <td class="text-center">${e.fecha_reposo_fin ? new Date(e.fecha_reposo_fin).toLocaleDateString('es-ES', {year: 'numeric', month: '2-digit', day: '2-digit'}) : (String(e.is_vigente) === '2' ? 'Pendiente' : '')}</td>
+                        <td class="text-center">${e.dias_reposo != null ? e.dias_reposo : ''}</td>
+                        <td class="text-center">${vigenciaLabel(e.is_vigente)}</td>
                         <td class="text-right">
                             <button class="btn btn-dark edit" data-id="${e.id}"><i class="far fa-edit"></i></button>
                             <button class="btn btn-danger delete" data-id="${e.id}"><i class="far fa-trash-alt"></i></button>
@@ -306,9 +322,10 @@
                     </tr>
                     `;
                 });
-                $('table').DataTable().destroy();
-                $('tbody').html(template);
-                $('table').DataTable(t);
+                CpetModule.refreshDataTable('#health-table', template || '<tr><td colspan="7" class="text-center text-muted">Sin registros</td></tr>', {
+                    order: [[0, 'desc']],
+                    columnDefs: [{ orderable: false, targets: 6 }]
+                });
             });
         }
 

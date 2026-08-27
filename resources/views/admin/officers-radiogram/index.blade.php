@@ -106,6 +106,8 @@
         index();
         index_estaciones();
 
+        $(document).on('cpet:refresh-table', index);
+
         $('#btn-add').click(function(e){
             e.preventDefault();
             $('#form-edit').attr('id', 'form-add');
@@ -124,13 +126,7 @@
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                $('#add').modal('hide');
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
-                });
-                index();
+                CpetModule.afterSave({ message: data.msj, refresh: index });
             });
         });
 
@@ -144,16 +140,14 @@
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
+                CpetModule.afterSave({
+                    message: data.msj,
+                    refresh: index,
+                    onReset: function () {
+                        $('#form-edit').trigger('reset').attr('id', 'form-add');
+                        id = '';
+                    }
                 });
-                $('#add').modal('hide');
-                $('#form-edit').trigger('reset');
-                $('#form-edit').attr('id', 'form-add');
-                id = "";
-                index();
             });
         });
 
@@ -258,12 +252,7 @@
                                         })
                                     }).then(response => response.json())
                                     .then(data => {
-                                        Swal.fire({
-                                            title: data.msj,
-                                            icon: "success",
-                                            draggable: true
-                                        });
-                                        index();
+                                        CpetModule.afterSave({ message: data.msj, refresh: index });
                                     });
                                 }
                             });
@@ -288,12 +277,7 @@
                             body: formData
                         }).then(response => response.json())
                         .then(data => {
-                            Swal.fire({
-                                title: data.msj,
-                                icon: "success",
-                                draggable: true
-                            });
-                            index();
+                            CpetModule.afterSave({ message: data.msj, refresh: index });
                         });
                     }
                 });

@@ -1,45 +1,86 @@
 @extends('layouts.app')
 
+@section('styles')
+<style>
+    .vac-tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.65rem 1rem;
+        border: 0;
+        border-radius: 0.75rem 0.75rem 0 0;
+        background: transparent;
+        color: #64748b;
+        font-family: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .vac-tab:hover { color: #1a4574; background: rgba(255,255,255,.7); }
+    .vac-tab.is-active {
+        color: #0f2744;
+        background: #fff;
+        position: relative;
+    }
+    .vac-tab.is-active::after {
+        content: "";
+        position: absolute;
+        left: .75rem; right: .75rem; bottom: 0;
+        height: 3px; border-radius: 999px;
+        background: linear-gradient(90deg, #c4922e, #d4a84b);
+    }
+    .vac-tab__count {
+        min-width: 1.35rem;
+        border-radius: 999px;
+        padding: .1rem .45rem;
+        font-size: .7rem;
+        font-weight: 700;
+        background: #e2e8f0;
+        color: #475569;
+    }
+    .vac-tab.is-active .vac-tab__count {
+        background: #1a4574;
+        color: #fff;
+    }
+</style>
+@endsection
+
 @section('content')
-{{-- INICIO MODALES --}}
-<!-- Modal -->
 <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content ">
+      <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="myModalLabel">Registrar cargo alcanzado</h4>
+          <h4 class="modal-title" id="myModalLabel">Solicitud de vacaciones</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
             <form id="form-add">
-                <div class="aler alert-info p-2 border mb-3">
-                    <p class="text-muted">Los campos marcados con (*) son obligatorios.</p>
+                <div class="alert alert-info p-2 border mb-3">
+                    <p class="mb-0 text-muted">Los campos marcados con (*) son obligatorios.</p>
                 </div>
                 <div class="card">
-                    <div class="card-header">
-                        Datos de la solicitud
-                    </div>
+                    <div class="card-header">Datos de la solicitud</div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label" for="estatus">Estatus *</label>
                                 <select class="form-control" id="estatus" name="estatus" required>
-                                    <option value>--- SELECCIONE UN ESTATUS ---</option>
+                                    <option value="">--- SELECCIONE UN ESTATUS ---</option>
                                     <option value="APROBADAS">APROBADAS</option>
                                     <option value="NEGADAS">NEGADAS</option>
                                     <option value="VENCIDAS">VENCIDAS</option>
                                     <option value="REGLAMENTARIAS">REGLAMENTARIAS</option>
                                     <option value="EN PROCESO">EN PROCESO</option>
                                 </select>
-                            </div>  
+                            </div>
                         </div>
                         <div class="row">
-                            <div class=" col-md-6 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label" for="fecha_emision">Fecha de emisión *</label>
                                 <input type="date" class="form-control" id="fecha_emision" name="fecha_emision" required>
                             </div>
-                            <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_reintegro">Fecha de reintegro </label>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="fecha_reintegro">Fecha de reintegro</label>
                                 <input type="date" class="form-control" id="fecha_reintegro" name="fecha_reintegro">
                             </div>
                         </div>
@@ -51,329 +92,291 @@
                         </div>
                         <hr>
                         <div class="row">
-                            <div class=" col-md-12 mb-3">
+                            <div class="col-md-12 mb-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="is_disfrutadas" name="is_disfrutadas" value="1">
                                     <label class="form-check-label" for="is_disfrutadas">¿Vacaciones disfrutadas?</label>
                                 </div>
+                                <small class="text-muted">Si la fecha de reintegro ya pasó, se marcarán automáticamente como disfrutadas.</small>
                             </div>
                         </div>
                     </div>
                 </div>
                 <hr>
-                <div class="container-fluid d-grid gap-2 text-right">
+                <div class="text-right">
                     <button type="submit" class="btn btn-primary btn-lg" id="btn-submit">
-                        <i class="fas fa-check-circle"></i>
-                         Guardar
+                        <i class="fas fa-check-circle"></i> Guardar
                     </button>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
-  </div>
+</div>
 
-
-{{-- FIN MODALES --}}
-
-{{-- INICIO CONTENIDO PRINCIPAL --}}
 <div class="row mb-3">
     <div class="col-md-12">
         <div class="au-breadcrumb-content">
             <div class="au-breadcrumb-left">
                 <a href="{{ route('officers') }}" class="btn text-uppercase text-dark"><i class="fas fa-arrow-left"></i> Regresar</a>
             </div>
-            <a class="btn btn-dark btn-lg" href="#" data-toggle="modal" data-target="#add" id="btn-add">
-                <i class="zmdi zmdi-plus"></i>Agregar solicitud de vacaciones
+            <a class="btn btn-dark btn-lg" href="#" id="btn-add">
+                <i class="zmdi zmdi-plus"></i> Agregar solicitud de vacaciones
             </a>
         </div>
     </div>
 </div>
+
 <div class="container-fluid">
-    <h2>{{$title}}</h2>
+    <h2>{{ $title }}</h2>
     <hr>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 text-right">
-                <p class="h5"><i class="fas fa-check text-success"></i> <b>Disfrutadas:</b> <span id="vacaciones-disfrutadas"></span></p>
-                <p class="h5"><i class="fas fa-times text-danger"></i> <b>Vencidas:</b> <span id="vacaciones-vencidas"></span></p>
-            </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12 text-right">
+            <p class="h5 mb-1"><i class="fas fa-check text-success"></i> <b>Disfrutadas:</b> <span id="vacaciones-disfrutadas">0</span></p>
+            <p class="h5 mb-1"><i class="fas fa-spinner text-primary"></i> <b>En proceso:</b> <span id="vacaciones-proceso">0</span></p>
+            <p class="h5 mb-0"><i class="fas fa-times text-danger"></i> <b>Vencidas:</b> <span id="vacaciones-vencidas">0</span></p>
         </div>
     </div>
-    <div class="responsive-table">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">Fecha de emisión</th>
-                    <th class="text-center" scope="col">Fecha de reintegro</th>
-                    <th class="text-center" scope="col">¿Disfrutadas?</th>
-                    <th class="text-center" scope="col">Estatus</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
 
-            </tbody>
-        </table>
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="border-b border-slate-200 bg-slate-50/80 px-2 pt-2" role="tablist">
+            <div class="flex flex-wrap gap-1">
+                <button type="button" class="vac-tab is-active" data-tab="todas">
+                    Todas <span class="vac-tab__count" id="count-todas">0</span>
+                </button>
+                <button type="button" class="vac-tab" data-tab="disfrutadas">
+                    Disfrutadas <span class="vac-tab__count" id="count-disfrutadas">0</span>
+                </button>
+                <button type="button" class="vac-tab" data-tab="proceso">
+                    En proceso <span class="vac-tab__count" id="count-proceso">0</span>
+                </button>
+                <button type="button" class="vac-tab" data-tab="vencidas">
+                    Vencidas <span class="vac-tab__count" id="count-vencidas">0</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="p-3">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="vacaciones-table" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Fecha de emisión</th>
+                            <th class="text-center">Fecha de reintegro</th>
+                            <th class="text-center">¿Disfrutadas?</th>
+                            <th class="text-center">Estatus</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
 
 @section('scripts')
 <script>
-    $(document).ready(function() {
-        var id = "";
-        index(); 
+$(document).ready(function () {
+    var id = '';
+    var currentTab = 'todas';
+    var allRows = [];
+    var apiBase = @json(url('api'));
+    var reportBase = @json(url('reports/vacation'));
 
-        // Run the function on page load
+    var dtEs = {
+        decimal: ',', thousands: '.', processing: 'Procesando...', search: 'Buscar:',
+        lengthMenu: 'Mostrar _MENU_ registros',
+        info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+        infoEmpty: 'Mostrando 0 a 0 de 0 registros',
+        infoFiltered: '(filtrado de _MAX_ registros totales)',
+        loadingRecords: 'Cargando...', zeroRecords: 'No se encontraron resultados',
+        emptyTable: 'No hay vacaciones en esta pestaña',
+        paginate: { first: 'Primero', previous: 'Anterior', next: 'Siguiente', last: 'Último' }
+    };
+
+    index();
+    $(document).on('cpet:refresh-table', index);
+    toggleCheckbox();
+    $('#estatus').on('change', toggleCheckbox);
+
+    document.querySelectorAll('.vac-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            document.querySelectorAll('.vac-tab').forEach(t => t.classList.remove('is-active'));
+            tab.classList.add('is-active');
+            currentTab = tab.getAttribute('data-tab');
+            renderTable();
+        });
+    });
+
+    $('#btn-add').click(function (e) {
+        e.preventDefault();
+        $('#form-edit').attr('id', 'form-add');
+        $('#form-add').trigger('reset');
+        $('#estatus option').prop('selected', false);
+        $('#is_disfrutadas').prop('checked', false);
         toggleCheckbox();
+        $('#btn-submit').text('Guardar').attr('class', 'btn btn-primary btn-lg');
+        $('#add').modal('show');
+    });
 
-        // Run the function whenever the select value changes
-        $('#estatus').on('change', toggleCheckbox);
-
-        $('#btn-add').click(function(e){
-            e.preventDefault();
-            $('#form-edit').attr('id', 'form-add');
-            $('#form-add').trigger('reset');
-            $('#btn-submit').text('Guardar');
-            $('#btn-submit').attr('css', 'btn btn-primary btn-lg');
-            $('#add').modal('show'); 
-        });
-
-        $(document).on('submit','#form-add', function(e){
-            e.preventDefault();
-            let formData = new FormData(this);
-                formData.append('id_policia', '{{ $id }}');
-            fetch('/cpet/public/api/officers/vacations', {
-                method: 'POST',
-                body: formData
-            }).then(response => response.json())
+    $(document).on('submit', '#form-add', function (e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+        formData.append('id_policia', '{{ $id }}');
+        if (!$('#is_disfrutadas').is(':checked')) formData.set('is_disfrutadas', '0');
+        fetch(apiBase + '/officers/vacations', { method: 'POST', body: formData })
+            .then(r => r.json())
             .then(data => {
-                $('#add').modal('hide');
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
-                });
-                index();
+                CpetModule.afterSave({ message: data.msj, refresh: index });
             });
-        });
+    });
 
-        $(document).on('submit','#form-edit', function(e){
-            e.preventDefault();
-            let formData = new FormData(this);
-                formData.append('_method', 'PUT');
-            console.log(id)
-            fetch('/cpet/public/api/officers/vacations/'+id, {
-                method: 'POST',
-                body: formData
-            }).then(response => response.json())
+    $(document).on('submit', '#form-edit', function (e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+        formData.append('_method', 'PUT');
+        if (!$('#is_disfrutadas').is(':checked')) formData.set('is_disfrutadas', '0');
+        fetch(apiBase + '/officers/vacations/' + id, { method: 'POST', body: formData })
+            .then(r => r.json())
             .then(data => {
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
-                });
-                $('#add').modal('hide');
-                $('#form-edit').trigger('reset');
-                $('#form-edit').attr('id', 'form-add');
-                id = "";
-                index();
-            });
-        });
-
-        $(document).on('click','.edit', function(e){
-            e.preventDefault();
-            id = $(this).data('id');
-            fetch('/cpet/public/api/officers/vacations/'+id)
-            .then(response => response.json())
-            .then(data => {
-                
-                id = data.id;
-                $('#fecha_emision').val(data.fecha_emision.substr(0,4) + '-' + data.fecha_emision.substr(5,2) + '-' + data.fecha_emision.substr(8,2));
-                $('#fecha_reintegro').val(data.fecha_reintegro.substr(0,4) + '-' + data.fecha_reintegro.substr(5,2) + '-' + data.fecha_reintegro.substr(8,2));
-                $('#descripcion').val(data.descripcion);
-
-                $('#is_disfrutadas').prop('checked', data.is_disfrutadas == 1);
-                $('#estatus option').each(function() {
-                    if($(this).val() == data.estatus){
-                        $(this).attr('selected', 'selected');
-                        $('#estatus').trigger('change');
+                CpetModule.afterSave({
+                    message: data.msj,
+                    refresh: index,
+                    onReset: function () {
+                        $('#form-edit').trigger('reset').attr('id', 'form-add');
+                        id = '';
                     }
                 });
+            });
+    });
 
-                
-
+    $(document).on('click', '.edit', function (e) {
+        e.preventDefault();
+        id = $(this).data('id');
+        fetch(apiBase + '/officers/vacations/' + id)
+            .then(r => r.json())
+            .then(data => {
+                id = data.id;
+                $('#fecha_emision').val(data.fecha_emision ? String(data.fecha_emision).substr(0, 10) : '');
+                $('#fecha_reintegro').val(data.fecha_reintegro ? String(data.fecha_reintegro).substr(0, 10) : '');
+                $('#descripcion').val(data.descripcion || '');
+                $('#estatus').val(data.estatus || '');
+                $('#is_disfrutadas').prop('checked', data.is_disfrutadas == 1);
+                toggleCheckbox();
                 $('#form-add').attr('id', 'form-edit');
-                $('#btn-submit').attr('class', 'btn btn-dark btn-lg');
-                $('#btn-submit').text('Actualizar');
+                $('#btn-submit').attr('class', 'btn btn-dark btn-lg').text('Actualizar');
                 $('#add').modal('show');
             });
-        });
-
-        $(document).on('click','.delete', function(e){
-            e.preventDefault();
-            id = $(this).data('id');
-            let formData = new FormData();
-            formData.append('_method', 'DELETE');
-            let pass = "",
-                request = "";
-            if({{ auth()->user()->role != 'Administrador' ? 'true' : 'false' }}){
-                Swal.fire({
-                    title: 'Ingrese contraseña del administrador',
-                    input: 'password',
-                    inputPlaceholder: 'Contraseña actual',
-                    inputAttributes: {
-                        maxlength: 20,
-                        autocapitalize: 'off',
-                        autocorrect: 'off'
-                    }
-                }).then(result => {
-                    if (result.isConfirmed) {
-                        let form = new FormData();
-                            form.append('password', result.value);
-                        request = fetch('/cpet/public/api/users/confirm-password-admin', {
-                                        method: "POST",
-                                        body: form
-                                    }).then(response => response.json())
-                                    .then(result => {
-                                        return result;
-                                    })
-                                    .catch(error => {
-                                        // Manejo de errores y asignar mensaje a una variable
-                                        let errorMessage = `Error: ${error.message}`;
-                                        console.error(errorMessage);
-                                        return { error: errorMessage };
-                                    });
-                                    
-                            return request;
-                        
-                    }
-                }).then(() => {
-                    request.then(result => {
-                        if(result.msj){
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: result.msj
-                            });                            
-                        }
-
-                        if(result.status){
-                            Swal.fire({
-                                title: '¿Estás seguro?',
-                                text: "No podrás revertir esto.",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Sí, eliminar'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/officers/vacations/'+id, {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                        },
-                                        body: JSON.stringify({
-                                            _method: 'DELETE',
-                                            password: pass
-                                        })
-                                    }).then(response => response.json())
-                                    .then(data => {
-                                        Swal.fire({
-                                            title: data.msj,
-                                            icon: "success",
-                                            draggable: true
-                                        });
-                                        index();
-                                    });
-                                }
-                            });
-                        }
-
-                        
-                    });
-                });
-            }else{
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "No podrás revertir esto.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, eliminar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/vacations/'+id, {
-                            method: 'POST',
-                            body: formData
-                        }).then(response => response.json())
-                        .then(data => {
-                            Swal.fire({
-                                title: data.msj,
-                                icon: "success",
-                                draggable: true
-                            });
-                            index();
-                        });
-                    }
-                });
-            }
-        });
-
-        function index(){
-            fetch('/cpet/public/api/officers/vacations/index/{{ $id }}')
-            .then(response => response.json())
-            .then(data => {
-                let template = '', 
-                    disfrutadas = 0,
-                    vencidas = 0;
-                data.forEach(e => {
-                    if(e.is_disfrutadas){
-                        disfrutadas++;
-                    }
-
-                    if(e.estatus == 'Vencidas'){
-                        vencidas++;
-                    }
-
-                    template += `
-                    <tr>
-                        <td class="text-center">${e.fecha_emision.substr(0,4) + '-' + e.fecha_emision.substr(5,2) + '-' + e.fecha_emision.substr(8,2)}</td>
-                        <td class="text-center">${(e.fecha_reintegro) ? e.fecha_reintegro.substr(0,4) + '-' + e.fecha_reintegro.substr(5,2) + '-' + e.fecha_reintegro.substr(8,2) : 'S/F'}</td>
-                        <td class="text-center">${(e.is_disfrutadas) ? "Disfrutadas" : 'Sin disfrutar'}</td>
-                        <td class="text-center">${e.estatus}</td>
-                        <td class="text-right">
-                            <a href="../../reports/vacation/${e.id}" target="_blank" class="btn btn-dark"><i class="fas fa-print"></i></a>
-                            <button class="btn btn-dark edit" data-id="${e.id}"><i class="far fa-edit"></i></button>
-                            <button class="btn btn-danger delete" data-id="${e.id}"><i class="far fa-trash-alt"></i></button>
-                        </td>
-                    </tr>
-                    `;
-                });
-                $('#vacaciones-disfrutadas').html(disfrutadas);
-                $('#vacaciones-vencidas').html(vencidas);
-
-                $('table').DataTable().destroy();
-                $('tbody').html(template);
-                $('table').DataTable(t);
-            });
-        }
-
-        function toggleCheckbox() {
-            const status = $('#estatus').val();
-            if (status === 'APROBADAS') {
-                $('#is_disfrutadas').prop('disabled', false);
-            } else {
-                $('#is_disfrutadas').prop('disabled', true).prop('checked', false); // Disable and uncheck
-            }
-        }
     });
+
+    $(document).on('click', '.delete', function (e) {
+        e.preventDefault();
+        id = $(this).data('id');
+        let formData = new FormData();
+        formData.append('_method', 'DELETE');
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'No podrás revertir esto.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (!result.isConfirmed) return;
+            fetch(apiBase + '/officers/vacations/' + id, { method: 'POST', body: formData })
+                .then(r => r.json())
+                .then(data => {
+                    CpetModule.afterSave({ message: data.msj, refresh: index });
+                });
+        });
+    });
+
+    function isVencida(e) {
+        return String(e.estatus || '').toUpperCase() === 'VENCIDAS';
+    }
+
+    function isDisfrutada(e) {
+        return e.is_disfrutadas == 1 || e.is_disfrutadas === true;
+    }
+
+    function isEnProceso(e) {
+        if (isDisfrutada(e) || isVencida(e)) return false;
+        var st = String(e.estatus || '').toUpperCase();
+        return st !== 'NEGADAS';
+    }
+
+    function filterRows() {
+        if (currentTab === 'disfrutadas') return allRows.filter(isDisfrutada);
+        if (currentTab === 'proceso') return allRows.filter(isEnProceso);
+        if (currentTab === 'vencidas') return allRows.filter(isVencida);
+        return allRows;
+    }
+
+    function renderTable() {
+        var rows = filterRows();
+        var template = '';
+        rows.forEach(function (e) {
+            var emision = e.fecha_emision ? String(e.fecha_emision).substr(0, 10) : 'S/F';
+            var reintegro = e.fecha_reintegro ? String(e.fecha_reintegro).substr(0, 10) : 'S/F';
+            template += `
+                <tr>
+                    <td class="text-center">${emision}</td>
+                    <td class="text-center">${reintegro}</td>
+                    <td class="text-center">${isDisfrutada(e) ? '<span class="badge badge-success">Sí</span>' : '<span class="badge badge-secondary">No</span>'}</td>
+                    <td class="text-center">${e.estatus || ''}</td>
+                    <td class="text-right">
+                        <a href="${reportBase}/${e.id}" target="_blank" class="btn btn-dark btn-sm"><i class="fas fa-print"></i></a>
+                        <button class="btn btn-dark btn-sm edit" data-id="${e.id}"><i class="far fa-edit"></i></button>
+                        <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="far fa-trash-alt"></i></button>
+                    </td>
+                </tr>`;
+        });
+
+        CpetModule.refreshDataTable('#vacaciones-table', template || '<tr><td colspan="5" class="text-center text-muted">Sin registros</td></tr>', {
+            order: [[0, 'desc']],
+            columnDefs: [{ orderable: false, targets: 4 }]
+        });
+    }
+
+    function index() {
+        fetch(apiBase + '/officers/vacations/index/{{ $id }}')
+            .then(r => r.json())
+            .then(payload => {
+                // Compatibilidad: array plano o { data, counts }
+                allRows = Array.isArray(payload) ? payload : (payload.data || []);
+                var counts = payload.counts || {
+                    disfrutadas: allRows.filter(isDisfrutada).length,
+                    en_proceso: allRows.filter(isEnProceso).length,
+                    vencidas: allRows.filter(isVencida).length,
+                    total: allRows.length
+                };
+
+                $('#vacaciones-disfrutadas').text(counts.disfrutadas);
+                $('#vacaciones-proceso').text(counts.en_proceso);
+                $('#vacaciones-vencidas').text(counts.vencidas);
+                $('#count-todas').text(counts.total);
+                $('#count-disfrutadas').text(counts.disfrutadas);
+                $('#count-proceso').text(counts.en_proceso);
+                $('#count-vencidas').text(counts.vencidas);
+
+                renderTable();
+            });
+    }
+
+    function toggleCheckbox() {
+        const status = $('#estatus').val();
+        if (status === 'APROBADAS' || status === 'EN PROCESO' || status === 'REGLAMENTARIAS') {
+            $('#is_disfrutadas').prop('disabled', false);
+        } else {
+            $('#is_disfrutadas').prop('disabled', true).prop('checked', false);
+        }
+    }
+});
 </script>
 @endsection

@@ -11,7 +11,16 @@ class OfficersRadiogramController extends Controller
      * Display a listing of the resource.
      */ 
     public function index($id) {
-        return response()->json(OficialesRadiograma::with('estacione')->where('id_policia', $id)->get(), 200);
+        return response()->json(
+            OficialesRadiograma::with('estacione')
+                ->where('id_policia', $id)
+                ->orderByDesc('is_actual')
+                ->orderByRaw('fecha_inicio IS NULL')
+                ->orderByDesc('fecha_inicio')
+                ->orderByDesc('id')
+                ->get(),
+            200
+        );
     }
 
 

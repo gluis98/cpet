@@ -23,9 +23,17 @@
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label" for="id_cargo">Cargo *</label>
-                                <select class="form-control" id="id_cargo" name="id_cargo" required>
-
-                                </select>
+                                <div class="input-group">
+                                    <select class="form-control" id="id_cargo" name="id_cargo" required>
+                                        <option value="">--- SELECCIONE UN CARGO ---</option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-secondary" id="btn-add-cargo" title="Agregar cargo">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Si no aparece en la lista, pulsa + para agregarlo.</small>
                             </div>  
                         </div>
                         <div class="row">
@@ -94,34 +102,42 @@
 <script>
     $(document).ready(function() {
         var id = "";
-        index(); 
+        var apiBase = @json(url('api'));
+        index();
         index_cargos();
+
+        $(document).on('cpet:refresh-table', index);
+
+        $('#btn-add-cargo').on('click', function () {
+            CpetCatalog.promptAdd({
+                title: 'Nuevo cargo / jerarquía',
+                placeholder: 'Ejemplo: Inspector, Comisario…',
+                postUrl: apiBase + '/cargos',
+                $select: $('#id_cargo'),
+                successMessage: 'Cargo agregado',
+            });
+        });
 
         $('#btn-add').click(function(e){
             e.preventDefault();
             $('#form-edit').attr('id', 'form-add');
             $('#form-add').trigger('reset');
+            index_cargos();
             $('#btn-submit').text('Guardar');
             $('#btn-submit').attr('css', 'btn btn-primary btn-lg');
-            $('#add').modal('show'); 
+            $('#add').modal('show');
         });
 
         $(document).on('submit','#form-add', function(e){
             e.preventDefault();
             let formData = new FormData(this);
                 formData.append('id_policia', '{{ $id }}');
-            fetch('/cpet/public/api/officers/position', {
+            fetch(apiBase + '/officers/position', {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                $('#add').modal('hide');
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
-                });
-                index();
+                CpetModule.afterSave({ message: data.msj, refresh: index });
             });
         });
 
@@ -129,38 +145,33 @@
             e.preventDefault();
             let formData = new FormData(this);
                 formData.append('_method', 'PUT');
-            console.log(id)
-            fetch('/cpet/public/api/officers/position/'+id, {
+            fetch(apiBase + '/officers/position/'+id, {
                 method: 'POST',
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
+                CpetModule.afterSave({
+                    message: data.msj,
+                    refresh: index,
+                    onReset: function () {
+                        $('#form-edit').trigger('reset').attr('id', 'form-add');
+                        id = '';
+                    }
                 });
-                $('#add').modal('hide');
-                $('#form-edit').trigger('reset');
-                $('#form-edit').attr('id', 'form-add');
-                id = "";
-                index();
             });
         });
 
         $(document).on('click','.edit', function(e){
             e.preventDefault();
             id = $(this).data('id');
-            fetch('/cpet/public/api/officers/position/'+id)
+            fetch(apiBase + '/officers/position/'+id)
             .then(response => response.json())
             .then(data => {
                 
                 id = data.id;
-                
-                $('#id_cargo option').each(function() {
-                    if($(this).val() == data.id_cargo){
-                        $(this).attr('selected', 'selected');
-                    }
+
+                index_cargos(data.id_cargo).then(function () {
+                    $('#id_cargo').val(String(data.id_cargo));
                 });
 
                 $('#fecha_inicio').val(data.fecha_inicio.substr(0,4) + '-' + data.fecha_inicio.substr(5,2) + '-' + data.fecha_inicio.substr(8,2));
@@ -199,7 +210,7 @@
                     if (result.isConfirmed) {
                         let form = new FormData();
                             form.append('password', result.value);
-                        request = fetch('/cpet/public/api/users/confirm-password-admin', {
+                        request = fetch(apiBase + '/users/confirm-password-admin', {
                                         method: "POST",
                                         body: form
                                     }).then(response => response.json())
@@ -237,7 +248,7 @@
                                 confirmButtonText: 'Sí, eliminar'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/officers/position/'+id, {
+                                    fetch(apiBase + '/officers/position/'+id, {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -249,12 +260,7 @@
                                         })
                                     }).then(response => response.json())
                                     .then(data => {
-                                        Swal.fire({
-                                            title: data.msj,
-                                            icon: "success",
-                                            draggable: true
-                                        });
-                                        index();
+                                        CpetModule.afterSave({ message: data.msj, refresh: index });
                                     });
                                 }
                             });
@@ -274,17 +280,12 @@
                     confirmButtonText: 'Sí, eliminar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/position/'+id, {
-                            method: 'DELETE',
+                        fetch(apiBase + '/officers/position/'+id, {
+                            method: 'POST',
                             body: formData
                         }).then(response => response.json())
                         .then(data => {
-                            Swal.fire({
-                                title: data.msj,
-                                icon: "success",
-                                draggable: true
-                            });
-                            index();
+                            CpetModule.afterSave({ message: data.msj, refresh: index });
                         });
                     }
                 });
@@ -292,7 +293,7 @@
         });
 
         function index(){
-            fetch('/cpet/public/api/officers/position/index/{{ $id }}')
+            fetch(apiBase + '/officers/position/index/{{ $id }}')
             .then(response => response.json())
             .then(data => {
                 let template = ''
@@ -337,18 +338,8 @@
             });
         }
 
-        function index_cargos(){
-            fetch('/cpet/public/api/positions')
-            .then(response => response.json())
-            .then(data => {
-                let template = '<option value>--- SELECCIONE UN CARGO ---</option>';
-                data.forEach(e => {
-                    template += `
-                        <option value="${e.id}">${e.nombre_cargo}</option>
-                    `;
-                });
-                $('#id_cargo').html(template);
-            });
+        function index_cargos(selectedId){
+            return CpetCatalog.loadSelect($('#id_cargo'), apiBase + '/cargos', selectedId, '--- SELECCIONE UN CARGO ---');
         }
     });
 </script>

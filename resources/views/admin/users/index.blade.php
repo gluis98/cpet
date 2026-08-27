@@ -111,7 +111,7 @@
     <h2>{{$title}}</h2>
     <hr>
     <div class="responsive-table">
-        <table class="table table-bordered">
+        <table id="users-table" class="table table-bordered">
             <thead>
                 <tr>
                     <th class="text-center" scope="col">Nombre</th>
@@ -134,6 +134,8 @@
         var id = "";
         index(); 
 
+        $(document).on('cpet:refresh-table', index);
+
         $('#btn-add').click(function(e){
             e.preventDefault();
             $('#form-edit').attr('id', 'form-add');
@@ -151,13 +153,7 @@
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                $('#add').modal('hide');
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
-                });
-                index();
+                CpetModule.afterSave({ message: data.msj, refresh: index });
             });
         });
 
@@ -171,16 +167,14 @@
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
+                CpetModule.afterSave({
+                    message: data.msj,
+                    refresh: index,
+                    onReset: function () {
+                        $('#form-edit').trigger('reset').attr('id', 'form-add');
+                        id = '';
+                    }
                 });
-                $('#add').modal('hide');
-                $('#form-edit').trigger('reset');
-                $('#form-edit').attr('id', 'form-add');
-                id = "";
-                index();
             });
         });
 
@@ -284,12 +278,7 @@
                                         })
                                     }).then(response => response.json())
                                     .then(data => {
-                                        Swal.fire({
-                                            title: data.msj,
-                                            icon: "success",
-                                            draggable: true
-                                        });
-                                        index();
+                                        CpetModule.afterSave({ message: data.msj, refresh: index });
                                     });
                                 }
                             });
@@ -314,12 +303,7 @@
                             body: formData
                         }).then(response => response.json())
                         .then(data => {
-                            Swal.fire({
-                                title: data.msj,
-                                icon: "success",
-                                draggable: true
-                            });
-                            index();
+                            CpetModule.afterSave({ message: data.msj, refresh: index });
                         });
                     }
                 });
@@ -330,18 +314,8 @@
             fetch('/cpet/public/api/users')
             .then(response => response.json())
             .then(data => {
-                let template = '', 
-                    disfrutadas = 0,
-                    vencidas = 0;
+                let template = '';
                 data.forEach(e => {
-                    if(e.is_disfrutadas){
-                        disfrutadas++;
-                    }
-
-                    if(e.estatus == 'Vencidas'){
-                        vencidas++;
-                    }
-
                     template += `
                     <tr>
                         <td class="text-center">${e.name}</td>
@@ -354,12 +328,10 @@
                     </tr>
                     `;
                 });
-                $('#vacaciones-disfrutadas').html(disfrutadas);
-                $('#vacaciones-vencidas').html(vencidas);
-
-                $('table').DataTable().destroy();
-                $('tbody').html(template);
-                $('table').DataTable(t);
+                CpetModule.refreshDataTable('#users-table', template || '<tr><td colspan="4" class="text-center text-muted">Sin usuarios</td></tr>', {
+                    order: [[0, 'asc']],
+                    columnDefs: [{ orderable: false, targets: 3 }]
+                });
             });
         }
 

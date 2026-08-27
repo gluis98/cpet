@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cargo;
+use App\Models\CargosAdministrativo;
 use App\Models\Oficiale;
+use App\Models\OficialesUrra;
 use App\Models\OficialesVacacione;
 use App\Models\Entidad;
 use App\Models\OficialesRadiograma;
+use App\Support\UrraEstatusSync;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 class ReportesController extends Controller
 {
-    protected $entidad;
-
-    public function __construct(Entidad $entidad)
+    protected function entidad(): ?Entidad
     {
-        $this->entidad = Entidad::first();
+        return Entidad::query()->first();
     }
 
     // Esta función sirve para obtener el reporte individual de la boleta de vacaciones de un oficial
@@ -34,7 +36,7 @@ class ReportesController extends Controller
             $fechaInicio->addDay();
         }
         $dias_habiles = $dias;
-        return view('admin.reports.vacation', ['oficial' => $oficial, 'title' => 'BOLETA DE VACACIONES', 'tipo' => 'VACACIONES DEL AÑO ' . $anio . " CON " . $dias_habiles . " DÍAS HÁBILES", 'entidad' => $this->entidad]);
+        return view('admin.reports.vacation', ['oficial' => $oficial, 'title' => 'BOLETA DE VACACIONES', 'tipo' => 'VACACIONES DEL AÑO ' . $anio . " CON " . $dias_habiles . " DÍAS HÁBILES", 'entidad' => $this->entidad()]);
     }
 
     public function radiogram($id)
@@ -51,27 +53,27 @@ class ReportesController extends Controller
             $fechaInicio->addDay();
         }
         $dias_habiles = $dias;
-        return view('admin.reports.radiogram', ['oficial' => $oficial, 'title' => '', 'tipo' => 'VACACIONES DEL AÑO ' . $anio . " CON " . $dias_habiles . " DÍAS HÁBILES", 'entidad' => $this->entidad]);
+        return view('admin.reports.radiogram', ['oficial' => $oficial, 'title' => '', 'tipo' => 'VACACIONES DEL AÑO ' . $anio . " CON " . $dias_habiles . " DÍAS HÁBILES", 'entidad' => $this->entidad()]);
     }
 
     public function card(Request $request)
     {
-        $oficial = Oficiale::with('tipo_cargo')->where('documento_identidad', $request->documento_identidad)->orderBy('documento_identidad')->first();
+        $oficial = Oficiale::with('cargos_administrativo')->where('documento_identidad', $request->documento_identidad)->orderBy('documento_identidad')->first();
         return view('admin.reports.card', ['officer' => $oficial]);
     }  
 
     public function officers()
     {
-        $oficial = Oficiale::with('tipo_cargo')->orderBy('documento_identidad')->get();
+        $oficial = Oficiale::with('cargos_administrativo')->orderBy('documento_identidad')->get();
         return view('admin.reports.officers', ['oficiales' => $oficial]);
     }  
 
     public function officers_born_date(Request $request)
     {   
-        $oficial = Oficiale::with('tipo_cargo')->whereBetween('fecha_nacimiento', [$request->fechaInicio, $request->fechaFin])->orderBy('documento_identidad')->get();
+        $oficial = Oficiale::with('cargos_administrativo')->whereBetween('fecha_nacimiento', [$request->fechaInicio, $request->fechaFin])->orderBy('documento_identidad')->get();
 
         if($request->fechaInicio == $request->fechaFin){
-            $oficial = Oficiale::with('tipo_cargo')->where('fecha_nacimiento', $request->fechaInicio)->orderBy('documento_identidad')->get();
+            $oficial = Oficiale::with('cargos_administrativo')->where('fecha_nacimiento', $request->fechaInicio)->orderBy('documento_identidad')->get();
         }
 
         return view('admin.reports.officers', ['oficiales' => $oficial]);
@@ -79,10 +81,10 @@ class ReportesController extends Controller
 
     public function ingress_date(Request $request)
     {   
-        $oficial = Oficiale::with('tipo_cargo')->whereBetween('fecha_ingreso', [$request->fechaInicio, $request->fechaFin])->orderBy('documento_identidad')->get();
+        $oficial = Oficiale::with('cargos_administrativo')->whereBetween('fecha_ingreso', [$request->fechaInicio, $request->fechaFin])->orderBy('documento_identidad')->get();
 
         if($request->fechaInicio == $request->fechaFin){
-            $oficial = Oficiale::with('tipo_cargo')->where('fecha_ingreso', $request->fechaInicio)->orderBy('documento_identidad')->get();
+            $oficial = Oficiale::with('cargos_administrativo')->where('fecha_ingreso', $request->fechaInicio)->orderBy('documento_identidad')->get();
         }
 
         return view('admin.reports.officers', ['oficiales' => $oficial]);
@@ -91,7 +93,7 @@ class ReportesController extends Controller
     public function officers_cargo(Request $request)
     {
         // Inicializar la consulta
-        $query = Oficiale::query()->with('oficiales_cargos.cargo', 'tipo_cargo');
+        $query = Oficiale::query()->with('oficiales_cargos.cargo', 'cargos_administrativo');
 
         // Filtrar por ID de cargo (si está presente)
         if ($request->has('id_cargo') && !empty($request->id_cargo) && $request->id_cargo != "") {
@@ -128,111 +130,69 @@ class ReportesController extends Controller
 
     public function family_members(Request $request)
     {
-        // Validar los datos de entrada
-        // $request->validate([
-        //     'parentesco' => 'nullable|string|max:255',
-        //     'fecha_nacimiento_inicio' => 'nullable|date|date_format:Y-m-d',
-        //     'fecha_nacimiento_fin' => 'nullable|date|date_format:Y-m-d|after_or_equal:fecha_nacimiento_inicio',
-        // ]);
+        $query = Oficiale::query()
+            ->with(['oficiales_familiares' => fn ($q) => $this->applyFamiliaresReportFilters($q, $request)])
+            ->whereHas('oficiales_familiares', fn ($q) => $this->applyFamiliaresReportFilters($q, $request));
 
-        // Inicializar la consulta
-        $query = Oficiale::query()->with(['oficiales_familiares' => function ($q) use ($request) {
-            // Filtrar por parentesco
-            if ($request->filled('parentesco')) {
-                $q->where('parentesco', $request->parentesco);
-            }
+        $oficiales = $query->get();
 
-            // Filtrar por fecha de nacimiento
-            $startDate = $request->filled('fecha_nacimiento_inicio') 
-                ? $request->fecha_nacimiento_inicio 
-                : '2015-01-01'; // Por defecto: desde 2015
+        return view('admin.reports.familly', compact('oficiales'));
+    }
 
-            $endDate = $request->filled('fecha_nacimiento_fin') 
-                ? $request->fecha_nacimiento_fin 
-                : now()->format('Y-m-d'); // Por defecto: hasta hoy
+    private function applyFamiliaresReportFilters($query, Request $request): void
+    {
+        if ($request->filled('parentesco')) {
+            $query->where('parentesco', $request->parentesco);
+        }
 
-            // Asegurar que startDate no sea anterior a 2015
-            if (strtotime($startDate) < strtotime('2015-01-01')) {
-                $startDate = '2015-01-01';
-            }
-
-            // Aplicar filtro de fecha con whereBetween
-            $q->whereBetween('fecha_nacimiento', [$startDate, $endDate]);
-
-            // Condición explícita para excluir fechas anteriores a 2015
-            $q->where('fecha_nacimiento', '>=', '2015-01-01');
-
-            // Depurar el filtro de fechas
-            Log::info('Filtro de fechas aplicado en oficiales_familiares: ', [
-                'startDate' => $startDate,
-                'endDate' => $endDate,
-            ]);
-        }]);
-
-        // Filtrar oficiales que tengan familiares que cumplan con los criterios
-        $query->whereHas('oficiales_familiares', function ($q) use ($request) {
-            // Repetir los mismos filtros para whereHas
-            if ($request->filled('parentesco')) {
-                $q->where('parentesco', $request->parentesco);
-            }
-
-            $startDate = $request->filled('fecha_nacimiento_inicio') 
-                ? $request->fecha_nacimiento_inicio 
+        if ($request->filled('fecha_nacimiento_inicio') || $request->filled('fecha_nacimiento_fin')) {
+            $startDate = $request->filled('fecha_nacimiento_inicio')
+                ? $request->fecha_nacimiento_inicio
                 : '2015-01-01';
 
-            $endDate = $request->filled('fecha_nacimiento_fin') 
-                ? $request->fecha_nacimiento_fin 
+            $endDate = $request->filled('fecha_nacimiento_fin')
+                ? $request->fecha_nacimiento_fin
                 : now()->format('Y-m-d');
 
             if (strtotime($startDate) < strtotime('2015-01-01')) {
                 $startDate = '2015-01-01';
             }
 
-            $q->whereBetween('fecha_nacimiento', [$startDate, $endDate]);
-            $q->where('fecha_nacimiento', '>=', '2015-01-01');
-        });
+            $query->whereBetween('fecha_nacimiento', [$startDate, $endDate])
+                ->where('fecha_nacimiento', '>=', '2015-01-01');
+        }
 
-        // Depurar los valores recibidos
-        Log::info('Filtros recibidos: ', [
-            'parentesco' => $request->parentesco,
-            'fecha_nacimiento_inicio' => $request->fecha_nacimiento_inicio,
-            'fecha_nacimiento_fin' => $request->fecha_nacimiento_fin,
-        ]);
+        if ($request->filled('edad_min') || $request->filled('edad_max')) {
+            $edadMin = $request->filled('edad_min') ? (int) $request->edad_min : null;
+            $edadMax = $request->filled('edad_max') ? (int) $request->edad_max : null;
 
-        // Depurar la consulta SQL generada
-        Log::info('Consulta SQL: ', [
-            'query' => $query->toSql(),
-            'bindings' => $query->getBindings(),
-        ]);
+            $query->where(function ($q) use ($edadMin, $edadMax) {
+                $q->where(function ($dateQ) use ($edadMin, $edadMax) {
+                    $dateQ->whereNotNull('fecha_nacimiento');
 
-        // Obtener los resultados
-        $oficiales = $query->get();
+                    if ($edadMin !== null) {
+                        $dateQ->whereDate('fecha_nacimiento', '<=', Carbon::today()->subYears($edadMin));
+                    }
+                    if ($edadMax !== null) {
+                        $dateQ->whereDate('fecha_nacimiento', '>', Carbon::today()->subYears($edadMax + 1));
+                    }
+                })->orWhere(function ($edadQ) use ($edadMin, $edadMax) {
+                    $edadQ->whereNull('fecha_nacimiento')->whereNotNull('edad');
 
-        // Depurar los resultados
-        Log::info('Resultados obtenidos: ', $oficiales->map(function ($oficial) {
-            return [
-                'id' => $oficial->id,
-                'nombre' => $oficial->nombre_completo,
-                'documento' => $oficial->documento_identidad,
-                'familiares' => $oficial->oficiales_familiares->map(function ($familiar) {
-                    return [
-                        'nombre' => $familiar->nombre_completo,
-                        'fecha_nacimiento' => $familiar->fecha_nacimiento,
-                        'parentesco' => $familiar->parentesco,
-                        'sexo' => $familiar->sexo,
-                        'edad' => $familiar->edad,
-                    ];
-                })->all(),
-            ];
-        })->all());
-
-        // Pasar los datos a la vista
-        return view('admin.reports.familly', compact('oficiales'));
+                    if ($edadMin !== null) {
+                        $edadQ->where('edad', '>=', $edadMin);
+                    }
+                    if ($edadMax !== null) {
+                        $edadQ->where('edad', '<=', $edadMax);
+                    }
+                });
+            });
+        }
     }
 
     public function sizes(Request $request)
     {
-        $query = Oficiale::query()->with('tipo_cargo');
+        $query = Oficiale::query()->with('cargos_administrativo');
 
         // Campos simples
         $campos = [
@@ -257,5 +217,242 @@ class ReportesController extends Controller
         $oficiales = $query->get();
 
         return view('admin.reports.officers', compact('oficiales'));
+    }
+
+    /**
+     * Reporte con filtros avanzados (sexo, sangre, hijos, vivienda, conducción, etc.).
+     */
+    public function officersFiltered(Request $request)
+    {
+        $query = $this->buildOfficersFilterQuery($request);
+
+        $query->withCount(['oficiales_familiares as hijos_count' => fn ($q) => $q->where('parentesco', 'Hijo(a)')]);
+
+        if ($request->filled('cantidad_hijos')) {
+            $cant = $request->cantidad_hijos;
+            if ($cant === '4+') {
+                $query->having('hijos_count', '>=', 4);
+            } else {
+                $query->having('hijos_count', '=', (int) $cant);
+            }
+        }
+
+        $oficiales = $query
+            ->with([
+                'cargos_administrativo',
+                'oficiales_cargos' => fn ($q) => $q->where('is_actual', 1)->with('cargo'),
+                'oficiales_academicos' => fn ($q) => $q->orderByDesc('fecha_fin')->orderByDesc('id'),
+            ])
+            ->withCount(['oficiales_familiares as hijos_count' => fn ($q) => $q->where('parentesco', 'Hijo(a)')])
+            ->orderBy('nombre_completo')
+            ->get();
+
+        return view('admin.reports.officers-filtered', [
+            'oficiales' => $oficiales,
+            'filtros' => $this->describeAppliedFilters($request),
+        ]);
+    }
+
+    private function buildOfficersFilterQuery(Request $request)
+    {
+        $query = Oficiale::query();
+
+        if ($request->filled('sexo')) {
+            $query->where('sexo', $request->sexo);
+        }
+
+        if ($request->filled('tipo_sangre')) {
+            $query->where('tipo_sangre', $request->tipo_sangre);
+        }
+
+        if ($request->filled('estado_civil')) {
+            $query->where('estado_civil', $request->estado_civil);
+        }
+
+        if ($request->filled('estatus')) {
+            $query->where('estatus', $request->estatus);
+        }
+
+        if ($request->filled('tipo_funcionario')) {
+            $query->where('tipo_funcionario', $request->tipo_funcionario);
+        }
+
+        if ($request->filled('cargo_administrativo_id')) {
+            $query->where('cargo_administrativo_id', $request->cargo_administrativo_id);
+        }
+
+        if ($request->filled('tipo_vivienda')) {
+            $query->where('tipo_vivienda', $request->tipo_vivienda);
+        }
+
+        if ($request->filled('posee_vivienda')) {
+            if ($request->posee_vivienda === 'si') {
+                $query->whereNotNull('tipo_vivienda')->where('tipo_vivienda', '!=', 'No posee');
+            } elseif ($request->posee_vivienda === 'no') {
+                $query->where(function ($q) {
+                    $q->whereNull('tipo_vivienda')->orWhere('tipo_vivienda', 'No posee');
+                });
+            }
+        }
+
+        if ($request->filled('sabe_conducir')) {
+            $query->where('sabe_conducir', $request->sabe_conducir === '1');
+        }
+
+        if ($request->filled('tipo_conduccion')) {
+            $tipo = $request->tipo_conduccion;
+            $query->where('sabe_conducir', true)
+                ->where(function ($q) use ($tipo) {
+                    $q->whereJsonContains('tipos_conduccion', $tipo)
+                        ->orWhere('tipos_conduccion', 'like', '%"'.$tipo.'"%');
+                });
+        }
+
+        if ($request->filled('id_cargo')) {
+            $query->whereHas('oficiales_cargos', function ($q) use ($request) {
+                $q->where('id_cargo', $request->id_cargo);
+                if ($request->boolean('jerarquia_actual')) {
+                    $q->where('is_actual', 1);
+                }
+            });
+        }
+
+        if ($request->filled('tipo_formacion')) {
+            $query->whereHas('oficiales_academicos', fn ($q) => $q->where('tipo_formacion', $request->tipo_formacion));
+        }
+
+        return $query;
+    }
+
+    private function describeAppliedFilters(Request $request): array
+    {
+        $labels = [];
+
+        if ($request->filled('sexo')) {
+            $labels[] = 'Sexo: '.$request->sexo;
+        }
+        if ($request->filled('tipo_sangre')) {
+            $labels[] = 'Tipo de sangre: '.$request->tipo_sangre;
+        }
+        if ($request->filled('estado_civil')) {
+            $labels[] = 'Estado civil: '.$request->estado_civil;
+        }
+        if ($request->filled('cantidad_hijos')) {
+            $labels[] = 'Cantidad de hijos: '.$request->cantidad_hijos;
+        }
+        if ($request->filled('tipo_funcionario')) {
+            $labels[] = 'Tipo de funcionario: '.$request->tipo_funcionario;
+        }
+        if ($request->filled('cargo_administrativo_id')) {
+            $cargo = CargosAdministrativo::find($request->cargo_administrativo_id);
+            $labels[] = 'Cargo: '.($cargo->nombre_cargo ?? $request->cargo_administrativo_id);
+        }
+        if ($request->filled('estatus')) {
+            $labels[] = 'Estatus: '.$request->estatus;
+        }
+        if ($request->filled('id_cargo')) {
+            $jer = Cargo::find($request->id_cargo);
+            $labels[] = 'Jerarquía: '.($jer->nombre_cargo ?? $request->id_cargo)
+                .($request->boolean('jerarquia_actual') ? ' (actual)' : '');
+        }
+        if ($request->filled('tipo_formacion')) {
+            $labels[] = 'Formación académica: '.$request->tipo_formacion;
+        }
+        if ($request->filled('posee_vivienda')) {
+            $labels[] = 'Posee vivienda: '.($request->posee_vivienda === 'si' ? 'Sí' : 'No');
+        }
+        if ($request->filled('tipo_vivienda')) {
+            $labels[] = 'Tipo de vivienda: '.$request->tipo_vivienda;
+        }
+        if ($request->filled('sabe_conducir')) {
+            $labels[] = 'Sabe conducir: '.($request->sabe_conducir === '1' ? 'Sí' : 'No');
+        }
+        if ($request->filled('tipo_conduccion')) {
+            $labels[] = 'Tipo de vehículo: '.$request->tipo_conduccion;
+        }
+
+        return $labels;
+    }
+
+    /**
+     * Ficha individual de un registro URRA.
+     */
+    public function urraFicha($id)
+    {
+        UrraEstatusSync::sincronizarVencidos();
+
+        $urra = OficialesUrra::with(['oficiale.cargos_administrativo'])->findOrFail($id);
+        $logos = $this->urraLogos();
+
+        return view('admin.reports.urra-ficha', [
+            'urra' => $urra,
+            'officer' => $urra->oficiale,
+            'logos' => $logos,
+        ]);
+    }
+
+    /**
+     * Funcionarios que alguna vez han tenido URRA.
+     */
+    public function urraHistorial()
+    {
+        UrraEstatusSync::sincronizarVencidos();
+
+        $registros = OficialesUrra::with(['oficiale.cargos_administrativo'])
+            ->orderByDesc('fecha_inicio')
+            ->get();
+
+        return view('admin.reports.urra-list', [
+            'title' => 'Funcionarios que han asistido a URRA',
+            'subtitle' => 'Historial completo de asignaciones URRA',
+            'modo' => 'historial',
+            'registros' => $registros,
+        ]);
+    }
+
+    /**
+     * Funcionarios actualmente en URRA.
+     */
+    public function urraActuales()
+    {
+        UrraEstatusSync::sincronizarVencidos();
+
+        $registros = OficialesUrra::with(['oficiale.cargos_administrativo'])
+            ->where('en_servicio', true)
+            ->orderByDesc('fecha_inicio')
+            ->get();
+
+        return view('admin.reports.urra-list', [
+            'title' => 'Funcionarios actualmente en URRA',
+            'subtitle' => 'Asignaciones con servicio activo',
+            'modo' => 'actuales',
+            'registros' => $registros,
+        ]);
+    }
+
+    /**
+     * Logos del cintillo en public/img/urra ordenados numéricamente (1, 2, 3…).
+     */
+    private function urraLogos(): array
+    {
+        $dir = public_path('img/urra');
+        if (! File::isDirectory($dir)) {
+            return [];
+        }
+
+        $files = collect(File::files($dir))
+            ->filter(function ($file) {
+                $ext = strtolower($file->getExtension());
+
+                return in_array($ext, ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'], true);
+            })
+            ->sortBy(function ($file) {
+                preg_match('/^(\d+)/', $file->getFilename(), $m);
+
+                return isset($m[1]) ? (int) $m[1] : PHP_INT_MAX;
+            })
+            ->values();
+
+        return $files->map(fn ($file) => asset('img/urra/'.$file->getFilename()))->all();
     }
 }

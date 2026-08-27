@@ -11,7 +11,7 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
-            <form id="form-add">
+            <form id="form-add" enctype="multipart/form-data">
                 <div class="aler alert-info p-2 border mb-3">
                     <p class="text-muted">Los campos marcados con (*) son obligatorios.</p>
                 </div>
@@ -44,26 +44,31 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class=" col-md-12 mb-3">
+                            <div class="col-md-12 mb-3">
                                 <label class="form-label" for="institucion">Institución</label>
                                 <input type="text" class="form-control" id="institucion" name="institucion" placeholder="Ingrese el nombre de la institución">
                             </div>
                         </div>
                         <div class="row">
-                            <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_inicio">Fecha de inicio</label>
-                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
-                            </div>
-                            <div class=" col-md-6 mb-3">
-                                <label class="form-label" for="fecha_fin">Fecha de fin</label>
-                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="anio_graduacion">Año de Graduación *</label>
+                                <input type="number" class="form-control" id="anio_graduacion" name="anio_graduacion"
+                                       min="1950" max="2100" step="1" required placeholder="Ejemplo: 2018">
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class=" col-md-12 mb-3">
+                            <div class="col-md-12 mb-3">
                                 <label class="form-label" for="descripcion">Descripción</label>
-                                <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+                                <textarea class="form-control" id="descripcion" name="descripcion"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label" for="documento_fondo_negro">Documento (fondo negro)</label>
+                                <input type="file" class="form-control-file" id="documento_fondo_negro" name="documento_fondo_negro" accept=".jpg,.jpeg,.png,.pdf">
+                                <small class="text-muted">Formatos: JPG, PNG o PDF. Máximo 5 MB.</small>
+                                <div id="documento-preview" class="mt-3" style="display:none;"></div>
                             </div>
                         </div>
                     </div>
@@ -113,12 +118,46 @@
 <script>
     $(document).ready(function() {
         var id = "";
+        var storageBase = @json(url('storage'));
         index();
+
+        $(document).on('cpet:refresh-table', index);
+
+        function renderDocumentPreview(url, isPdf) {
+            if (!url) {
+                $('#documento-preview').hide().html('');
+                return;
+            }
+            let html = '';
+            if (isPdf) {
+                html = '<a href="' + url + '" target="_blank" class="btn btn-sm btn-outline-dark"><i class="fas fa-file-pdf"></i> Ver documento PDF</a>';
+            } else {
+                html = '<img src="' + url + '" alt="Documento fondo negro" class="img-thumbnail" style="max-height:220px;">';
+            }
+            $('#documento-preview').html(html).show();
+        }
+
+        function isPdfPath(path) {
+            return /\.pdf$/i.test(path || '');
+        }
+
+        $('#documento_fondo_negro').on('change', function () {
+            const file = this.files[0];
+            if (!file) {
+                return;
+            }
+            if (file.type === 'application/pdf') {
+                renderDocumentPreview(URL.createObjectURL(file), true);
+            } else {
+                renderDocumentPreview(URL.createObjectURL(file), false);
+            }
+        });
 
         $('#btn-add').click(function(e){
             e.preventDefault();
             $('#form-edit').attr('id', 'form-add');
             $('#form-add').trigger('reset');
+            renderDocumentPreview(null);
             $('#btn-submit').text('Guardar');
             $('#btn-submit').attr('css', 'btn btn-primary btn-lg');
             $('#add').modal('show'); 
@@ -133,13 +172,7 @@
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                $('#add').modal('hide');
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
-                });
-                index();
+                CpetModule.afterSave({ message: data.msj, refresh: index });
             });
         });
 
@@ -153,16 +186,14 @@
                 body: formData
             }).then(response => response.json())
             .then(data => {
-                Swal.fire({
-                    title: data.msj,
-                    icon: "success",
-                    draggable: true
+                CpetModule.afterSave({
+                    message: data.msj,
+                    refresh: index,
+                    onReset: function () {
+                        $('#form-edit').trigger('reset').attr('id', 'form-add');
+                        id = '';
+                    }
                 });
-                $('#add').modal('hide');
-                $('#form-edit').trigger('reset');
-                $('#form-edit').attr('id', 'form-add');
-                id = "";
-                index();
             });
         });
 
@@ -183,10 +214,13 @@
 
                 $('#titulo').val(data.titulo);
                 $('#institucion').val(data.institucion);
-                $('#fecha_inicio').val(data.fecha_inicio.substr(0,4) + '-' + data.fecha_inicio.substr(5,2) + '-' + data.fecha_inicio.substr(8,2));
-                $('#fecha_fin').val(data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2));
+                $('#anio_graduacion').val(data.fecha_fin ? String(data.fecha_fin).substr(0, 4) : '');
                 $('#descripcion').val(data.descripcion);
-                
+                if (data.documento_fondo_negro_url) {
+                    renderDocumentPreview(data.documento_fondo_negro_url, isPdfPath(data.documento_fondo_negro));
+                } else {
+                    renderDocumentPreview(null);
+                }
 
                 $('#form-add').attr('id', 'form-edit');
                 $('#btn-submit').attr('class', 'btn btn-dark btn-lg');
@@ -266,12 +300,7 @@
                                         })
                                     }).then(response => response.json())
                                     .then(data => {
-                                        Swal.fire({
-                                            title: data.msj,
-                                            icon: "success",
-                                            draggable: true
-                                        });
-                                        index();
+                                        CpetModule.afterSave({ message: data.msj, refresh: index });
                                     });
                                 }
                             });
@@ -296,12 +325,7 @@
                             body: formData
                         }).then(response => response.json())
                         .then(data => {
-                            Swal.fire({
-                                title: data.msj,
-                                icon: "success",
-                                draggable: true
-                            });
-                            index();
+                            CpetModule.afterSave({ message: data.msj, refresh: index });
                         });
                     }
                 });
@@ -322,33 +346,47 @@
                         </div>`;
                 }else{
                 
-                    data.forEach(e => {
+                    data.forEach((e, index) => {
+                        const anio = e.fecha_fin ? String(e.fecha_fin).substr(0, 4) : 'S/F';
+                        const esActual = index === 0 && e.fecha_fin;
                         template += `
-                        <div class="row border p-3 mb-4 shadow">
+                        <div class="row border p-3 mb-4 shadow ${esActual ? 'border-left border-warning' : ''}" style="${esActual ? 'border-left:4px solid #c4922e !important;' : ''}">
                             <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-6 h4"><span class="font-weight-bold">${e.titulo}</span> - ${e.tipo_formacion} 
-                                        <button class="btn btn-dark btn-sm edit" data-id="${e.id}"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="fas fa-trash"></i></button>    
+                                <div class="row align-items-center">
+                                    <div class="col-md-8 h4 mb-0">
+                                        <span class="font-weight-bold">${e.titulo || e.tipo_formacion}</span>
+                                        <span class="text-muted"> — ${e.tipo_formacion}</span>
+                                        ${esActual ? '<span class="badge badge-warning ml-2" style="background:#c4922e;color:#1a1408;">Título Actual</span>' : ''}
+                                        <button class="btn btn-dark btn-sm edit ml-2" data-id="${e.id}"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="fas fa-trash"></i></button>
                                     </div>
-                                    <div class="col-md-6 text-right">
-                                        <span>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_inicio))}</span> - 
-                                        <span>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_fin))}</span>
+                                    <div class="col-md-4 text-right">
+                                        <span class="text-muted">Año de Graduación:</span>
+                                        <strong>${anio}</strong>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mt-2">
                                     <div class="col-md-12">
-                                        <span class="text-muted">${e.institucion}</span>
+                                        <span class="text-muted">${e.institucion || 'Sin institución'}</span>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <p class="text-justify">
+                                        <p class="text-justify mb-0">
                                             ${((e.descripcion) ? e.descripcion : 'Sin descripción')}
                                         </p>
                                     </div>
                                 </div>
+                                ${e.documento_fondo_negro_url ? `
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <span class="text-muted d-block mb-2">Documento (fondo negro):</span>
+                                        ${isPdfPath(e.documento_fondo_negro)
+                                            ? '<a href="' + e.documento_fondo_negro_url + '" target="_blank" class="btn btn-sm btn-outline-dark"><i class="fas fa-file-pdf"></i> Ver PDF</a>'
+                                            : '<a href="' + e.documento_fondo_negro_url + '" target="_blank"><img src="' + e.documento_fondo_negro_url + '" alt="Documento" class="img-thumbnail" style="max-height:180px;"></a>'}
+                                    </div>
+                                </div>` : ''}
                             </div>
                         </div>
                         `;
