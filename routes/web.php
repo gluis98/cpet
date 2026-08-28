@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\SetupController;
 use App\Http\Controllers\BulkImportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OfficerFormController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportesController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,9 @@ Route::get('/setup', [SetupController::class, 'create'])->name('setup.create');
 Route::post('/setup', [SetupController::class, 'store'])->name('setup.store');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/perfil', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/perfil/contrasena', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+
     Route::controller(HomeController::class)->group(function () {
         Route::get('/', 'index')->name('home');
         Route::get('/officers/radiogram/{id}', 'officers_radiogram')->name('officers.radiogram');

@@ -6,7 +6,7 @@ RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 COPY resources ./resources
 COPY vite.config.js ./
 COPY public ./public
-RUN npm run build
+RUN npm run build && test -f public/build/manifest.json
 
 FROM composer:2 AS vendor
 WORKDIR /app

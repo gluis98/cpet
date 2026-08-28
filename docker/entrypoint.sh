@@ -19,4 +19,8 @@ php artisan route:cache || true
 php artisan view:cache || true
 php artisan storage:link || true
 
+if [ ! -f public/build/manifest.json ]; then
+  echo "ADVERTENCIA: falta public/build/manifest.json — ejecute npm run build en el despliegue."
+fi
+
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

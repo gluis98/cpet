@@ -20,9 +20,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
 
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
+    @include('partials.vite-assets')
     @yield('styles')
 
 </head>
@@ -62,12 +60,17 @@
         </div>
 
         {{-- Usuario --}}
-        <div class="relative z-10 mx-4 mb-3 rounded-2xl border border-white/10 bg-white/5 px-3.5 py-3 backdrop-blur-sm">
+        <div class="relative z-10 mx-4 mb-3 rounded-2xl border border-white/10 bg-white/5 px-3.5 py-3 backdrop-blur-sm {{ request()->routeIs('profile.*') ? 'ring-1 ring-accent-400/40' : '' }}">
             <div class="flex items-center gap-3">
-                <img src="{{ asset('images/avatar.png') }}" alt="" class="h-10 w-10 rounded-full object-cover ring-2 ring-accent-400/50">
-                <div class="min-w-0">
+                <img src="{{ asset('images/avatar.png') }}" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-accent-400/50">
+                <div class="min-w-0 flex-1">
                     <p class="truncate text-sm font-semibold text-white">{{ auth()->user()->name }}</p>
                     <p class="sidebar-muted truncate text-[11px]">{{ auth()->user()->email ?? 'Sesión activa' }}</p>
+                    <a href="{{ route('profile.show') }}"
+                       class="mt-1.5 inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent-400 transition hover:bg-white/10 hover:text-accent-300 {{ request()->routeIs('profile.*') ? 'bg-white/10 text-accent-300' : '' }}">
+                        <i class="fas fa-user-circle text-[11px]"></i>
+                        Ver perfil
+                    </a>
                 </div>
             </div>
         </div>

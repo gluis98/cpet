@@ -76,6 +76,25 @@ Opcional: si usas `storage:link`, el enlace se recrea en el entrypoint.
 
 La app confía en proxies (`trustProxies('*')`) para HTTPS detrás de Coolify.
 
+## Estilos / assets no cargan
+
+Si la página se ve sin diseño (solo HTML plano):
+
+1. **Build Pack:** debe ser **Dockerfile** (el Dockerfile ejecuta `npm run build` y copia `public/build/`).
+2. **`APP_URL`:** en Coolify, pon la URL pública real con `https://` (no `http://localhost`).
+3. **Redeploy:** tras cambiar código o variables, vuelve a desplegar la imagen.
+4. **Comprobar en el navegador:** abre DevTools → Red → busca archivos en `/build/assets/` y `/vendor/`. Si dan 404, el build no llegó al contenedor.
+5. **Logs del contenedor:** si aparece `ADVERTENCIA: falta public/build/manifest.json`, el paso de Vite falló en el build.
+
+Si despliegas **sin Docker**, en el servidor ejecuta:
+
+```bash
+npm ci && npm run build
+php artisan config:clear && php artisan view:clear
+```
+
+(`public/build/` está en `.gitignore` y no se sube con git.)
+
 ## 6. Datos geo (municipios / parroquias)
 
 Las migraciones crean el esquema. Los seeders solo cargan catálogos pequeños (`estados`, `cargos`, `armamentos`, `tipos_cargos`).
