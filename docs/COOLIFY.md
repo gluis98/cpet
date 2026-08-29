@@ -72,7 +72,9 @@ Opcional: si usas `storage:link`, el enlace se recrea en el entrypoint.
 
 1. Asigna el dominio en Coolify
 2. Activa SSL (Let's Encrypt)
-3. `APP_URL` debe coincidir con `https://tu-dominio`
+3. `APP_URL` debe coincidir con `https://tu-dominio` (ej. `https://intcpet.cc`).
+
+**No uses `ASSET_URL`** en el `.env`. Si está definido (p. ej. `ASSET_URL=https://intcpet.cc`), puede romper los CSS del panel interno. Elimínalo en Coolify y deja solo `APP_URL`.
 
 La app confía en proxies (`trustProxies('*')`) para HTTPS detrás de Coolify.
 

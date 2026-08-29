@@ -5,8 +5,9 @@ COPY package.json package-lock.json* ./
 RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 COPY resources ./resources
 COPY vite.config.js ./
+COPY scripts ./scripts
 COPY public ./public
-RUN npm run build && test -f public/build/manifest.json
+RUN npm run build && test -f public/css/app.built.css
 
 FROM composer:2 AS vendor
 WORKDIR /app
@@ -48,6 +49,8 @@ WORKDIR /var/www/html
 
 COPY --from=vendor /app /var/www/html
 COPY --from=node-build /app/public/build /var/www/html/public/build
+COPY --from=node-build /app/public/css/app.built.css /var/www/html/public/css/app.built.css
+COPY --from=node-build /app/public/js/app.built.js /var/www/html/public/js/app.built.js
 
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
