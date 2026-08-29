@@ -147,7 +147,7 @@
                 <div class="tab-pane fade" id="tab-laborales" role="tabpanel">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Tipo de cargo</label><span>{{ $oficial->tipo_funcionario ?? 'N/A' }}</span></div>
-                        <div class="col-md-6 ficha-field"><label>Credencial</label><span>{{ $oficial->numero_placa ?? 'N/A' }}</span></div>
+                        <div class="col-md-6 ficha-field"><label>Credencial</label><span>{{ \App\Models\Oficiale::displayNumeroPlaca($oficial->numero_placa) }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Fecha de ingreso</label><span>{{ optional($oficial->fecha_ingreso)->format('d/m/Y') ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Estatus</label><span>{{ $oficial->estatus ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Jerarquía actual</label><span>{{ $cargoActual }}</span></div>

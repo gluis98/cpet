@@ -228,7 +228,7 @@
                 }
             },
             columns: [
-                { data: 'numero_placa', className: 'text-center', render: d => d || 'S/NC' },
+                { data: 'numero_placa', className: 'text-center', render: d => d || @json(\App\Models\Oficiale::PLACA_SIN_ASIGNAR) },
                 { data: 'documento_identidad', className: 'text-center' },
                 { data: 'nombre_completo', className: 'text-center' },
                 { data: 'telefono', className: 'text-center', render: d => d || 'S/T' },

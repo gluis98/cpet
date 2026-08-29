@@ -153,8 +153,9 @@
                     <h3 class="mb-4 text-base font-semibold text-slate-800">Datos laborales / policiales</h3>
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label class="form-label" for="numero_placa">Número de credencial <span class="text-accent-600">*</span></label>
-                            <input type="text" class="form-control" id="numero_placa" name="numero_placa" required
+                            <label class="form-label" for="numero_placa">Número de credencial</label>
+                            <input type="text" class="form-control" id="numero_placa" name="numero_placa"
+                                   placeholder="Opcional — Sin Credencial Asignada"
                                    value="{{ old('numero_placa', $oficial->numero_placa) }}">
                         </div>
                         <div class="col-md-4 mb-3">

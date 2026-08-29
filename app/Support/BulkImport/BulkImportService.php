@@ -252,7 +252,7 @@ class BulkImportService
             'nombre_completo' => $this->require($d, 'nombre_completo'),
             'fecha_nacimiento' => $this->date($this->require($d, 'fecha_nacimiento')),
             'sexo' => $sexo !== '' ? $sexo : null,
-            'numero_placa' => $this->require($d, 'numero_placa'),
+            'numero_placa' => filled($d['numero_placa'] ?? null) ? trim((string) $d['numero_placa']) : null,
             'fecha_ingreso' => $this->date($this->require($d, 'fecha_ingreso')),
             'estatus' => $estatus,
             'tipo_funcionario' => $tipo,
@@ -457,11 +457,23 @@ class BulkImportService
 
                 return $dt->format('Y-m-d');
             } catch (\Throwable) {
-                // fall through
+                // continuar con otros formatos
             }
         }
 
-        return Carbon::parse((string) $value)->toDateString();
+        $str = trim((string) $value);
+
+        // dd/mm/yyyy o d/m/yyyy (Excel en español)
+        if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $str, $m)) {
+            return sprintf('%04d-%02d-%02d', (int) $m[3], (int) $m[2], (int) $m[1]);
+        }
+
+        // dd-mm-yyyy
+        if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $str, $m)) {
+            return sprintf('%04d-%02d-%02d', (int) $m[3], (int) $m[2], (int) $m[1]);
+        }
+
+        return Carbon::parse($str)->toDateString();
     }
 
     private function businessDays(string $inicio, string $fin): int

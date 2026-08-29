@@ -205,7 +205,7 @@ class OfficerFormController extends Controller
             'tipos_conduccion' => ['nullable', 'array'],
             'tipos_conduccion.*' => ['string', 'in:Vehículo,Moto,Jack,Grúa'],
             'centro_votacion' => ['nullable', 'string'],
-            'numero_placa' => ['required', 'string', 'max:255'],
+            'numero_placa' => ['nullable', 'string', 'max:255'],
             'fecha_ingreso' => ['required', 'date'],
             'estatus' => ['required', 'string', 'max:50'],
             'cargo_administrativo_id' => ['nullable', 'integer'],
@@ -231,6 +231,10 @@ class OfficerFormController extends Controller
 
         if (($data['tipo_vivienda'] ?? null) === 'No posee' || empty($data['tipo_vivienda'])) {
             $data['direccion_vivienda'] = null;
+        }
+
+        if (! filled(trim((string) ($data['numero_placa'] ?? '')))) {
+            $data['numero_placa'] = null;
         }
 
         $data['sabe_conducir'] = (string) ($data['sabe_conducir'] ?? '0') === '1';

@@ -142,6 +142,15 @@ class Oficiale extends Model
 		return self::TIPOS_FUNCIONARIO[$key] ?? 'Policial';
 	}
 
+	public const PLACA_SIN_ASIGNAR = 'Sin Credencial Asignada';
+
+	public static function displayNumeroPlaca(?string $placa): string
+	{
+		$valor = trim((string) $placa);
+
+		return $valor !== '' ? $valor : self::PLACA_SIN_ASIGNAR;
+	}
+
 	public function parroquia()
 	{
 		return $this->belongsTo(Parroquia::class);

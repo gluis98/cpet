@@ -27,7 +27,7 @@
                             <td>{{ $r->documento_identidad }}</td>
                             <td>{{ $r->nombre_completo }}</td>
                             <td>{{ $r->tipo_funcionario }}</td>
-                            <td>{{ $r->numero_placa ?? 'S/NC' }}</td>
+                            <td>{{ \App\Models\Oficiale::displayNumeroPlaca($r->numero_placa) }}</td>
                             <td>{{ $r->estatus }}</td>
                             <td>
                                 <a class="btn btn-sm btn-primary" href="{{ route('officers.ficha', $r->id) }}">Ver ficha</a>
