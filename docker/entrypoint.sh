@@ -14,6 +14,7 @@ if [ "${RUN_SEEDERS}" = "true" ]; then
   php artisan db:seed --force --no-interaction
 fi
 
+php artisan view:clear || true
 php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true

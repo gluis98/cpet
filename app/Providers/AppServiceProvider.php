@@ -35,7 +35,12 @@ class AppServiceProvider extends ServiceProvider
             $scheme = $request->getScheme();
         }
 
-        URL::forceRootUrl($scheme.'://'.$request->getHost());
+        $host = $request->header('X-Forwarded-Host', $request->getHost());
+        if (str_contains($host, ',')) {
+            $host = trim(explode(',', $host)[0]);
+        }
+
+        URL::forceRootUrl($scheme.'://'.$host);
         URL::forceScheme($scheme);
     }
 }

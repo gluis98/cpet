@@ -9,13 +9,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ asset('images/icon/logo.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ public_asset('images/icon/logo.png') }}" type="image/x-icon">
 
     {{-- Bootstrap 4 (modales / DataTables / vistas legacy) --}}
-    <link href="{{ asset('vendor/bootstrap-4.1/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendor/select2/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ public_asset('vendor/bootstrap-4.1/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ public_asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ public_asset('vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet">
+    <link href="{{ public_asset('vendor/select2/select2.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
@@ -48,7 +48,7 @@
         {{-- Branding --}}
         <div class="relative z-10 flex items-center gap-3 px-5 pb-5 pt-5">
             <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/10 p-1.5 shadow-inner ring-1 ring-white/20">
-                <img src="{{ asset('images/icon/logo.png') }}" alt="CPET" class="h-full w-full rounded-xl object-cover">
+                <img src="{{ public_asset('images/icon/logo.png') }}" alt="CPET" class="h-full w-full rounded-xl object-cover">
             </div>
             <div class="min-w-0 flex-1 leading-tight">
                 <p class="text-[1.15rem] font-bold tracking-[0.06em] text-white">CPET</p>
@@ -62,7 +62,7 @@
         {{-- Usuario --}}
         <div class="relative z-10 mx-4 mb-3 rounded-2xl border border-white/10 bg-white/5 px-3.5 py-3 backdrop-blur-sm {{ request()->routeIs('profile.*') ? 'ring-1 ring-accent-400/40' : '' }}">
             <div class="flex items-center gap-3">
-                <img src="{{ asset('images/avatar.png') }}" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-accent-400/50">
+                <img src="{{ public_asset('images/avatar.png') }}" alt="" class="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-accent-400/50">
                 <div class="min-w-0 flex-1">
                     <p class="truncate text-sm font-semibold text-white">{{ auth()->user()->name }}</p>
                     <p class="sidebar-muted truncate text-[11px]">{{ auth()->user()->email ?? 'Sesión activa' }}</p>
@@ -241,15 +241,15 @@
 @include('partials.reportes-modal')
 @include('partials.carga-masiva-modal')
 
-<script src="{{ asset('vendor/jquery-3.2.1.min.js') }}"></script>
-<script src="{{ asset('vendor/bootstrap-4.1/popper.min.js') }}"></script>
-<script src="{{ asset('vendor/bootstrap-4.1/bootstrap.min.js') }}"></script>
-<script src="{{ asset('vendor/select2/select2.min.js') }}"></script>
-<script src="{{ asset('js/sweetalert2@11.js') }}"></script>
-<script src="{{ asset('js/cpet-catalog-select.js') }}"></script>
-<script src="{{ asset('vendor/jszip/jszip.min.js') }}"></script>
-<script src="{{ asset('vendor/pdfmake/pdfmake.min.js') }}"></script>
-<script src="{{ asset('vendor/pdfmake/vfs_fonts.js') }}"></script>
+<script src="{{ public_asset('vendor/jquery-3.2.1.min.js') }}"></script>
+<script src="{{ public_asset('vendor/bootstrap-4.1/popper.min.js') }}"></script>
+<script src="{{ public_asset('vendor/bootstrap-4.1/bootstrap.min.js') }}"></script>
+<script src="{{ public_asset('vendor/select2/select2.min.js') }}"></script>
+<script src="{{ public_asset('js/sweetalert2@11.js') }}"></script>
+<script src="{{ public_asset('js/cpet-catalog-select.js') }}"></script>
+<script src="{{ public_asset('vendor/jszip/jszip.min.js') }}"></script>
+<script src="{{ public_asset('vendor/pdfmake/pdfmake.min.js') }}"></script>
+<script src="{{ public_asset('vendor/pdfmake/vfs_fonts.js') }}"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
@@ -258,8 +258,8 @@
 <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
-<script src="{{ asset('js/datatable-spanish.js') }}"></script>
-<script src="{{ asset('js/cpet-module-table.js') }}"></script>
+<script src="{{ public_asset('js/datatable-spanish.js') }}"></script>
+<script src="{{ public_asset('js/cpet-module-table.js') }}"></script>
 
 <script>
     var title = @json($title ?? '');
