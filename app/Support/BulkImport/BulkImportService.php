@@ -5,12 +5,14 @@ namespace App\Support\BulkImport;
 use App\Models\CargosAdministrativo;
 use App\Models\CatalogoCurso;
 use App\Models\Discapacidade;
+use App\Models\Municipio;
 use App\Models\Oficiale;
 use App\Models\OficialesAcademico;
 use App\Models\OficialesCurso;
 use App\Models\OficialesFamiliare;
 use App\Models\OficialesSalud;
 use App\Models\OficialesVacacione;
+use App\Models\Parroquia;
 use App\Support\ReposoEstatusSync;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
@@ -140,15 +142,22 @@ class BulkImportService
 
         $created = 0;
         $skipped = 0;
+        $failed = 0;
         $errors = [];
+        $totalRows = 0;
+        $emptyRows = 0;
 
         DB::beginTransaction();
         try {
             for ($i = 1; $i < count($rows); $i++) {
                 $raw = $rows[$i];
                 if ($this->rowIsEmpty($raw)) {
+                    $emptyRows++;
+
                     continue;
                 }
+
+                $totalRows++;
 
                 $data = [];
                 foreach ($map as $col => $idx) {
@@ -175,9 +184,11 @@ class BulkImportService
                             $errors[] = "Fila {$line}: ".$result['message'];
                         }
                     } else {
+                        $failed++;
                         $errors[] = "Fila {$line}: ".($result['message'] ?? 'Error desconocido');
                     }
                 } catch (\Throwable $e) {
+                    $failed++;
                     $errors[] = "Fila {$line}: ".$e->getMessage();
                 }
             }
@@ -191,16 +202,36 @@ class BulkImportService
                 'msj' => 'Error al importar: '.$e->getMessage(),
                 'created' => 0,
                 'skipped' => 0,
+                'failed' => 0,
+                'total_rows' => $totalRows,
+                'empty_rows' => $emptyRows,
                 'errors' => $errors,
             ];
         }
 
+        $hasIssues = $skipped > 0 || $failed > 0;
+        $summary = "Procesadas {$totalRows} filas: {$created} creados";
+        if ($skipped > 0) {
+            $summary .= ", {$skipped} omitidos";
+        }
+        if ($failed > 0) {
+            $summary .= ", {$failed} con error";
+        }
+        if ($emptyRows > 0) {
+            $summary .= " ({$emptyRows} filas vacías ignoradas)";
+        }
+        $summary .= '.';
+
         return [
             'ok' => true,
-            'msj' => "Importación finalizada: {$created} creados, {$skipped} omitidos".(count($errors) ? ', '.count($errors).' con observaciones.' : '.'),
+            'msj' => $summary,
             'created' => $created,
             'skipped' => $skipped,
-            'errors' => array_slice($errors, 0, 50),
+            'failed' => $failed,
+            'total_rows' => $totalRows,
+            'empty_rows' => $emptyRows,
+            'has_issues' => $hasIssues,
+            'errors' => $errors,
         ];
     }
 
@@ -263,6 +294,7 @@ class BulkImportService
             'estado_civil' => $d['estado_civil'] ?: null,
             'direccion' => $d['direccion'] ?: null,
             'centro_votacion' => $d['centro_votacion'] ?: null,
+            'parroquia_id' => $this->resolveParroquiaId($d['municipio'] ?? null, $d['parroquia'] ?? null),
             'tipo_vivienda' => $vivienda,
             'direccion_vivienda' => ($vivienda === 'No posee' || ! $vivienda) ? null : ($d['direccion_vivienda'] ?: null),
             'sabe_conducir' => $sabe,
@@ -426,6 +458,43 @@ class BulkImportService
         ]);
 
         return ['status' => 'created'];
+    }
+
+    private function resolveParroquiaId(?string $municipio, ?string $parroquia): ?int
+    {
+        $municipio = trim((string) $municipio);
+        $parroquia = trim((string) $parroquia);
+
+        if ($municipio === '' || $parroquia === '') {
+            return null;
+        }
+
+        $mun = Municipio::query()
+            ->where('estado_id', Municipio::ESTADO_TRUJILLO_ID)
+            ->where('descripcion', $municipio)
+            ->first();
+
+        if (! $mun) {
+            $mun = Municipio::create([
+                'descripcion' => $municipio,
+                'estado_id' => Municipio::ESTADO_TRUJILLO_ID,
+            ]);
+        }
+
+        $par = Parroquia::query()
+            ->where('municipio_id', $mun->id)
+            ->where('descripcion', $parroquia)
+            ->first();
+
+        if (! $par) {
+            $par = Parroquia::create([
+                'descripcion' => $parroquia,
+                'municipio_id' => $mun->id,
+                'atencionfamilias' => 0,
+            ]);
+        }
+
+        return (int) $par->id;
     }
 
     private function findOficial(string $documento): Oficiale

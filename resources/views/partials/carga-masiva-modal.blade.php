@@ -229,10 +229,45 @@
         border: 1px solid #fecaca;
     }
 
+    .carga-result.is-warn {
+        display: block;
+        background: #fffbeb;
+        color: #92400e;
+        border: 1px solid #fde68a;
+    }
+
+    .carga-result__stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.65rem 0;
+    }
+
+    .carga-result__stat {
+        background: rgba(255, 255, 255, 0.65);
+        border-radius: 0.5rem;
+        padding: 0.35rem 0.6rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .carga-result__errors {
+        margin: 0.5rem 0 0;
+        padding-left: 1.1rem;
+        max-height: 220px;
+        overflow-y: auto;
+        font-size: 0.78rem;
+        line-height: 1.45;
+    }
+
+    .carga-result__actions {
+        margin-top: 0.65rem;
+    }
+
     .carga-result ul {
         margin: 0.5rem 0 0;
         padding-left: 1.1rem;
-        max-height: 120px;
+        max-height: 220px;
         overflow-y: auto;
     }
 
@@ -457,28 +492,78 @@ document.addEventListener('DOMContentLoaded', function () {
                         data.msj = data.message || 'Revise el archivo enviado.';
                         data.errors = msgs;
                     }
+
+                    var errors = Array.isArray(data.errors) ? data.errors : [];
+                    var hasIssues = !!(data.has_issues || data.failed > 0 || data.skipped > 0 || errors.length);
+
                     if (resultEl) {
-                        resultEl.className = 'carga-result ' + (ok ? 'is-ok' : 'is-err');
-                        var html = '<strong>' + (data.msj || (ok ? 'Listo' : 'Error')) + '</strong>';
-                        if (data.errors && data.errors.length) {
-                            html += '<ul>' + data.errors.map(function (err) {
-                                return '<li>' + err + '</li>';
-                            }).join('') + '</ul>';
+                        var resultClass = 'carga-result ';
+                        if (!ok) {
+                            resultClass += 'is-err';
+                        } else if (hasIssues) {
+                            resultClass += 'is-warn';
+                        } else {
+                            resultClass += 'is-ok';
                         }
+                        resultEl.className = resultClass;
+
+                        var html = '<strong>' + (data.msj || (ok ? 'Importación completada' : 'Error en la importación')) + '</strong>';
+
+                        if (ok && (data.total_rows != null)) {
+                            html += '<div class="carga-result__stats">';
+                            html += '<span class="carga-result__stat">Procesadas: ' + (data.total_rows || 0) + '</span>';
+                            html += '<span class="carga-result__stat">Creados: ' + (data.created || 0) + '</span>';
+                            html += '<span class="carga-result__stat">Omitidos: ' + (data.skipped || 0) + '</span>';
+                            html += '<span class="carga-result__stat">Errores: ' + (data.failed || 0) + '</span>';
+                            html += '</div>';
+                        }
+
+                        if (errors.length) {
+                            html += '<ol class="carga-result__errors">';
+                            errors.forEach(function (err) {
+                                html += '<li>' + String(err).replace(/</g, '&lt;') + '</li>';
+                            });
+                            html += '</ol>';
+                            html += '<div class="carga-result__actions">';
+                            html += '<button type="button" class="btn btn-sm btn-outline-dark carga-download-errors">';
+                            html += '<i class="fas fa-download mr-1"></i> Descargar reporte (.txt)</button>';
+                            html += '</div>';
+                            resultEl._cargaErrors = errors;
+                        } else {
+                            resultEl._cargaErrors = [];
+                        }
+
                         resultEl.innerHTML = html;
+
+                        var dlBtn = resultEl.querySelector('.carga-download-errors');
+                        if (dlBtn) {
+                            dlBtn.addEventListener('click', function () {
+                                var lines = (resultEl._cargaErrors || []).join('\n');
+                                var blob = new Blob([lines], { type: 'text/plain;charset=utf-8' });
+                                var a = document.createElement('a');
+                                a.href = URL.createObjectURL(blob);
+                                a.download = 'importacion-errores-' + module + '-' + new Date().toISOString().slice(0, 10) + '.txt';
+                                a.click();
+                                URL.revokeObjectURL(a.href);
+                            });
+                        }
                     }
+
                     if (ok) {
-                        $(document).trigger('cpet:refresh-table');
+                        if ((data.created || 0) > 0) {
+                            $(document).trigger('cpet:refresh-table');
+                        }
                         if (typeof Swal !== 'undefined') {
                             Swal.fire({
-                                icon: 'success',
-                                title: 'Importación completada',
+                                icon: hasIssues ? 'warning' : 'success',
+                                title: hasIssues ? 'Importación con observaciones' : 'Importación completada',
                                 text: data.msj || '',
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 2800,
-                                timerProgressBar: true
+                                toast: !hasIssues,
+                                position: hasIssues ? 'center' : 'top-end',
+                                showConfirmButton: hasIssues,
+                                timer: hasIssues ? undefined : 3200,
+                                timerProgressBar: !hasIssues,
+                                width: hasIssues ? '32rem' : undefined
                             });
                         }
                     }

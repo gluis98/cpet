@@ -344,6 +344,68 @@
                 successMessage: 'Cargo agregado',
             });
         });
+
+        var estadoTrujilloId = @json(\App\Models\Municipio::ESTADO_TRUJILLO_ID);
+        var selectedMunicipioId = @json(old('municipio_id', optional($oficial->parroquia)->municipio_id));
+        var selectedParroquiaId = @json(old('parroquia_id', $oficial->parroquia_id));
+
+        function loadParroquias(municipioId, selectedId) {
+            if (!municipioId) {
+                $('#parroquia_id').html($('<option>', { value: '', text: '--- SELECCIONE ---' }));
+                return $.when();
+            }
+            return CpetCatalog.loadSelect(
+                $('#parroquia_id'),
+                apiBase + '/parroquias?municipio_id=' + encodeURIComponent(municipioId),
+                selectedId
+            );
+        }
+
+        CpetCatalog.loadSelect(
+            $('#municipio_id'),
+            apiBase + '/municipios?estado_id=' + estadoTrujilloId,
+            selectedMunicipioId
+        ).then(function () {
+            if (selectedMunicipioId) {
+                loadParroquias(selectedMunicipioId, selectedParroquiaId);
+            }
+        });
+
+        $('#municipio_id').on('change', function () {
+            loadParroquias($(this).val(), null);
+        });
+
+        $('#btn-add-municipio').on('click', function () {
+            CpetCatalog.promptAdd({
+                title: 'Nuevo municipio',
+                placeholder: 'Ejemplo: Valera…',
+                postUrl: apiBase + '/municipios',
+                fieldName: 'descripcion',
+                $select: $('#municipio_id'),
+                extraFormData: { estado_id: estadoTrujilloId },
+                successMessage: 'Municipio agregado',
+                onAdded: function () {
+                    $('#parroquia_id').html($('<option>', { value: '', text: '--- SELECCIONE ---' }));
+                },
+            });
+        });
+
+        $('#btn-add-parroquia').on('click', function () {
+            var municipioId = $('#municipio_id').val();
+            if (!municipioId) {
+                Swal.fire({ icon: 'warning', title: 'Seleccione un municipio primero' });
+                return;
+            }
+            CpetCatalog.promptAdd({
+                title: 'Nueva parroquia',
+                placeholder: 'Ejemplo: La Beatriz…',
+                postUrl: apiBase + '/parroquias',
+                fieldName: 'descripcion',
+                $select: $('#parroquia_id'),
+                extraFormData: { municipio_id: municipioId },
+                successMessage: 'Parroquia agregada',
+            });
+        });
     }
 })();
 </script>

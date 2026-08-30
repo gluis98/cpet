@@ -136,10 +136,37 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-8 mb-3">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="municipio_id">Municipio (centro de votación)</label>
+                            <div class="input-group">
+                                <select class="form-control" id="municipio_id" name="municipio_id">
+                                    <option value="">--- SELECCIONE ---</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary" id="btn-add-municipio" title="Agregar municipio">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="parroquia_id">Parroquia</label>
+                            <div class="input-group">
+                                <select class="form-control" id="parroquia_id" name="parroquia_id">
+                                    <option value="">--- SELECCIONE ---</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary" id="btn-add-parroquia" title="Agregar parroquia">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
                             <label class="form-label" for="centro_votacion">Centro de votación</label>
                             <input type="text" class="form-control" id="centro_votacion" name="centro_votacion"
-                                   value="{{ old('centro_votacion', $oficial->centro_votacion) }}">
+                                   value="{{ old('centro_votacion', $oficial->centro_votacion) }}"
+                                   placeholder="Nombre del centro electoral">
                         </div>
                         <div class="col-md-12 mb-3">
                             <label class="form-label" for="direccion">Dirección</label>

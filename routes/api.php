@@ -107,6 +107,11 @@ Route::controller(CatalogosController::class)->group(function () {
     Route::get('/cargos-administrativos/{id}', 'cargosAdministrativosShow');
     Route::put('/cargos-administrativos/{id}', 'cargosAdministrativosUpdate');
     Route::delete('/cargos-administrativos/{id}', 'cargosAdministrativosDestroy');
+
+    Route::get('/municipios', 'municipiosIndex');
+    Route::post('/municipios', 'municipiosStore');
+    Route::get('/parroquias', 'parroquiasIndex');
+    Route::post('/parroquias', 'parroquiasStore');
 });
 
 Route::controller(OfficersFilesController::class)->group(function(){

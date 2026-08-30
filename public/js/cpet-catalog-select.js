@@ -67,7 +67,7 @@
     }
 
     function extractItem(data) {
-        return data?.item || data?.discapacidad || data?.curso || data?.cargo || null;
+        return data?.item || data?.discapacidad || data?.curso || data?.cargo || data?.municipio || data?.parroquia || null;
     }
 
     function promptAdd(options) {
@@ -80,6 +80,7 @@
                 fieldName: 'nombre',
                 onAdded: null,
                 successMessage: 'Registro agregado',
+                extraFormData: null,
             },
             options || {}
         );
@@ -107,6 +108,11 @@
 
             var form = new FormData();
             form.append(settings.fieldName, String(result.value).trim());
+            if (settings.extraFormData && typeof settings.extraFormData === 'object') {
+                Object.keys(settings.extraFormData).forEach(function (key) {
+                    form.append(key, settings.extraFormData[key]);
+                });
+            }
 
             fetch(settings.postUrl, {
                 method: 'POST',

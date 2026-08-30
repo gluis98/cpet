@@ -101,58 +101,56 @@ class OfficerFormController extends Controller
         $q = trim((string) $request->get('q', ''));
 
         if ($q === '') {
-            return redirect()->back()->with('error', 'Escribe una cédula o un nombre para buscar.');
+            return redirect()->back()->with('error', 'Escribe una cédula, credencial o nombre para buscar.');
         }
 
         $digitsOnly = preg_replace('/\D+/', '', $q) ?? '';
+        $withRelations = [
+            'oficiales_cargos.cargo',
+            'cargos_administrativo',
+            'parroquia.municipio',
+            'oficiales_academicos' => function ($q) {
+                $q->orderByRaw('fecha_fin IS NULL')
+                    ->orderByDesc('fecha_fin')
+                    ->orderByDesc('id');
+            },
+            'oficiales_familiares',
+        ];
 
-        if ($digitsOnly !== '' && preg_match('/^\d{5,}$/', $digitsOnly)) {
-            $oficial = Oficiale::with([
-                'oficiales_cargos.cargo',
-                'cargos_administrativo',
-                'oficiales_academicos' => function ($q) {
-                    $q->orderByRaw('fecha_fin IS NULL')
-                        ->orderByDesc('fecha_fin')
-                        ->orderByDesc('id');
-                },
-                'oficiales_familiares',
-            ])
-                ->where(function ($query) use ($digitsOnly, $q) {
-                    $query->where('documento_identidad', $digitsOnly)
-                        ->orWhere('documento_identidad', $q);
-                })
-                ->first();
+        // Coincidencia exacta por cédula o credencial
+        $oficial = Oficiale::with($withRelations)
+            ->where(function ($query) use ($q, $digitsOnly) {
+                $query->where('documento_identidad', $q)
+                    ->orWhere('numero_placa', $q);
+                if ($digitsOnly !== '' && $digitsOnly !== $q) {
+                    $query->orWhere('documento_identidad', $digitsOnly);
+                }
+            })
+            ->first();
 
-            if ($oficial) {
-                return view('admin.officers.ficha', [
-                    'title' => 'Ficha — '.$oficial->nombre_completo,
-                    'oficial' => $oficial,
-                    'leftImagePath' => $this->logoDataUri(),
-                ]);
-            }
+        if ($oficial) {
+            return view('admin.officers.ficha', [
+                'title' => 'Ficha — '.$oficial->nombre_completo,
+                'oficial' => $oficial,
+                'leftImagePath' => $this->logoDataUri(),
+            ]);
         }
 
         $resultados = Oficiale::query()
-            ->where(function ($query) use ($q) {
+            ->where(function ($query) use ($q, $digitsOnly) {
                 $query->where('nombre_completo', 'like', "%{$q}%")
                     ->orWhere('documento_identidad', 'like', "%{$q}%")
                     ->orWhere('numero_placa', 'like', "%{$q}%");
+                if ($digitsOnly !== '' && strlen($digitsOnly) >= 3) {
+                    $query->orWhere('documento_identidad', 'like', "%{$digitsOnly}%");
+                }
             })
             ->orderBy('nombre_completo')
             ->limit(50)
             ->get();
 
         if ($resultados->count() === 1) {
-            $oficial = Oficiale::with([
-                'oficiales_cargos.cargo',
-                'cargos_administrativo',
-                'oficiales_academicos' => function ($q) {
-                    $q->orderByRaw('fecha_fin IS NULL')
-                        ->orderByDesc('fecha_fin')
-                        ->orderByDesc('id');
-                },
-                'oficiales_familiares',
-            ])->findOrFail($resultados->first()->id);
+            $oficial = Oficiale::with($withRelations)->findOrFail($resultados->first()->id);
 
             return view('admin.officers.ficha', [
                 'title' => 'Ficha — '.$oficial->nombre_completo,
@@ -174,6 +172,7 @@ class OfficerFormController extends Controller
         $oficial = Oficiale::with([
             'oficiales_cargos.cargo',
             'cargos_administrativo',
+            'parroquia.municipio',
             'oficiales_academicos' => function ($q) {
                 $q->orderByRaw('fecha_fin IS NULL')
                     ->orderByDesc('fecha_fin')
@@ -205,6 +204,7 @@ class OfficerFormController extends Controller
             'tipos_conduccion' => ['nullable', 'array'],
             'tipos_conduccion.*' => ['string', 'in:Vehículo,Moto,Jack,Grúa'],
             'centro_votacion' => ['nullable', 'string'],
+            'parroquia_id' => ['nullable', 'integer', 'exists:parroquias,id'],
             'numero_placa' => ['nullable', 'string', 'max:255'],
             'fecha_ingreso' => ['required', 'date'],
             'estatus' => ['required', 'string', 'max:50'],
@@ -223,7 +223,7 @@ class OfficerFormController extends Controller
             'fotografia' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        foreach (['cargo_administrativo_id'] as $fk) {
+        foreach (['cargo_administrativo_id', 'parroquia_id'] as $fk) {
             if (empty($data[$fk])) {
                 $data[$fk] = null;
             }

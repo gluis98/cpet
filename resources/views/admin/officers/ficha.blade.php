@@ -141,6 +141,8 @@
                         <div class="col-md-6 ficha-field"><label>Cantidad de hijos</label><span>{{ $cantidadHijos }}</span></div>
                         <div class="col-md-12 ficha-field"><label>Dirección</label><span>{{ $oficial->direccion ?? 'N/A' }}</span></div>
                         <div class="col-md-12 ficha-field"><label>Centro de votación</label><span>{{ $oficial->centro_votacion ?? 'N/A' }}</span></div>
+                        <div class="col-md-6 ficha-field"><label>Municipio</label><span>{{ optional($oficial->parroquia?->municipio)->descripcion ?? 'N/A' }}</span></div>
+                        <div class="col-md-6 ficha-field"><label>Parroquia</label><span>{{ optional($oficial->parroquia)->descripcion ?? 'N/A' }}</span></div>
                     </div>
                 </div>
 

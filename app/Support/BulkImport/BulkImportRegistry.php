@@ -29,6 +29,8 @@ class BulkImportRegistry
                     ['key' => 'estado_civil', 'label' => 'estado_civil', 'required' => false, 'example' => 'Soltero', 'help' => 'Estado civil'],
                     ['key' => 'direccion', 'label' => 'direccion', 'required' => false, 'example' => 'Calle 1', 'help' => 'Dirección'],
                     ['key' => 'centro_votacion', 'label' => 'centro_votacion', 'required' => false, 'example' => 'Escuela X', 'help' => 'Centro de votación'],
+                    ['key' => 'municipio', 'label' => 'municipio', 'required' => false, 'example' => 'Valera', 'help' => 'Municipio del centro de votación (Estado Trujillo)'],
+                    ['key' => 'parroquia', 'label' => 'parroquia', 'required' => false, 'example' => 'La Beatriz', 'help' => 'Parroquia del centro de votación'],
                     ['key' => 'tipo_vivienda', 'label' => 'tipo_vivienda', 'required' => false, 'example' => 'Propia', 'help' => 'Propia | Alquilada | No posee'],
                     ['key' => 'direccion_vivienda', 'label' => 'direccion_vivienda', 'required' => false, 'example' => 'Av. 2', 'help' => 'Si vivienda Propia/Alquilada'],
                     ['key' => 'sabe_conducir', 'label' => 'sabe_conducir', 'required' => false, 'example' => '1', 'help' => '0 o 1'],

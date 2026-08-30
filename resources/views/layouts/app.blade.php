@@ -166,7 +166,7 @@
                     <div class="relative w-full">
                         <i class="fas fa-search pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
                         <input type="search" name="q" value="{{ request('q') }}"
-                               placeholder="Buscar cédula o nombre…"
+                               placeholder="Buscar cédula, credencial o nombre…"
                                class="w-full rounded-xl border border-slate-200 bg-slate-50/80 py-2.5 pl-10 pr-3 text-sm text-slate-800 shadow-inner outline-none transition focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-100">
                     </div>
                 </form>

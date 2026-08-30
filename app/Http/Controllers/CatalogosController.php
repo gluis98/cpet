@@ -239,6 +239,83 @@ class CatalogosController extends Controller
         return response()->json(['msj' => 'Cargo administrativo eliminado.'], 200);
     }
 
+    /* ---------- Municipios (Estado Trujillo) ---------- */
+
+    public function municipiosIndex(Request $request)
+    {
+        $estadoId = (int) $request->input('estado_id', \App\Models\Municipio::ESTADO_TRUJILLO_ID);
+
+        $items = \App\Models\Municipio::query()
+            ->where('estado_id', $estadoId)
+            ->orderBy('descripcion')
+            ->get(['id', 'descripcion'])
+            ->map(fn ($m) => $this->catalogItem($m->id, $m->descripcion));
+
+        return response()->json($items, 200);
+    }
+
+    public function municipiosStore(Request $request)
+    {
+        $descripcion = $this->descripcionFromRequest($request);
+        $estadoId = (int) $request->input('estado_id', \App\Models\Municipio::ESTADO_TRUJILLO_ID);
+
+        $item = \App\Models\Municipio::firstOrCreate(
+            ['descripcion' => $descripcion, 'estado_id' => $estadoId],
+            ['descripcion' => $descripcion, 'estado_id' => $estadoId]
+        );
+
+        return response()->json([
+            'msj' => 'Municipio registrado.',
+            'municipio' => $item,
+            'item' => $this->catalogItem($item->id, $item->descripcion),
+        ], 201);
+    }
+
+    /* ---------- Parroquias ---------- */
+
+    public function parroquiasIndex(Request $request)
+    {
+        $municipioId = (int) $request->input('municipio_id', 0);
+        if ($municipioId <= 0) {
+            return response()->json([], 200);
+        }
+
+        $items = \App\Models\Parroquia::query()
+            ->where('municipio_id', $municipioId)
+            ->orderBy('descripcion')
+            ->get(['id', 'descripcion'])
+            ->map(fn ($p) => $this->catalogItem($p->id, $p->descripcion));
+
+        return response()->json($items, 200);
+    }
+
+    public function parroquiasStore(Request $request)
+    {
+        $descripcion = $this->descripcionFromRequest($request);
+        $municipioId = (int) $request->input('municipio_id', 0);
+
+        if ($municipioId <= 0) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'municipio_id' => 'Seleccione un municipio antes de agregar la parroquia.',
+            ]);
+        }
+
+        $item = \App\Models\Parroquia::firstOrCreate(
+            ['descripcion' => $descripcion, 'municipio_id' => $municipioId],
+            [
+                'descripcion' => $descripcion,
+                'municipio_id' => $municipioId,
+                'atencionfamilias' => 0,
+            ]
+        );
+
+        return response()->json([
+            'msj' => 'Parroquia registrada.',
+            'parroquia' => $item,
+            'item' => $this->catalogItem($item->id, $item->descripcion),
+        ], 201);
+    }
+
     private function catalogItem(int $id, string $nombre): array
     {
         return [
@@ -291,5 +368,31 @@ class CatalogosController extends Controller
         }
 
         return $nombre;
+    }
+
+    private function descripcionFromRequest(Request $request, array $keys = ['descripcion', 'nombre']): string
+    {
+        $descripcion = '';
+        foreach ($keys as $key) {
+            $candidate = trim((string) $request->input($key, ''));
+            if ($candidate !== '') {
+                $descripcion = $candidate;
+                break;
+            }
+        }
+
+        if ($descripcion === '') {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                $keys[0] => 'La descripción es obligatoria.',
+            ]);
+        }
+
+        if (strlen($descripcion) > 100) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                $keys[0] => 'La descripción no puede superar 100 caracteres.',
+            ]);
+        }
+
+        return $descripcion;
     }
 }

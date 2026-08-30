@@ -26,6 +26,8 @@ class Municipio extends Model
 	protected $table = 'municipios';
 	public $timestamps = false;
 
+	public const ESTADO_TRUJILLO_ID = 19;
+
 	protected $casts = [
 		'estado_id' => 'int'
 	];
