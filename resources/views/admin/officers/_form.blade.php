@@ -330,9 +330,9 @@
                     <h3 class="mb-4 text-base font-semibold text-slate-800">Datos de contacto</h3>
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label class="form-label" for="telefono">Teléfono <span class="text-accent-600">*</span></label>
-                            <input type="text" class="form-control" name="telefono" id="telefono" required
-                                   value="{{ old('telefono', $oficial->telefono) }}" placeholder="Ejemplo: +58 412 1234567">
+                            <label class="form-label" for="telefono">Teléfono</label>
+                            <input type="text" class="form-control" name="telefono" id="telefono"
+                                   value="{{ old('telefono', $oficial->telefono) }}" placeholder="Opcional — Ejemplo: +58 412 1234567">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label" for="telefono_residencial">Teléfono residencial</label>

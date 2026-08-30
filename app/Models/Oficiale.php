@@ -142,6 +142,22 @@ class Oficiale extends Model
 		return self::TIPOS_FUNCIONARIO[$key] ?? 'Policial';
 	}
 
+	public static function normalizeTipoVivienda(?string $tipo): ?string
+	{
+		$valor = trim((string) $tipo);
+		if ($valor === '') {
+			return null;
+		}
+
+		foreach (self::TIPOS_VIVIENDA as $canon) {
+			if (strcasecmp($valor, $canon) === 0) {
+				return $canon;
+			}
+		}
+
+		return null;
+	}
+
 	public const PLACA_SIN_ASIGNAR = 'Sin Credencial Asignada';
 
 	public static function displayNumeroPlaca(?string $placa): string

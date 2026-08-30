@@ -217,7 +217,7 @@ class OfficerFormController extends Controller
             'talla_falda' => ['nullable', 'string', 'max:255'],
             'talla_gorra' => ['nullable', 'string', 'max:255'],
             'talla_tacon' => ['nullable', 'string', 'max:255'],
-            'telefono' => ['required', 'string', 'max:50'],
+            'telefono' => ['nullable', 'string', 'max:50'],
             'telefono_residencial' => ['nullable', 'string', 'max:50'],
             'correo_electronico' => ['required', 'email', 'max:100'],
             'fotografia' => ['nullable', 'image', 'max:5120'],

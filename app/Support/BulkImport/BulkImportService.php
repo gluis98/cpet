@@ -268,9 +268,10 @@ class BulkImportService
             }
         }
 
-        $vivienda = $d['tipo_vivienda'] ?: null;
-        if ($vivienda && ! in_array($vivienda, Oficiale::TIPOS_VIVIENDA, true)) {
-            throw new \InvalidArgumentException("tipo_vivienda inválido: {$vivienda}");
+        $viviendaRaw = trim((string) ($d['tipo_vivienda'] ?? ''));
+        $vivienda = $viviendaRaw !== '' ? Oficiale::normalizeTipoVivienda($viviendaRaw) : null;
+        if ($viviendaRaw !== '' && $vivienda === null) {
+            throw new \InvalidArgumentException("tipo_vivienda inválido: {$viviendaRaw}");
         }
 
         $sexo = trim((string) ($d['sexo'] ?? ''));
@@ -287,7 +288,7 @@ class BulkImportService
             'fecha_ingreso' => $this->date($this->require($d, 'fecha_ingreso')),
             'estatus' => $estatus,
             'tipo_funcionario' => $tipo,
-            'telefono' => $this->require($d, 'telefono'),
+            'telefono' => filled($d['telefono'] ?? null) ? trim((string) $d['telefono']) : null,
             'correo_electronico' => $this->require($d, 'correo_electronico'),
             'cargo_administrativo_id' => $cargoId,
             'tipo_sangre' => $d['tipo_sangre'] ?: null,
