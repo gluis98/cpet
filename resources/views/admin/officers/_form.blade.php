@@ -340,9 +340,9 @@
                                    value="{{ old('telefono_residencial', $oficial->telefono_residencial) }}" placeholder="Opcional">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label" for="correo_electronico">Correo electrónico <span class="text-accent-600">*</span></label>
-                            <input type="email" class="form-control" name="correo_electronico" id="correo_electronico" required
-                                   value="{{ old('correo_electronico', $oficial->correo_electronico) }}">
+                            <label class="form-label" for="correo_electronico">Correo electrónico</label>
+                            <input type="email" class="form-control" name="correo_electronico" id="correo_electronico"
+                                   value="{{ old('correo_electronico', $oficial->correo_electronico) }}" placeholder="Opcional">
                         </div>
                     </div>
                 </div>

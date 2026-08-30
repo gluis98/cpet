@@ -219,7 +219,7 @@ class OfficerFormController extends Controller
             'talla_tacon' => ['nullable', 'string', 'max:255'],
             'telefono' => ['nullable', 'string', 'max:50'],
             'telefono_residencial' => ['nullable', 'string', 'max:50'],
-            'correo_electronico' => ['required', 'email', 'max:100'],
+            'correo_electronico' => ['nullable', 'email', 'max:100'],
             'fotografia' => ['nullable', 'image', 'max:5120'],
         ]);
 

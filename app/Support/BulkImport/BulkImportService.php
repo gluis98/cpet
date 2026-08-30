@@ -289,7 +289,7 @@ class BulkImportService
             'estatus' => $estatus,
             'tipo_funcionario' => $tipo,
             'telefono' => filled($d['telefono'] ?? null) ? trim((string) $d['telefono']) : null,
-            'correo_electronico' => $this->require($d, 'correo_electronico'),
+            'correo_electronico' => filled($d['correo_electronico'] ?? null) ? trim((string) $d['correo_electronico']) : null,
             'cargo_administrativo_id' => $cargoId,
             'tipo_sangre' => $d['tipo_sangre'] ?: null,
             'estado_civil' => $d['estado_civil'] ?: null,

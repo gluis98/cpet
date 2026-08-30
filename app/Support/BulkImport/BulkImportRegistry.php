@@ -23,7 +23,7 @@ class BulkImportRegistry
                     ['key' => 'estatus', 'label' => 'estatus', 'required' => true, 'example' => 'Operativo', 'help' => 'Operativo, No Operativo, En Reposo, Retirado, Suspendido, Jubilado, Fallecido, URRA'],
                     ['key' => 'tipo_funcionario', 'label' => 'tipo_funcionario', 'required' => true, 'example' => 'Policial', 'help' => 'Policial | Administrativo | Obrero'],
                     ['key' => 'telefono', 'label' => 'telefono', 'required' => false, 'example' => '04141234567', 'help' => 'Teléfono principal (opcional)'],
-                    ['key' => 'correo_electronico', 'label' => 'correo_electronico', 'required' => true, 'example' => 'juan@correo.com', 'help' => 'Email'],
+                    ['key' => 'correo_electronico', 'label' => 'correo_electronico', 'required' => false, 'example' => 'juan@correo.com', 'help' => 'Email (opcional)'],
                     ['key' => 'cargo', 'label' => 'cargo', 'required' => false, 'example' => 'SECRETARIO I', 'help' => 'Nombre exacto en Cargos administrativos'],
                     ['key' => 'tipo_sangre', 'label' => 'tipo_sangre', 'required' => false, 'example' => 'O+', 'help' => 'A+/A-/B+/B-/AB+/AB-/O+/O-'],
                     ['key' => 'estado_civil', 'label' => 'estado_civil', 'required' => false, 'example' => 'Soltero', 'help' => 'Estado civil'],
