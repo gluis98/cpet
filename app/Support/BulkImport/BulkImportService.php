@@ -112,14 +112,25 @@ class BulkImportService
         }
 
         $spreadsheet = IOFactory::load($file->getRealPath());
-        $sheet = $spreadsheet->getActiveSheet();
-        $rows = $sheet->toArray(null, true, true, false);
+        $resolved = $this->resolveImportRows($spreadsheet, $module);
 
-        if (count($rows) < 2) {
-            return ['ok' => false, 'msj' => 'El archivo no tiene filas de datos.', 'created' => 0, 'skipped' => 0, 'errors' => []];
+        if ($resolved === null) {
+            $sheet = $spreadsheet->getSheetByName('Datos') ?? $spreadsheet->getActiveSheet();
+            $rows = $sheet->toArray(null, true, true, false);
+
+            if (count($rows) < 2) {
+                return ['ok' => false, 'msj' => 'El archivo no tiene filas de datos.', 'created' => 0, 'skipped' => 0, 'errors' => []];
+            }
+
+            $resolved = [
+                'rows' => $rows,
+                'headerRowIndex' => $this->detectHeaderRowIndex($rows, $module),
+                'sheetName' => $sheet->getTitle(),
+            ];
         }
 
-        $headerRowIndex = $this->detectHeaderRowIndex($rows, $module);
+        $rows = $resolved['rows'];
+        $headerRowIndex = $resolved['headerRowIndex'];
         $headerRow = array_map(fn ($h) => $this->normalizeHeader((string) $h), $rows[$headerRowIndex]);
         $map = [];
         $maxColumnIndex = 0;
@@ -135,14 +146,9 @@ class BulkImportService
                 }
 
                 if ($indices === [] && ($columnDef['required'] ?? false)) {
-                    $rawHeaders = array_values(array_filter(array_map(
-                        fn ($h) => trim((string) $h),
-                        $rows[$headerRowIndex] ?? []
-                    )));
-
                     return [
                         'ok' => false,
-                        'msj' => "Falta la columna obligatoria: {$columnDef['label']}. Encabezados detectados en fila ".($headerRowIndex + 1).': '.implode(' | ', $rawHeaders),
+                        'msj' => $this->missingRequiredColumnMessage($columnDef['label'], $rows, $headerRowIndex),
                         'created' => 0,
                         'skipped' => 0,
                         'errors' => [],
@@ -885,57 +891,209 @@ class BulkImportService
         return in_array($key, ['documento_identidad', 'cedula', 'documento', 'ci'], true);
     }
 
+    private function resolveImportRows(Spreadsheet $spreadsheet, array $module): ?array
+    {
+        $best = null;
+        $bestScore = -1;
+        $preferredSheets = ['Datos', 'datos', 'Hoja1', 'Sheet1'];
+        $sheetNames = $spreadsheet->getSheetNames();
+
+        usort($sheetNames, function (string $a, string $b) use ($preferredSheets): int {
+            $pa = array_search($a, $preferredSheets, true);
+            $pb = array_search($b, $preferredSheets, true);
+            $pa = $pa === false ? 99 : $pa;
+            $pb = $pb === false ? 99 : $pb;
+
+            return $pa <=> $pb;
+        });
+
+        foreach ($sheetNames as $sheetName) {
+            $sheet = $spreadsheet->getSheetByName($sheetName);
+            if (! $sheet) {
+                continue;
+            }
+
+            $rows = $sheet->toArray(null, true, true, false);
+            if (count($rows) < 2) {
+                continue;
+            }
+
+            $limit = min(count($rows), 15);
+            for ($i = 0; $i < $limit; $i++) {
+                if ($this->rowIsEmpty($rows[$i]) || $this->rowLooksLikeData($rows[$i])) {
+                    continue;
+                }
+
+                $headerRow = array_map(fn ($h) => $this->normalizeHeader((string) $h), $rows[$i]);
+                if (! $this->headerRowHasRequiredColumns($module, $headerRow, $rows, $i)) {
+                    continue;
+                }
+
+                $score = $this->scoreHeaderRow($module, $headerRow, $rows, $i) - ($i * 0.01);
+                if (in_array($sheetName, $preferredSheets, true)) {
+                    $score += 5;
+                }
+
+                if ($score > $bestScore) {
+                    $bestScore = $score;
+                    $best = [
+                        'rows' => $rows,
+                        'headerRowIndex' => $i,
+                        'sheetName' => $sheetName,
+                    ];
+                }
+            }
+        }
+
+        return $best;
+    }
+
     private function detectHeaderRowIndex(array $rows, array $module): int
     {
-        $bestIndex = 0;
+        $limit = min(count($rows), 15);
+        $bestIndex = null;
         $bestScore = -1;
-        $limit = min(count($rows), 6);
 
         for ($i = 0; $i < $limit; $i++) {
-            if ($this->rowIsEmpty($rows[$i])) {
+            if ($this->rowIsEmpty($rows[$i]) || $this->rowLooksLikeData($rows[$i])) {
                 continue;
             }
 
             $headerRow = array_map(fn ($h) => $this->normalizeHeader((string) $h), $rows[$i]);
-            $score = 0;
-            $used = [];
-
-            foreach ($module['columns'] as $columnDef) {
-                $indices = $this->resolveColumnIndices($columnDef, $headerRow, $used, $rows, $i);
-                if ($indices === [] && ($columnDef['key'] ?? '') === 'documento_identidad') {
-                    $indices = $this->resolveDocumentoFuzzyIndices($headerRow, $used, $rows, $i);
-                }
-                if ($indices === []) {
-                    continue;
-                }
-
-                foreach ($indices as $idx) {
-                    $used[] = $idx;
-                }
-                $score += ($columnDef['required'] ?? false) ? 2 : 1;
+            if (! $this->headerRowHasRequiredColumns($module, $headerRow, $rows, $i)) {
+                continue;
             }
 
+            $score = $this->scoreHeaderRow($module, $headerRow, $rows, $i) - ($i * 0.01);
             if ($score > $bestScore) {
                 $bestScore = $score;
                 $bestIndex = $i;
             }
         }
 
-        if ($bestScore <= 0) {
-            for ($i = 0; $i < $limit; $i++) {
-                if ($this->rowIsEmpty($rows[$i])) {
-                    continue;
-                }
+        if ($bestIndex !== null) {
+            return $bestIndex;
+        }
 
-                $filled = count(array_filter($rows[$i], fn ($cell) => trim((string) $cell) !== ''));
-                if ($filled > $bestScore) {
-                    $bestScore = $filled;
-                    $bestIndex = $i;
-                }
+        for ($i = 0; $i < $limit; $i++) {
+            if ($this->rowIsEmpty($rows[$i]) || $this->rowLooksLikeData($rows[$i])) {
+                continue;
+            }
+
+            $headerRow = array_map(fn ($h) => $this->normalizeHeader((string) $h), $rows[$i]);
+            if ($this->resolveDocumentoFuzzyIndices($headerRow, [], $rows, $i) !== []) {
+                return $i;
             }
         }
 
-        return $bestIndex;
+        return 0;
+    }
+
+    private function headerRowHasRequiredColumns(array $module, array $headerRow, array $rows, int $rowIndex): bool
+    {
+        $used = [];
+
+        foreach ($module['columns'] as $columnDef) {
+            if (! ($columnDef['required'] ?? false)) {
+                continue;
+            }
+
+            $indices = $this->resolveColumnIndices($columnDef, $headerRow, $used, $rows, $rowIndex);
+            if ($indices === [] && ($columnDef['key'] ?? '') === 'documento_identidad') {
+                $indices = $this->resolveDocumentoFuzzyIndices($headerRow, $used, $rows, $rowIndex);
+            }
+
+            if ($indices === []) {
+                return false;
+            }
+
+            foreach ($indices as $idx) {
+                $used[] = $idx;
+            }
+        }
+
+        return true;
+    }
+
+    private function scoreHeaderRow(array $module, array $headerRow, array $rows, int $rowIndex): int
+    {
+        $score = 0;
+        $used = [];
+
+        foreach ($module['columns'] as $columnDef) {
+            $indices = $this->resolveColumnIndices($columnDef, $headerRow, $used, $rows, $rowIndex);
+            if ($indices === [] && ($columnDef['key'] ?? '') === 'documento_identidad') {
+                $indices = $this->resolveDocumentoFuzzyIndices($headerRow, $used, $rows, $rowIndex);
+            }
+
+            if ($indices === []) {
+                continue;
+            }
+
+            foreach ($indices as $idx) {
+                $used[] = $idx;
+            }
+
+            $score += ($columnDef['required'] ?? false) ? 10 : 1;
+        }
+
+        return $score;
+    }
+
+    private function rowLooksLikeData(array $row): bool
+    {
+        $signals = 0;
+
+        foreach ($row as $cell) {
+            $str = trim((string) $cell);
+            if ($str === '') {
+                continue;
+            }
+
+            $lower = mb_strtolower($str, 'UTF-8');
+            if (in_array($lower, ['si', 'sí', 'no', '0', '1', 'true', 'false'], true)) {
+                $signals += 2;
+            }
+
+            $digits = preg_replace('/\D+/', '', $str) ?? '';
+            if ($digits !== '' && strlen($digits) >= 6 && strlen($digits) <= 10 && ctype_digit($digits)) {
+                $signals += 2;
+            }
+
+            if ($this->looksLikePersonName($str)) {
+                $signals += 3;
+            }
+
+            if (preg_match('/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}$/', $str)) {
+                $signals += 2;
+            }
+        }
+
+        return $signals >= 3;
+    }
+
+    private function looksLikePersonName(string $value): bool
+    {
+        return (bool) preg_match('/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑa-záéíóúñ][a-záéíóúñ]+)+$/u', $value);
+    }
+
+    private function missingRequiredColumnMessage(string $label, array $rows, int $headerRowIndex): string
+    {
+        $preview = [];
+        $limit = min(count($rows), 4);
+
+        for ($i = 0; $i < $limit; $i++) {
+            $cells = array_map(
+                fn ($cell) => trim((string) $cell),
+                array_slice($this->padRow($rows[$i], 12), 0, 12)
+            );
+            $preview[] = 'Fila '.($i + 1).': '.implode(' | ', $cells);
+        }
+
+        return "Falta la columna obligatoria: {$label}. "
+            .'Use la fila 1 para los encabezados (documento_identidad, nombre_completo, etc.) y datos desde la fila 2. '
+            .'El sistema interpretó encabezados en la fila '.($headerRowIndex + 1).'. '
+            .'Primeras filas del archivo: '.implode(' — ', $preview);
     }
 
     private function padRow(array $row, int $length): array
