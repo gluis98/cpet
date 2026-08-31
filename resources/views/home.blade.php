@@ -19,6 +19,7 @@
             <div class="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10"></div>
             <p class="relative text-xs font-semibold uppercase tracking-wider text-white/70">Total funcionarios</p>
             <p class="relative mt-3 text-3xl font-bold tabular-nums">{{ number_format($totalOfficers, 0, '', '.') }}</p>
+            @include('partials.dashboard-tipo-breakdown', ['counts' => $totalPorTipo])
             <p class="relative mt-1 text-sm text-white/70">Registrados en el sistema</p>
             <i class="fas fa-users absolute bottom-3 right-4 text-4xl text-white/15"></i>
         </div>
@@ -27,6 +28,7 @@
             <div class="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10"></div>
             <p class="relative text-xs font-semibold uppercase tracking-wider text-white/70">Operativos</p>
             <p class="relative mt-3 text-3xl font-bold tabular-nums">{{ number_format($operativos, 0, '', '.') }}</p>
+            @include('partials.dashboard-tipo-breakdown', ['counts' => $operativosPorTipo])
             <p class="relative mt-1 text-sm text-white/70">En servicio activo</p>
             <i class="fas fa-user-check absolute bottom-3 right-4 text-4xl text-white/15"></i>
         </div>
@@ -35,6 +37,7 @@
             <div class="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/10"></div>
             <p class="relative text-xs font-semibold uppercase tracking-wider text-white/70">En reposo</p>
             <p class="relative mt-3 text-3xl font-bold tabular-nums">{{ number_format($funcionariosReposo->count(), 0, '', '.') }}</p>
+            @include('partials.dashboard-tipo-breakdown', ['counts' => $reposoPorTipo])
             <p class="relative mt-1 text-sm text-white/70">Reposos médicos vigentes</p>
             <i class="fas fa-bed absolute bottom-3 right-4 text-4xl text-white/15"></i>
         </div>

@@ -117,6 +117,25 @@ class BulkImportRegistry
                     'Si nombre_curso no existe en el catálogo, se crea automáticamente.',
                 ],
             ],
+            'jerarquias' => [
+                'title' => 'Jerarquías',
+                'icon' => 'fas fa-medal',
+                'group' => 'Submódulos',
+                'description' => 'Historial de jerarquías policiales del funcionario.',
+                'parent_key' => 'documento_identidad',
+                'columns' => [
+                    ['key' => 'documento_identidad', 'label' => 'documento_identidad', 'required' => true, 'example' => '12345678', 'help' => 'Cédula del funcionario'],
+                    ['key' => 'jerarquia', 'label' => 'jerarquia', 'required' => true, 'example' => 'Inspector', 'help' => 'Nombre en Configuraciones → Cargos (se crea si no existe)'],
+                    ['key' => 'fecha_inicio', 'label' => 'fecha_inicio', 'required' => true, 'example' => '15/03/2020', 'help' => 'YYYY-MM-DD o DD/MM/YYYY'],
+                    ['key' => 'fecha_fin', 'label' => 'fecha_fin', 'required' => false, 'example' => '10/06/2024', 'help' => 'YYYY-MM-DD o DD/MM/YYYY (no aplica si is_actual=1)'],
+                    ['key' => 'is_actual', 'label' => 'is_actual', 'required' => false, 'example' => '1', 'help' => '0 o 1 — marcar como jerarquía actual'],
+                ],
+                'notes' => [
+                    'El funcionario (documento_identidad) debe existir previamente.',
+                    'Si is_actual=1, las demás jerarquías del funcionario pasan a histórico.',
+                    'Si la misma jerarquía con la misma fecha de inicio ya existe, la fila se omite.',
+                ],
+            ],
             'reposos' => [
                 'title' => 'Reposos médicos',
                 'icon' => 'fas fa-medkit',

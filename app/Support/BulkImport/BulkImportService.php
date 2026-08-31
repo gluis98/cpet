@@ -2,12 +2,14 @@
 
 namespace App\Support\BulkImport;
 
+use App\Models\Cargo;
 use App\Models\CargosAdministrativo;
 use App\Models\CatalogoCurso;
 use App\Models\Discapacidade;
 use App\Models\Municipio;
 use App\Models\Oficiale;
 use App\Models\OficialesAcademico;
+use App\Models\OficialesCargo;
 use App\Models\OficialesCurso;
 use App\Models\OficialesFamiliare;
 use App\Models\OficialesSalud;
@@ -171,6 +173,7 @@ class BulkImportService
                         'familiares' => $this->importFamiliar($data),
                         'academia' => $this->importAcademia($data),
                         'cursos' => $this->importCurso($data),
+                        'jerarquias' => $this->importJerarquia($data),
                         'reposos' => $this->importReposo($data),
                         'vacaciones' => $this->importVacacion($data),
                         default => ['status' => 'error', 'message' => 'Módulo no implementado'],
@@ -392,6 +395,54 @@ class BulkImportService
             'fecha_inicio' => $this->date($this->require($d, 'fecha_inicio')),
             'duracion_valor' => (int) $this->require($d, 'duracion_valor'),
             'duracion_tipo' => $duracionTipo,
+        ]);
+
+        return ['status' => 'created'];
+    }
+
+    private function importJerarquia(array $d): array
+    {
+        $oficial = $this->findOficial($this->require($d, 'documento_identidad'));
+        $nombreJerarquia = trim($this->require($d, 'jerarquia'));
+
+        $cargo = Cargo::firstOrCreate(
+            ['nombre_cargo' => $nombreJerarquia],
+            ['nombre_cargo' => $nombreJerarquia]
+        );
+
+        $fechaInicio = $this->date($this->require($d, 'fecha_inicio'));
+        $isActual = in_array((string) ($d['is_actual'] ?? '0'), ['1', 'true', 'Si', 'SI'], true);
+        $fechaFin = null;
+
+        if (! $isActual && filled($d['fecha_fin'] ?? null)) {
+            $fechaFin = $this->date($d['fecha_fin']);
+        }
+
+        $duplicado = OficialesCargo::query()
+            ->where('id_policia', $oficial->id)
+            ->where('id_cargo', $cargo->id)
+            ->whereDate('fecha_inicio', $fechaInicio)
+            ->exists();
+
+        if ($duplicado) {
+            return [
+                'status' => 'skipped',
+                'message' => "Jerarquía {$nombreJerarquia} con la misma fecha de inicio ya existe para {$oficial->documento_identidad}",
+            ];
+        }
+
+        if ($isActual) {
+            OficialesCargo::query()
+                ->where('id_policia', $oficial->id)
+                ->update(['is_actual' => 0]);
+        }
+
+        OficialesCargo::create([
+            'id_policia' => $oficial->id,
+            'id_cargo' => $cargo->id,
+            'fecha_inicio' => $fechaInicio,
+            'fecha_fin' => $fechaFin,
+            'is_actual' => $isActual ? 1 : 0,
         ]);
 
         return ['status' => 'created'];

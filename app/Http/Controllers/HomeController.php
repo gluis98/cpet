@@ -36,6 +36,10 @@ class HomeController extends Controller
         $operativos = \App\Models\Oficiale::where('estatus', 'Operativo')->count();
         $noOperativos = \App\Models\Oficiale::where('estatus', 'No Operativo')->count();
         $jubilados = \App\Models\Oficiale::where('estatus', 'Jubilado')->count();
+
+        $totalPorTipo = $this->countsByTipo();
+        $operativosPorTipo = $this->countsByTipo(fn ($q) => $q->where('estatus', 'Operativo'));
+        $reposoPorTipo = $this->reposoCountsByTipo();
         
         // Funcionarios en reposo (vigentes)
         $funcionariosReposo = \App\Models\OficialesSalud::with('oficiale')
@@ -62,12 +66,72 @@ class HomeController extends Controller
             'leftImagePath' => $this->leftImagePath,
             'totalOfficers' => $totalOfficers,
             'operativos' => $operativos,
+            'totalPorTipo' => $totalPorTipo,
+            'operativosPorTipo' => $operativosPorTipo,
+            'reposoPorTipo' => $reposoPorTipo,
             'noOperativos' => $noOperativos,
             'jubilados' => $jubilados,
             'funcionariosReposo' => $funcionariosReposo,
             'funcionariosServicio' => $funcionariosServicio,
             'notificaciones' => $notificaciones
         ]);
+    }
+
+    /**
+     * @param  callable(\Illuminate\Database\Eloquent\Builder): void|null  $scope
+     * @return array<string, int>
+     */
+    private function countsByTipo(?callable $scope = null): array
+    {
+        $query = \App\Models\Oficiale::query();
+        if ($scope) {
+            $scope($query);
+        }
+
+        $raw = $query
+            ->selectRaw('tipo_funcionario, COUNT(*) as total')
+            ->groupBy('tipo_funcionario')
+            ->pluck('total', 'tipo_funcionario')
+            ->all();
+
+        return $this->normalizeTipoCounts($raw);
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private function reposoCountsByTipo(): array
+    {
+        $raw = \App\Models\OficialesSalud::query()
+            ->whereIn('is_vigente', [1, 2])
+            ->join('oficiales', 'oficiales.id', '=', 'oficiales_salud.id_policia')
+            ->selectRaw('oficiales.tipo_funcionario, COUNT(*) as total')
+            ->groupBy('oficiales.tipo_funcionario')
+            ->pluck('total', 'tipo_funcionario')
+            ->all();
+
+        return $this->normalizeTipoCounts($raw);
+    }
+
+    /**
+     * @param  array<string|int, mixed>  $raw
+     * @return array<string, int>
+     */
+    private function normalizeTipoCounts(array $raw): array
+    {
+        $counts = [];
+        foreach (array_values(\App\Models\Oficiale::TIPOS_FUNCIONARIO) as $tipo) {
+            $counts[$tipo] = (int) ($raw[$tipo] ?? 0);
+        }
+
+        foreach ($raw as $tipo => $total) {
+            $label = (string) $tipo;
+            if (! array_key_exists($label, $counts)) {
+                $counts[$label] = (int) $total;
+            }
+        }
+
+        return $counts;
     }
 
     public function officers()
