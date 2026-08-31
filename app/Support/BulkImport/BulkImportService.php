@@ -532,18 +532,83 @@ class BulkImportService
         }
 
         $str = trim((string) $value);
-
-        // dd/mm/yyyy o d/m/yyyy (Excel en español)
-        if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/', $str, $m)) {
-            return sprintf('%04d-%02d-%02d', (int) $m[3], (int) $m[2], (int) $m[1]);
+        if ($str === '') {
+            throw new \InvalidArgumentException('Fecha vacía');
         }
 
-        // dd-mm-yyyy
-        if (preg_match('/^(\d{1,2})-(\d{1,2})-(\d{4})$/', $str, $m)) {
-            return sprintf('%04d-%02d-%02d', (int) $m[3], (int) $m[2], (int) $m[1]);
+        // dd/mm/yyyy, d/m/yy, o año con dígito extra (ej. 03/08/20012 → 2012)
+        if (preg_match('/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d+)$/', $str, $m)) {
+            $day = (int) $m[1];
+            $month = (int) $m[2];
+            $year = $this->normalizeDateYear($m[3]);
+
+            if (! checkdate($month, $day, $year)) {
+                throw new \InvalidArgumentException("Fecha inválida: {$str}");
+            }
+
+            return sprintf('%04d-%02d-%02d', $year, $month, $day);
         }
 
-        return Carbon::parse($str)->toDateString();
+        if (preg_match('/^(\d{4,})-(\d{1,2})-(\d{1,2})$/', $str, $m)) {
+            $year = $this->normalizeDateYear($m[1]);
+            $month = (int) $m[2];
+            $day = (int) $m[3];
+
+            if (! checkdate($month, $day, $year)) {
+                throw new \InvalidArgumentException("Fecha inválida: {$str}");
+            }
+
+            return sprintf('%04d-%02d-%02d', $year, $month, $day);
+        }
+
+        try {
+            return Carbon::parse($str)->toDateString();
+        } catch (\Throwable) {
+            throw new \InvalidArgumentException("Fecha inválida: {$str}");
+        }
+    }
+
+    private function normalizeDateYear(string $rawYear): int
+    {
+        $year = preg_replace('/\D/', '', $rawYear) ?? '';
+        if ($year === '') {
+            throw new \InvalidArgumentException('Año de fecha inválido');
+        }
+
+        if (strlen($year) === 4) {
+            return (int) $year;
+        }
+
+        if (strlen($year) === 2) {
+            $y = (int) $year;
+
+            return $y >= 50 ? 1900 + $y : 2000 + $y;
+        }
+
+        // Año con dígitos de más (ej. 20012 → 2012): quitar un carácter hasta obtener año válido
+        if (strlen($year) >= 5 && strlen($year) <= 7) {
+            for ($i = 0; $i < strlen($year); $i++) {
+                $candidate = substr($year, 0, $i).substr($year, $i + 1);
+                if (strlen($candidate) === 4) {
+                    $y = (int) $candidate;
+                    if ($y >= 1900 && $y <= 2100) {
+                        return $y;
+                    }
+                }
+            }
+
+            $first = (int) substr($year, 0, 4);
+            if ($first >= 1900 && $first <= 2100) {
+                return $first;
+            }
+
+            $last = (int) substr($year, -4);
+            if ($last >= 1900 && $last <= 2100) {
+                return $last;
+            }
+        }
+
+        throw new \InvalidArgumentException("Año de fecha inválido: {$rawYear}");
     }
 
     private function businessDays(string $inicio, string $fin): int
