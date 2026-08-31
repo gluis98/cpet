@@ -4,6 +4,36 @@ namespace App\Support\BulkImport;
 
 class BulkImportRegistry
 {
+    public static function documentoIdentidadColumn(string $help = 'Cédula del funcionario'): array
+    {
+        return [
+            'key' => 'documento_identidad',
+            'label' => 'documento_identidad',
+            'required' => true,
+            'example' => '12345678',
+            'help' => $help,
+            'aliases' => [
+                'cedula',
+                'cédula',
+                'documento',
+                'ci',
+                'c i',
+                'nro documento',
+                'numero documento',
+                'num documento',
+                'doc identidad',
+                'doc',
+                'documento identidad',
+                'cedula funcionario',
+                'cedula del funcionario',
+                'documento del funcionario',
+                'nro documento identidad',
+                'identificacion',
+                'id funcionario',
+            ],
+        ];
+    }
+
     public static function modules(): array
     {
         return [
@@ -14,7 +44,7 @@ class BulkImportRegistry
                 'description' => 'Alta masiva de funcionarios policiales, administrativos u obreros.',
                 'parent_key' => null,
                 'columns' => [
-                    ['key' => 'documento_identidad', 'label' => 'documento_identidad', 'required' => true, 'example' => '12345678', 'help' => 'Cédula (única)'],
+                    self::documentoIdentidadColumn('Cédula (única)'),
                     ['key' => 'nombre_completo', 'label' => 'nombre_completo', 'required' => true, 'example' => 'Juan Pérez', 'help' => 'Nombre y apellido'],
                     ['key' => 'fecha_nacimiento', 'label' => 'fecha_nacimiento', 'required' => true, 'example' => '15/05/1990', 'help' => 'YYYY-MM-DD o DD/MM/YYYY'],
                     ['key' => 'sexo', 'label' => 'sexo', 'required' => false, 'example' => 'Masculino', 'help' => 'Masculino | Femenino'],
@@ -60,8 +90,9 @@ class BulkImportRegistry
                 'description' => 'Carga de hijos y familiares vinculados a un funcionario existente.',
                 'parent_key' => 'documento_identidad',
                 'columns' => [
-                    ['key' => 'documento_identidad', 'label' => 'documento_identidad', 'required' => true, 'example' => '12345678', 'help' => 'Cédula del funcionario padre'],
-                    ['key' => 'nombre_completo', 'label' => 'nombre_completo', 'required' => true, 'example' => 'María Pérez', 'help' => 'Nombre del familiar'],
+                    self::documentoIdentidadColumn('Cédula del funcionario padre'),
+                    ['key' => 'nombre_completo', 'label' => 'nombre_completo', 'required' => true, 'example' => 'María Pérez', 'help' => 'Nombre del familiar', 'aliases' => ['nombre completo', 'nombre y apellido', 'nombres y apellidos']],
+                    ['key' => 'nombre_familiar', 'label' => 'nombre_familiar', 'required' => false, 'example' => '', 'help' => 'Alternativa si el nombre está en otra columna', 'aliases' => ['nombre del familiar', 'nombre']],
                     ['key' => 'parentesco', 'label' => 'parentesco', 'required' => true, 'example' => 'Hijo(a)', 'help' => 'Padre | Madre | Hijo(a) | Esposo(a) | Conyugue | Union Estable de Hechos'],
                     ['key' => 'fecha_nacimiento', 'label' => 'fecha_nacimiento', 'required' => true, 'example' => '2010-03-20', 'help' => 'YYYY-MM-DD o DD/MM/YYYY'],
                     ['key' => 'sexo', 'label' => 'sexo', 'required' => true, 'example' => 'F', 'help' => 'M o F'],
@@ -85,7 +116,7 @@ class BulkImportRegistry
                 'description' => 'Títulos y grados académicos del funcionario.',
                 'parent_key' => 'documento_identidad',
                 'columns' => [
-                    ['key' => 'documento_identidad', 'label' => 'documento_identidad', 'required' => true, 'example' => '12345678', 'help' => 'Cédula del funcionario'],
+                    self::documentoIdentidadColumn(),
                     ['key' => 'tipo_formacion', 'label' => 'tipo_formacion', 'required' => true, 'example' => 'Licenciatura', 'help' => 'Primaria, Secundaria, Bachillerato, Bachiller en Ciencias, Técnico superior universitario, Licenciatura, Ingeniería, Especialización, Maestría, Doctorado, Post-doctorado'],
                     ['key' => 'anio_graduacion', 'label' => 'anio_graduacion', 'required' => true, 'example' => '2018', 'help' => 'Año 1950–2100'],
                     ['key' => 'titulo', 'label' => 'titulo', 'required' => false, 'example' => 'Informática', 'help' => 'Nombre de la formación'],
@@ -104,7 +135,7 @@ class BulkImportRegistry
                 'description' => 'Cursos, diplomados y talleres del funcionario.',
                 'parent_key' => 'documento_identidad',
                 'columns' => [
-                    ['key' => 'documento_identidad', 'label' => 'documento_identidad', 'required' => true, 'example' => '12345678', 'help' => 'Cédula del funcionario'],
+                    self::documentoIdentidadColumn(),
                     ['key' => 'tipo', 'label' => 'tipo', 'required' => true, 'example' => 'Curso', 'help' => 'Curso | Diplomado | Taller'],
                     ['key' => 'nombre_curso', 'label' => 'nombre_curso', 'required' => true, 'example' => 'Criminalística', 'help' => 'Se busca/crea en catálogo de cursos'],
                     ['key' => 'fecha_inicio', 'label' => 'fecha_inicio', 'required' => true, 'example' => '2022-06-01', 'help' => 'YYYY-MM-DD o DD/MM/YYYY'],
@@ -124,7 +155,7 @@ class BulkImportRegistry
                 'description' => 'Historial de jerarquías policiales del funcionario.',
                 'parent_key' => 'documento_identidad',
                 'columns' => [
-                    ['key' => 'documento_identidad', 'label' => 'documento_identidad', 'required' => true, 'example' => '12345678', 'help' => 'Cédula del funcionario'],
+                    self::documentoIdentidadColumn(),
                     ['key' => 'jerarquia', 'label' => 'jerarquia', 'required' => true, 'example' => 'Inspector', 'help' => 'Nombre en Configuraciones → Cargos (se crea si no existe)'],
                     ['key' => 'fecha_inicio', 'label' => 'fecha_inicio', 'required' => true, 'example' => '15/03/2020', 'help' => 'YYYY-MM-DD o DD/MM/YYYY'],
                     ['key' => 'fecha_fin', 'label' => 'fecha_fin', 'required' => false, 'example' => '10/06/2024', 'help' => 'YYYY-MM-DD o DD/MM/YYYY (no aplica si is_actual=1)'],
@@ -143,7 +174,7 @@ class BulkImportRegistry
                 'description' => 'Solicitudes de reposo médico del funcionario.',
                 'parent_key' => 'documento_identidad',
                 'columns' => [
-                    ['key' => 'documento_identidad', 'label' => 'documento_identidad', 'required' => true, 'example' => '12345678', 'help' => 'Cédula del funcionario'],
+                    self::documentoIdentidadColumn(),
                     ['key' => 'fecha_revision', 'label' => 'fecha_revision', 'required' => true, 'example' => '2026-01-10', 'help' => 'YYYY-MM-DD o DD/MM/YYYY'],
                     ['key' => 'diagnostico', 'label' => 'diagnostico', 'required' => true, 'example' => 'Lumbalgia', 'help' => 'Diagnóstico'],
                     ['key' => 'fecha_reposo_inicio', 'label' => 'fecha_reposo_inicio', 'required' => true, 'example' => '2026-01-11', 'help' => 'YYYY-MM-DD o DD/MM/YYYY'],
@@ -163,15 +194,20 @@ class BulkImportRegistry
                 'description' => 'Solicitudes de vacaciones del funcionario.',
                 'parent_key' => 'documento_identidad',
                 'columns' => [
-                    ['key' => 'documento_identidad', 'label' => 'documento_identidad', 'required' => true, 'example' => '12345678', 'help' => 'Cédula del funcionario'],
-                    ['key' => 'fecha_emision', 'label' => 'fecha_emision', 'required' => true, 'example' => '2026-02-01', 'help' => 'YYYY-MM-DD o DD/MM/YYYY'],
-                    ['key' => 'estatus', 'label' => 'estatus', 'required' => true, 'example' => 'APROBADAS', 'help' => 'APROBADAS | NEGADAS | VENCIDAS | REGLAMENTARIAS | EN PROCESO'],
-                    ['key' => 'fecha_reintegro', 'label' => 'fecha_reintegro', 'required' => false, 'example' => '2026-02-15', 'help' => 'YYYY-MM-DD o DD/MM/YYYY'],
-                    ['key' => 'is_disfrutadas', 'label' => 'is_disfrutadas', 'required' => false, 'example' => '0', 'help' => '0 o 1 (si reintegro ≤ hoy se marca 1)'],
-                    ['key' => 'descripcion', 'label' => 'descripcion', 'required' => false, 'example' => 'Periodo ordinaria', 'help' => 'Descripción'],
+                    self::documentoIdentidadColumn('Cédula del funcionario'),
+                    ['key' => 'fecha_emision', 'label' => 'fecha_emision', 'required' => true, 'example' => '2026-02-01', 'help' => 'YYYY-MM-DD o DD/MM/YYYY', 'aliases' => ['fecha de emision', 'fecha emision', 'fecha inicio', 'fecha desde']],
+                    ['key' => 'fecha_inicio', 'label' => 'fecha_inicio', 'required' => false, 'example' => '', 'help' => 'Alternativa a fecha_emision'],
+                    ['key' => 'fecha_desde', 'label' => 'fecha_desde', 'required' => false, 'example' => '', 'help' => 'Alternativa a fecha_emision'],
+                    ['key' => 'estatus', 'label' => 'estatus', 'required' => true, 'example' => 'APROBADAS', 'help' => 'APROBADAS | NEGADAS | VENCIDAS | REGLAMENTARIAS | EN PROCESO', 'aliases' => ['estado', 'status', 'estatus vacaciones']],
+                    ['key' => 'estado', 'label' => 'estado', 'required' => false, 'example' => '', 'help' => 'Alternativa a estatus'],
+                    ['key' => 'fecha_reintegro', 'label' => 'fecha_reintegro', 'required' => false, 'example' => '2026-02-15', 'help' => 'YYYY-MM-DD o DD/MM/YYYY', 'aliases' => ['fecha de reintegro', 'fecha reintegro', 'fecha fin', 'fecha hasta', 'reintegro']],
+                    ['key' => 'fecha_fin', 'label' => 'fecha_fin', 'required' => false, 'example' => '', 'help' => 'Alternativa a fecha_reintegro'],
+                    ['key' => 'is_disfrutadas', 'label' => 'is_disfrutadas', 'required' => false, 'example' => '0', 'help' => '0 o 1 (si reintegro ≤ hoy se marca 1)', 'aliases' => ['disfrutadas', 'vacaciones disfrutadas']],
+                    ['key' => 'descripcion', 'label' => 'descripcion', 'required' => false, 'example' => 'Periodo ordinaria', 'help' => 'Descripción', 'aliases' => ['observaciones', 'nota', 'detalle']],
                 ],
                 'notes' => [
                     'El estatus se guarda en mayúsculas.',
+                    'Acepta encabezados como "Fecha de emisión", "Cédula", "Estado", etc.',
                 ],
             ],
         ];

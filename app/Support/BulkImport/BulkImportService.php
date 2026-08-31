@@ -119,26 +119,33 @@ class BulkImportService
             return ['ok' => false, 'msj' => 'El archivo no tiene filas de datos.', 'created' => 0, 'skipped' => 0, 'errors' => []];
         }
 
-        $headerRow = array_map(fn ($h) => $this->normalizeHeader((string) $h), $rows[0]);
-        $expected = array_column($module['columns'], 'label');
+        $headerRowIndex = $this->detectHeaderRowIndex($rows, $module);
+        $headerRow = array_map(fn ($h) => $this->normalizeHeader((string) $h), $rows[$headerRowIndex]);
         $map = [];
-        foreach ($expected as $col) {
-            $idx = array_search($this->normalizeHeader($col), $headerRow, true);
-            if ($idx === false) {
-                // permitir columnas opcionales ausentes
-                $def = collect($module['columns'])->firstWhere('label', $col);
-                if ($def && $def['required']) {
+        $maxColumnIndex = 0;
+        $usedIndices = [];
+
+        foreach ($module['columns'] as $columnDef) {
+            $key = $columnDef['key'];
+            $indices = $this->resolveColumnIndices($columnDef, $headerRow, $usedIndices, $rows, $headerRowIndex);
+
+            if ($indices === []) {
+                if ($columnDef['required'] ?? false) {
                     return [
                         'ok' => false,
-                        'msj' => "Falta la columna obligatoria: {$col}",
+                        'msj' => "Falta la columna obligatoria: {$columnDef['label']}",
                         'created' => 0,
                         'skipped' => 0,
                         'errors' => [],
                     ];
                 }
-                $map[$col] = null;
+                $map[$key] = null;
             } else {
-                $map[$col] = $idx;
+                $map[$key] = $indices;
+                foreach ($indices as $idx) {
+                    $usedIndices[] = $idx;
+                    $maxColumnIndex = max($maxColumnIndex, $idx);
+                }
             }
         }
 
@@ -151,8 +158,8 @@ class BulkImportService
 
         DB::beginTransaction();
         try {
-            for ($i = 1; $i < count($rows); $i++) {
-                $raw = $rows[$i];
+            for ($i = $headerRowIndex + 1; $i < count($rows); $i++) {
+                $raw = $this->padRow($rows[$i], $maxColumnIndex + 1);
                 if ($this->rowIsEmpty($raw)) {
                     $emptyRows++;
 
@@ -162,8 +169,8 @@ class BulkImportService
                 $totalRows++;
 
                 $data = [];
-                foreach ($map as $col => $idx) {
-                    $data[$col] = $idx === null ? null : $this->cell($raw[$idx] ?? null);
+                foreach ($map as $key => $indices) {
+                    $data[$key] = $indices === null ? null : $this->readCell($raw, $indices);
                 }
 
                 $line = $i + 1;
@@ -240,7 +247,7 @@ class BulkImportService
 
     private function importFuncionario(array $d): array
     {
-        $doc = $this->require($d, 'documento_identidad');
+        $doc = $this->normalizeDocumento($this->require($d, 'documento_identidad'));
         if (Oficiale::where('documento_identidad', $doc)->exists()) {
             return ['status' => 'skipped', 'message' => "Documento {$doc} ya existe"];
         }
@@ -338,7 +345,7 @@ class BulkImportService
 
         OficialesFamiliare::create([
             'id_policia' => $oficial->id,
-            'nombre_completo' => $this->require($d, 'nombre_completo'),
+            'nombre_completo' => $this->requireAny($d, ['nombre_completo', 'nombre_familiar'], 'nombre_completo'),
             'parentesco' => $this->require($d, 'parentesco'),
             'fecha_nacimiento' => $this->date($this->require($d, 'fecha_nacimiento')),
             'sexo' => $sexo,
@@ -492,20 +499,23 @@ class BulkImportService
 
     private function importVacacion(array $d): array
     {
-        $oficial = $this->findOficial($this->require($d, 'documento_identidad'));
-        $estatus = strtoupper(trim($this->require($d, 'estatus')));
-        $reintegro = ! empty($d['fecha_reintegro']) ? $this->date($d['fecha_reintegro']) : null;
-        $disfrutadas = in_array((string) ($d['is_disfrutadas'] ?? '0'), ['1', 'true', 'Si', 'SI'], true) ? 1 : 0;
+        $oficial = $this->findOficial($this->requireAny($d, ['documento_identidad', 'cedula', 'documento'], 'documento_identidad'));
+        $estatus = strtoupper(trim($this->requireAny($d, ['estatus', 'estado', 'status'], 'estatus')));
+        $fechaEmision = $this->requireAny($d, ['fecha_emision', 'fecha_inicio', 'fecha_desde'], 'fecha_emision');
+        $reintegroRaw = $this->optionalValue($d, ['fecha_reintegro', 'fecha_fin', 'fecha_hasta', 'reintegro']);
+        $reintegro = $reintegroRaw !== null ? $this->date($reintegroRaw) : null;
+        $disfrutadasRaw = $this->optionalValue($d, ['is_disfrutadas', 'disfrutadas', 'vacaciones_disfrutadas']);
+        $disfrutadas = in_array((string) ($disfrutadasRaw ?? '0'), ['1', 'true', 'Si', 'SI'], true) ? 1 : 0;
         if ($reintegro && Carbon::parse($reintegro)->lte(Carbon::today())) {
             $disfrutadas = 1;
         }
 
         OficialesVacacione::create([
             'id_policia' => $oficial->id,
-            'fecha_emision' => $this->date($this->require($d, 'fecha_emision')),
+            'fecha_emision' => $this->date($fechaEmision),
             'fecha_reintegro' => $reintegro,
             'estatus' => $estatus,
-            'descripcion' => $d['descripcion'] ?: null,
+            'descripcion' => $this->optionalValue($d, ['descripcion', 'observaciones', 'nota']) ?: null,
             'is_disfrutadas' => $disfrutadas,
         ]);
 
@@ -551,6 +561,7 @@ class BulkImportService
 
     private function findOficial(string $documento): Oficiale
     {
+        $documento = $this->normalizeDocumento($documento);
         $oficial = Oficiale::where('documento_identidad', $documento)->first();
         if (! $oficial) {
             throw new \InvalidArgumentException("Funcionario con documento {$documento} no encontrado");
@@ -561,12 +572,38 @@ class BulkImportService
 
     private function require(array $d, string $key): string
     {
-        $value = trim((string) ($d[$key] ?? ''));
+        $raw = (string) ($d[$key] ?? '');
+        $value = $this->isDocumentoKey($key)
+            ? $this->normalizeDocumento($raw)
+            : trim($raw);
+
         if ($value === '') {
+            if (! array_key_exists($key, $d)) {
+                throw new \InvalidArgumentException("Campo obligatorio no mapeado: {$key}");
+            }
+
             throw new \InvalidArgumentException("Campo obligatorio vacío: {$key}");
         }
 
         return $value;
+    }
+
+    /**
+     * @param  array<int, string>  $keys
+     */
+    private function requireAny(array $d, array $keys, string $label): string
+    {
+        foreach ($keys as $key) {
+            $raw = (string) ($d[$key] ?? '');
+            $value = $this->isDocumentoKey($key)
+                ? $this->normalizeDocumento($raw)
+                : trim($raw);
+            if ($value !== '') {
+                return $value;
+            }
+        }
+
+        throw new \InvalidArgumentException("Campo obligatorio vacío: {$label}");
     }
 
     private function date(string|int|float $value): string
@@ -677,9 +714,198 @@ class BulkImportService
         return $days;
     }
 
+    /**
+     * @param  array<int, string>  $keys
+     */
+    private function optionalValue(array $d, array $keys): ?string
+    {
+        foreach ($keys as $key) {
+            $value = trim((string) ($d[$key] ?? ''));
+            if ($value !== '') {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    private function resolveColumnIndices(array $columnDef, array $headerRow, array $usedIndices, array $rows, int $headerRowIndex): array
+    {
+        $normalizedCandidates = [];
+        foreach ($this->columnCandidates($columnDef) as $candidate) {
+            $normalized = $this->normalizeHeader($candidate);
+            if ($normalized !== '') {
+                $normalizedCandidates[$normalized] = true;
+            }
+        }
+
+        $matches = [];
+        foreach ($headerRow as $idx => $header) {
+            if ($header !== '' && isset($normalizedCandidates[$header]) && ! in_array($idx, $usedIndices, true)) {
+                $matches[] = $idx;
+            }
+        }
+
+        if ($matches === []) {
+            return [];
+        }
+
+        if ($rows === []) {
+            return $matches;
+        }
+
+        return $this->rankColumnsByFillRate($matches, $rows, $headerRowIndex);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function columnCandidates(array $columnDef): array
+    {
+        return array_values(array_filter([
+            $columnDef['key'] ?? null,
+            $columnDef['label'] ?? null,
+            ...($columnDef['aliases'] ?? []),
+        ], fn ($value) => trim((string) $value) !== ''));
+    }
+
+    /**
+     * @param  array<int, int>  $indices
+     * @return array<int, int>
+     */
+    private function rankColumnsByFillRate(array $indices, array $rows, int $headerRowIndex): array
+    {
+        $sampleLimit = min(count($rows), $headerRowIndex + 21);
+        $scores = [];
+
+        foreach ($indices as $idx) {
+            $filled = 0;
+            for ($i = $headerRowIndex + 1; $i < $sampleLimit; $i++) {
+                $raw = $this->padRow($rows[$i], $idx + 1);
+                if ($this->cell($raw[$idx] ?? null) !== null) {
+                    $filled++;
+                }
+            }
+            $scores[$idx] = $filled;
+        }
+
+        usort($indices, fn ($a, $b) => ($scores[$b] ?? 0) <=> ($scores[$a] ?? 0));
+
+        return $indices;
+    }
+
+    /**
+     * @param  array<int, int>|null  $indices
+     */
+    private function readCell(array $raw, ?array $indices): ?string
+    {
+        if ($indices === null || $indices === []) {
+            return null;
+        }
+
+        foreach ($indices as $idx) {
+            $value = $this->cell($raw[$idx] ?? null);
+            if ($value !== null) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    private function normalizeDocumento(string $documento): string
+    {
+        $documento = trim($documento);
+        if (preg_match('/^[\d.]+e[\d+]+$/i', $documento)) {
+            $documento = sprintf('%.0f', (float) $documento);
+        }
+
+        $digits = preg_replace('/\D+/', '', $documento) ?? '';
+
+        return $digits !== '' ? $digits : $documento;
+    }
+
+    private function isDocumentoKey(string $key): bool
+    {
+        return in_array($key, ['documento_identidad', 'cedula', 'documento', 'ci'], true);
+    }
+
+    private function detectHeaderRowIndex(array $rows, array $module): int
+    {
+        $bestIndex = 0;
+        $bestScore = -1;
+        $limit = min(count($rows), 6);
+
+        for ($i = 0; $i < $limit; $i++) {
+            if ($this->rowIsEmpty($rows[$i])) {
+                continue;
+            }
+
+            $headerRow = array_map(fn ($h) => $this->normalizeHeader((string) $h), $rows[$i]);
+            $score = 0;
+            $used = [];
+
+            foreach ($module['columns'] as $columnDef) {
+                $indices = $this->resolveColumnIndices($columnDef, $headerRow, $used, $rows, $i);
+                if ($indices === []) {
+                    continue;
+                }
+
+                foreach ($indices as $idx) {
+                    $used[] = $idx;
+                }
+                $score += ($columnDef['required'] ?? false) ? 2 : 1;
+            }
+
+            if ($score > $bestScore) {
+                $bestScore = $score;
+                $bestIndex = $i;
+            }
+        }
+
+        return $bestIndex;
+    }
+
+    private function padRow(array $row, int $length): array
+    {
+        for ($i = 0; $i < $length; $i++) {
+            if (! array_key_exists($i, $row)) {
+                $row[$i] = null;
+            }
+        }
+
+        return $row;
+    }
+
     private function normalizeHeader(string $h): string
     {
-        return strtolower(trim(preg_replace('/\s+/', '_', $h) ?? $h));
+        $h = preg_replace('/^\xEF\xBB\xBF/u', '', $h) ?? $h;
+        $h = str_replace("\xc2\xa0", ' ', $h);
+        $h = trim($h);
+        if ($h === '') {
+            return '';
+        }
+
+        $ascii = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $h);
+        if ($ascii !== false) {
+            $h = $ascii;
+        }
+
+        $h = strtolower($h);
+        $h = preg_replace('/[\s\-]+/u', '_', $h) ?? $h;
+        $h = preg_replace('/[^a-z0-9_]/', '', $h) ?? $h;
+        $h = preg_replace('/_+/', '_', $h) ?? $h;
+
+        while (preg_match('/_(de|del|la|el|los|las)_/', $h)) {
+            $h = preg_replace('/_(de|del|la|el|los|las)_/', '_', $h) ?? $h;
+        }
+
+        $h = preg_replace('/_+/', '_', $h) ?? $h;
+
+        return trim($h, '_');
     }
 
     private function cell(mixed $value): ?string
@@ -687,6 +913,11 @@ class BulkImportService
         if ($value === null) {
             return null;
         }
+
+        if (is_object($value) && method_exists($value, 'getPlainText')) {
+            $value = $value->getPlainText();
+        }
+
         if (is_float($value) || is_int($value)) {
             // evitar notación científica en cédulas
             if (floor((float) $value) == $value) {
