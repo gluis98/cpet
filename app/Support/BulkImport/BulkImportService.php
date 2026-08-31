@@ -130,17 +130,32 @@ class BulkImportService
             $indices = $this->resolveColumnIndices($columnDef, $headerRow, $usedIndices, $rows, $headerRowIndex);
 
             if ($indices === []) {
-                if ($columnDef['required'] ?? false) {
+                if (($columnDef['key'] ?? '') === 'documento_identidad') {
+                    $indices = $this->resolveDocumentoFuzzyIndices($headerRow, $usedIndices, $rows, $headerRowIndex);
+                }
+
+                if ($indices === [] && ($columnDef['required'] ?? false)) {
+                    $rawHeaders = array_values(array_filter(array_map(
+                        fn ($h) => trim((string) $h),
+                        $rows[$headerRowIndex] ?? []
+                    )));
+
                     return [
                         'ok' => false,
-                        'msj' => "Falta la columna obligatoria: {$columnDef['label']}",
+                        'msj' => "Falta la columna obligatoria: {$columnDef['label']}. Encabezados detectados en fila ".($headerRowIndex + 1).': '.implode(' | ', $rawHeaders),
                         'created' => 0,
                         'skipped' => 0,
                         'errors' => [],
                     ];
                 }
-                $map[$key] = null;
-            } else {
+
+                if ($indices === []) {
+                    $map[$key] = null;
+
+                    continue;
+                }
+            }
+            if ($indices !== []) {
                 $map[$key] = $indices;
                 foreach ($indices as $idx) {
                     $usedIndices[] = $idx;
@@ -761,6 +776,43 @@ class BulkImportService
     }
 
     /**
+     * @return array<int, int>
+     */
+    private function resolveDocumentoFuzzyIndices(array $headerRow, array $usedIndices, array $rows, int $headerRowIndex): array
+    {
+        $matches = [];
+
+        foreach ($headerRow as $idx => $header) {
+            if ($header === '' || in_array($idx, $usedIndices, true)) {
+                continue;
+            }
+
+            if ($this->headerLooksLikeDocumento($header)) {
+                $matches[] = $idx;
+            }
+        }
+
+        if ($matches === []) {
+            return [];
+        }
+
+        return $this->rankColumnsByFillRate($matches, $rows, $headerRowIndex);
+    }
+
+    private function headerLooksLikeDocumento(string $header): bool
+    {
+        if (in_array($header, ['ci', 'doc'], true)) {
+            return true;
+        }
+
+        if (preg_match('/_(nombre|parentesco|fecha|sexo|telefono|direccion|edad|correo|estatus)/', $header)) {
+            return false;
+        }
+
+        return (bool) preg_match('/(cedula|documento|identidad|identificacion)/', $header);
+    }
+
+    /**
      * @return array<int, string>
      */
     private function columnCandidates(array $columnDef): array
@@ -850,6 +902,9 @@ class BulkImportService
 
             foreach ($module['columns'] as $columnDef) {
                 $indices = $this->resolveColumnIndices($columnDef, $headerRow, $used, $rows, $i);
+                if ($indices === [] && ($columnDef['key'] ?? '') === 'documento_identidad') {
+                    $indices = $this->resolveDocumentoFuzzyIndices($headerRow, $used, $rows, $i);
+                }
                 if ($indices === []) {
                     continue;
                 }
@@ -863,6 +918,20 @@ class BulkImportService
             if ($score > $bestScore) {
                 $bestScore = $score;
                 $bestIndex = $i;
+            }
+        }
+
+        if ($bestScore <= 0) {
+            for ($i = 0; $i < $limit; $i++) {
+                if ($this->rowIsEmpty($rows[$i])) {
+                    continue;
+                }
+
+                $filled = count(array_filter($rows[$i], fn ($cell) => trim((string) $cell) !== ''));
+                if ($filled > $bestScore) {
+                    $bestScore = $filled;
+                    $bestIndex = $i;
+                }
             }
         }
 
@@ -889,11 +958,7 @@ class BulkImportService
             return '';
         }
 
-        $ascii = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $h);
-        if ($ascii !== false) {
-            $h = $ascii;
-        }
-
+        $h = $this->foldAccents($h);
         $h = strtolower($h);
         $h = preg_replace('/[\s\-]+/u', '_', $h) ?? $h;
         $h = preg_replace('/[^a-z0-9_]/', '', $h) ?? $h;
@@ -906,6 +971,36 @@ class BulkImportService
         $h = preg_replace('/_+/', '_', $h) ?? $h;
 
         return trim($h, '_');
+    }
+
+    private function foldAccents(string $value): string
+    {
+        if (class_exists(\Transliterator::class)) {
+            $transliterated = \Transliterator::create('Any-Latin; Latin-ASCII')->transliterate($value);
+            if (is_string($transliterated) && $transliterated !== '') {
+                return $transliterated;
+            }
+        }
+
+        $converted = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+        if ($converted !== false && trim($converted) !== '') {
+            return $converted;
+        }
+
+        return strtr($value, [
+            'Á' => 'A', 'À' => 'A', 'Ä' => 'A', 'Â' => 'A', 'Ã' => 'A',
+            'É' => 'E', 'È' => 'E', 'Ë' => 'E', 'Ê' => 'E',
+            'Í' => 'I', 'Ì' => 'I', 'Ï' => 'I', 'Î' => 'I',
+            'Ó' => 'O', 'Ò' => 'O', 'Ö' => 'O', 'Ô' => 'O', 'Õ' => 'O',
+            'Ú' => 'U', 'Ù' => 'U', 'Ü' => 'U', 'Û' => 'U',
+            'Ñ' => 'N', 'Ç' => 'C',
+            'á' => 'a', 'à' => 'a', 'ä' => 'a', 'â' => 'a', 'ã' => 'a',
+            'é' => 'e', 'è' => 'e', 'ë' => 'e', 'ê' => 'e',
+            'í' => 'i', 'ì' => 'i', 'ï' => 'i', 'î' => 'i',
+            'ó' => 'o', 'ò' => 'o', 'ö' => 'o', 'ô' => 'o', 'õ' => 'o',
+            'ú' => 'u', 'ù' => 'u', 'ü' => 'u', 'û' => 'u',
+            'ñ' => 'n', 'ç' => 'c',
+        ]);
     }
 
     private function cell(mixed $value): ?string
