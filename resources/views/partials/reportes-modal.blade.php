@@ -531,9 +531,9 @@
                             <div class="reportes-panel__section" data-report-panel="familiares">
                                 <form action="{{ route('report.officers.family_members') }}" method="GET" target="_blank">
                                     <div class="form-group">
-                                        <label for="rep_parentesco">Parentesco <span class="text-danger">*</span></label>
-                                        <select class="form-control" name="parentesco" id="rep_parentesco" required>
-                                            <option value="">--- SELECCIONE ---</option>
+                                        <label for="rep_parentesco">Parentesco</label>
+                                        <select class="form-control" name="parentesco" id="rep_parentesco">
+                                            <option value="">Todos</option>
                                             <option value="Padre">Padre</option>
                                             <option value="Madre">Madre</option>
                                             <option value="Hijo(a)">Hijo(a)</option>

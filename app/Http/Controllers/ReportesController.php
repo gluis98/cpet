@@ -131,12 +131,22 @@ class ReportesController extends Controller
     public function family_members(Request $request)
     {
         $query = Oficiale::query()
-            ->with(['oficiales_familiares' => fn ($q) => $this->applyFamiliaresReportFilters($q, $request)])
-            ->whereHas('oficiales_familiares', fn ($q) => $this->applyFamiliaresReportFilters($q, $request));
+            ->with([
+                'oficiales_familiares' => fn ($q) => $this->applyFamiliaresReportFilters($q, $request),
+                'oficiales_familiares.discapacidade',
+            ])
+            ->whereHas('oficiales_familiares', fn ($q) => $this->applyFamiliaresReportFilters($q, $request))
+            ->orderBy('nombre_completo');
 
         $oficiales = $query->get();
+        $totalFamiliares = $oficiales->sum(fn ($o) => $o->oficiales_familiares->count());
 
-        return view('admin.reports.familly', compact('oficiales'));
+        return view('admin.reports.familly', [
+            'oficiales' => $oficiales,
+            'filtros' => $this->describeFamiliaresFilters($request),
+            'totalFamiliares' => $totalFamiliares,
+            'entidad' => $this->entidad(),
+        ]);
     }
 
     private function applyFamiliaresReportFilters($query, Request $request): void
@@ -148,46 +158,78 @@ class ReportesController extends Controller
         if ($request->filled('fecha_nacimiento_inicio') || $request->filled('fecha_nacimiento_fin')) {
             $startDate = $request->filled('fecha_nacimiento_inicio')
                 ? $request->fecha_nacimiento_inicio
-                : '2015-01-01';
+                : '1900-01-01';
 
             $endDate = $request->filled('fecha_nacimiento_fin')
                 ? $request->fecha_nacimiento_fin
                 : now()->format('Y-m-d');
 
-            if (strtotime($startDate) < strtotime('2015-01-01')) {
-                $startDate = '2015-01-01';
+            if (strtotime($startDate) > strtotime($endDate)) {
+                [$startDate, $endDate] = [$endDate, $startDate];
             }
 
-            $query->whereBetween('fecha_nacimiento', [$startDate, $endDate])
-                ->where('fecha_nacimiento', '>=', '2015-01-01');
+            $query->whereNotNull('fecha_nacimiento')
+                ->whereDate('fecha_nacimiento', '>=', $startDate)
+                ->whereDate('fecha_nacimiento', '<=', $endDate);
         }
 
         if ($request->filled('edad_min') || $request->filled('edad_max')) {
-            $edadMin = $request->filled('edad_min') ? (int) $request->edad_min : null;
-            $edadMax = $request->filled('edad_max') ? (int) $request->edad_max : null;
+            $edadMin = $request->filled('edad_min') ? max(0, (int) $request->edad_min) : null;
+            $edadMax = $request->filled('edad_max') ? max(0, (int) $request->edad_max) : null;
+
+            if ($edadMin !== null && $edadMax !== null && $edadMin > $edadMax) {
+                [$edadMin, $edadMax] = [$edadMax, $edadMin];
+            }
 
             $query->where(function ($q) use ($edadMin, $edadMax) {
-                $q->where(function ($dateQ) use ($edadMin, $edadMax) {
-                    $dateQ->whereNotNull('fecha_nacimiento');
+                $q->where(function ($sub) use ($edadMin, $edadMax) {
+                    $sub->whereNotNull('fecha_nacimiento');
 
                     if ($edadMin !== null) {
-                        $dateQ->whereDate('fecha_nacimiento', '<=', Carbon::today()->subYears($edadMin));
+                        $sub->whereRaw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) >= ?', [$edadMin]);
                     }
                     if ($edadMax !== null) {
-                        $dateQ->whereDate('fecha_nacimiento', '>', Carbon::today()->subYears($edadMax + 1));
+                        $sub->whereRaw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) <= ?', [$edadMax]);
                     }
-                })->orWhere(function ($edadQ) use ($edadMin, $edadMax) {
-                    $edadQ->whereNull('fecha_nacimiento')->whereNotNull('edad');
+                })->orWhere(function ($sub) use ($edadMin, $edadMax) {
+                    $sub->whereNull('fecha_nacimiento')->whereNotNull('edad');
 
                     if ($edadMin !== null) {
-                        $edadQ->where('edad', '>=', $edadMin);
+                        $sub->where('edad', '>=', $edadMin);
                     }
                     if ($edadMax !== null) {
-                        $edadQ->where('edad', '<=', $edadMax);
+                        $sub->where('edad', '<=', $edadMax);
                     }
                 });
             });
         }
+    }
+
+    private function describeFamiliaresFilters(Request $request): array
+    {
+        $labels = [];
+
+        if ($request->filled('parentesco')) {
+            $labels[] = 'Parentesco: '.$request->parentesco;
+        }
+        if ($request->filled('fecha_nacimiento_inicio')) {
+            $labels[] = 'Nacimiento desde: '.Carbon::parse($request->fecha_nacimiento_inicio)->format('d/m/Y');
+        }
+        if ($request->filled('fecha_nacimiento_fin')) {
+            $labels[] = 'Nacimiento hasta: '.Carbon::parse($request->fecha_nacimiento_fin)->format('d/m/Y');
+        }
+        if ($request->filled('edad_min') && $request->filled('edad_max') && (int) $request->edad_min === (int) $request->edad_max) {
+            $labels[] = 'Edad: '.(int) $request->edad_min.' años';
+        } else {
+            if ($request->filled('edad_min')) {
+                $labels[] = 'Edad desde: '.(int) $request->edad_min.' años';
+            }
+            if ($request->filled('edad_max')) {
+                $labels[] = 'Edad hasta: '.(int) $request->edad_max.' años';
+            }
+        }
+
+        return $labels;
     }
 
     public function sizes(Request $request)
