@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CargosAdministrativo;
+use App\Models\CentroVotacion;
 use App\Models\Oficiale;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -55,6 +56,7 @@ class OfficerFormController extends Controller
         $slug = array_search($tipoFuncionario, Oficiale::TIPOS_FUNCIONARIO, true) ?: 'policial';
         $data = $this->validated($request);
         $data['tipo_funcionario'] = $tipoFuncionario;
+        $this->syncCentroVotacionText($data);
 
         $oficial = Oficiale::create($data);
         $this->storePhoto($request, $oficial);
@@ -87,6 +89,7 @@ class OfficerFormController extends Controller
         $oficial = Oficiale::findOrFail($id);
         $data = $this->validated($request);
         $data['tipo_funcionario'] = $tipoFuncionario;
+        $this->syncCentroVotacionText($data);
 
         $oficial->update($data);
         $this->storePhoto($request, $oficial);
@@ -109,6 +112,7 @@ class OfficerFormController extends Controller
             'oficiales_cargos.cargo',
             'cargos_administrativo',
             'parroquia.municipio',
+            'centro_votacion_catalogo',
             'oficiales_academicos' => function ($q) {
                 $q->orderByRaw('fecha_fin IS NULL')
                     ->orderByDesc('fecha_fin')
@@ -173,6 +177,7 @@ class OfficerFormController extends Controller
             'oficiales_cargos.cargo',
             'cargos_administrativo',
             'parroquia.municipio',
+            'centro_votacion_catalogo',
             'oficiales_academicos' => function ($q) {
                 $q->orderByRaw('fecha_fin IS NULL')
                     ->orderByDesc('fecha_fin')
@@ -204,6 +209,7 @@ class OfficerFormController extends Controller
             'tipos_conduccion' => ['nullable', 'array'],
             'tipos_conduccion.*' => ['string', 'in:Vehículo,Moto,Jack,Grúa'],
             'centro_votacion' => ['nullable', 'string'],
+            'centro_votacion_id' => ['nullable', 'integer', 'exists:centros_votacion,id'],
             'parroquia_id' => ['nullable', 'integer', 'exists:parroquias,id'],
             'numero_placa' => ['nullable', 'string', 'max:255'],
             'fecha_ingreso' => ['required', 'date'],
@@ -223,7 +229,7 @@ class OfficerFormController extends Controller
             'fotografia' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        foreach (['cargo_administrativo_id', 'parroquia_id'] as $fk) {
+        foreach (['cargo_administrativo_id', 'parroquia_id', 'centro_votacion_id'] as $fk) {
             if (empty($data[$fk])) {
                 $data[$fk] = null;
             }
@@ -248,6 +254,16 @@ class OfficerFormController extends Controller
         }
 
         return $data;
+    }
+
+    private function syncCentroVotacionText(array &$data): void
+    {
+        if (! empty($data['centro_votacion_id'])) {
+            $centro = CentroVotacion::find($data['centro_votacion_id']);
+            $data['centro_votacion'] = $centro?->nombre;
+        } elseif (empty($data['centro_votacion'])) {
+            $data['centro_votacion'] = null;
+        }
     }
 
     private function storePhoto(Request $request, Oficiale $oficial): void

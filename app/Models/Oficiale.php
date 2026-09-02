@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $estatus
  * @property string|null $numero_placa
  * @property int|null $parroquia_id
+ * @property int|null $centro_votacion_id
  * @property string|null $fotografia
  * @property string|null $centro_votacion
  * @property string|null $direccion_centro
@@ -62,6 +63,7 @@ class Oficiale extends Model
 		'fecha_nacimiento' => 'datetime',
 		'fecha_ingreso' => 'datetime',
 		'parroquia_id' => 'int',
+		'centro_votacion_id' => 'int',
 		'sabe_conducir' => 'boolean',
 		'tipos_conduccion' => 'array',
 	];
@@ -95,6 +97,7 @@ class Oficiale extends Model
 		'estatus',
 		'numero_placa',
 		'parroquia_id',
+		'centro_votacion_id',
 		'fotografia',
 		'centro_votacion',
 		'direccion_centro',
@@ -170,6 +173,11 @@ class Oficiale extends Model
 	public function parroquia()
 	{
 		return $this->belongsTo(Parroquia::class);
+	}
+
+	public function centro_votacion_catalogo()
+	{
+		return $this->belongsTo(CentroVotacion::class, 'centro_votacion_id');
 	}
 
 	public function cargos_administrativo()

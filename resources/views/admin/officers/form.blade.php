@@ -348,17 +348,36 @@
         var estadoTrujilloId = @json(\App\Models\Municipio::ESTADO_TRUJILLO_ID);
         var selectedMunicipioId = @json(old('municipio_id', optional($oficial->parroquia)->municipio_id));
         var selectedParroquiaId = @json(old('parroquia_id', $oficial->parroquia_id));
+        var selectedCentroVotacionId = @json(old('centro_votacion_id', $oficial->centro_votacion_id));
+
+        function loadCentrosVotacion(parroquiaId, selectedId) {
+            if (!parroquiaId) {
+                $('#centro_votacion_id').html($('<option>', { value: '', text: '--- SELECCIONE ---' }));
+                return $.when();
+            }
+            return CpetCatalog.loadSelect(
+                $('#centro_votacion_id'),
+                apiBase + '/centros-votacion?parroquia_id=' + encodeURIComponent(parroquiaId),
+                selectedId
+            );
+        }
 
         function loadParroquias(municipioId, selectedId) {
             if (!municipioId) {
                 $('#parroquia_id').html($('<option>', { value: '', text: '--- SELECCIONE ---' }));
+                $('#centro_votacion_id').html($('<option>', { value: '', text: '--- SELECCIONE ---' }));
                 return $.when();
             }
             return CpetCatalog.loadSelect(
                 $('#parroquia_id'),
                 apiBase + '/parroquias?municipio_id=' + encodeURIComponent(municipioId),
                 selectedId
-            );
+            ).then(function () {
+                var parroquiaId = selectedId || $('#parroquia_id').val();
+                if (parroquiaId) {
+                    return loadCentrosVotacion(parroquiaId, selectedCentroVotacionId);
+                }
+            });
         }
 
         CpetCatalog.loadSelect(
@@ -372,7 +391,12 @@
         });
 
         $('#municipio_id').on('change', function () {
+            selectedCentroVotacionId = null;
             loadParroquias($(this).val(), null);
+        });
+
+        $('#parroquia_id').on('change', function () {
+            loadCentrosVotacion($(this).val(), null);
         });
 
         $('#btn-add-municipio').on('click', function () {
@@ -386,6 +410,7 @@
                 successMessage: 'Municipio agregado',
                 onAdded: function () {
                     $('#parroquia_id').html($('<option>', { value: '', text: '--- SELECCIONE ---' }));
+                    $('#centro_votacion_id').html($('<option>', { value: '', text: '--- SELECCIONE ---' }));
                 },
             });
         });
@@ -404,6 +429,27 @@
                 $select: $('#parroquia_id'),
                 extraFormData: { municipio_id: municipioId },
                 successMessage: 'Parroquia agregada',
+                onAdded: function () {
+                    loadCentrosVotacion($('#parroquia_id').val(), null);
+                },
+            });
+        });
+
+        $('#btn-add-centro-votacion').on('click', function () {
+            var parroquiaId = $('#parroquia_id').val();
+            var municipioId = $('#municipio_id').val();
+            if (!parroquiaId) {
+                Swal.fire({ icon: 'warning', title: 'Seleccione municipio y parroquia primero' });
+                return;
+            }
+            CpetCatalog.promptAdd({
+                title: 'Nuevo centro de votación',
+                placeholder: 'Ejemplo: Escuela Bolivariana…',
+                postUrl: apiBase + '/centros-votacion',
+                fieldName: 'descripcion',
+                $select: $('#centro_votacion_id'),
+                extraFormData: { parroquia_id: parroquiaId, municipio_id: municipioId },
+                successMessage: 'Centro de votación agregado',
             });
         });
     }

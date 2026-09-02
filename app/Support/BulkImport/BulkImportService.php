@@ -5,6 +5,7 @@ namespace App\Support\BulkImport;
 use App\Models\Cargo;
 use App\Models\CargosAdministrativo;
 use App\Models\CatalogoCurso;
+use App\Models\CentroVotacion;
 use App\Models\Discapacidade;
 use App\Models\Municipio;
 use App\Models\Oficiale;
@@ -198,6 +199,7 @@ class BulkImportService
                 try {
                     $result = match ($moduleKey) {
                         'funcionarios' => $this->importFuncionario($data),
+                        'cargos_funcionarios' => $this->importCargoFuncionario($data),
                         'familiares' => $this->importFamiliar($data),
                         'academia' => $this->importAcademia($data),
                         'cursos' => $this->importCurso($data),
@@ -310,6 +312,22 @@ class BulkImportService
             throw new \InvalidArgumentException("sexo inválido: {$sexo}");
         }
 
+        $parroquiaId = $this->resolveParroquiaId($d['municipio'] ?? null, $d['parroquia'] ?? null);
+        $centroNombre = trim((string) ($d['centro_votacion'] ?? ''));
+        $centroVotacionId = null;
+        if ($centroNombre !== '') {
+            $centroVotacionId = $this->resolveCentroVotacionId(
+                $d['municipio'] ?? null,
+                $d['parroquia'] ?? null,
+                $centroNombre
+            );
+            $centro = CentroVotacion::find($centroVotacionId);
+            if ($centro) {
+                $centroNombre = $centro->nombre;
+                $parroquiaId = $parroquiaId ?? $centro->parroquia_id;
+            }
+        }
+
         Oficiale::create([
             'documento_identidad' => $doc,
             'nombre_completo' => $this->require($d, 'nombre_completo'),
@@ -325,8 +343,9 @@ class BulkImportService
             'tipo_sangre' => $d['tipo_sangre'] ?: null,
             'estado_civil' => $d['estado_civil'] ?: null,
             'direccion' => $d['direccion'] ?: null,
-            'centro_votacion' => $d['centro_votacion'] ?: null,
-            'parroquia_id' => $this->resolveParroquiaId($d['municipio'] ?? null, $d['parroquia'] ?? null),
+            'centro_votacion' => $centroNombre !== '' ? $centroNombre : null,
+            'centro_votacion_id' => $centroVotacionId,
+            'parroquia_id' => $parroquiaId,
             'tipo_vivienda' => $vivienda,
             'direccion_vivienda' => ($vivienda === 'No posee' || ! $vivienda) ? null : ($d['direccion_vivienda'] ?: null),
             'sabe_conducir' => $sabe,
@@ -341,6 +360,21 @@ class BulkImportService
             'talla_falda' => $d['talla_falda'] ?: null,
             'talla_gorra' => $d['talla_gorra'] ?: null,
         ]);
+
+        return ['status' => 'created'];
+    }
+
+    private function importCargoFuncionario(array $d): array
+    {
+        $oficial = $this->findOficial($this->require($d, 'documento_identidad'));
+        $cargoNombre = trim($this->require($d, 'cargo'));
+
+        $cargo = CargosAdministrativo::firstOrCreate(
+            ['nombre_cargo' => $cargoNombre],
+            ['nombre_cargo' => $cargoNombre]
+        );
+
+        $oficial->update(['cargo_administrativo_id' => $cargo->id]);
 
         return ['status' => 'created'];
     }
@@ -578,6 +612,31 @@ class BulkImportService
         }
 
         return (int) $par->id;
+    }
+
+    private function resolveCentroVotacionId(?string $municipio, ?string $parroquia, string $nombre): int
+    {
+        $nombre = trim($nombre);
+        if ($nombre === '') {
+            throw new \InvalidArgumentException('centro_votacion vacío');
+        }
+
+        $parroquiaId = $this->resolveParroquiaId($municipio, $parroquia);
+        if (! $parroquiaId) {
+            throw new \InvalidArgumentException('municipio y parroquia son obligatorios para registrar centro_votacion');
+        }
+
+        $par = Parroquia::findOrFail($parroquiaId);
+        $centro = CentroVotacion::firstOrCreate(
+            ['nombre' => $nombre, 'parroquia_id' => $parroquiaId],
+            [
+                'nombre' => $nombre,
+                'parroquia_id' => $parroquiaId,
+                'municipio_id' => $par->municipio_id,
+            ]
+        );
+
+        return (int) $centro->id;
     }
 
     private function findOficial(string $documento): Oficiale

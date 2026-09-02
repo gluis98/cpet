@@ -316,6 +316,62 @@ class CatalogosController extends Controller
         ], 201);
     }
 
+    /* ---------- Centros de votación ---------- */
+
+    public function centrosVotacionIndex(Request $request)
+    {
+        $parroquiaId = (int) $request->input('parroquia_id', 0);
+        $municipioId = (int) $request->input('municipio_id', 0);
+
+        $query = \App\Models\CentroVotacion::query()->orderBy('nombre');
+
+        if ($parroquiaId > 0) {
+            $query->where('parroquia_id', $parroquiaId);
+        } elseif ($municipioId > 0) {
+            $query->where('municipio_id', $municipioId);
+        } else {
+            return response()->json([], 200);
+        }
+
+        $items = $query->get(['id', 'nombre'])
+            ->map(fn ($c) => $this->catalogItem($c->id, $c->nombre));
+
+        return response()->json($items, 200);
+    }
+
+    public function centrosVotacionStore(Request $request)
+    {
+        $nombre = $this->descripcionFromRequest($request);
+        $parroquiaId = (int) $request->input('parroquia_id', 0);
+        $municipioId = (int) $request->input('municipio_id', 0);
+
+        if ($parroquiaId <= 0) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'parroquia_id' => 'Seleccione una parroquia antes de agregar el centro de votación.',
+            ]);
+        }
+
+        $parroquia = \App\Models\Parroquia::findOrFail($parroquiaId);
+        if ($municipioId <= 0) {
+            $municipioId = (int) $parroquia->municipio_id;
+        }
+
+        $item = \App\Models\CentroVotacion::firstOrCreate(
+            ['nombre' => $nombre, 'parroquia_id' => $parroquiaId],
+            [
+                'nombre' => $nombre,
+                'parroquia_id' => $parroquiaId,
+                'municipio_id' => $municipioId,
+            ]
+        );
+
+        return response()->json([
+            'msj' => 'Centro de votación registrado.',
+            'centro_votacion' => $item,
+            'item' => $this->catalogItem($item->id, $item->nombre),
+        ], 201);
+    }
+
     private function catalogItem(int $id, string $nombre): array
     {
         return [

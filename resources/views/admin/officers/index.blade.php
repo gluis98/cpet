@@ -2,6 +2,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('vendor/dropzone/dropzone.min.css') }}">
+<link rel="stylesheet" href="{{ public_asset('css/cpet-file-gallery.css') }}">
 <style>
     #officers-table, #officers-table_wrapper, .dataTables_wrapper, table.dataTable {
         width: 100% !important;
@@ -106,7 +107,7 @@
                 </div>
                 <form class="dropzone" id="myDropzone" method="POST"></form>
                 <hr>
-                <div class="row" id="archivos-index"></div>
+                <div class="row cpet-file-gallery" id="archivos-index"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -177,10 +178,14 @@
 
 @section('scripts')
 <script src="{{ asset('vendor/dropzone/dropzone.min.js') }}"></script>
+<script src="{{ public_asset('js/cpet-file-gallery.js') }}"></script>
 <script>
     Dropzone.autoDiscover = false;
     let officersTable;
     let id = '';
+    let officerDropzone = null;
+    const storageBase = @json(public_asset('storage'));
+    const filesApiBase = @json(url('api/officers/files'));
     let currentEstatus = '';
     const tipoFuncionario = @json($tipoFuncionario);
     const tipoSlug = @json($tipo);
@@ -382,58 +387,38 @@
 
         $(document).on('click', '.files', function () {
             id = $(this).attr('data-id');
-            if (!Dropzone.instances.length) {
-                new Dropzone('#myDropzone', {
-                    url: '{{ url('api/officers/files/add-files') }}/' + id,
-                    method: 'POST',
-                    paramName: 'archivos',
-                    maxFilesize: 2,
-                    acceptedFiles: '.jpg,.jpeg,.png',
-                    dictDefaultMessage: 'Arrastra los archivos aquí para subirlos',
-                    success: function () { index_archivos(id); }
-                });
+            if (officerDropzone) {
+                officerDropzone.destroy();
+                officerDropzone = null;
             }
+            officerDropzone = new Dropzone('#myDropzone', {
+                url: filesApiBase + '/add-files/' + id,
+                method: 'POST',
+                paramName: 'archivos',
+                maxFilesize: 10,
+                acceptedFiles: '.jpg,.jpeg,.png,.pdf',
+                dictDefaultMessage: 'Arrastra los archivos aquí para subirlos',
+                success: function () { index_archivos(id); }
+            });
             $('#modal-archivos').modal('show');
             index_archivos(id);
-        });
-
-        $(document).on('click', '.delete-file', function (e) {
-            e.preventDefault();
-            const fileId = $(this).data('id');
-            const formData = new FormData();
-            formData.append('_method', 'DELETE');
-            Swal.fire({
-                title: '¿Estás seguro?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (!result.isConfirmed) return;
-                fetch('{{ url('api/officers/files') }}/' + fileId, { method: 'POST', body: formData })
-                    .then(r => r.json())
-                    .then(data => {
-                        Swal.fire('Eliminado', data.msj, 'success');
-                        index_archivos(id);
-                    });
-            });
         });
     });
 
     function index_archivos(officerId) {
-        fetch('{{ url('api/officers/files/index') }}/' + (officerId || id))
+        fetch(filesApiBase + '/index/' + (officerId || id))
             .then(r => r.json())
             .then(data => {
-                let html = '';
-                (data || []).forEach(file => {
-                    html += `<div class="col-md-3 mb-3 text-center">
-                        <img src="storage/${file.archivo_url || file.archivo}" class="img-thumbnail" style="height:100px;object-fit:cover;">
-                        <button class="btn btn-sm btn-danger delete-file mt-2" data-id="${file.id}">Eliminar</button>
-                    </div>`;
+                CpetFileGallery.render('#archivos-index', data || [], {
+                    storageBase: storageBase,
+                    contextId: officerId || id,
+                    deleteUrl: function (fileId) { return filesApiBase + '/' + fileId; },
+                    onDeleted: function () { index_archivos(officerId || id); }
                 });
-                $('#archivos-index').html(html || '<div class="col-12 text-muted">Sin archivos</div>');
             })
-            .catch(() => $('#archivos-index').html('<div class="col-12 text-muted">Sin archivos</div>'));
+            .catch(function () {
+                $('#archivos-index').html('<div class="col-12 text-muted text-center py-3">Sin archivos</div>');
+            });
     }
 </script>
 @endsection

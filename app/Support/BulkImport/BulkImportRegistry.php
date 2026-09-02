@@ -66,7 +66,7 @@ class BulkImportRegistry
                     ['key' => 'tipo_sangre', 'label' => 'tipo_sangre', 'required' => false, 'example' => 'O+', 'help' => 'A+/A-/B+/B-/AB+/AB-/O+/O-'],
                     ['key' => 'estado_civil', 'label' => 'estado_civil', 'required' => false, 'example' => 'Soltero', 'help' => 'Estado civil'],
                     ['key' => 'direccion', 'label' => 'direccion', 'required' => false, 'example' => 'Calle 1', 'help' => 'Dirección'],
-                    ['key' => 'centro_votacion', 'label' => 'centro_votacion', 'required' => false, 'example' => 'Escuela X', 'help' => 'Centro de votación'],
+                    ['key' => 'centro_votacion', 'label' => 'centro_votacion', 'required' => false, 'example' => 'Escuela X', 'help' => 'Centro de votación (requiere municipio y parroquia)'],
                     ['key' => 'municipio', 'label' => 'municipio', 'required' => false, 'example' => 'Valera', 'help' => 'Municipio del centro de votación (Estado Trujillo)'],
                     ['key' => 'parroquia', 'label' => 'parroquia', 'required' => false, 'example' => 'La Beatriz', 'help' => 'Parroquia del centro de votación'],
                     ['key' => 'tipo_vivienda', 'label' => 'tipo_vivienda', 'required' => false, 'example' => 'Propia', 'help' => 'Propia | Alquilada | No posee'],
@@ -89,6 +89,22 @@ class BulkImportRegistry
                     'Las fechas aceptan formato DD/MM/YYYY (Excel en español) o YYYY-MM-DD.',
                     'numero_placa es opcional; si está vacío se guardará como Sin Credencial Asignada.',
                     'El campo cargo debe coincidir con un registro de Configuraciones → Cargos administrativos (o se crea).',
+                ],
+            ],
+            'cargos_funcionarios' => [
+                'title' => 'Cargos administrativos',
+                'icon' => 'fas fa-briefcase',
+                'group' => 'Submódulos',
+                'description' => 'Asignar o actualizar el cargo administrativo de funcionarios existentes.',
+                'parent_key' => 'documento_identidad',
+                'columns' => [
+                    self::documentoIdentidadColumn('Cédula del funcionario'),
+                    ['key' => 'cargo', 'label' => 'cargo', 'required' => true, 'example' => 'SECRETARIO I', 'help' => 'Nombre en Configuraciones → Cargos administrativos'],
+                ],
+                'notes' => [
+                    'El funcionario (documento_identidad) debe existir previamente.',
+                    'Actualiza cargo_administrativo_id del funcionario.',
+                    'Si el cargo no existe en el catálogo, se crea automáticamente.',
                 ],
             ],
             'familiares' => [
@@ -118,10 +134,10 @@ class BulkImportRegistry
                 ],
             ],
             'academia' => [
-                'title' => 'Formación académica',
+                'title' => 'Nivel académico',
                 'icon' => 'fas fa-graduation-cap',
                 'group' => 'Submódulos',
-                'description' => 'Títulos y grados académicos del funcionario.',
+                'description' => 'Carga masiva de títulos y grados académicos del funcionario.',
                 'parent_key' => 'documento_identidad',
                 'columns' => [
                     self::documentoIdentidadColumn(),

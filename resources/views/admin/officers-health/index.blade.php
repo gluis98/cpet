@@ -95,7 +95,7 @@
                 </form>
                 <hr>
                 <h5>Previsualización de Reposos</h5>
-                <div id="filePreview" class="list-group"></div>
+                <div class="row cpet-file-gallery" id="filePreview"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -146,11 +146,15 @@
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
+<link rel="stylesheet" href="{{ public_asset('css/cpet-file-gallery.css') }}">
+<script src="{{ public_asset('js/cpet-file-gallery.js') }}"></script>
 <script>
-    // Initialize Dropzone
     Dropzone.autoDiscover = false;
     $(document).ready(function() {
         var id = "";
+        var reposoDropzone = null;
+        var reposoFilesApiBase = @json(url('api/officers/files/reposos'));
+        var storageBase = @json(public_asset('storage'));
         index();
 
         $(document).on('cpet:refresh-table', index);
@@ -332,61 +336,41 @@
         
         $(document).on('click', '.files', function() {
             id = $(this).attr('data-id');
-            // Note that the name "myDropzone" is the camelized
-            loadFilePreview(id)
-            if (!Dropzone.instances.length) { 
-                const dropzone =  new Dropzone('#myDropzone', {
-                    url: '{{ url("api/officers/files/reposos") }}/'+id,  // URL donde se enviarán los archivos
-                    method: 'POST', //Método por el cual se enviarán los archivos
-                    paramName: 'archivos',          // El nombre del campo de archivo en el backend
-                    maxFilesize: 2,             // Tamaño máximo en MB
-                    acceptedFiles: '.jpg,.jpeg,.png',  // Tipos de archivo aceptados
-                    dictDefaultMessage: 'Arrastra los archivos aquí para subirlos',
-                    success: function(file, response) {
-                        loadFilePreview(id);
-                    },
-                    error: function(file, response) {
-                        console.error("Error al subir archivo:", response);
-                    }
-                });
+            loadFilePreview(id);
+            if (reposoDropzone) {
+                reposoDropzone.destroy();
+                reposoDropzone = null;
             }
+            reposoDropzone = new Dropzone('#myDropzone', {
+                url: reposoFilesApiBase + '/' + id,
+                method: 'POST',
+                paramName: 'reposos',
+                maxFilesize: 10,
+                acceptedFiles: '.jpg,.jpeg,.png,.pdf',
+                dictDefaultMessage: 'Arrastra los archivos aquí para subirlos',
+                success: function() {
+                    loadFilePreview(id);
+                },
+                error: function(file, response) {
+                    console.error('Error al subir archivo:', response);
+                }
+            });
             $('#uploadFiles').modal('show');
-        })
+        });
 
-        function loadFilePreview(id) {
-            fetch('{{ url("api/officers/files/reposos") }}/' + id)
+        function loadFilePreview(reposoId) {
+            fetch(reposoFilesApiBase + '/' + reposoId)
             .then(response => response.json())
             .then(data => {
-                let preview = '';
-                data.forEach(file => {
-                    preview += `
-                    <div class="list-group-item">
-                        <a href="{{ url('storage') }}/${file.archivo}" target="_blank" class="btn btn-success btn-sm">Descargar</a>
-                        <button class="btn btn-danger btn-sm delete-file" data-id="${file.id}">Eliminar</button>
-                        <span>${file.archivo}</span>
-                    </div>
-                    `;
+                CpetFileGallery.render('#filePreview', data || [], {
+                    storageBase: storageBase,
+                    contextId: reposoId,
+                    deleteUrl: function(fileId) { return reposoFilesApiBase + '/' + fileId; },
+                    onDeleted: function() { loadFilePreview(reposoId); }
                 });
-                $('#filePreview').html(preview);
-
-                $('.delete-file').on('click', function(e) {
-                    e.preventDefault();
-                    let fileId = $(this).data('id');
-                    let formData = new FormData();
-                    formData.append('_method', 'DELETE');
-                    fetch('{{ url("api/officers/files/add-files") }}/' + fileId, {
-                        method: 'POST',
-                        body: formData
-                    }).then(response => response.json())
-                    .then(data => {
-                        Swal.fire({
-                            title: data.msj,
-                            icon: "success",
-                            draggable: true
-                        });
-                        loadFilePreview(id);
-                    });
-                });
+            })
+            .catch(function() {
+                $('#filePreview').html('<div class="col-12 text-muted text-center py-3">Sin archivos</div>');
             });
         }
 

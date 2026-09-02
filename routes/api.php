@@ -112,6 +112,8 @@ Route::controller(CatalogosController::class)->group(function () {
     Route::post('/municipios', 'municipiosStore');
     Route::get('/parroquias', 'parroquiasIndex');
     Route::post('/parroquias', 'parroquiasStore');
+    Route::get('/centros-votacion', 'centrosVotacionIndex');
+    Route::post('/centros-votacion', 'centrosVotacionStore');
 });
 
 Route::controller(OfficersFilesController::class)->group(function(){
@@ -122,6 +124,7 @@ Route::controller(OfficersFilesController::class)->group(function(){
     Route::delete('/officers/files/{id}', 'destroy');
     Route::get('/officers/files/reposos/{id}', 'get_reposos');
     Route::post('/officers/files/reposos/{id}', 'updateReposo');
+    Route::delete('/officers/files/reposos/{id}', 'destroyReposo');
 });
 
 Route::controller(OfficersVacationsController::class)->group(function(){
