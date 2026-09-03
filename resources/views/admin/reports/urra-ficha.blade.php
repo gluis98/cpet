@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ficha URRA — {{ $officer->nombre_completo ?? 'Funcionario' }}</title>
+    <title>Ficha Personal URRA — {{ $officer->nombre_completo ?? 'Funcionario' }}</title>
     <style>
         @page {
             size: A4 landscape;
@@ -41,117 +41,135 @@
             margin: 0 auto;
             background: #fff;
             box-shadow: 0 10px 36px rgba(15, 39, 68, 0.18);
+            padding: 6mm 8mm 7mm;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Cintillo horizontal, alineado a la izquierda */
+        .cintillo {
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cintillo img {
+            display: block;
+            height: 28mm;
+            width: auto;
+            max-width: 78%;
+            object-fit: contain;
+            object-position: left center;
+        }
+
+        .cintillo-empty {
+            font-size: 11px;
+            color: #64748b;
+            padding: 8px 0;
+        }
+
+        .cintillo-line {
+            flex: 0 0 auto;
+            width: 100%;
+            height: 2.2mm;
+            margin-top: 1mm;
+            background: linear-gradient(180deg, #e31837 0%, #b50f28 100%);
+        }
+
+        .title-bar {
+            flex: 0 0 auto;
+            text-align: center;
+            padding: 3.5mm 0 3mm;
+        }
+
+        .title-bar h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            color: #111;
+            text-transform: uppercase;
+        }
+
+        /* Marco rojo: datos + foto */
+        .frame {
+            flex: 1 1 auto;
+            min-height: 0;
+            border: 1.8px solid #c4122f;
             display: flex;
             flex-direction: row;
             overflow: hidden;
             position: relative;
         }
 
-        .sheet::before {
+        .col-datos {
+            position: relative;
+            flex: 1 1 56%;
+            min-width: 0;
+            padding: 0;
+            display: flex;
+            z-index: 1;
+        }
+
+        .col-datos::before {
             content: '';
             position: absolute;
-            inset: 14mm 18mm 14mm 72mm;
+            inset: 8% 12%;
             background: url('{{ asset('images/icon/logo.png') }}') center / contain no-repeat;
-            opacity: 0.07;
+            opacity: 0.08;
             pointer-events: none;
             z-index: 0;
         }
 
-        /* Cintillo vertical izquierdo (banner rotado, grande) */
-        .cintillo {
-            position: relative;
-            z-index: 2;
-            flex: 0 0 68mm;
-            width: 68mm;
-            height: 210mm;
-            background: #000;
-            overflow: hidden;
-            border-right: 4px solid #c4122f;
-        }
-
-        .cintillo-inner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 210mm;
-            height: 68mm;
-            transform: translate(-50%, -50%) rotate(-90deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .cintillo-inner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            display: block;
-        }
-
-        .cintillo-empty {
-            color: #fff;
-            font-size: 11px;
-            text-align: center;
-            padding: 12px;
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-        }
-
-        .main {
+        .datos-table {
             position: relative;
             z-index: 1;
-            flex: 1;
-            display: flex;
-            min-width: 0;
-            height: 100%;
-        }
-
-        .col-datos {
-            flex: 1 1 54%;
-            padding: 10mm 8mm 10mm 7mm;
-            display: flex;
-            align-items: stretch;
-            min-width: 0;
-        }
-
-        .datos-table {
             width: 100%;
+            height: 100%;
             border-collapse: collapse;
             table-layout: fixed;
-            background: rgba(255, 255, 255, 0.88);
+            background: transparent;
         }
 
         .datos-table th,
         .datos-table td {
-            border: 1.6px solid #111;
-            padding: 5.5mm 3.5mm;
+            border: 1.5px solid #111;
+            padding: 2.2mm 2.5mm;
             text-align: center;
             vertical-align: middle;
             font-weight: 700;
-            font-size: 13px;
-            line-height: 1.25;
+            font-size: 12.5px;
+            line-height: 1.2;
         }
 
         .datos-table th {
-            width: 42%;
+            width: 40%;
             text-transform: uppercase;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
             background: #fff;
             color: #111;
         }
 
         .datos-table td {
-            width: 58%;
+            width: 60%;
             word-break: break-word;
+            background: rgba(255, 255, 255, 0.72);
         }
 
-        .datos-table tr:nth-child(1) td {
-            background: #cfe8ff;
+        .datos-table tr.civ td {
+            background: #b8d4f0;
         }
 
-        .datos-table tr:nth-child(3) td {
-            background: #fff3b0;
+        .datos-table tr.dir th,
+        .datos-table tr.dir td {
+            height: 14%;
+            padding-top: 3.5mm;
+            padding-bottom: 3.5mm;
         }
 
         .cargo-urra {
@@ -161,14 +179,15 @@
         }
 
         .col-foto {
-            flex: 1 1 46%;
-            border-left: 2px solid #111;
-            background: #0b1d33;
+            flex: 0 0 42%;
+            width: 42%;
+            border-left: 1.5px solid #111;
+            background: #111;
             display: flex;
             align-items: stretch;
             justify-content: stretch;
             min-width: 0;
-            padding: 0;
+            overflow: hidden;
         }
 
         .col-foto img {
@@ -238,20 +257,23 @@
 </div>
 
 <div class="sheet">
-    <aside class="cintillo" aria-label="Cintillo institucional">
+    <header class="cintillo" aria-label="Cintillo institucional">
         @if (! empty($logos))
-            <div class="cintillo-inner">
-                <img src="{{ $logos[0] }}" alt="Cintillo URRA">
-            </div>
+            <img src="{{ $logos[0] }}" alt="Cintillo institucional">
         @else
             <div class="cintillo-empty">Coloque el cintillo en public/img/urra/1.png</div>
         @endif
-    </aside>
+    </header>
+    <div class="cintillo-line" aria-hidden="true"></div>
 
-    <div class="main">
+    <div class="title-bar">
+        <h1>FICHA PERSONAL</h1>
+    </div>
+
+    <div class="frame">
         <section class="col-datos">
             <table class="datos-table">
-                <tr>
+                <tr class="civ">
                     <th>C.I.V</th>
                     <td>{{ $officer->documento_identidad ?? '—' }}</td>
                 </tr>
@@ -279,7 +301,7 @@
                     <th>CTA BANCARIA</th>
                     <td>{{ $cuenta }}</td>
                 </tr>
-                <tr>
+                <tr class="dir">
                     <th>DIRECCIÓN</th>
                     <td>{{ $direccion }}</td>
                 </tr>
