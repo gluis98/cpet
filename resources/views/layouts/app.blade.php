@@ -140,6 +140,10 @@
                        class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->routeIs('config.cargos_administrativos') ? 'nav-link-active' : '' }}">
                         <i class="fas fa-briefcase sidebar-icon w-4 text-center text-xs"></i> Cargos administrativos
                     </a>
+                    <a href="{{ route('config.entidad') }}"
+                       class="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition {{ request()->routeIs('config.entidad') ? 'nav-link-active' : '' }}">
+                        <i class="fas fa-landmark sidebar-icon w-4 text-center text-xs"></i> Entidad
+                    </a>
                 </div>
             </div>
         </nav>

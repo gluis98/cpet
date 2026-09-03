@@ -275,4 +275,16 @@ class HomeController extends Controller
             'leftImagePath' => $this->leftImagePath,
         ]);
     }
+
+    public function config_entidad()
+    {
+        $entidad = \App\Models\Entidad::query()->first()
+            ?? new \App\Models\Entidad(['director_general' => null, 'rrhh' => null]);
+
+        return view('admin.config.entidad', [
+            'title' => 'Entidad',
+            'entidad' => $entidad,
+            'leftImagePath' => $this->leftImagePath,
+        ]);
+    }
 }

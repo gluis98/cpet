@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/config/cursos', 'config_cursos')->name('config.cursos');
         Route::get('/config/cargos', 'config_cargos')->name('config.cargos');
         Route::get('/config/cargos-administrativos', 'config_cargos_administrativos')->name('config.cargos_administrativos');
+        Route::get('/config/entidad', 'config_entidad')->name('config.entidad');
     });
 
     Route::get('/officers', fn () => redirect()->route('officers.tipo', 'policial'))->name('officers');

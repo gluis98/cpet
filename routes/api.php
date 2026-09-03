@@ -18,6 +18,7 @@ use App\Http\Controllers\OfficersHealthController;
 use App\Http\Controllers\OfficersIcapController;
 use App\Http\Controllers\OfficersUrraController;
 use App\Http\Controllers\CatalogosController;
+use App\Http\Controllers\EntidadController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\UserController;
 
@@ -42,6 +43,11 @@ Route::apiResource('/armament', ArmamentController::class);
 Route::apiResource('/stations', StationController::class);
 Route::apiResource('/users', UserController::class);
 Route::post('/users/confirm-password-admin', [UserController::class, 'confirm_password_admin']);
+
+Route::controller(EntidadController::class)->group(function () {
+    Route::get('/entidad', 'show');
+    Route::put('/entidad', 'update');
+});
 
 Route::controller(OfficersPositionsController::class)->group(function(){
     Route::get('/officers/position/index/{id}', 'index');

@@ -18,10 +18,15 @@ class ReportesController extends Controller
 {
     protected function entidad(): Entidad
     {
-        return Entidad::query()->first() ?? new Entidad([
-            'director_general' => null,
-            'rrhh' => null,
-        ]);
+        $entidad = Entidad::query()->first();
+        if (! $entidad) {
+            $entidad = Entidad::create([
+                'director_general' => null,
+                'rrhh' => null,
+            ]);
+        }
+
+        return $entidad;
     }
 
     // Esta función sirve para obtener el reporte individual de la boleta de vacaciones de un oficial
