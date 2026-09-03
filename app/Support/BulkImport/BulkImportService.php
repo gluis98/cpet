@@ -431,34 +431,130 @@ class BulkImportService
 
         $sexo = strtoupper(trim((string) $this->require($d, 'sexo')));
         if (! in_array($sexo, ['M', 'F'], true)) {
-            throw new \InvalidArgumentException('sexo debe ser M o F');
+            // Aceptar variantes comunes
+            $sexoNorm = $this->normalizeMatchText($this->foldAccents($sexo));
+            $sexo = match (true) {
+                in_array($sexoNorm, ['m', 'masculino', 'hombre', 'male'], true) => 'M',
+                in_array($sexoNorm, ['f', 'femenino', 'mujer', 'female'], true) => 'F',
+                default => throw new \InvalidArgumentException('sexo debe ser M o F'),
+            };
         }
 
         $nombre = trim($this->requireAny($d, ['nombre_completo', 'nombre_familiar'], 'nombre_completo'));
         $parentesco = trim($this->require($d, 'parentesco'));
         $fechaNacimiento = $this->date($this->require($d, 'fecha_nacimiento'));
-        $rowKey = "{$oficial->id}|{$this->normalizeMatchText($nombre)}|{$this->normalizeMatchText($parentesco)}|{$fechaNacimiento}";
-        $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
-            ->whereRaw('LOWER(TRIM(nombre_completo)) = ?', [$this->normalizeMatchText($nombre)])
-            ->whereRaw('LOWER(TRIM(parentesco)) = ?', [$this->normalizeMatchText($parentesco)])
-            ->whereDate('fecha_nacimiento', $fechaNacimiento);
 
-        return $this->importUnique('familiares', $rowKey, OficialesFamiliare::class, $matchFn, function () use ($oficial, $d, $nombre, $parentesco, $fechaNacimiento, $sexo, $posee, $discId) {
-            OficialesFamiliare::create([
-                'id_policia' => $oficial->id,
-                'nombre_completo' => $nombre,
-                'parentesco' => $parentesco,
-                'fecha_nacimiento' => $fechaNacimiento,
-                'sexo' => $sexo,
-                'telefono' => $d['telefono'] ?: null,
-                'direccion' => $d['direccion'] ?: null,
-                'edad' => ($d['edad'] !== null && $d['edad'] !== '') ? (int) $d['edad'] : null,
-                'posee_discapacidad' => $posee,
-                'discapacidad_id' => $discId,
-                'discapacidad_requerimientos' => $posee ? ($d['discapacidad_requerimientos'] ?: null) : null,
-                'discapacidad_observaciones' => $posee ? ($d['discapacidad_observaciones'] ?: null) : null,
-            ]);
-        });
+        $nombreNorm = $this->normalizeMatchText($this->foldAccents($nombre));
+        $rowKey = "{$oficial->id}|{$nombreNorm}|{$fechaNacimiento}";
+
+        // Limpia duplicados previos del mismo funcionario (nombre+fecha, ignorando acentos)
+        $dedupedPrevios = $this->dedupeFamiliaresOficial((int) $oficial->id);
+
+        $matchFn = function ($q) use ($oficial, $nombreNorm, $fechaNacimiento) {
+            $q->where('id_policia', $oficial->id)->whereDate('fecha_nacimiento', $fechaNacimiento);
+
+            $candidates = (clone $q)->get(['id', 'nombre_completo']);
+            $keepIds = $candidates->filter(function ($row) use ($nombreNorm) {
+                return $this->normalizeMatchText($this->foldAccents((string) $row->nombre_completo)) === $nombreNorm;
+            })->pluck('id')->all();
+
+            if ($keepIds === []) {
+                $q->whereRaw('1 = 0');
+            } else {
+                $q->whereIn('id', $keepIds);
+            }
+        };
+
+        $result = $this->importUnique(
+            'familiares',
+            $rowKey,
+            OficialesFamiliare::class,
+            $matchFn,
+            function () use ($oficial, $d, $nombre, $parentesco, $fechaNacimiento, $sexo, $posee, $discId) {
+                OficialesFamiliare::create([
+                    'id_policia' => $oficial->id,
+                    'nombre_completo' => $nombre,
+                    'parentesco' => $parentesco,
+                    'fecha_nacimiento' => $fechaNacimiento,
+                    'sexo' => $sexo,
+                    'telefono' => $d['telefono'] ?: null,
+                    'direccion' => $d['direccion'] ?: null,
+                    'edad' => ($d['edad'] !== null && $d['edad'] !== '') ? (int) $d['edad'] : null,
+                    'posee_discapacidad' => $posee,
+                    'discapacidad_id' => $discId,
+                    'discapacidad_requerimientos' => $posee ? ($d['discapacidad_requerimientos'] ?: null) : null,
+                    'discapacidad_observaciones' => $posee ? ($d['discapacidad_observaciones'] ?: null) : null,
+                ]);
+            },
+            "Familiar {$nombre} ({$fechaNacimiento}) ya existe para este funcionario"
+        );
+
+        $totalDeduped = $dedupedPrevios + (int) ($result['deduped'] ?? 0);
+        $result['deduped'] = $totalDeduped;
+
+        if ($totalDeduped > 0) {
+            $base = (string) ($result['message'] ?? (
+                ($result['status'] ?? '') === 'created'
+                    ? 'Registro creado'
+                    : 'Registro ya existente'
+            ));
+            $base = trim((string) preg_replace('/\s*\(\d+ duplicado\(s\) eliminado\(s\) en BD\)\s*/u', '', $base));
+            if ($base === '' || $base === 'Registro creado') {
+                // Mantener mensaje solo si es skipped; en created el resumen global ya cuenta deduped
+                if (($result['status'] ?? '') === 'skipped') {
+                    $result['message'] = $this->skipMessage('Registro ya existente', $totalDeduped);
+                }
+            } else {
+                $result['message'] = $this->skipMessage($base, $totalDeduped);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Elimina familiares duplicados del mismo funcionario:
+     * mismo nombre (sin acentos) + misma fecha de nacimiento → deja el de menor id.
+     */
+    private function dedupeFamiliaresOficial(int $oficialId): int
+    {
+        $rows = OficialesFamiliare::query()
+            ->where('id_policia', $oficialId)
+            ->orderBy('id')
+            ->get(['id', 'nombre_completo', 'fecha_nacimiento', 'parentesco']);
+
+        $seen = [];
+        $deleteIds = [];
+
+        foreach ($rows as $row) {
+            $nombreKey = $this->normalizeMatchText($this->foldAccents((string) $row->nombre_completo));
+            $fechaKey = $row->fecha_nacimiento
+                ? Carbon::parse($row->fecha_nacimiento)->toDateString()
+                : '';
+
+            // Sin fecha: agrupar por nombre + parentesco para no borrar distintos familiares homónimos
+            $key = $fechaKey !== ''
+                ? $nombreKey.'|'.$fechaKey
+                : $nombreKey.'|'.$this->normalizeMatchText($this->foldAccents((string) $row->parentesco));
+
+            if ($nombreKey === '') {
+                continue;
+            }
+
+            if (isset($seen[$key])) {
+                $deleteIds[] = (int) $row->id;
+            } else {
+                $seen[$key] = (int) $row->id;
+            }
+        }
+
+        if ($deleteIds === []) {
+            return 0;
+        }
+
+        OficialesFamiliare::query()->whereIn('id', $deleteIds)->delete();
+
+        return count($deleteIds);
     }
 
     private function importAcademia(array $d): array

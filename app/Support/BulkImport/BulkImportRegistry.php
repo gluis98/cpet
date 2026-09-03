@@ -134,7 +134,8 @@ class BulkImportRegistry
                 'notes' => [
                     'El funcionario (documento_identidad) debe existir previamente.',
                     'El informe médico no se adjunta por Excel.',
-                    'Duplicado = mismo funcionario + nombre + parentesco + fecha de nacimiento (se omite / se limpia en BD).',
+                    'Duplicado = mismo funcionario + nombre (sin acentos) + fecha de nacimiento: se omite y se eliminan extras en BD.',
+                    'Al reimportar se limpian primero los duplicados ya existentes de ese funcionario.',
                 ],
             ],
             'academia' => [
