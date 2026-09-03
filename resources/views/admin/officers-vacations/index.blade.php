@@ -75,11 +75,15 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" for="fecha_emision">Fecha de emisión *</label>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="fecha_emision">Fecha de emisión / Desde *</label>
                                 <input type="date" class="form-control" id="fecha_emision" name="fecha_emision" required>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="fecha_hasta">Hasta</label>
+                                <input type="date" class="form-control" id="fecha_hasta" name="fecha_hasta">
+                            </div>
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label" for="fecha_reintegro">Fecha de reintegro</label>
                                 <input type="date" class="form-control" id="fecha_reintegro" name="fecha_reintegro">
                             </div>
@@ -166,6 +170,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">Fecha de emisión</th>
+                            <th class="text-center">Hasta</th>
                             <th class="text-center">Fecha de reintegro</th>
                             <th class="text-center">¿Disfrutadas?</th>
                             <th class="text-center">Estatus</th>
@@ -264,6 +269,7 @@ $(document).ready(function () {
             .then(data => {
                 id = data.id;
                 $('#fecha_emision').val(data.fecha_emision ? String(data.fecha_emision).substr(0, 10) : '');
+                $('#fecha_hasta').val(data.fecha_hasta ? String(data.fecha_hasta).substr(0, 10) : '');
                 $('#fecha_reintegro').val(data.fecha_reintegro ? String(data.fecha_reintegro).substr(0, 10) : '');
                 $('#descripcion').val(data.descripcion || '');
                 $('#estatus').val(data.estatus || '');
@@ -323,10 +329,12 @@ $(document).ready(function () {
         var template = '';
         rows.forEach(function (e) {
             var emision = e.fecha_emision ? String(e.fecha_emision).substr(0, 10) : 'S/F';
+            var hasta = e.fecha_hasta ? String(e.fecha_hasta).substr(0, 10) : 'S/F';
             var reintegro = e.fecha_reintegro ? String(e.fecha_reintegro).substr(0, 10) : 'S/F';
             template += `
                 <tr>
                     <td class="text-center">${emision}</td>
+                    <td class="text-center">${hasta}</td>
                     <td class="text-center">${reintegro}</td>
                     <td class="text-center">${isDisfrutada(e) ? '<span class="badge badge-success">Sí</span>' : '<span class="badge badge-secondary">No</span>'}</td>
                     <td class="text-center">${e.estatus || ''}</td>
@@ -338,9 +346,9 @@ $(document).ready(function () {
                 </tr>`;
         });
 
-        CpetModule.refreshDataTable('#vacaciones-table', template || '<tr><td colspan="5" class="text-center text-muted">Sin registros</td></tr>', {
+        CpetModule.refreshDataTable('#vacaciones-table', template || '<tr><td colspan="6" class="text-center text-muted">Sin registros</td></tr>', {
             order: [[0, 'desc']],
-            columnDefs: [{ orderable: false, targets: 4 }]
+            columnDefs: [{ orderable: false, targets: 5 }]
         });
     }
 

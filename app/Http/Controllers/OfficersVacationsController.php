@@ -89,6 +89,7 @@ class OfficersVacationsController extends Controller
         $data = $request->validate([
             'id_policia' => ['sometimes', 'integer'],
             'fecha_emision' => ['required', 'date'],
+            'fecha_hasta' => ['nullable', 'date', 'after_or_equal:fecha_emision'],
             'fecha_reintegro' => ['nullable', 'date'],
             'estatus' => ['required', 'string', 'max:100'],
             'descripcion' => ['nullable', 'string'],

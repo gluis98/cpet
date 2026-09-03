@@ -12,11 +12,11 @@
     <div><span class="label">CON UBICACIÓN EN:</span> <span class="input-field">{{$oficial->oficiale->direccion}}</span></div>
 </div>
 <div class="grid">
-    <div><span class="label">DESDE EL DÍA:</span> <span class="input-field">{{ \Carbon\Carbon::parse($oficial->fecha_emision)->locale('es')->isoFormat('D [de] MMMM [del] YYYY') }}</span></div>
-    <div><span class="label">HASTA EL DÍA:</span> <span class="input-field">{{ \Carbon\Carbon::parse($oficial->fecha_reintegro)->locale('es')->isoFormat('D [de] MMMM [del] YYYY') }}</span></div>
+    <div><span class="label">DESDE EL DÍA:</span> <span class="input-field">{{ $oficial->fecha_emision ? \Carbon\Carbon::parse($oficial->fecha_emision)->locale('es')->isoFormat('D [de] MMMM [del] YYYY') : '—' }}</span></div>
+    <div><span class="label">HASTA EL DÍA:</span> <span class="input-field">{{ ($oficial->fecha_hasta ?? $oficial->fecha_reintegro) ? \Carbon\Carbon::parse($oficial->fecha_hasta ?? $oficial->fecha_reintegro)->locale('es')->isoFormat('D [de] MMMM [del] YYYY') : '—' }}</span></div>
 </div>
 <div class="grid">
-    <div><span class="label">FECHA DE REINTEGRO:</span> <span class="input-field">{{ \Carbon\Carbon::parse($oficial->fecha_reintegro)->locale('es')->isoFormat('D [de] MMMM [del] YYYY') }}</span></div>
+    <div><span class="label">FECHA DE REINTEGRO:</span> <span class="input-field">{{ $oficial->fecha_reintegro ? \Carbon\Carbon::parse($oficial->fecha_reintegro)->locale('es')->isoFormat('D [de] MMMM [del] YYYY') : '—' }}</span></div>
 </div>
 <div class="grid">
     <div class="grid-full"><span class="label">TIPO DE PERMISO: </span> <span class="input-field">{{$tipo}}</span></div>

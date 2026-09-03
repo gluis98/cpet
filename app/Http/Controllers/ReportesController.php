@@ -31,7 +31,8 @@ class ReportesController extends Controller
         $anio = Carbon::parse($oficial->fecha_emision)->format('Y');
         $dias = 0;
         $fechaInicio = Carbon::parse($oficial->fecha_emision);
-        $fechaFin = isset($oficial->fecha_reintegro) ? Carbon::parse($oficial->fecha_reintegro) : Carbon::now();
+        $fechaFinRaw = $oficial->fecha_hasta ?? $oficial->fecha_reintegro;
+        $fechaFin = $fechaFinRaw ? Carbon::parse($fechaFinRaw) : Carbon::now();
         while ($fechaInicio->lte($fechaFin)) {
             if ($fechaInicio->isWeekday()) {
                 $dias++;

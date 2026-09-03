@@ -245,7 +245,7 @@
         <h2>Vacaciones</h2>
         @foreach ($officer->oficiales_vacaciones as $vacaciones)
         <div class="vacation-item">
-          <p><strong>Vacación desde - hasta:</strong> {{$vacaciones->fecha_emision}} a {{$vacaciones->fecha_reintegro}}</p>
+          <p><strong>Vacación desde - hasta:</strong> {{ $vacaciones->fecha_emision }} a {{ $vacaciones->fecha_hasta ?? $vacaciones->fecha_reintegro }}</p>
           <p><strong>Estatus:</strong> {{$vacaciones->estatus}}</p>
           <p><strong>Disfrutadas:</strong> {{($vacaciones->is_disfrutadas) ? "Si" : "No"}}</p>
           @if($vacaciones->descripcion)

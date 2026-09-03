@@ -630,7 +630,9 @@ class BulkImportService
         $oficial = $this->findOficial($this->requireAny($d, ['documento_identidad', 'cedula', 'documento'], 'documento_identidad'));
         $estatus = strtoupper(trim($this->requireAny($d, ['estatus', 'estado', 'status'], 'estatus')));
         $fechaEmision = $this->date($this->requireAny($d, ['fecha_emision', 'fecha_inicio', 'fecha_desde'], 'fecha_emision'));
-        $reintegroRaw = $this->optionalValue($d, ['fecha_reintegro', 'fecha_fin', 'fecha_hasta', 'reintegro']);
+        $hastaRaw = $this->optionalValue($d, ['fecha_hasta', 'fecha_fin', 'hasta']);
+        $hasta = $hastaRaw !== null ? $this->date($hastaRaw) : null;
+        $reintegroRaw = $this->optionalValue($d, ['fecha_reintegro', 'reintegro']);
         $reintegro = $reintegroRaw !== null ? $this->date($reintegroRaw) : null;
         $disfrutadasRaw = $this->optionalValue($d, ['is_disfrutadas', 'disfrutadas', 'vacaciones_disfrutadas']);
         $disfrutadas = in_array((string) ($disfrutadasRaw ?? '0'), ['1', 'true', 'Si', 'SI'], true) ? 1 : 0;
@@ -643,10 +645,11 @@ class BulkImportService
             ->whereDate('fecha_emision', $fechaEmision)
             ->whereRaw('UPPER(TRIM(estatus)) = ?', [$estatus]);
 
-        return $this->importUnique('vacaciones', $rowKey, OficialesVacacione::class, $matchFn, function () use ($oficial, $fechaEmision, $reintegro, $estatus, $d, $disfrutadas) {
+        return $this->importUnique('vacaciones', $rowKey, OficialesVacacione::class, $matchFn, function () use ($oficial, $fechaEmision, $hasta, $reintegro, $estatus, $d, $disfrutadas) {
             OficialesVacacione::create([
                 'id_policia' => $oficial->id,
                 'fecha_emision' => $fechaEmision,
+                'fecha_hasta' => $hasta,
                 'fecha_reintegro' => $reintegro,
                 'estatus' => $estatus,
                 'descripcion' => $this->optionalValue($d, ['descripcion', 'observaciones', 'nota']) ?: null,
