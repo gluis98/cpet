@@ -9,11 +9,27 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Si un intento anterior dejó la tabla a medias (tipos incompatibles), recrearla.
+        if (Schema::hasTable('centros_votacion')) {
+            if (Schema::hasColumn('oficiales', 'centro_votacion_id')) {
+                Schema::table('oficiales', function (Blueprint $table) {
+                    try {
+                        $table->dropForeign(['centro_votacion_id']);
+                    } catch (\Throwable $e) {
+                        // ignore
+                    }
+                    $table->dropColumn('centro_votacion_id');
+                });
+            }
+            Schema::dropIfExists('centros_votacion');
+        }
+
         Schema::create('centros_votacion', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre');
-            $table->unsignedInteger('municipio_id');
-            $table->unsignedInteger('parroquia_id');
+            // municipios.id y parroquias.id son SMALLINT UNSIGNED
+            $table->unsignedSmallInteger('municipio_id');
+            $table->unsignedSmallInteger('parroquia_id');
 
             $table->foreign('municipio_id')
                 ->references('id')
@@ -31,13 +47,15 @@ return new class extends Migration
         });
 
         Schema::table('oficiales', function (Blueprint $table) {
-            $table->unsignedInteger('centro_votacion_id')->nullable()->after('parroquia_id');
+            if (! Schema::hasColumn('oficiales', 'centro_votacion_id')) {
+                $table->unsignedInteger('centro_votacion_id')->nullable()->after('parroquia_id');
 
-            $table->foreign('centro_votacion_id')
-                ->references('id')
-                ->on('centros_votacion')
-                ->nullOnDelete()
-                ->restrictOnUpdate();
+                $table->foreign('centro_votacion_id')
+                    ->references('id')
+                    ->on('centros_votacion')
+                    ->nullOnDelete()
+                    ->restrictOnUpdate();
+            }
         });
 
         if (Schema::hasColumn('oficiales', 'centro_votacion') && Schema::hasColumn('oficiales', 'parroquia_id')) {
@@ -75,10 +93,12 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('oficiales', function (Blueprint $table) {
-            $table->dropForeign(['centro_votacion_id']);
-            $table->dropColumn('centro_votacion_id');
-        });
+        if (Schema::hasColumn('oficiales', 'centro_votacion_id')) {
+            Schema::table('oficiales', function (Blueprint $table) {
+                $table->dropForeign(['centro_votacion_id']);
+                $table->dropColumn('centro_votacion_id');
+            });
+        }
 
         Schema::dropIfExists('centros_votacion');
     }
