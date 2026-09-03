@@ -86,6 +86,7 @@ class BulkImportRegistry
                 'notes' => [
                     'La fotografía no se carga por Excel; se asigna luego en el formulario.',
                     'Si el documento_identidad ya existe, la fila se omite (no se actualiza).',
+                    'Si hay registros duplicados en BD, se eliminan dejando solo el más antiguo.',
                     'Las fechas aceptan formato DD/MM/YYYY (Excel en español) o YYYY-MM-DD.',
                     'numero_placa es opcional; si está vacío se guardará como Sin Credencial Asignada.',
                     'El campo cargo debe coincidir con un registro de Configuraciones → Cargos administrativos (o se crea).',
@@ -105,6 +106,8 @@ class BulkImportRegistry
                     'El funcionario (documento_identidad) debe existir previamente.',
                     'Actualiza cargo_administrativo_id del funcionario.',
                     'Si el cargo no existe en el catálogo, se crea automáticamente.',
+                    'Si la misma cédula+cargo ya está asignada, la fila se omite.',
+                    'Si hay funcionarios duplicados por cédula en BD, se dejan solo uno.',
                 ],
             ],
             'familiares' => [
@@ -131,6 +134,7 @@ class BulkImportRegistry
                 'notes' => [
                     'El funcionario (documento_identidad) debe existir previamente.',
                     'El informe médico no se adjunta por Excel.',
+                    'Duplicado = mismo funcionario + nombre + parentesco + fecha de nacimiento (se omite / se limpia en BD).',
                 ],
             ],
             'academia' => [
@@ -150,6 +154,7 @@ class BulkImportRegistry
                 'notes' => [
                     'El documento fondo negro no se carga por Excel.',
                     'anio_graduacion se guarda como fecha_fin = AÑO-12-31.',
+                    'Duplicado = mismo funcionario + tipo_formacion + año + título (se omite / se limpia en BD).',
                 ],
             ],
             'cursos' => [
@@ -170,6 +175,7 @@ class BulkImportRegistry
                 ],
                 'notes' => [
                     'Si nombre_curso no existe en el catálogo, se crea automáticamente.',
+                    'Duplicado = mismo funcionario + curso + tipo + fecha_inicio (se omite / se limpia en BD).',
                 ],
             ],
             'jerarquias' => [
@@ -188,7 +194,7 @@ class BulkImportRegistry
                 'notes' => [
                     'El funcionario (documento_identidad) debe existir previamente.',
                     'Si is_actual=1, las demás jerarquías del funcionario pasan a histórico.',
-                    'Si la misma jerarquía con la misma fecha de inicio ya existe, la fila se omite.',
+                    'Duplicado = misma jerarquía + fecha_inicio (se omite / se limpia en BD).',
                 ],
             ],
             'reposos' => [
@@ -209,6 +215,7 @@ class BulkImportRegistry
                     'Los días de reposo se calculan automáticamente (días hábiles).',
                     'Los archivos del reposo no se cargan por Excel.',
                     'Un reposo vigente puede cambiar el estatus del funcionario a En Reposo.',
+                    'Duplicado = mismo funcionario + inicio + diagnóstico + fecha revisión (se omite / se limpia en BD).',
                 ],
             ],
             'vacaciones' => [
@@ -232,6 +239,46 @@ class BulkImportRegistry
                 'notes' => [
                     'El estatus se guarda en mayúsculas.',
                     'Acepta encabezados como "Fecha de emisión", "Cédula", "Estado", etc.',
+                    'Duplicado = mismo funcionario + fecha_emision + estatus (se omite / se limpia en BD).',
+                ],
+            ],
+            'reconocimientos' => [
+                'title' => 'Reconocimientos',
+                'icon' => 'fas fa-trophy',
+                'group' => 'Submódulos',
+                'description' => 'Reconocimientos, condecoraciones y felicitaciones del funcionario.',
+                'parent_key' => 'documento_identidad',
+                'columns' => [
+                    self::documentoIdentidadColumn(),
+                    ['key' => 'tipo', 'label' => 'tipo', 'required' => true, 'example' => 'Reconocimiento', 'help' => 'Reconocimiento | Condecoración | Felicitaciones', 'aliases' => ['tipo reconocimiento', 'tipo de reconocimiento']],
+                    ['key' => 'autoridad', 'label' => 'autoridad', 'required' => true, 'example' => 'Inspector Rivas', 'help' => 'Autoridad que otorga', 'aliases' => ['otorgado por', 'quien otorga']],
+                    ['key' => 'fecha', 'label' => 'fecha', 'required' => true, 'example' => '15/08/2024', 'help' => 'YYYY-MM-DD o DD/MM/YYYY', 'aliases' => ['fecha reconocimiento', 'fecha de reconocimiento']],
+                    ['key' => 'descripcion', 'label' => 'descripcion', 'required' => true, 'example' => 'Mérito al servicio', 'help' => 'Descripción del reconocimiento', 'aliases' => ['detalle', 'observaciones', 'motivo']],
+                ],
+                'notes' => [
+                    'El funcionario (documento_identidad) debe existir previamente.',
+                    'Duplicado = mismo funcionario + tipo + fecha + descripción + autoridad (se omite / se limpia en BD).',
+                ],
+            ],
+            'radiogramas' => [
+                'title' => 'Radiogramas',
+                'icon' => 'fas fa-broadcast-tower',
+                'group' => 'Submódulos',
+                'description' => 'Asignaciones a estaciones de comando (radiogramas).',
+                'parent_key' => 'documento_identidad',
+                'columns' => [
+                    self::documentoIdentidadColumn(),
+                    ['key' => 'estacion', 'label' => 'estacion', 'required' => true, 'example' => 'Comando Valera', 'help' => 'Nombre de la estación (se busca/crea en catálogo)', 'aliases' => ['estación', 'estacion comando', 'estación de comando', 'comando']],
+                    ['key' => 'fecha_inicio', 'label' => 'fecha_inicio', 'required' => true, 'example' => '01/03/2024', 'help' => 'YYYY-MM-DD o DD/MM/YYYY', 'aliases' => ['fecha inicio', 'desde']],
+                    ['key' => 'fecha_final', 'label' => 'fecha_final', 'required' => false, 'example' => '30/06/2024', 'help' => 'YYYY-MM-DD o DD/MM/YYYY', 'aliases' => ['fecha fin', 'fecha final', 'hasta']],
+                    ['key' => 'is_actual', 'label' => 'is_actual', 'required' => false, 'example' => '1', 'help' => '0 o 1 — estación actual del funcionario', 'aliases' => ['actual', 'vigente', 'en servicio']],
+                    ['key' => 'descripcion', 'label' => 'descripcion', 'required' => false, 'example' => 'Traslado temporal', 'help' => 'Descripción / observaciones', 'aliases' => ['observaciones', 'nota', 'detalle']],
+                ],
+                'notes' => [
+                    'El funcionario (documento_identidad) debe existir previamente.',
+                    'Si la estación no existe, se crea automáticamente.',
+                    'Si is_actual=1, los demás radiogramas del funcionario pasan a histórico.',
+                    'Duplicado = mismo funcionario + estación + fecha_inicio (se omite / se limpia en BD).',
                 ],
             ],
         ];

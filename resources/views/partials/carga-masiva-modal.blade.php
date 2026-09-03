@@ -515,6 +515,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             html += '<span class="carga-result__stat">Creados: ' + (data.created || 0) + '</span>';
                             html += '<span class="carga-result__stat">Omitidos: ' + (data.skipped || 0) + '</span>';
                             html += '<span class="carga-result__stat">Errores: ' + (data.failed || 0) + '</span>';
+                            if ((data.deduped || 0) > 0) {
+                                html += '<span class="carga-result__stat">Duplicados eliminados: ' + data.deduped + '</span>';
+                            }
                             html += '</div>';
                         }
 

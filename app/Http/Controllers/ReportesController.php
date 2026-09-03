@@ -16,9 +16,12 @@ use Illuminate\Support\Facades\File;
 
 class ReportesController extends Controller
 {
-    protected function entidad(): ?Entidad
+    protected function entidad(): Entidad
     {
-        return Entidad::query()->first();
+        return Entidad::query()->first() ?? new Entidad([
+            'director_general' => null,
+            'rrhh' => null,
+        ]);
     }
 
     // Esta función sirve para obtener el reporte individual de la boleta de vacaciones de un oficial

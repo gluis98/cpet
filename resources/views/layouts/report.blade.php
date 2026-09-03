@@ -139,13 +139,13 @@
             <div class="footer fw-bold">
                 @if(Route::currentRouteName() == "report.radiogram")
                 <p>CUMPLASE:</p>
-                <p class="text-center">{{$entidad->rrhh}} <br>
+                <p class="text-center">{{ $entidad?->rrhh ?: '________________________' }} <br>
                     DIRECTORA DE LA OFICINA DE TALENTO HUMANO DE LA DIRECCIÓN GENERAL DEL CUERPO DE POLICÍA DEL ESTADO TRUJILLO</p>
                 @endif
 
                 @if(Route::currentRouteName() == "report.vacation")
                     <p>CONFORME:</p>
-                    <p class="text-center">{{$entidad->director_general}} <br>
+                    <p class="text-center">{{ $entidad?->director_general ?: '________________________' }} <br>
                     DIRECTOR GENERAL DEL CUERPO POLICÍA DEL ESTADO TRUJILLO <br>
                     SEGÚN DECRETO N° 3755 DE FECHA 11/08/2022 Y PUBLICADA EN GACETA OFICIAL DEL ESTADO TRUJILLO N° 3839 DE FECHA 11/08/2022</p>
                 @endif

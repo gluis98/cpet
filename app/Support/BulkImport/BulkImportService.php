@@ -7,12 +7,15 @@ use App\Models\CargosAdministrativo;
 use App\Models\CatalogoCurso;
 use App\Models\CentroVotacion;
 use App\Models\Discapacidade;
+use App\Models\Estacione;
 use App\Models\Municipio;
 use App\Models\Oficiale;
 use App\Models\OficialesAcademico;
 use App\Models\OficialesCargo;
 use App\Models\OficialesCurso;
 use App\Models\OficialesFamiliare;
+use App\Models\OficialesRadiograma;
+use App\Models\OficialesReconocimiento;
 use App\Models\OficialesSalud;
 use App\Models\OficialesVacacione;
 use App\Models\Parroquia;
@@ -30,6 +33,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BulkImportService
 {
+    /** @var array<string, true> */
+    private array $importSeenKeys = [];
+
     public function downloadTemplate(string $moduleKey): StreamedResponse
     {
         $module = BulkImportRegistry::get($moduleKey);
@@ -174,9 +180,12 @@ class BulkImportService
         $created = 0;
         $skipped = 0;
         $failed = 0;
+        $dedupedTotal = 0;
         $errors = [];
         $totalRows = 0;
         $emptyRows = 0;
+
+        $this->resetImportSession();
 
         DB::beginTransaction();
         try {
@@ -206,8 +215,12 @@ class BulkImportService
                         'jerarquias' => $this->importJerarquia($data),
                         'reposos' => $this->importReposo($data),
                         'vacaciones' => $this->importVacacion($data),
+                        'reconocimientos' => $this->importReconocimiento($data),
+                        'radiogramas' => $this->importRadiograma($data),
                         default => ['status' => 'error', 'message' => 'Módulo no implementado'],
                     };
+
+                    $dedupedTotal += (int) ($result['deduped'] ?? 0);
 
                     if (($result['status'] ?? '') === 'created') {
                         $created++;
@@ -250,6 +263,9 @@ class BulkImportService
         if ($failed > 0) {
             $summary .= ", {$failed} con error";
         }
+        if ($dedupedTotal > 0) {
+            $summary .= ", {$dedupedTotal} duplicado(s) eliminado(s) en BD";
+        }
         if ($emptyRows > 0) {
             $summary .= " ({$emptyRows} filas vacías ignoradas)";
         }
@@ -261,6 +277,7 @@ class BulkImportService
             'created' => $created,
             'skipped' => $skipped,
             'failed' => $failed,
+            'deduped' => $dedupedTotal,
             'total_rows' => $totalRows,
             'empty_rows' => $emptyRows,
             'has_issues' => $hasIssues,
@@ -271,112 +288,131 @@ class BulkImportService
     private function importFuncionario(array $d): array
     {
         $doc = $this->normalizeDocumento($this->require($d, 'documento_identidad'));
-        if (Oficiale::where('documento_identidad', $doc)->exists()) {
-            return ['status' => 'skipped', 'message' => "Documento {$doc} ya existe"];
-        }
+        $matchFn = fn ($q) => $q->where('documento_identidad', $doc);
 
-        $tipo = Oficiale::normalizeTipo($this->require($d, 'tipo_funcionario'));
-        $estatus = $this->require($d, 'estatus');
-        if (! in_array($estatus, Oficiale::ESTATUS, true)) {
-            throw new \InvalidArgumentException("estatus inválido: {$estatus}");
-        }
-
-        $cargoId = null;
-        if (! empty($d['cargo'])) {
-            $cargo = CargosAdministrativo::firstOrCreate(
-                ['nombre_cargo' => trim($d['cargo'])],
-                ['nombre_cargo' => trim($d['cargo'])]
-            );
-            $cargoId = $cargo->id;
-        }
-
-        $sabe = in_array((string) ($d['sabe_conducir'] ?? '0'), ['1', 'true', 'Si', 'SI'], true);
-        $tipos = null;
-        if ($sabe && ! empty($d['tipos_conduccion'])) {
-            $tipos = array_values(array_filter(array_map('trim', preg_split('/[;,|]/', (string) $d['tipos_conduccion']))));
-            $allowed = Oficiale::TIPOS_CONDUCCION;
-            $tipos = array_values(array_intersect($tipos, $allowed));
-            if ($tipos === []) {
-                $tipos = null;
+        return $this->importUnique('funcionarios', $doc, Oficiale::class, $matchFn, function () use ($d, $doc) {
+            $tipo = Oficiale::normalizeTipo($this->require($d, 'tipo_funcionario'));
+            $estatus = $this->require($d, 'estatus');
+            if (! in_array($estatus, Oficiale::ESTATUS, true)) {
+                throw new \InvalidArgumentException("estatus inválido: {$estatus}");
             }
-        }
 
-        $viviendaRaw = trim((string) ($d['tipo_vivienda'] ?? ''));
-        $vivienda = $viviendaRaw !== '' ? Oficiale::normalizeTipoVivienda($viviendaRaw) : null;
-        if ($viviendaRaw !== '' && $vivienda === null) {
-            throw new \InvalidArgumentException("tipo_vivienda inválido: {$viviendaRaw}");
-        }
-
-        $sexo = trim((string) ($d['sexo'] ?? ''));
-        if ($sexo !== '' && ! in_array($sexo, Oficiale::SEXOS, true)) {
-            throw new \InvalidArgumentException("sexo inválido: {$sexo}");
-        }
-
-        $parroquiaId = $this->resolveParroquiaId($d['municipio'] ?? null, $d['parroquia'] ?? null);
-        $centroNombre = trim((string) ($d['centro_votacion'] ?? ''));
-        $centroVotacionId = null;
-        if ($centroNombre !== '') {
-            $centroVotacionId = $this->resolveCentroVotacionId(
-                $d['municipio'] ?? null,
-                $d['parroquia'] ?? null,
-                $centroNombre
-            );
-            $centro = CentroVotacion::find($centroVotacionId);
-            if ($centro) {
-                $centroNombre = $centro->nombre;
-                $parroquiaId = $parroquiaId ?? $centro->parroquia_id;
+            $cargoId = null;
+            if (! empty($d['cargo'])) {
+                $cargo = CargosAdministrativo::firstOrCreate(
+                    ['nombre_cargo' => trim($d['cargo'])],
+                    ['nombre_cargo' => trim($d['cargo'])]
+                );
+                $cargoId = $cargo->id;
             }
-        }
 
-        Oficiale::create([
-            'documento_identidad' => $doc,
-            'nombre_completo' => $this->require($d, 'nombre_completo'),
-            'fecha_nacimiento' => $this->date($this->require($d, 'fecha_nacimiento')),
-            'sexo' => $sexo !== '' ? $sexo : null,
-            'numero_placa' => filled($d['numero_placa'] ?? null) ? trim((string) $d['numero_placa']) : null,
-            'fecha_ingreso' => $this->date($this->require($d, 'fecha_ingreso')),
-            'estatus' => $estatus,
-            'tipo_funcionario' => $tipo,
-            'telefono' => filled($d['telefono'] ?? null) ? trim((string) $d['telefono']) : null,
-            'correo_electronico' => filled($d['correo_electronico'] ?? null) ? trim((string) $d['correo_electronico']) : null,
-            'cargo_administrativo_id' => $cargoId,
-            'tipo_sangre' => $d['tipo_sangre'] ?: null,
-            'estado_civil' => $d['estado_civil'] ?: null,
-            'direccion' => $d['direccion'] ?: null,
-            'centro_votacion' => $centroNombre !== '' ? $centroNombre : null,
-            'centro_votacion_id' => $centroVotacionId,
-            'parroquia_id' => $parroquiaId,
-            'tipo_vivienda' => $vivienda,
-            'direccion_vivienda' => ($vivienda === 'No posee' || ! $vivienda) ? null : ($d['direccion_vivienda'] ?: null),
-            'sabe_conducir' => $sabe,
-            'tipos_conduccion' => $tipos,
-            'telefono_residencial' => $d['telefono_residencial'] ?: null,
-            'talla_camisa' => $d['talla_camisa'] ?: null,
-            'talla_pantalon' => $d['talla_pantalon'] ?: null,
-            'talla_zapatos' => $d['talla_zapatos'] ?: null,
-            'talla_saco' => $d['talla_saco'] ?: null,
-            'talla_kepin_toka' => $d['talla_kepin_toka'] ?: null,
-            'talla_tacon' => $d['talla_tacon'] ?: null,
-            'talla_falda' => $d['talla_falda'] ?: null,
-            'talla_gorra' => $d['talla_gorra'] ?: null,
-        ]);
+            $sabe = in_array((string) ($d['sabe_conducir'] ?? '0'), ['1', 'true', 'Si', 'SI'], true);
+            $tipos = null;
+            if ($sabe && ! empty($d['tipos_conduccion'])) {
+                $tipos = array_values(array_filter(array_map('trim', preg_split('/[;,|]/', (string) $d['tipos_conduccion']))));
+                $allowed = Oficiale::TIPOS_CONDUCCION;
+                $tipos = array_values(array_intersect($tipos, $allowed));
+                if ($tipos === []) {
+                    $tipos = null;
+                }
+            }
 
-        return ['status' => 'created'];
+            $viviendaRaw = trim((string) ($d['tipo_vivienda'] ?? ''));
+            $vivienda = $viviendaRaw !== '' ? Oficiale::normalizeTipoVivienda($viviendaRaw) : null;
+            if ($viviendaRaw !== '' && $vivienda === null) {
+                throw new \InvalidArgumentException("tipo_vivienda inválido: {$viviendaRaw}");
+            }
+
+            $sexo = trim((string) ($d['sexo'] ?? ''));
+            if ($sexo !== '' && ! in_array($sexo, Oficiale::SEXOS, true)) {
+                throw new \InvalidArgumentException("sexo inválido: {$sexo}");
+            }
+
+            $parroquiaId = $this->resolveParroquiaId($d['municipio'] ?? null, $d['parroquia'] ?? null);
+            $centroNombre = trim((string) ($d['centro_votacion'] ?? ''));
+            $centroVotacionId = null;
+            if ($centroNombre !== '') {
+                $centroVotacionId = $this->resolveCentroVotacionId(
+                    $d['municipio'] ?? null,
+                    $d['parroquia'] ?? null,
+                    $centroNombre
+                );
+                $centro = CentroVotacion::find($centroVotacionId);
+                if ($centro) {
+                    $centroNombre = $centro->nombre;
+                    $parroquiaId = $parroquiaId ?? $centro->parroquia_id;
+                }
+            }
+
+            Oficiale::create([
+                'documento_identidad' => $doc,
+                'nombre_completo' => $this->require($d, 'nombre_completo'),
+                'fecha_nacimiento' => $this->date($this->require($d, 'fecha_nacimiento')),
+                'sexo' => $sexo !== '' ? $sexo : null,
+                'numero_placa' => filled($d['numero_placa'] ?? null) ? trim((string) $d['numero_placa']) : null,
+                'fecha_ingreso' => $this->date($this->require($d, 'fecha_ingreso')),
+                'estatus' => $estatus,
+                'tipo_funcionario' => $tipo,
+                'telefono' => filled($d['telefono'] ?? null) ? trim((string) $d['telefono']) : null,
+                'correo_electronico' => filled($d['correo_electronico'] ?? null) ? trim((string) $d['correo_electronico']) : null,
+                'cargo_administrativo_id' => $cargoId,
+                'tipo_sangre' => $d['tipo_sangre'] ?: null,
+                'estado_civil' => $d['estado_civil'] ?: null,
+                'direccion' => $d['direccion'] ?: null,
+                'centro_votacion' => $centroNombre !== '' ? $centroNombre : null,
+                'centro_votacion_id' => $centroVotacionId,
+                'parroquia_id' => $parroquiaId,
+                'tipo_vivienda' => $vivienda,
+                'direccion_vivienda' => ($vivienda === 'No posee' || ! $vivienda) ? null : ($d['direccion_vivienda'] ?: null),
+                'sabe_conducir' => $sabe,
+                'tipos_conduccion' => $tipos,
+                'telefono_residencial' => $d['telefono_residencial'] ?: null,
+                'talla_camisa' => $d['talla_camisa'] ?: null,
+                'talla_pantalon' => $d['talla_pantalon'] ?: null,
+                'talla_zapatos' => $d['talla_zapatos'] ?: null,
+                'talla_saco' => $d['talla_saco'] ?: null,
+                'talla_kepin_toka' => $d['talla_kepin_toka'] ?: null,
+                'talla_tacon' => $d['talla_tacon'] ?: null,
+                'talla_falda' => $d['talla_falda'] ?: null,
+                'talla_gorra' => $d['talla_gorra'] ?: null,
+            ]);
+        });
     }
 
     private function importCargoFuncionario(array $d): array
     {
-        $oficial = $this->findOficial($this->require($d, 'documento_identidad'));
+        $doc = $this->normalizeDocumento($this->require($d, 'documento_identidad'));
         $cargoNombre = trim($this->require($d, 'cargo'));
+        $rowKey = $doc.'|'.$this->normalizeMatchText($cargoNombre);
 
+        $deduped = $this->dedupeRecords(Oficiale::class, fn ($q) => $q->where('documento_identidad', $doc));
+
+        if ($this->isImportRowSeen('cargos_funcionarios', $rowKey)) {
+            return [
+                'status' => 'skipped',
+                'message' => $this->skipMessage('Fila duplicada en el archivo', $deduped),
+                'deduped' => $deduped,
+            ];
+        }
+        $this->markImportRowSeen('cargos_funcionarios', $rowKey);
+
+        $oficial = $this->findOficial($doc);
         $cargo = CargosAdministrativo::firstOrCreate(
             ['nombre_cargo' => $cargoNombre],
             ['nombre_cargo' => $cargoNombre]
         );
 
+        if ((int) $oficial->cargo_administrativo_id === (int) $cargo->id) {
+            return [
+                'status' => 'skipped',
+                'message' => $this->skipMessage("Cargo {$cargoNombre} ya asignado a {$doc}", $deduped),
+                'deduped' => $deduped,
+            ];
+        }
+
         $oficial->update(['cargo_administrativo_id' => $cargo->id]);
 
-        return ['status' => 'created'];
+        return ['status' => 'created', 'deduped' => $deduped];
     }
 
     private function importFamiliar(array $d): array
@@ -398,22 +434,31 @@ class BulkImportService
             throw new \InvalidArgumentException('sexo debe ser M o F');
         }
 
-        OficialesFamiliare::create([
-            'id_policia' => $oficial->id,
-            'nombre_completo' => $this->requireAny($d, ['nombre_completo', 'nombre_familiar'], 'nombre_completo'),
-            'parentesco' => $this->require($d, 'parentesco'),
-            'fecha_nacimiento' => $this->date($this->require($d, 'fecha_nacimiento')),
-            'sexo' => $sexo,
-            'telefono' => $d['telefono'] ?: null,
-            'direccion' => $d['direccion'] ?: null,
-            'edad' => ($d['edad'] !== null && $d['edad'] !== '') ? (int) $d['edad'] : null,
-            'posee_discapacidad' => $posee,
-            'discapacidad_id' => $discId,
-            'discapacidad_requerimientos' => $posee ? ($d['discapacidad_requerimientos'] ?: null) : null,
-            'discapacidad_observaciones' => $posee ? ($d['discapacidad_observaciones'] ?: null) : null,
-        ]);
+        $nombre = trim($this->requireAny($d, ['nombre_completo', 'nombre_familiar'], 'nombre_completo'));
+        $parentesco = trim($this->require($d, 'parentesco'));
+        $fechaNacimiento = $this->date($this->require($d, 'fecha_nacimiento'));
+        $rowKey = "{$oficial->id}|{$this->normalizeMatchText($nombre)}|{$this->normalizeMatchText($parentesco)}|{$fechaNacimiento}";
+        $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
+            ->whereRaw('LOWER(TRIM(nombre_completo)) = ?', [$this->normalizeMatchText($nombre)])
+            ->whereRaw('LOWER(TRIM(parentesco)) = ?', [$this->normalizeMatchText($parentesco)])
+            ->whereDate('fecha_nacimiento', $fechaNacimiento);
 
-        return ['status' => 'created'];
+        return $this->importUnique('familiares', $rowKey, OficialesFamiliare::class, $matchFn, function () use ($oficial, $d, $nombre, $parentesco, $fechaNacimiento, $sexo, $posee, $discId) {
+            OficialesFamiliare::create([
+                'id_policia' => $oficial->id,
+                'nombre_completo' => $nombre,
+                'parentesco' => $parentesco,
+                'fecha_nacimiento' => $fechaNacimiento,
+                'sexo' => $sexo,
+                'telefono' => $d['telefono'] ?: null,
+                'direccion' => $d['direccion'] ?: null,
+                'edad' => ($d['edad'] !== null && $d['edad'] !== '') ? (int) $d['edad'] : null,
+                'posee_discapacidad' => $posee,
+                'discapacidad_id' => $discId,
+                'discapacidad_requerimientos' => $posee ? ($d['discapacidad_requerimientos'] ?: null) : null,
+                'discapacidad_observaciones' => $posee ? ($d['discapacidad_observaciones'] ?: null) : null,
+            ]);
+        });
     }
 
     private function importAcademia(array $d): array
@@ -424,17 +469,32 @@ class BulkImportService
             throw new \InvalidArgumentException('anio_graduacion fuera de rango');
         }
 
-        OficialesAcademico::create([
-            'id_policia' => $oficial->id,
-            'tipo_formacion' => $this->require($d, 'tipo_formacion'),
-            'titulo' => $d['titulo'] ?: null,
-            'institucion' => $d['institucion'] ?: null,
-            'descripcion' => $d['descripcion'] ?: null,
-            'fecha_inicio' => null,
-            'fecha_fin' => sprintf('%04d-12-31', $anio),
-        ]);
+        $tipoFormacion = trim($this->require($d, 'tipo_formacion'));
+        $fechaFin = sprintf('%04d-12-31', $anio);
+        $titulo = trim((string) ($d['titulo'] ?? ''));
+        $rowKey = "{$oficial->id}|{$this->normalizeMatchText($tipoFormacion)}|{$fechaFin}|{$this->normalizeMatchText($titulo)}";
+        $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
+            ->where('tipo_formacion', $tipoFormacion)
+            ->whereDate('fecha_fin', $fechaFin)
+            ->when(
+                $titulo !== '',
+                fn ($query) => $query->whereRaw('LOWER(TRIM(COALESCE(titulo, ""))) = ?', [$this->normalizeMatchText($titulo)]),
+                fn ($query) => $query->where(function ($inner) {
+                    $inner->whereNull('titulo')->orWhereRaw('TRIM(titulo) = ?', ['']);
+                })
+            );
 
-        return ['status' => 'created'];
+        return $this->importUnique('academia', $rowKey, OficialesAcademico::class, $matchFn, function () use ($oficial, $d, $tipoFormacion, $fechaFin) {
+            OficialesAcademico::create([
+                'id_policia' => $oficial->id,
+                'tipo_formacion' => $tipoFormacion,
+                'titulo' => $d['titulo'] ?: null,
+                'institucion' => $d['institucion'] ?: null,
+                'descripcion' => $d['descripcion'] ?: null,
+                'fecha_inicio' => null,
+                'fecha_fin' => $fechaFin,
+            ]);
+        });
     }
 
     private function importCurso(array $d): array
@@ -447,19 +507,30 @@ class BulkImportService
             throw new \InvalidArgumentException('duracion_tipo inválido');
         }
 
-        OficialesCurso::create([
-            'id_policia' => $oficial->id,
-            'tipo' => $this->require($d, 'tipo'),
-            'nombre' => $catalogo->nombre,
-            'catalogo_curso_id' => $catalogo->id,
-            'institucion' => $d['institucion'] ?: null,
-            'descripcion' => $d['descripcion'] ?: '',
-            'fecha_inicio' => $this->date($this->require($d, 'fecha_inicio')),
-            'duracion_valor' => (int) $this->require($d, 'duracion_valor'),
-            'duracion_tipo' => $duracionTipo,
-        ]);
+        $tipo = trim($this->require($d, 'tipo'));
+        $fechaInicio = $this->date($this->require($d, 'fecha_inicio'));
+        $rowKey = "{$oficial->id}|{$catalogo->id}|{$this->normalizeMatchText($tipo)}|{$fechaInicio}";
+        $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
+            ->where('tipo', $tipo)
+            ->whereDate('fecha_inicio', $fechaInicio)
+            ->where(function ($inner) use ($catalogo) {
+                $inner->where('catalogo_curso_id', $catalogo->id)
+                    ->orWhereRaw('LOWER(TRIM(COALESCE(nombre, ""))) = ?', [$this->normalizeMatchText($catalogo->nombre)]);
+            });
 
-        return ['status' => 'created'];
+        return $this->importUnique('cursos', $rowKey, OficialesCurso::class, $matchFn, function () use ($oficial, $d, $catalogo, $tipo, $fechaInicio, $duracionTipo) {
+            OficialesCurso::create([
+                'id_policia' => $oficial->id,
+                'tipo' => $tipo,
+                'nombre' => $catalogo->nombre,
+                'catalogo_curso_id' => $catalogo->id,
+                'institucion' => $d['institucion'] ?: null,
+                'descripcion' => $d['descripcion'] ?: '',
+                'fecha_inicio' => $fechaInicio,
+                'duracion_valor' => (int) $this->require($d, 'duracion_valor'),
+                'duracion_tipo' => $duracionTipo,
+            ]);
+        });
     }
 
     private function importJerarquia(array $d): array
@@ -480,34 +551,26 @@ class BulkImportService
             $fechaFin = $this->date($d['fecha_fin']);
         }
 
-        $duplicado = OficialesCargo::query()
-            ->where('id_policia', $oficial->id)
+        $rowKey = "{$oficial->id}|{$cargo->id}|{$fechaInicio}";
+        $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
             ->where('id_cargo', $cargo->id)
-            ->whereDate('fecha_inicio', $fechaInicio)
-            ->exists();
+            ->whereDate('fecha_inicio', $fechaInicio);
 
-        if ($duplicado) {
-            return [
-                'status' => 'skipped',
-                'message' => "Jerarquía {$nombreJerarquia} con la misma fecha de inicio ya existe para {$oficial->documento_identidad}",
-            ];
-        }
+        return $this->importUnique('jerarquias', $rowKey, OficialesCargo::class, $matchFn, function () use ($oficial, $cargo, $fechaInicio, $fechaFin, $isActual, $nombreJerarquia) {
+            if ($isActual) {
+                OficialesCargo::query()
+                    ->where('id_policia', $oficial->id)
+                    ->update(['is_actual' => 0]);
+            }
 
-        if ($isActual) {
-            OficialesCargo::query()
-                ->where('id_policia', $oficial->id)
-                ->update(['is_actual' => 0]);
-        }
-
-        OficialesCargo::create([
-            'id_policia' => $oficial->id,
-            'id_cargo' => $cargo->id,
-            'fecha_inicio' => $fechaInicio,
-            'fecha_fin' => $fechaFin,
-            'is_actual' => $isActual ? 1 : 0,
-        ]);
-
-        return ['status' => 'created'];
+            OficialesCargo::create([
+                'id_policia' => $oficial->id,
+                'id_cargo' => $cargo->id,
+                'fecha_inicio' => $fechaInicio,
+                'fecha_fin' => $fechaFin,
+                'is_actual' => $isActual ? 1 : 0,
+            ]);
+        }, "Jerarquía {$nombreJerarquia} con la misma fecha de inicio ya existe");
     }
 
     private function importReposo(array $d): array
@@ -520,6 +583,8 @@ class BulkImportService
 
         $inicio = $this->date($this->require($d, 'fecha_reposo_inicio'));
         $fin = ! empty($d['fecha_reposo_fin']) ? $this->date($d['fecha_reposo_fin']) : null;
+        $fechaRevision = $this->date($this->require($d, 'fecha_revision'));
+        $diagnostico = trim($this->require($d, 'diagnostico'));
 
         if ($estado === ReposoEstatusSync::VIGENTE_SI && ! $fin) {
             throw new \InvalidArgumentException('fecha_reposo_fin obligatoria si estado_reposo=1');
@@ -537,26 +602,34 @@ class BulkImportService
             $estado = ReposoEstatusSync::VIGENTE_NO;
         }
 
-        OficialesSalud::create([
-            'id_policia' => $oficial->id,
-            'fecha_revision' => $this->date($this->require($d, 'fecha_revision')),
-            'diagnostico' => $this->require($d, 'diagnostico'),
-            'fecha_reposo_inicio' => $inicio,
-            'fecha_reposo_fin' => $fin,
-            'dias_reposo' => $dias,
-            'is_vigente' => $estado,
-        ]);
+        $rowKey = "{$oficial->id}|{$inicio}|{$this->normalizeMatchText($diagnostico)}|{$fechaRevision}";
+        $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
+            ->whereDate('fecha_reposo_inicio', $inicio)
+            ->whereRaw('LOWER(TRIM(diagnostico)) = ?', [$this->normalizeMatchText($diagnostico)])
+            ->whereDate('fecha_revision', $fechaRevision);
+
+        $result = $this->importUnique('reposos', $rowKey, OficialesSalud::class, $matchFn, function () use ($oficial, $fechaRevision, $diagnostico, $inicio, $fin, $dias, $estado) {
+            OficialesSalud::create([
+                'id_policia' => $oficial->id,
+                'fecha_revision' => $fechaRevision,
+                'diagnostico' => $diagnostico,
+                'fecha_reposo_inicio' => $inicio,
+                'fecha_reposo_fin' => $fin,
+                'dias_reposo' => $dias,
+                'is_vigente' => $estado,
+            ]);
+        });
 
         ReposoEstatusSync::actualizarEstatusFuncionario((int) $oficial->id);
 
-        return ['status' => 'created'];
+        return $result;
     }
 
     private function importVacacion(array $d): array
     {
         $oficial = $this->findOficial($this->requireAny($d, ['documento_identidad', 'cedula', 'documento'], 'documento_identidad'));
         $estatus = strtoupper(trim($this->requireAny($d, ['estatus', 'estado', 'status'], 'estatus')));
-        $fechaEmision = $this->requireAny($d, ['fecha_emision', 'fecha_inicio', 'fecha_desde'], 'fecha_emision');
+        $fechaEmision = $this->date($this->requireAny($d, ['fecha_emision', 'fecha_inicio', 'fecha_desde'], 'fecha_emision'));
         $reintegroRaw = $this->optionalValue($d, ['fecha_reintegro', 'fecha_fin', 'fecha_hasta', 'reintegro']);
         $reintegro = $reintegroRaw !== null ? $this->date($reintegroRaw) : null;
         $disfrutadasRaw = $this->optionalValue($d, ['is_disfrutadas', 'disfrutadas', 'vacaciones_disfrutadas']);
@@ -565,16 +638,115 @@ class BulkImportService
             $disfrutadas = 1;
         }
 
-        OficialesVacacione::create([
-            'id_policia' => $oficial->id,
-            'fecha_emision' => $this->date($fechaEmision),
-            'fecha_reintegro' => $reintegro,
-            'estatus' => $estatus,
-            'descripcion' => $this->optionalValue($d, ['descripcion', 'observaciones', 'nota']) ?: null,
-            'is_disfrutadas' => $disfrutadas,
-        ]);
+        $rowKey = "{$oficial->id}|{$fechaEmision}|{$this->normalizeMatchText($estatus)}";
+        $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
+            ->whereDate('fecha_emision', $fechaEmision)
+            ->whereRaw('UPPER(TRIM(estatus)) = ?', [$estatus]);
 
-        return ['status' => 'created'];
+        return $this->importUnique('vacaciones', $rowKey, OficialesVacacione::class, $matchFn, function () use ($oficial, $fechaEmision, $reintegro, $estatus, $d, $disfrutadas) {
+            OficialesVacacione::create([
+                'id_policia' => $oficial->id,
+                'fecha_emision' => $fechaEmision,
+                'fecha_reintegro' => $reintegro,
+                'estatus' => $estatus,
+                'descripcion' => $this->optionalValue($d, ['descripcion', 'observaciones', 'nota']) ?: null,
+                'is_disfrutadas' => $disfrutadas,
+            ]);
+        });
+    }
+
+    private function importReconocimiento(array $d): array
+    {
+        $oficial = $this->findOficial($this->require($d, 'documento_identidad'));
+        $tipo = trim($this->require($d, 'tipo'));
+        $tipoNorm = $this->normalizeMatchText($this->foldAccents($tipo));
+        $tipoCanon = match (true) {
+            str_contains($tipoNorm, 'condecor') => 'Condecoración',
+            str_contains($tipoNorm, 'felicit') => 'Felicitaciones',
+            str_contains($tipoNorm, 'reconoc') => 'Reconocimiento',
+            default => null,
+        };
+        if ($tipoCanon === null) {
+            throw new \InvalidArgumentException('tipo debe ser Reconocimiento, Condecoración o Felicitaciones');
+        }
+
+        $autoridad = trim($this->require($d, 'autoridad'));
+        $fecha = $this->date($this->require($d, 'fecha'));
+        $descripcion = trim($this->require($d, 'descripcion'));
+
+        $rowKey = "{$oficial->id}|{$this->normalizeMatchText($this->foldAccents($tipoCanon))}|{$fecha}|{$this->normalizeMatchText($this->foldAccents($descripcion))}|{$this->normalizeMatchText($this->foldAccents($autoridad))}";
+        $matchFn = function ($q) use ($oficial, $tipoCanon, $fecha, $descripcion, $autoridad) {
+            $q->where('id_policia', $oficial->id)->whereDate('fecha', $fecha);
+
+            $candidates = (clone $q)->get(['id', 'tipo', 'descripcion', 'autoridad']);
+            $keepIds = $candidates->filter(function ($row) use ($tipoCanon, $descripcion, $autoridad) {
+                return $this->normalizeMatchText($this->foldAccents((string) $row->tipo)) === $this->normalizeMatchText($this->foldAccents($tipoCanon))
+                    && $this->normalizeMatchText($this->foldAccents((string) $row->descripcion)) === $this->normalizeMatchText($this->foldAccents($descripcion))
+                    && $this->normalizeMatchText($this->foldAccents((string) ($row->autoridad ?? ''))) === $this->normalizeMatchText($this->foldAccents($autoridad));
+            })->pluck('id')->all();
+
+            if ($keepIds === []) {
+                $q->whereRaw('1 = 0');
+            } else {
+                $q->whereIn('id', $keepIds);
+            }
+        };
+
+        return $this->importUnique('reconocimientos', $rowKey, OficialesReconocimiento::class, $matchFn, function () use ($oficial, $tipoCanon, $autoridad, $fecha, $descripcion) {
+            OficialesReconocimiento::create([
+                'id_policia' => $oficial->id,
+                'tipo' => $tipoCanon,
+                'autoridad' => $autoridad,
+                'fecha' => $fecha,
+                'descripcion' => $descripcion,
+            ]);
+        });
+    }
+
+    private function importRadiograma(array $d): array
+    {
+        $oficial = $this->findOficial($this->require($d, 'documento_identidad'));
+        $nombreEstacion = trim($this->require($d, 'estacion'));
+        $nombreNorm = $this->normalizeMatchText($this->foldAccents($nombreEstacion));
+        $estacion = Estacione::query()
+            ->get(['id', 'estacion'])
+            ->first(function ($item) use ($nombreNorm) {
+                return $this->normalizeMatchText($this->foldAccents((string) $item->estacion)) === $nombreNorm;
+            });
+
+        if (! $estacion) {
+            $estacion = Estacione::create([
+                'estacion' => $nombreEstacion,
+                'descripcion' => null,
+            ]);
+        }
+
+        $fechaInicio = $this->date($this->require($d, 'fecha_inicio'));
+        $fechaFinal = filled($d['fecha_final'] ?? null) ? $this->date($d['fecha_final']) : null;
+        $isActual = in_array((string) ($d['is_actual'] ?? '0'), ['1', 'true', 'Si', 'SI'], true);
+        $descripcion = trim((string) ($d['descripcion'] ?? ''));
+
+        $rowKey = "{$oficial->id}|{$estacion->id}|{$fechaInicio}";
+        $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
+            ->where('id_estacion', $estacion->id)
+            ->whereDate('fecha_inicio', $fechaInicio);
+
+        return $this->importUnique('radiogramas', $rowKey, OficialesRadiograma::class, $matchFn, function () use ($oficial, $estacion, $fechaInicio, $fechaFinal, $isActual, $descripcion) {
+            if ($isActual) {
+                OficialesRadiograma::query()
+                    ->where('id_policia', $oficial->id)
+                    ->update(['is_actual' => 0]);
+            }
+
+            OficialesRadiograma::create([
+                'id_policia' => $oficial->id,
+                'id_estacion' => $estacion->id,
+                'fecha_inicio' => $fechaInicio,
+                'fecha_final' => $fechaFinal,
+                'is_actual' => $isActual ? 1 : 0,
+                'descripcion' => $descripcion !== '' ? $descripcion : null,
+            ]);
+        }, "Radiograma en estación {$estacion->estacion} con la misma fecha de inicio ya existe");
     }
 
     private function resolveParroquiaId(?string $municipio, ?string $parroquia): ?int
@@ -639,9 +811,109 @@ class BulkImportService
         return (int) $centro->id;
     }
 
+    private function resetImportSession(): void
+    {
+        $this->importSeenKeys = [];
+    }
+
+    private function isImportRowSeen(string $module, string $key): bool
+    {
+        return isset($this->importSeenKeys[$module.'|'.$key]);
+    }
+
+    private function markImportRowSeen(string $module, string $key): void
+    {
+        $this->importSeenKeys[$module.'|'.$key] = true;
+    }
+
+    private function normalizeMatchText(string $value): string
+    {
+        return mb_strtolower(trim($value));
+    }
+
+    private function skipMessage(string $base, int $deduped): string
+    {
+        if ($deduped > 0) {
+            return "{$base} ({$deduped} duplicado(s) eliminado(s) en BD)";
+        }
+
+        return $base;
+    }
+
+    /**
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelClass
+     * @param  callable(\Illuminate\Database\Eloquent\Builder): void  $matchFn
+     * @param  callable(): void  $create
+     */
+    private function importUnique(
+        string $module,
+        string $rowKey,
+        string $modelClass,
+        callable $matchFn,
+        callable $create,
+        ?string $existsMessage = null
+    ): array {
+        $deduped = $this->dedupeRecords($modelClass, $matchFn);
+
+        if ($this->isImportRowSeen($module, $rowKey)) {
+            return [
+                'status' => 'skipped',
+                'message' => $this->skipMessage('Registro duplicado en el archivo', $deduped),
+                'deduped' => $deduped,
+            ];
+        }
+        $this->markImportRowSeen($module, $rowKey);
+
+        if ($this->recordExists($modelClass, $matchFn)) {
+            return [
+                'status' => 'skipped',
+                'message' => $this->skipMessage($existsMessage ?? 'Registro ya existente', $deduped),
+                'deduped' => $deduped,
+            ];
+        }
+
+        $create();
+        $deduped += $this->dedupeRecords($modelClass, $matchFn);
+
+        return ['status' => 'created', 'deduped' => $deduped];
+    }
+
+    /**
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelClass
+     * @param  callable(\Illuminate\Database\Eloquent\Builder): void  $matchFn
+     */
+    private function dedupeRecords(string $modelClass, callable $matchFn): int
+    {
+        $query = $modelClass::query();
+        $matchFn($query);
+        $ids = (clone $query)->orderBy('id')->pluck('id');
+
+        if ($ids->count() <= 1) {
+            return 0;
+        }
+
+        $deleteIds = $ids->slice(1)->values()->all();
+        $modelClass::query()->whereIn('id', $deleteIds)->delete();
+
+        return count($deleteIds);
+    }
+
+    /**
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelClass
+     * @param  callable(\Illuminate\Database\Eloquent\Builder): void  $matchFn
+     */
+    private function recordExists(string $modelClass, callable $matchFn): bool
+    {
+        $query = $modelClass::query();
+        $matchFn($query);
+
+        return $query->exists();
+    }
+
     private function findOficial(string $documento): Oficiale
     {
         $documento = $this->normalizeDocumento($documento);
+        $this->dedupeRecords(Oficiale::class, fn ($q) => $q->where('documento_identidad', $documento));
         $oficial = Oficiale::where('documento_identidad', $documento)->first();
         if (! $oficial) {
             throw new \InvalidArgumentException("Funcionario con documento {$documento} no encontrado");
