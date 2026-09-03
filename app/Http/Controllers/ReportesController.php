@@ -426,7 +426,13 @@ class ReportesController extends Controller
     {
         UrraEstatusSync::sincronizarVencidos();
 
-        $urra = OficialesUrra::with(['oficiale.cargos_administrativo'])->findOrFail($id);
+        $urra = OficialesUrra::with([
+            'oficiale.cargos_administrativo',
+            'oficiale.oficiales_cargos' => function ($q) {
+                $q->where('is_actual', 1)->with('cargo');
+            },
+            'oficiale.armamentos',
+        ])->findOrFail($id);
         $logos = $this->urraLogos();
 
         return view('admin.reports.urra-ficha', [

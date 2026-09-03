@@ -41,6 +41,32 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="unidad_origen">Unidad de origen</label>
+                                    <input type="text" class="form-control" id="unidad_origen" name="unidad_origen" value="CPET" placeholder="CPET">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="cargo_urra">Cargo que ocupa en la URRA</label>
+                                    <input type="text" class="form-control" id="cargo_urra" name="cargo_urra" placeholder="Ej: Servicio General">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="cuenta_bancaria">Cuenta bancaria</label>
+                                    <input type="text" class="form-control" id="cuenta_bancaria" name="cuenta_bancaria" placeholder="Número de cuenta">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="armamento_serial">Armamento / Serial</label>
+                                    <input type="text" class="form-control" id="armamento_serial" name="armamento_serial" placeholder="Ej: Pistola / 12345">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="ultimo_poligono">Último polígono</label>
+                                    <input type="text" class="form-control" id="ultimo_poligono" name="ultimo_poligono" placeholder="0">
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label" for="observaciones">Observaciones</label>
                                     <textarea class="form-control" id="observaciones" name="observaciones" rows="3"></textarea>
@@ -131,6 +157,7 @@ $(document).ready(function () {
         $('#form-edit').attr('id', 'form-add');
         $('#form-add').trigger('reset');
         $('#en_servicio').prop('checked', false);
+        $('#unidad_origen').val('CPET');
         $('#btn-submit').html('<i class="fas fa-check-circle"></i> Guardar').attr('class', 'btn btn-primary btn-lg');
         $('#add').modal('show');
     });
@@ -176,6 +203,11 @@ $(document).ready(function () {
                 $('#fecha_inicio').val(data.fecha_inicio ? String(data.fecha_inicio).substr(0, 10) : '');
                 $('#fecha_culminacion').val(data.fecha_culminacion ? String(data.fecha_culminacion).substr(0, 10) : '');
                 $('#tiempo_servicio').val(data.tiempo_servicio || '');
+                $('#unidad_origen').val(data.unidad_origen || 'CPET');
+                $('#cargo_urra').val(data.cargo_urra || '');
+                $('#cuenta_bancaria').val(data.cuenta_bancaria || '');
+                $('#armamento_serial').val(data.armamento_serial || '');
+                $('#ultimo_poligono').val(data.ultimo_poligono || '');
                 $('#observaciones').val(data.observaciones || '');
                 $('#en_servicio').prop('checked', !!data.en_servicio);
                 $('#form-add').attr('id', 'form-edit');

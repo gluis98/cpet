@@ -73,6 +73,11 @@ class OfficersUrraController extends Controller
             'tiempo_servicio' => ['nullable', 'string', 'max:120'],
             'en_servicio' => ['nullable'],
             'observaciones' => ['nullable', 'string'],
+            'unidad_origen' => ['nullable', 'string', 'max:255'],
+            'cuenta_bancaria' => ['nullable', 'string', 'max:40'],
+            'cargo_urra' => ['nullable', 'string', 'max:255'],
+            'armamento_serial' => ['nullable', 'string', 'max:255'],
+            'ultimo_poligono' => ['nullable', 'string', 'max:255'],
         ]);
 
         $inicio = $data['fecha_inicio'];

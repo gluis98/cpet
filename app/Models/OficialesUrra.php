@@ -25,6 +25,11 @@ class OficialesUrra extends Model
         'tiempo_servicio',
         'en_servicio',
         'observaciones',
+        'unidad_origen',
+        'cuenta_bancaria',
+        'cargo_urra',
+        'armamento_serial',
+        'ultimo_poligono',
     ];
 
     public function oficiale()
