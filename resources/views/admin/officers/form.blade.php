@@ -101,9 +101,19 @@
             <h1 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">{{ $title }}</h1>
             <p class="mt-1 text-sm text-slate-500">Completa cada pestaña y carga la fotografía del funcionario</p>
         </div>
-        <a href="{{ route('officers.tipo', $tipo) }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Volver al listado
-        </a>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+            @if ($oficial->exists)
+                @include('admin.officers._submodulos', [
+                    'oficialId' => $oficial->id,
+                    'tipoSlug' => $tipo,
+                    'btnClass' => 'btn btn-dark dropdown-toggle',
+                    'btnLabel' => 'Submódulos',
+                ])
+            @endif
+            <a href="{{ route('officers.tipo', $tipo) }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver al listado
+            </a>
+        </div>
     </div>
 
     @if (session('success'))

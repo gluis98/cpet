@@ -4,10 +4,6 @@
 <link rel="stylesheet" href="{{ asset('vendor/dropzone/dropzone.min.css') }}">
 <link rel="stylesheet" href="{{ public_asset('css/cpet-file-gallery.css') }}">
 <style>
-    #officers-table, #officers-table_wrapper, .dataTables_wrapper, table.dataTable {
-        width: 100% !important;
-    }
-
     .estatus-tab {
         display: inline-flex;
         align-items: center;
@@ -21,75 +17,86 @@
         font-size: 0.84rem;
         font-weight: 600;
         cursor: pointer;
-        transition: color 0.15s, background 0.15s, box-shadow 0.15s;
         white-space: nowrap;
     }
-
-    .estatus-tab:hover {
-        color: #1a4574;
-        background: rgba(255, 255, 255, 0.75);
-    }
-
+    .estatus-tab:hover { color: #1a4574; background: rgba(255,255,255,.75); }
     .estatus-tab.is-active {
         color: #0f2744;
         background: #fff;
-        box-shadow: 0 -1px 0 #fff, 0 1px 0 #fff;
         position: relative;
     }
-
     .estatus-tab.is-active::after {
         content: "";
         position: absolute;
-        left: 0.65rem;
-        right: 0.65rem;
-        bottom: 0;
-        height: 3px;
-        border-radius: 999px;
+        left: .65rem; right: .65rem; bottom: 0;
+        height: 3px; border-radius: 999px;
         background: linear-gradient(90deg, #c4922e, #d4a84b);
     }
-
     .estatus-tab__count {
         display: inline-flex;
         min-width: 1.35rem;
         align-items: center;
         justify-content: center;
         border-radius: 999px;
-        padding: 0.1rem 0.45rem;
-        font-size: 0.7rem;
+        padding: .1rem .45rem;
+        font-size: .7rem;
         font-weight: 700;
         background: #e2e8f0;
         color: #475569;
     }
-
     .estatus-tab.is-active .estatus-tab__count {
         background: #1a4574;
         color: #fff;
     }
+    .estatus-tabs-wrap { overflow-x: auto; scrollbar-width: thin; }
 
-    .estatus-tabs-wrap {
-        overflow-x: auto;
-        scrollbar-width: thin;
+    .officers-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .75rem;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
     }
+    .officers-toolbar input[type="search"] {
+        min-width: min(100%, 280px);
+    }
+    .officers-meta {
+        font-size: .85rem;
+        color: #64748b;
+    }
+    .officers-pager {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+    .officers-pager .btn[disabled] { opacity: .45; cursor: not-allowed; }
 
-    /* El menú de submódulos debe poder salir del contenedor de la tabla */
     .officers-table-panel,
-    .officers-table-panel .dataTables_wrapper,
-    .officers-table-panel .dataTables_scroll,
-    .officers-table-panel .dataTables_scrollBody,
     .officers-table-panel .table-responsive {
         overflow: visible !important;
     }
-
     .officers-table-panel td.actions {
         overflow: visible !important;
         position: relative;
+        white-space: nowrap;
     }
-
-    .officers-table-panel .dropdown-menu {
+    .officers-submodulos-menu {
         z-index: 1060;
         max-height: min(70vh, 28rem);
         overflow-y: auto;
     }
+    #officers-tbody tr { cursor: default; }
+    #officers-loading {
+        display: none;
+        text-align: center;
+        padding: 1.5rem;
+        color: #64748b;
+    }
+    #officers-loading.is-on { display: block; }
 </style>
 @endsection
 
@@ -156,22 +163,47 @@
     </div>
 
     <div class="p-4 sm:p-5">
-        <table class="table table-bordered table-hover" id="officers-table" style="width:100%;">
-            <thead>
-                <tr>
-                    <th class="text-center">N° Credencial</th>
-                    <th class="text-center">N° de Cédula</th>
-                    <th class="text-center">Nombre y apellido</th>
-                    <th class="text-center">Teléfono</th>
-                    <th class="text-center">Fecha de ingreso</th>
-                    <th class="text-center">Jerarquía</th>
-                    <th class="text-center">Cargo</th>
-                    <th class="text-center">Estatus</th>
-                    <th class="text-center actions">Acciones</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="officers-toolbar">
+            <input type="search" id="officers-search" class="form-control" placeholder="Buscar cédula, nombre, placa, cargo…">
+            <div class="d-flex align-items-center gap-2">
+                <label class="mb-0 text-muted small" for="officers-per-page">Por página</label>
+                <select id="officers-per-page" class="form-control form-control-sm" style="width:auto;">
+                    <option value="10">10</option>
+                    <option value="25" selected>25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="officers-loading"><i class="fas fa-spinner fa-spin"></i> Cargando…</div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover mb-0" id="officers-table">
+                <thead>
+                    <tr>
+                        <th class="text-center">N° Credencial</th>
+                        <th class="text-center">N° de Cédula</th>
+                        <th class="text-center">Nombre y apellido</th>
+                        <th class="text-center">Teléfono</th>
+                        <th class="text-center">Fecha de ingreso</th>
+                        <th class="text-center">Jerarquía</th>
+                        <th class="text-center">Cargo</th>
+                        <th class="text-center">Estatus</th>
+                        <th class="text-center actions">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="officers-tbody"></tbody>
+            </table>
+        </div>
+
+        <div class="officers-pager">
+            <div class="officers-meta" id="officers-info">—</div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="officers-prev">Anterior</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="officers-next">Siguiente</button>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
@@ -180,200 +212,233 @@
 <script src="{{ asset('vendor/dropzone/dropzone.min.js') }}"></script>
 <script src="{{ public_asset('js/cpet-file-gallery.js') }}"></script>
 <script>
+(function () {
     Dropzone.autoDiscover = false;
-    let officersTable;
-    let id = '';
-    let officerDropzone = null;
-    const storageBase = @json(public_asset('storage'));
-    const filesApiBase = @json(url('api/officers/files'));
-    let currentEstatus = '';
-    const tipoFuncionario = @json($tipoFuncionario);
-    const tipoSlug = @json($tipo);
 
-    const dtEs = {
-        decimal: ',',
-        thousands: '.',
-        processing: 'Procesando...',
-        search: 'Buscar:',
-        lengthMenu: 'Mostrar _MENU_ registros',
-        info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
-        infoEmpty: 'Mostrando 0 a 0 de 0 registros',
-        infoFiltered: '(filtrado de _MAX_ registros totales)',
-        infoPostFix: '',
-        loadingRecords: 'Cargando...',
-        zeroRecords: 'No se encontraron resultados',
-        emptyTable: 'No hay funcionarios con este estatus',
-        paginate: {
-            first: 'Primero',
-            previous: 'Anterior',
-            next: 'Siguiente',
-            last: 'Último'
-        },
-        aria: {
-            sortAscending: ': activar para ordenar la columna de manera ascendente',
-            sortDescending: ': activar para ordenar la columna de manera descendente'
-        }
+    var apiBase = @json(url('api/officers'));
+    var storageBase = @json(public_asset('storage'));
+    var filesApiBase = @json(url('api/officers/files'));
+    var tipoFuncionario = @json($tipoFuncionario);
+    var tipoSlug = @json($tipo);
+    var placaSin = @json(\App\Models\Oficiale::PLACA_SIN_ASIGNAR);
+
+    var state = {
+        page: 1,
+        perPage: 25,
+        q: '',
+        estatus: '',
+        total: 0,
+        lastPage: 1,
+        loading: false
+    };
+    var searchTimer = null;
+    var officerDropzone = null;
+    var currentFilesId = '';
+
+    var estatusColors = {
+        'Operativo': 'badge-success',
+        'No Operativo': 'badge-secondary',
+        'En Reposo': 'badge-warning',
+        'Reingreso': 'badge-info',
+        'Suspendido': 'badge-warning',
+        'Retirado': 'badge-dark',
+        'Jubilado': 'badge-info',
+        'Fallecido': 'badge-danger',
+        'URRA': 'badge-primary'
     };
 
-    $(document).ready(function () {
-        $(document).on('cpet:refresh-table', function () {
-            if (officersTable) officersTable.ajax.reload(null, false);
+    function esc(v) {
+        return String(v == null ? '' : v)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function badgeEstatus(estatus, tipoRetiro) {
+        if (!estatus) return '';
+        var cls = estatusColors[estatus] || 'badge-light';
+        var label = String(estatus).toUpperCase();
+        if (estatus === 'Retirado' && tipoRetiro) {
+            label += ' (' + String(tipoRetiro).toUpperCase() + ')';
+        }
+        return '<span class="badge ' + cls + '">' + esc(label) + '</span>';
+    }
+
+    function actionsHtml(id) {
+        return '' +
+            '<div class="btn-group">' +
+                '<button type="button" class="btn btn-dark btn-sm dropdown-toggle" data-toggle="dropdown">' +
+                    '<i class="fas fa-ellipsis-v"></i>' +
+                '</button>' +
+                '<div class="dropdown-menu dropdown-menu-right officers-submodulos-menu">' +
+                    '<a class="dropdown-item" href="{{ url('/officers/tipo') }}/' + tipoSlug + '/' + id + '/edit"><i class="far fa-edit"></i> Editar</a>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/ficha') }}/' + id + '"><i class="fas fa-id-card-alt"></i> Ver ficha</a>' +
+                    '<div class="dropdown-divider"></div>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/radiogram') }}/' + id + '"><i class="fas fa-street-view"></i> Radiograma</a>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/nombramientos') }}/' + id + '"><i class="fas fa-user-tie"></i> Nombramientos</a>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/academy') }}/' + id + '"><i class="fas fa-graduation-cap"></i> Formación académica</a>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/courses') }}/' + id + '"><i class="fas fa-book-reader"></i> Cursos y diplomados</a>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/positions') }}/' + id + '"><i class="fas fa-medal"></i> Jerarquías obtenidas</a>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/awards') }}/' + id + '"><i class="fas fa-trophy"></i> Reconocimientos</a>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/familly') }}/' + id + '"><i class="fab fa-gratipay"></i> Hijos y familiares</a>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/health') }}/' + id + '"><i class="fas fa-medkit"></i> Reposos médicos</a>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/icap') }}/' + id + '"><i class="fas fa-balance-scale"></i> ICAP</a>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/urra') }}/' + id + '"><i class="fas fa-shield-alt"></i> URRA</a>' +
+                    '<button class="dropdown-item files" data-id="' + id + '" type="button"><i class="fas fa-file"></i> Archivos del oficial</button>' +
+                    '<a class="dropdown-item" href="{{ url('/officers/vacations') }}/' + id + '"><i class="fas fa-plane-departure"></i> Vacaciones</a>' +
+                    '<div class="dropdown-divider"></div>' +
+                    '<button class="dropdown-item delete text-danger" data-id="' + id + '" type="button"><i class="far fa-trash-alt"></i> Eliminar</button>' +
+                '</div>' +
+            '</div>';
+    }
+
+    function renderRows(rows) {
+        var tbody = document.getElementById('officers-tbody');
+        if (!rows.length) {
+            tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Sin resultados</td></tr>';
+            return;
+        }
+        var html = '';
+        rows.forEach(function (r) {
+            html += '<tr>' +
+                '<td class="text-center">' + esc(r.numero_placa || placaSin) + '</td>' +
+                '<td class="text-center">' + esc(r.documento_identidad || '') + '</td>' +
+                '<td class="text-center">' + esc(r.nombre_completo || '') + '</td>' +
+                '<td class="text-center">' + esc(r.telefono || 'S/T') + '</td>' +
+                '<td class="text-center">' + esc(r.fecha_ingreso || 'S/F') + '</td>' +
+                '<td class="text-center">' + esc(r.jerarquia || 'N/A') + '</td>' +
+                '<td class="text-center">' + esc(r.cargo || 'S/A') + '</td>' +
+                '<td class="text-center">' + badgeEstatus(r.estatus, r.tipo_retiro) + '</td>' +
+                '<td class="text-right actions">' + actionsHtml(r.id) + '</td>' +
+            '</tr>';
         });
+        tbody.innerHTML = html;
+    }
 
-        officersTable = $('#officers-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '{{ url('api/officers') }}',
-                type: 'GET',
-                data: function (d) {
-                    d.tipo_funcionario = tipoFuncionario;
-                    d.estatus = currentEstatus;
-                    return d;
-                }
-            },
-            columns: [
-                { data: 'numero_placa', className: 'text-center', render: d => d || @json(\App\Models\Oficiale::PLACA_SIN_ASIGNAR) },
-                { data: 'documento_identidad', className: 'text-center' },
-                { data: 'nombre_completo', className: 'text-center' },
-                { data: 'telefono', className: 'text-center', render: d => d || 'S/T' },
-                { data: 'fecha_ingreso', className: 'text-center', render: d => d ? d.substr(0, 10) : 'S/F' },
-                {
-                    data: 'oficiales_cargos', className: 'text-center', orderable: false,
-                    render: function (data) {
-                        const cargo = data && data.length ? data.find(c => c.is_actual === 1) : null;
-                        return cargo && cargo.cargo ? cargo.cargo.nombre_cargo : 'N/A';
-                    }
-                },
-                {
-                    data: 'cargos_administrativo', className: 'text-center', orderable: false,
-                    render: d => d ? d.nombre_cargo : 'S/A'
-                },
-                {
-                    data: 'estatus', className: 'text-center',
-                    render: function (d, type, row) {
-                        if (!d) return '';
-                        const colors = {
-                            'Operativo': 'badge-success',
-                            'No Operativo': 'badge-secondary',
-                            'En Reposo': 'badge-warning',
-                            'Reingreso': 'badge-info',
-                            'Suspendido': 'badge-warning',
-                            'Retirado': 'badge-dark',
-                            'Jubilado': 'badge-info',
-                            'Fallecido': 'badge-danger',
-                            'URRA': 'badge-primary'
-                        };
-                        const cls = colors[d] || 'badge-light';
-                        let label = d.toUpperCase();
-                        if (d === 'Retirado' && row && row.tipo_retiro) {
-                            label += ' (' + String(row.tipo_retiro).toUpperCase() + ')';
-                        }
-                        return `<span class="badge ${cls}">${label}</span>`;
-                    }
-                },
-                {
-                    data: 'id', className: 'text-right actions', orderable: false, searchable: false,
-                    render: function (data) {
-                        return `
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ url('/officers/tipo') }}/${tipoSlug}/${data}/edit"><i class="far fa-edit"></i> Editar</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/ficha') }}/${data}"><i class="fas fa-id-card-alt"></i> Ver ficha</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/radiogram') }}/${data}"><i class="fas fa-street-view"></i> Radiograma</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/nombramientos') }}/${data}"><i class="fas fa-user-tie"></i> Nombramientos</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/academy') }}/${data}"><i class="fas fa-graduation-cap"></i> Formación académica</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/courses') }}/${data}"><i class="fas fa-book-reader"></i> Cursos y diplomados</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/positions') }}/${data}"><i class="fas fa-medal"></i> Jerarquías obtenidas</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/awards') }}/${data}"><i class="fas fa-trophy"></i> Reconocimientos</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/familly') }}/${data}"><i class="fab fa-gratipay"></i> Hijos y familiares</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/health') }}/${data}"><i class="fas fa-medkit"></i> Reposos médicos</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/icap') }}/${data}"><i class="fas fa-balance-scale"></i> ICAP</a>
-                                    <a class="dropdown-item" href="{{ url('/officers/urra') }}/${data}"><i class="fas fa-shield-alt"></i> URRA</a>
-                                    <button class="dropdown-item files" data-id="${data}" type="button"><i class="fas fa-file"></i> Archivos del oficial</button>
-                                    <a class="dropdown-item" href="{{ url('/officers/vacations') }}/${data}"><i class="fas fa-plane-departure"></i> Solicitud de vacaciones</a>
-                                    <div class="dropdown-divider"></div>
-                                    <button class="dropdown-item delete text-danger" data-id="${data}" type="button"><i class="far fa-trash-alt"></i> Eliminar</button>
-                                </div>
-                            </div>`;
-                    }
-                }
-            ],
-            language: dtEs,
-            pageLength: 25,
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
-            order: [[2, 'asc']],
-            stateSave: false,
-            autoWidth: false,
-            responsive: true
+    function updatePager() {
+        var from = state.total === 0 ? 0 : ((state.page - 1) * state.perPage) + 1;
+        var to = Math.min(state.page * state.perPage, state.total);
+        document.getElementById('officers-info').textContent =
+            'Mostrando ' + from + '–' + to + ' de ' + state.total;
+        document.getElementById('officers-prev').disabled = state.page <= 1 || state.loading;
+        document.getElementById('officers-next').disabled = state.page >= state.lastPage || state.loading;
+    }
+
+    function loadOfficers() {
+        if (state.loading) return;
+        state.loading = true;
+        document.getElementById('officers-loading').classList.add('is-on');
+        updatePager();
+
+        var params = new URLSearchParams({
+            page: String(state.page),
+            per_page: String(state.perPage),
+            tipo_funcionario: tipoFuncionario
         });
+        if (state.estatus) params.set('estatus', state.estatus);
+        if (state.q) params.set('q', state.q);
 
-        // Evitar que DataTables recorte el menú de submódulos
-        $('#officers-table').on('show.bs.dropdown', '.btn-group', function () {
-            var $group = $(this);
-            var $menu = $group.find('.dropdown-menu');
-            var $toggle = $group.find('[data-toggle="dropdown"]');
-
-            $group.data('officers-dropdown-menu', $menu);
-            $('body').append($menu.detach());
-
-            var offset = $toggle.offset();
-            var toggleH = $toggle.outerHeight();
-            var toggleW = $toggle.outerWidth();
-            var menuW = $menu.outerWidth() || 240;
-            var menuH = $menu.outerHeight() || 320;
-            var top = offset.top + toggleH;
-            var left = offset.left + toggleW - menuW;
-            var viewportBottom = $(window).scrollTop() + $(window).height();
-
-            if (top + menuH > viewportBottom - 8) {
-                top = offset.top - menuH - 4;
-            }
-
-            $menu.css({
-                position: 'absolute',
-                top: Math.max(8, top) + 'px',
-                left: Math.max(8, left) + 'px',
-                display: 'block',
-                zIndex: 1060
-            });
-        });
-
-        $('#officers-table').on('hide.bs.dropdown', '.btn-group', function () {
-            var $group = $(this);
-            var $menu = $group.data('officers-dropdown-menu');
-            if ($menu && $menu.length) {
-                $menu.detach().appendTo($group);
-                $menu.removeAttr('style');
-            }
-        });
-
-        $(window).on('scroll.officersDropdown resize.officersDropdown', function () {
-            $('#officers-table .btn-group.show .dropdown-toggle').dropdown('hide');
-        });
-
-        document.querySelectorAll('.estatus-tab').forEach(function (tab) {
-            tab.addEventListener('click', function () {
-                document.querySelectorAll('.estatus-tab').forEach(function (t) {
-                    t.classList.remove('is-active');
-                    t.setAttribute('aria-selected', 'false');
+        fetch(apiBase + '?' + params.toString(), {
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            credentials: 'same-origin'
+        })
+            .then(function (r) {
+                return r.json().then(function (json) {
+                    return { ok: r.ok, json: json };
                 });
-                tab.classList.add('is-active');
-                tab.setAttribute('aria-selected', 'true');
-                currentEstatus = tab.getAttribute('data-estatus') || '';
-                officersTable.ajax.reload();
+            })
+            .then(function (res) {
+                if (!res.ok || res.json.error) {
+                    var msg = (res.json && (res.json.detail || res.json.error)) || 'Error al cargar funcionarios';
+                    document.getElementById('officers-tbody').innerHTML =
+                        '<tr><td colspan="9" class="text-center text-danger py-4">' + esc(msg) + '</td></tr>';
+                    state.total = 0;
+                    state.lastPage = 1;
+                    return;
+                }
+                var meta = res.json.meta || {};
+                state.total = meta.total || 0;
+                state.lastPage = meta.last_page || 1;
+                state.page = meta.page || state.page;
+                renderRows(res.json.data || []);
+            })
+            .catch(function () {
+                document.getElementById('officers-tbody').innerHTML =
+                    '<tr><td colspan="9" class="text-center text-danger py-4">No se pudo conectar con el servidor</td></tr>';
+            })
+            .finally(function () {
+                state.loading = false;
+                document.getElementById('officers-loading').classList.remove('is-on');
+                updatePager();
             });
+    }
+
+    function index_archivos(officerId) {
+        fetch(filesApiBase + '/index/' + (officerId || currentFilesId))
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                CpetFileGallery.render('#archivos-index', data || [], {
+                    storageBase: storageBase,
+                    contextId: officerId || currentFilesId,
+                    deleteUrl: function (fileId) { return filesApiBase + '/' + fileId; },
+                    onDeleted: function () { index_archivos(officerId || currentFilesId); }
+                });
+            })
+            .catch(function () {
+                $('#archivos-index').html('<div class="col-12 text-muted text-center py-3">Sin archivos</div>');
+            });
+    }
+
+    document.getElementById('officers-search').addEventListener('input', function (e) {
+        clearTimeout(searchTimer);
+        var value = e.target.value.trim();
+        searchTimer = setTimeout(function () {
+            state.q = value;
+            state.page = 1;
+            loadOfficers();
+        }, 280);
+    });
+
+    document.getElementById('officers-per-page').addEventListener('change', function (e) {
+        state.perPage = parseInt(e.target.value, 10) || 25;
+        state.page = 1;
+        loadOfficers();
+    });
+
+    document.getElementById('officers-prev').addEventListener('click', function () {
+        if (state.page <= 1) return;
+        state.page -= 1;
+        loadOfficers();
+    });
+
+    document.getElementById('officers-next').addEventListener('click', function () {
+        if (state.page >= state.lastPage) return;
+        state.page += 1;
+        loadOfficers();
+    });
+
+    document.querySelectorAll('.estatus-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            document.querySelectorAll('.estatus-tab').forEach(function (t) {
+                t.classList.remove('is-active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            tab.classList.add('is-active');
+            tab.setAttribute('aria-selected', 'true');
+            state.estatus = tab.getAttribute('data-estatus') || '';
+            state.page = 1;
+            loadOfficers();
         });
+    });
 
-        $(document).on('click', '.delete', function (e) {
+    document.addEventListener('click', function (e) {
+        var del = e.target.closest('.delete');
+        if (del) {
             e.preventDefault();
-            id = $(this).data('id');
-            const formData = new FormData();
+            var id = del.getAttribute('data-id');
+            var formData = new FormData();
             formData.append('_method', 'DELETE');
-
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: 'No podrás revertir esto.',
@@ -381,51 +446,76 @@
                 showCancelButton: true,
                 confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar'
-            }).then((result) => {
+            }).then(function (result) {
                 if (!result.isConfirmed) return;
-                fetch('{{ url('api/officers') }}/' + id, { method: 'POST', body: formData })
-                    .then(r => r.json())
-                    .then(data => {
+                fetch(apiBase + '/' + id, { method: 'POST', body: formData })
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
                         Swal.fire({ title: data.msj || 'Eliminado', icon: 'success' });
-                        officersTable.ajax.reload(null, false);
+                        loadOfficers();
                     });
             });
-        });
+            return;
+        }
 
-        $(document).on('click', '.files', function () {
-            id = $(this).attr('data-id');
+        var filesBtn = e.target.closest('.files');
+        if (filesBtn) {
+            currentFilesId = filesBtn.getAttribute('data-id');
             if (officerDropzone) {
                 officerDropzone.destroy();
                 officerDropzone = null;
             }
             officerDropzone = new Dropzone('#myDropzone', {
-                url: filesApiBase + '/add-files/' + id,
+                url: filesApiBase + '/add-files/' + currentFilesId,
                 method: 'POST',
                 paramName: 'archivos',
                 maxFilesize: 10,
                 acceptedFiles: '.jpg,.jpeg,.png,.pdf',
                 dictDefaultMessage: 'Arrastra los archivos aquí para subirlos',
-                success: function () { index_archivos(id); }
+                success: function () { index_archivos(currentFilesId); }
             });
             $('#modal-archivos').modal('show');
-            index_archivos(id);
+            index_archivos(currentFilesId);
+        }
+    });
+
+    document.addEventListener('cpet:refresh-table', loadOfficers);
+
+    // Menú flotante para que no lo recorte la tabla
+    $('#officers-table').on('show.bs.dropdown', '.btn-group', function () {
+        var $group = $(this);
+        var $menu = $group.find('.dropdown-menu');
+        var $toggle = $group.find('[data-toggle="dropdown"]');
+        $group.data('officers-dropdown-menu', $menu);
+        $('body').append($menu.detach());
+        var offset = $toggle.offset();
+        var toggleH = $toggle.outerHeight();
+        var toggleW = $toggle.outerWidth();
+        var menuW = $menu.outerWidth() || 240;
+        var menuH = $menu.outerHeight() || 320;
+        var top = offset.top + toggleH;
+        var left = offset.left + toggleW - menuW;
+        var viewportBottom = $(window).scrollTop() + $(window).height();
+        if (top + menuH > viewportBottom - 8) top = offset.top - menuH - 4;
+        $menu.css({
+            position: 'absolute',
+            top: Math.max(8, top) + 'px',
+            left: Math.max(8, left) + 'px',
+            display: 'block',
+            zIndex: 1060
         });
     });
 
-    function index_archivos(officerId) {
-        fetch(filesApiBase + '/index/' + (officerId || id))
-            .then(r => r.json())
-            .then(data => {
-                CpetFileGallery.render('#archivos-index', data || [], {
-                    storageBase: storageBase,
-                    contextId: officerId || id,
-                    deleteUrl: function (fileId) { return filesApiBase + '/' + fileId; },
-                    onDeleted: function () { index_archivos(officerId || id); }
-                });
-            })
-            .catch(function () {
-                $('#archivos-index').html('<div class="col-12 text-muted text-center py-3">Sin archivos</div>');
-            });
-    }
+    $('#officers-table').on('hide.bs.dropdown', '.btn-group', function () {
+        var $group = $(this);
+        var $menu = $group.data('officers-dropdown-menu');
+        if ($menu && $menu.length) {
+            $menu.detach().appendTo($group);
+            $menu.removeAttr('style');
+        }
+    });
+
+    loadOfficers();
+})();
 </script>
 @endsection

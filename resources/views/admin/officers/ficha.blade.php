@@ -82,6 +82,12 @@
     <div class="d-flex justify-content-between align-items-center mb-3 no-print">
         <h2 class="mb-0">Ficha del funcionario</h2>
         <div class="d-flex align-items-center gap-2">
+            @include('admin.officers._submodulos', [
+                'oficialId' => $oficial->id,
+                'tipoSlug' => $tipoSlug,
+                'btnClass' => 'btn btn-dark btn-sm dropdown-toggle',
+                'btnLabel' => 'Submódulos',
+            ])
             <a href="{{ route('officers.form.edit', [$tipoSlug, $oficial->id]) }}"
                class="btn btn-sm btn-link text-muted px-2"
                title="Editar funcionario"
