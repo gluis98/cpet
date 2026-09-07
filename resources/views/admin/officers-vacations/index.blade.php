@@ -139,8 +139,8 @@
 
     <div class="row mb-3">
         <div class="col-md-12 text-right">
+            <p class="h5 mb-1"><i class="fas fa-calendar-alt text-dark"></i> <b>Años de servicio / máx. periodos:</b> <span id="vacaciones-anios">0</span></p>
             <p class="h5 mb-1"><i class="fas fa-check text-success"></i> <b>Disfrutadas:</b> <span id="vacaciones-disfrutadas">0</span></p>
-            <p class="h5 mb-1"><i class="fas fa-spinner text-primary"></i> <b>En proceso:</b> <span id="vacaciones-proceso">0</span></p>
             <p class="h5 mb-0"><i class="fas fa-times text-danger"></i> <b>Vencidas:</b> <span id="vacaciones-vencidas">0</span></p>
         </div>
     </div>
@@ -153,9 +153,6 @@
                 </button>
                 <button type="button" class="vac-tab" data-tab="disfrutadas">
                     Disfrutadas <span class="vac-tab__count" id="count-disfrutadas">0</span>
-                </button>
-                <button type="button" class="vac-tab" data-tab="proceso">
-                    En proceso <span class="vac-tab__count" id="count-proceso">0</span>
                 </button>
                 <button type="button" class="vac-tab" data-tab="vencidas">
                     Vencidas <span class="vac-tab__count" id="count-vencidas">0</span>
@@ -303,22 +300,17 @@ $(document).ready(function () {
     });
 
     function isVencida(e) {
+        if (isDisfrutada(e)) return false;
         return String(e.estatus || '').toUpperCase() === 'VENCIDAS';
     }
 
     function isDisfrutada(e) {
+        if (String(e.estatus || '').toUpperCase() === 'NEGADAS') return false;
         return e.is_disfrutadas == 1 || e.is_disfrutadas === true;
-    }
-
-    function isEnProceso(e) {
-        if (isDisfrutada(e) || isVencida(e)) return false;
-        var st = String(e.estatus || '').toUpperCase();
-        return st !== 'NEGADAS';
     }
 
     function filterRows() {
         if (currentTab === 'disfrutadas') return allRows.filter(isDisfrutada);
-        if (currentTab === 'proceso') return allRows.filter(isEnProceso);
         if (currentTab === 'vencidas') return allRows.filter(isVencida);
         return allRows;
     }
@@ -355,21 +347,19 @@ $(document).ready(function () {
         fetch(apiBase + '/officers/vacations/index/{{ $id }}')
             .then(r => r.json())
             .then(payload => {
-                // Compatibilidad: array plano o { data, counts }
                 allRows = Array.isArray(payload) ? payload : (payload.data || []);
                 var counts = payload.counts || {
+                    anios_servicio: 0,
                     disfrutadas: allRows.filter(isDisfrutada).length,
-                    en_proceso: allRows.filter(isEnProceso).length,
                     vencidas: allRows.filter(isVencida).length,
                     total: allRows.length
                 };
 
+                $('#vacaciones-anios').text(counts.anios_servicio ?? 0);
                 $('#vacaciones-disfrutadas').text(counts.disfrutadas);
-                $('#vacaciones-proceso').text(counts.en_proceso);
                 $('#vacaciones-vencidas').text(counts.vencidas);
                 $('#count-todas').text(counts.total);
                 $('#count-disfrutadas').text(counts.disfrutadas);
-                $('#count-proceso').text(counts.en_proceso);
                 $('#count-vencidas').text(counts.vencidas);
 
                 renderTable();

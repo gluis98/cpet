@@ -36,6 +36,7 @@
         }
 
         .sheet {
+            position: relative;
             width: 297mm;
             height: 210mm;
             margin: 0 auto;
@@ -45,6 +46,24 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+        }
+
+        .sheet-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 170mm;
+            height: 170mm;
+            transform: translate(-50%, -50%);
+            object-fit: contain;
+            opacity: 0.10;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .sheet > *:not(.sheet-watermark) {
+            position: relative;
+            z-index: 1;
         }
 
         /* Cintillo horizontal, alineado a la izquierda */
@@ -116,16 +135,6 @@
             z-index: 1;
         }
 
-        .col-datos::before {
-            content: '';
-            position: absolute;
-            inset: 8% 12%;
-            background: url('{{ asset('images/icon/logo.png') }}') center / contain no-repeat;
-            opacity: 0.08;
-            pointer-events: none;
-            z-index: 0;
-        }
-
         .datos-table {
             position: relative;
             z-index: 1;
@@ -158,7 +167,7 @@
         .datos-table td {
             width: 60%;
             word-break: break-word;
-            background: rgba(255, 255, 255, 0.72);
+            background: rgba(255, 255, 255, 0.78);
         }
 
         .datos-table tr.civ td {
@@ -257,6 +266,8 @@
 </div>
 
 <div class="sheet">
+    <img src="{{ asset('img/escudo.jpeg') }}" alt="" class="sheet-watermark">
+
     <header class="cintillo" aria-label="Cintillo institucional">
         @if (! empty($logos))
             <img src="{{ $logos[0] }}" alt="Cintillo institucional">

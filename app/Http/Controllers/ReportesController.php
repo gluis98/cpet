@@ -11,6 +11,7 @@ use App\Models\Entidad;
 use App\Models\OficialesRadiograma;
 use App\Models\OficialesNombramiento;
 use App\Support\UrraEstatusSync;
+use App\Support\VacacionesPeriodos;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -92,41 +93,13 @@ class ReportesController extends Controller
             ];
         }
 
-        $ingreso = Carbon::parse($funcionario->fecha_ingreso);
-        $anioInicio = (int) $ingreso->format('Y');
-        $anioFin = (int) Carbon::now()->format('Y');
-
-        $vacaciones = OficialesVacacione::query()
-            ->where('id_policia', $funcionario->id)
-            ->whereNotNull('fecha_emision')
-            ->get(['fecha_emision', 'is_disfrutadas', 'estatus']);
-
-        $disfrutados = [];
-        foreach ($vacaciones as $v) {
-            $estatus = strtoupper(trim((string) $v->estatus));
-            if ($estatus === 'NEGADAS') {
-                continue;
-            }
-            if ((int) $v->is_disfrutadas !== 1) {
-                continue;
-            }
-            $disfrutados[] = (int) Carbon::parse($v->fecha_emision)->format('Y');
-        }
-        $disfrutados = array_values(array_unique($disfrutados));
-        sort($disfrutados);
-
-        $setDisfrutados = array_fill_keys($disfrutados, true);
-        $noDisfrutados = [];
-        for ($y = $anioInicio; $y <= $anioFin; $y++) {
-            if (! isset($setDisfrutados[$y])) {
-                $noDisfrutados[] = $y;
-            }
-        }
+        VacacionesPeriodos::dedupeOficial((int) $funcionario->id);
+        $resumen = VacacionesPeriodos::resumen($funcionario);
 
         return [
-            'disfrutados' => $disfrutados,
-            'no_disfrutados' => $noDisfrutados,
-            'fecha_ingreso_fmt' => $ingreso->format('d/m/Y'),
+            'disfrutados' => $resumen['anios_disfrutados'],
+            'no_disfrutados' => $resumen['anios_no_disfrutados'],
+            'fecha_ingreso_fmt' => Carbon::parse($funcionario->fecha_ingreso)->format('d/m/Y'),
         ];
     }
 

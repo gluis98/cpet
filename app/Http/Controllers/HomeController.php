@@ -164,8 +164,10 @@ class HomeController extends Controller
     public function officers_vacations($id)
     {
         $o = \App\Models\Oficiale::find($id);
-        $title = "Funcionario Policial: " . $o->nombre_completo . " - Vacaciones - Años de servicio: " . (now()->year - $o->fecha_ingreso->year);
-        return view('admin.officers-vacations.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
+        $anios = \App\Support\VacacionesPeriodos::aniosServicio($o);
+        $title = 'Funcionario Policial: '.$o->nombre_completo.' - Vacaciones - Años de servicio: '.$anios;
+
+        return view('admin.officers-vacations.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id' => $id]);
     }
 
     public function officers_courses($id)

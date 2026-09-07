@@ -247,7 +247,7 @@ class BulkImportRegistry
                     'El estatus se guarda en mayúsculas.',
                     'fecha_hasta es el fin del periodo; fecha_reintegro es el día de reintegro (pueden diferir).',
                     'Acepta encabezados como "Fecha de emisión", "Cédula", "Estado", etc.',
-                    'Duplicado = mismo funcionario + fecha_emision + estatus (se omite / se limpia en BD).',
+                    'Solo 1 vacación por año de servicio (año de fecha_emision). Si se repite, se conserva una sola.',
                 ],
             ],
             'reconocimientos' => [

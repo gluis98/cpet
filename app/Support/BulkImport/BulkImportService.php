@@ -23,6 +23,7 @@ use App\Models\OficialesSalud;
 use App\Models\OficialesVacacione;
 use App\Models\Parroquia;
 use App\Support\ReposoEstatusSync;
+use App\Support\VacacionesPeriodos;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -781,7 +782,12 @@ class BulkImportService
     {
         $oficial = $this->findOficial($this->requireAny($d, ['documento_identidad', 'cedula', 'documento'], 'documento_identidad'));
         $estatus = strtoupper(trim($this->requireAny($d, ['estatus', 'estado', 'status'], 'estatus')));
+        if ($estatus === 'EN PROCESO') {
+            throw new \InvalidArgumentException('estatus EN PROCESO ya no está permitido');
+        }
+
         $fechaEmision = $this->date($this->requireAny($d, ['fecha_emision', 'fecha_inicio', 'fecha_desde'], 'fecha_emision'));
+        $anio = (int) Carbon::parse($fechaEmision)->format('Y');
         $hastaRaw = $this->optionalValue($d, ['fecha_hasta', 'fecha_fin', 'hasta']);
         $hasta = $hastaRaw !== null ? $this->date($hastaRaw) : null;
         $reintegroRaw = $this->optionalValue($d, ['fecha_reintegro', 'reintegro']);
@@ -791,23 +797,39 @@ class BulkImportService
         if ($reintegro && Carbon::parse($reintegro)->lte(Carbon::today())) {
             $disfrutadas = 1;
         }
+        if ($estatus === 'VENCIDAS') {
+            $disfrutadas = 0;
+        }
 
-        $rowKey = "{$oficial->id}|{$fechaEmision}|{$this->normalizeMatchText($estatus)}";
+        // Una sola vacación por año de servicio: limpia duplicados previos del mismo año.
+        $dedupedPrevios = VacacionesPeriodos::dedupeOficial((int) $oficial->id, $anio);
+
+        $rowKey = "{$oficial->id}|{$anio}";
         $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
-            ->whereDate('fecha_emision', $fechaEmision)
-            ->whereRaw('UPPER(TRIM(estatus)) = ?', [$estatus]);
+            ->whereYear('fecha_emision', $anio);
 
-        return $this->importUnique('vacaciones', $rowKey, OficialesVacacione::class, $matchFn, function () use ($oficial, $fechaEmision, $hasta, $reintegro, $estatus, $d, $disfrutadas) {
-            OficialesVacacione::create([
-                'id_policia' => $oficial->id,
-                'fecha_emision' => $fechaEmision,
-                'fecha_hasta' => $hasta,
-                'fecha_reintegro' => $reintegro,
-                'estatus' => $estatus,
-                'descripcion' => $this->optionalValue($d, ['descripcion', 'observaciones', 'nota']) ?: null,
-                'is_disfrutadas' => $disfrutadas,
-            ]);
-        });
+        $result = $this->importUnique(
+            'vacaciones',
+            $rowKey,
+            OficialesVacacione::class,
+            $matchFn,
+            function () use ($oficial, $fechaEmision, $hasta, $reintegro, $estatus, $d, $disfrutadas) {
+                OficialesVacacione::create([
+                    'id_policia' => $oficial->id,
+                    'fecha_emision' => $fechaEmision,
+                    'fecha_hasta' => $hasta,
+                    'fecha_reintegro' => $reintegro,
+                    'estatus' => $estatus,
+                    'descripcion' => $this->optionalValue($d, ['descripcion', 'observaciones', 'nota']) ?: null,
+                    'is_disfrutadas' => $disfrutadas,
+                ]);
+            },
+            "Vacaciones del año {$anio} ya existen para este funcionario"
+        );
+
+        $result['deduped'] = (int) ($result['deduped'] ?? 0) + $dedupedPrevios;
+
+        return $result;
     }
 
     private function importReconocimiento(array $d): array

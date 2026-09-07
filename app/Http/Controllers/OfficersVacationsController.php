@@ -2,42 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Oficiale;
 use App\Models\OficialesVacacione;
+use App\Support\VacacionesPeriodos;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class OfficersVacationsController extends Controller
 {
     public function index($id)
     {
         $this->marcarDisfrutadasPorReintegro((int) $id);
+        VacacionesPeriodos::dedupeOficial((int) $id);
 
+        $oficial = Oficiale::find((int) $id);
         $vacaciones = OficialesVacacione::where('id_policia', $id)
             ->orderByRaw('fecha_emision IS NULL')
             ->orderByDesc('fecha_emision')
             ->orderByDesc('id')
             ->get();
 
-        $counts = [
-            'disfrutadas' => $vacaciones->where('is_disfrutadas', 1)->count(),
-            'en_proceso' => $vacaciones->filter(fn ($v) => $this->esEnProceso($v))->count(),
-            'vencidas' => $vacaciones->filter(fn ($v) => $this->esVencida($v))->count(),
-            'total' => $vacaciones->count(),
-        ];
+        $resumen = VacacionesPeriodos::resumen($oficial, $vacaciones);
 
         return response()->json([
             'data' => $vacaciones,
-            'counts' => $counts,
+            'counts' => [
+                'anios_servicio' => $resumen['anios_servicio'],
+                'disfrutadas' => $resumen['disfrutadas'],
+                'vencidas' => $resumen['vencidas'],
+                'total' => $resumen['total'],
+            ],
         ], 200);
     }
 
     public function store(Request $request)
     {
         $data = $this->payload($request);
+        $this->assertAnioUnico((int) $data['id_policia'], $data['fecha_emision']);
+
         $vacacion = OficialesVacacione::create($data);
 
         if ($vacacion->id_policia) {
             $this->marcarDisfrutadasPorReintegro((int) $vacacion->id_policia);
+            VacacionesPeriodos::dedupeOficial((int) $vacacion->id_policia);
         }
 
         return response()->json(['msj' => 'Registro realizado con éxito.'], 201);
@@ -51,10 +59,15 @@ class OfficersVacationsController extends Controller
     public function update(Request $request, $id)
     {
         $vacacion = OficialesVacacione::findOrFail($id);
-        $vacacion->update($this->payload($request));
+        $data = $this->payload($request, $vacacion);
+        $idPolicia = (int) ($data['id_policia'] ?? $vacacion->id_policia);
+        $this->assertAnioUnico($idPolicia, $data['fecha_emision'], (int) $vacacion->id);
+
+        $vacacion->update($data);
 
         if ($vacacion->id_policia) {
             $this->marcarDisfrutadasPorReintegro((int) $vacacion->id_policia);
+            VacacionesPeriodos::dedupeOficial((int) $vacacion->id_policia);
         }
 
         return response()->json(['msj' => 'Registro actualizado con éxito.'], 200);
@@ -67,9 +80,6 @@ class OfficersVacationsController extends Controller
         return response()->json(['msj' => 'Registro eliminado con éxito.'], 200);
     }
 
-    /**
-     * Si la fecha de reintegro ya llegó o pasó, marcar como disfrutadas.
-     */
     private function marcarDisfrutadasPorReintegro(int $idPolicia): void
     {
         $hoy = Carbon::today()->toDateString();
@@ -84,10 +94,10 @@ class OfficersVacationsController extends Controller
             ->update(['is_disfrutadas' => 1]);
     }
 
-    private function payload(Request $request): array
+    private function payload(Request $request, ?OficialesVacacione $existing = null): array
     {
         $data = $request->validate([
-            'id_policia' => ['sometimes', 'integer'],
+            'id_policia' => [$existing ? 'sometimes' : 'required', 'integer'],
             'fecha_emision' => ['required', 'date'],
             'fecha_hasta' => ['nullable', 'date', 'after_or_equal:fecha_emision'],
             'fecha_reintegro' => ['nullable', 'date'],
@@ -97,9 +107,14 @@ class OfficersVacationsController extends Controller
         ]);
 
         $data['estatus'] = strtoupper(trim($data['estatus']));
+        if ($data['estatus'] === 'EN PROCESO') {
+            throw ValidationException::withMessages([
+                'estatus' => 'El estatus EN PROCESO ya no está permitido.',
+            ]);
+        }
+
         $data['is_disfrutadas'] = $request->boolean('is_disfrutadas') ? 1 : 0;
 
-        // Si ya reintegró, forzar disfrutadas
         if (! empty($data['fecha_reintegro']) && Carbon::parse($data['fecha_reintegro'])->lte(Carbon::today())) {
             $data['is_disfrutadas'] = 1;
         }
@@ -107,19 +122,21 @@ class OfficersVacationsController extends Controller
         return $data;
     }
 
-    private function esVencida(OficialesVacacione $v): bool
+    private function assertAnioUnico(int $idPolicia, string $fechaEmision, ?int $ignoreId = null): void
     {
-        return strtoupper((string) $v->estatus) === 'VENCIDAS';
-    }
+        $anio = (int) Carbon::parse($fechaEmision)->format('Y');
+        $query = OficialesVacacione::query()
+            ->where('id_policia', $idPolicia)
+            ->whereYear('fecha_emision', $anio);
 
-    private function esEnProceso(OficialesVacacione $v): bool
-    {
-        if ((int) $v->is_disfrutadas === 1) {
-            return false;
+        if ($ignoreId) {
+            $query->where('id', '!=', $ignoreId);
         }
 
-        $estatus = strtoupper((string) $v->estatus);
-
-        return ! in_array($estatus, ['VENCIDAS', 'NEGADAS'], true);
+        if ($query->exists()) {
+            throw ValidationException::withMessages([
+                'fecha_emision' => "Ya existe un periodo de vacaciones para el año {$anio}. Solo se permite uno por año de servicio.",
+            ]);
+        }
     }
 }
