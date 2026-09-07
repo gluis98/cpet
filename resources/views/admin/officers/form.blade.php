@@ -331,6 +331,66 @@
     sabeConducir?.addEventListener('change', syncConduccion);
     syncConduccion();
 
+    // Estatus: tipo de retiro y fechas de reingreso
+    var estatusSelect = document.getElementById('estatus');
+    var wrapTipoRetiro = document.getElementById('wrap-tipo-retiro');
+    var tipoRetiro = document.getElementById('tipo_retiro');
+    var wrapReingresos = document.getElementById('wrap-reingresos');
+    var reingresosList = document.getElementById('reingresos-list');
+
+    function syncEstatusExtras() {
+        var estatus = estatusSelect ? estatusSelect.value : '';
+        var isRetirado = estatus === 'Retirado';
+        var isReingreso = estatus === 'Reingreso';
+
+        if (wrapTipoRetiro) {
+            wrapTipoRetiro.style.display = isRetirado ? '' : 'none';
+        }
+        if (tipoRetiro) {
+            tipoRetiro.required = isRetirado;
+            if (!isRetirado) {
+                tipoRetiro.value = '';
+            }
+        }
+        if (wrapReingresos) {
+            wrapReingresos.style.display = isReingreso ? '' : 'none';
+        }
+    }
+
+    function addReingresoRow(value) {
+        if (!reingresosList) return;
+        var row = document.createElement('div');
+        row.className = 'input-group mb-2 reingreso-row';
+        row.innerHTML =
+            '<input type="date" class="form-control" name="fechas_reingreso[]" value="' + (value || '') + '">' +
+            '<div class="input-group-append">' +
+                '<button type="button" class="btn btn-outline-danger btn-remove-reingreso" title="Quitar">' +
+                    '<i class="fas fa-times"></i>' +
+                '</button>' +
+            '</div>';
+        reingresosList.appendChild(row);
+    }
+
+    document.getElementById('btn-add-reingreso')?.addEventListener('click', function () {
+        addReingresoRow('');
+    });
+
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.btn-remove-reingreso');
+        if (!btn) return;
+        var rows = reingresosList ? reingresosList.querySelectorAll('.reingreso-row') : [];
+        var row = btn.closest('.reingreso-row');
+        if (rows.length <= 1) {
+            var input = row && row.querySelector('input');
+            if (input) input.value = '';
+            return;
+        }
+        row?.remove();
+    });
+
+    estatusSelect?.addEventListener('change', syncEstatusExtras);
+    syncEstatusExtras();
+
     // Catálogos: agregar cargo / tipo de cargo desde el select
     if (window.CpetCatalog && window.jQuery) {
         var apiBase = @json(url('api'));

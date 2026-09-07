@@ -18,7 +18,7 @@ class OfficersController extends Controller
         if (!$request->has('draw')) {
             return response()->json(
                 Oficiale::select('id', 'numero_placa', 'documento_identidad', 'nombre_completo', 
-                                'telefono', 'fecha_ingreso', 'estatus', 'cargo_administrativo_id')
+                                'telefono', 'fecha_ingreso', 'estatus', 'tipo_retiro', 'cargo_administrativo_id')
                     ->with([
                         'oficiales_cargos' => function($query) {
                             $query->select('id', 'id_policia', 'id_cargo', 'is_actual')
@@ -53,7 +53,7 @@ class OfficersController extends Controller
 
         $query = Oficiale::select(
             'id', 'numero_placa', 'documento_identidad', 'nombre_completo',
-            'telefono', 'fecha_ingreso', 'estatus', 'cargo_administrativo_id', 'tipo_funcionario'
+            'telefono', 'fecha_ingreso', 'estatus', 'tipo_retiro', 'cargo_administrativo_id', 'tipo_funcionario'
         )->with([
             'oficiales_cargos' => function ($q) {
                 $q->select('id', 'id_policia', 'id_cargo', 'is_actual')

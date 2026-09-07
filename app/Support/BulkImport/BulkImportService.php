@@ -15,7 +15,10 @@ use App\Models\OficialesCargo;
 use App\Models\OficialesCurso;
 use App\Models\OficialesFamiliare;
 use App\Models\OficialesRadiograma;
+use App\Models\OficialesNombramiento;
+use App\Models\CatalogoNombramiento;
 use App\Models\OficialesReconocimiento;
+use App\Models\OficialesReingreso;
 use App\Models\OficialesSalud;
 use App\Models\OficialesVacacione;
 use App\Models\Parroquia;
@@ -217,6 +220,7 @@ class BulkImportService
                         'vacaciones' => $this->importVacacion($data),
                         'reconocimientos' => $this->importReconocimiento($data),
                         'radiogramas' => $this->importRadiograma($data),
+                        'nombramientos' => $this->importNombramiento($data),
                         default => ['status' => 'error', 'message' => 'Módulo no implementado'],
                     };
 
@@ -323,9 +327,47 @@ class BulkImportService
                 throw new \InvalidArgumentException("tipo_vivienda inválido: {$viviendaRaw}");
             }
 
-            $sexo = trim((string) ($d['sexo'] ?? ''));
-            if ($sexo !== '' && ! in_array($sexo, Oficiale::SEXOS, true)) {
-                throw new \InvalidArgumentException("sexo inválido: {$sexo}");
+            $sexoRaw = trim((string) ($d['sexo'] ?? ''));
+            $sexo = $sexoRaw !== '' ? Oficiale::normalizeSexo($sexoRaw) : null;
+            if ($sexoRaw !== '' && $sexo === null) {
+                throw new \InvalidArgumentException("sexo inválido: {$sexoRaw} (use Masculino/Femenino o M/F)");
+            }
+
+            $tipoRetiro = null;
+            if ($estatus === 'Retirado') {
+                $tipoRetiroRaw = trim((string) ($d['tipo_retiro'] ?? ''));
+                if ($tipoRetiroRaw === '') {
+                    throw new \InvalidArgumentException('tipo_retiro es obligatorio si estatus=Retirado (Renuncia o Destitución)');
+                }
+                $tipoRetiroFold = mb_strtolower($this->foldAccents($tipoRetiroRaw));
+                $tipoRetiro = match (true) {
+                    str_contains($tipoRetiroFold, 'renun') => 'Renuncia',
+                    str_contains($tipoRetiroFold, 'destit') => 'Destitución',
+                    in_array($tipoRetiroRaw, Oficiale::TIPOS_RETIRO, true) => $tipoRetiroRaw,
+                    default => null,
+                };
+                if ($tipoRetiro === null) {
+                    throw new \InvalidArgumentException("tipo_retiro inválido: {$tipoRetiroRaw}");
+                }
+            }
+
+            $fechasReingreso = [];
+            if ($estatus === 'Reingreso') {
+                $rawFechas = trim((string) ($d['fechas_reingreso'] ?? ''));
+                if ($rawFechas === '') {
+                    throw new \InvalidArgumentException('fechas_reingreso es obligatorio si estatus=Reingreso');
+                }
+                foreach (preg_split('/[;,|]/', $rawFechas) as $parte) {
+                    $parte = trim($parte);
+                    if ($parte === '') {
+                        continue;
+                    }
+                    $fechasReingreso[] = $this->date($parte);
+                }
+                $fechasReingreso = array_values(array_unique($fechasReingreso));
+                if ($fechasReingreso === []) {
+                    throw new \InvalidArgumentException('fechas_reingreso no contiene fechas válidas');
+                }
             }
 
             $parroquiaId = $this->resolveParroquiaId($d['municipio'] ?? null, $d['parroquia'] ?? null);
@@ -344,14 +386,15 @@ class BulkImportService
                 }
             }
 
-            Oficiale::create([
+            $oficial = Oficiale::create([
                 'documento_identidad' => $doc,
                 'nombre_completo' => $this->require($d, 'nombre_completo'),
                 'fecha_nacimiento' => $this->date($this->require($d, 'fecha_nacimiento')),
-                'sexo' => $sexo !== '' ? $sexo : null,
+                'sexo' => $sexo,
                 'numero_placa' => filled($d['numero_placa'] ?? null) ? trim((string) $d['numero_placa']) : null,
                 'fecha_ingreso' => $this->date($this->require($d, 'fecha_ingreso')),
                 'estatus' => $estatus,
+                'tipo_retiro' => $tipoRetiro,
                 'tipo_funcionario' => $tipo,
                 'telefono' => filled($d['telefono'] ?? null) ? trim((string) $d['telefono']) : null,
                 'correo_electronico' => filled($d['correo_electronico'] ?? null) ? trim((string) $d['correo_electronico']) : null,
@@ -376,6 +419,19 @@ class BulkImportService
                 'talla_falda' => $d['talla_falda'] ?: null,
                 'talla_gorra' => $d['talla_gorra'] ?: null,
             ]);
+
+            foreach ($fechasReingreso as $fechaReingreso) {
+                OficialesReingreso::firstOrCreate(
+                    [
+                        'id_policia' => $oficial->id,
+                        'fecha_reingreso' => $fechaReingreso,
+                    ],
+                    [
+                        'id_policia' => $oficial->id,
+                        'fecha_reingreso' => $fechaReingreso,
+                    ]
+                );
+            }
         });
     }
 
@@ -846,6 +902,65 @@ class BulkImportService
                 'descripcion' => $descripcion !== '' ? $descripcion : null,
             ]);
         }, "Radiograma en estación {$estacion->estacion} con la misma fecha de inicio ya existe");
+    }
+
+    private function importNombramiento(array $d): array
+    {
+        $oficial = $this->findOficial($this->require($d, 'documento_identidad'));
+
+        $nombreTipo = trim($this->requireAny($d, ['nombramiento', 'tipo_nombramiento', 'de_que_fue_nombrado'], 'nombramiento'));
+        $tipoNorm = $this->normalizeMatchText($this->foldAccents($nombreTipo));
+        $tipo = CatalogoNombramiento::query()
+            ->get(['id', 'nombre'])
+            ->first(function ($item) use ($tipoNorm) {
+                return $this->normalizeMatchText($this->foldAccents((string) $item->nombre)) === $tipoNorm;
+            });
+        if (! $tipo) {
+            $tipo = CatalogoNombramiento::create(['nombre' => $nombreTipo]);
+        }
+
+        $nombreEstacion = trim($this->require($d, 'estacion'));
+        $estacionNorm = $this->normalizeMatchText($this->foldAccents($nombreEstacion));
+        $estacion = Estacione::query()
+            ->get(['id', 'estacion'])
+            ->first(function ($item) use ($estacionNorm) {
+                return $this->normalizeMatchText($this->foldAccents((string) $item->estacion)) === $estacionNorm;
+            });
+        if (! $estacion) {
+            $estacion = Estacione::create([
+                'estacion' => $nombreEstacion,
+                'descripcion' => null,
+            ]);
+        }
+
+        $fechaInicio = $this->date($this->require($d, 'fecha_inicio'));
+        $fechaFinal = filled($d['fecha_final'] ?? null) ? $this->date($d['fecha_final']) : null;
+        $isActual = in_array((string) ($d['is_actual'] ?? '0'), ['1', 'true', 'Si', 'SI'], true);
+        $descripcion = trim((string) ($d['descripcion'] ?? ''));
+
+        $rowKey = "{$oficial->id}|{$tipo->id}|{$estacion->id}|{$fechaInicio}";
+        $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
+            ->where('id_tipo_nombramiento', $tipo->id)
+            ->where('id_estacion', $estacion->id)
+            ->whereDate('fecha_inicio', $fechaInicio);
+
+        return $this->importUnique('nombramientos', $rowKey, OficialesNombramiento::class, $matchFn, function () use ($oficial, $tipo, $estacion, $fechaInicio, $fechaFinal, $isActual, $descripcion) {
+            if ($isActual) {
+                OficialesNombramiento::query()
+                    ->where('id_policia', $oficial->id)
+                    ->update(['is_actual' => 0]);
+            }
+
+            OficialesNombramiento::create([
+                'id_policia' => $oficial->id,
+                'id_estacion' => $estacion->id,
+                'id_tipo_nombramiento' => $tipo->id,
+                'fecha_inicio' => $fechaInicio,
+                'fecha_final' => $fechaFinal,
+                'is_actual' => $isActual ? 1 : 0,
+                'descripcion' => $descripcion !== '' ? $descripcion : null,
+            ]);
+        }, "Nombramiento {$tipo->nombre} en estación {$estacion->estacion} con la misma fecha de inicio ya existe");
     }
 
     private function resolveParroquiaId(?string $municipio, ?string $parroquia): ?int

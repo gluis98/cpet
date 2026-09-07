@@ -251,11 +251,13 @@
                 },
                 {
                     data: 'estatus', className: 'text-center',
-                    render: function (d) {
+                    render: function (d, type, row) {
                         if (!d) return '';
                         const colors = {
                             'Operativo': 'badge-success',
                             'No Operativo': 'badge-secondary',
+                            'En Reposo': 'badge-warning',
+                            'Reingreso': 'badge-info',
                             'Suspendido': 'badge-warning',
                             'Retirado': 'badge-dark',
                             'Jubilado': 'badge-info',
@@ -263,7 +265,11 @@
                             'URRA': 'badge-primary'
                         };
                         const cls = colors[d] || 'badge-light';
-                        return `<span class="badge ${cls}">${d.toUpperCase()}</span>`;
+                        let label = d.toUpperCase();
+                        if (d === 'Retirado' && row && row.tipo_retiro) {
+                            label += ' (' + String(row.tipo_retiro).toUpperCase() + ')';
+                        }
+                        return `<span class="badge ${cls}">${label}</span>`;
                     }
                 },
                 {
@@ -278,6 +284,7 @@
                                     <a class="dropdown-item" href="{{ url('/officers/tipo') }}/${tipoSlug}/${data}/edit"><i class="far fa-edit"></i> Editar</a>
                                     <a class="dropdown-item" href="{{ url('/officers/ficha') }}/${data}"><i class="fas fa-id-card-alt"></i> Ver ficha</a>
                                     <a class="dropdown-item" href="{{ url('/officers/radiogram') }}/${data}"><i class="fas fa-street-view"></i> Radiograma</a>
+                                    <a class="dropdown-item" href="{{ url('/officers/nombramientos') }}/${data}"><i class="fas fa-user-tie"></i> Nombramientos</a>
                                     <a class="dropdown-item" href="{{ url('/officers/academy') }}/${data}"><i class="fas fa-graduation-cap"></i> Formación académica</a>
                                     <a class="dropdown-item" href="{{ url('/officers/courses') }}/${data}"><i class="fas fa-book-reader"></i> Cursos y diplomados</a>
                                     <a class="dropdown-item" href="{{ url('/officers/positions') }}/${data}"><i class="fas fa-medal"></i> Jerarquías obtenidas</a>

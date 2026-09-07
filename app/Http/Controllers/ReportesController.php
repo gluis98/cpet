@@ -9,6 +9,7 @@ use App\Models\OficialesUrra;
 use App\Models\OficialesVacacione;
 use App\Models\Entidad;
 use App\Models\OficialesRadiograma;
+use App\Models\OficialesNombramiento;
 use App\Support\UrraEstatusSync;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -32,11 +33,18 @@ class ReportesController extends Controller
     // Esta función sirve para obtener el reporte individual de la boleta de vacaciones de un oficial
     public function vacation($id)
     {
-        $oficial = OficialesVacacione::with('oficiale')->findOrFail($id);
-        $anio = Carbon::parse($oficial->fecha_emision)->format('Y');
+        $vacacion = OficialesVacacione::with([
+            'oficiale.oficiales_cargos' => function ($q) {
+                $q->where('is_actual', 1)->with('cargo');
+            },
+            'oficiale.cargos_administrativo',
+        ])->findOrFail($id);
+
+        $funcionario = $vacacion->oficiale;
+        $anio = Carbon::parse($vacacion->fecha_emision)->format('Y');
         $dias = 0;
-        $fechaInicio = Carbon::parse($oficial->fecha_emision);
-        $fechaFinRaw = $oficial->fecha_hasta ?? $oficial->fecha_reintegro;
+        $fechaInicio = Carbon::parse($vacacion->fecha_emision);
+        $fechaFinRaw = $vacacion->fecha_hasta ?? $vacacion->fecha_reintegro;
         $fechaFin = $fechaFinRaw ? Carbon::parse($fechaFinRaw) : Carbon::now();
         while ($fechaInicio->lte($fechaFin)) {
             if ($fechaInicio->isWeekday()) {
@@ -44,8 +52,147 @@ class ReportesController extends Controller
             }
             $fechaInicio->addDay();
         }
-        $dias_habiles = $dias;
-        return view('admin.reports.vacation', ['oficial' => $oficial, 'title' => 'BOLETA DE VACACIONES', 'tipo' => 'VACACIONES DEL AÑO ' . $anio . " CON " . $dias_habiles . " DÍAS HÁBILES", 'entidad' => $this->entidad()]);
+
+        $periodos = $this->periodosVacacionesPlanilla($funcionario);
+
+        $jerarquia = optional(optional($funcionario?->oficiales_cargos->first())->cargo)->nombre_cargo;
+        $cargoAdmin = optional($funcionario?->cargos_administrativo)->nombre_cargo;
+        $rangoFirma = trim(implode(' ', array_filter([
+            $jerarquia ?: $cargoAdmin,
+            $jerarquia || $cargoAdmin ? '(CPET)' : null,
+            $funcionario?->nombre_completo,
+        ])));
+
+        return view('admin.reports.vacation', [
+            'oficial' => $vacacion,
+            'funcionario' => $funcionario,
+            'title' => 'BOLETA DE VACACIONES',
+            'tipo' => 'VACACIONES DEL AÑO '.$anio.' CON '.$dias.' DÍAS HÁBILES',
+            'entidad' => $this->entidad(),
+            'aniosDisfrutados' => $periodos['disfrutados'],
+            'aniosNoDisfrutados' => $periodos['no_disfrutados'],
+            'fechaIngresoFmt' => $periodos['fecha_ingreso_fmt'],
+            'fechaPlanilla' => Carbon::now()->format('d/m/Y'),
+            'rangoFirma' => $rangoFirma !== '' ? $rangoFirma : ($funcionario?->nombre_completo ?? '—'),
+        ]);
+    }
+
+    /**
+     * Años de vacaciones disfrutadas / no disfrutadas desde el ingreso hasta el año actual.
+     *
+     * @return array{disfrutados: list<int>, no_disfrutados: list<int>, fecha_ingreso_fmt: string}
+     */
+    private function periodosVacacionesPlanilla(?Oficiale $funcionario): array
+    {
+        if (! $funcionario || ! $funcionario->fecha_ingreso) {
+            return [
+                'disfrutados' => [],
+                'no_disfrutados' => [],
+                'fecha_ingreso_fmt' => '—',
+            ];
+        }
+
+        $ingreso = Carbon::parse($funcionario->fecha_ingreso);
+        $anioInicio = (int) $ingreso->format('Y');
+        $anioFin = (int) Carbon::now()->format('Y');
+
+        $vacaciones = OficialesVacacione::query()
+            ->where('id_policia', $funcionario->id)
+            ->whereNotNull('fecha_emision')
+            ->get(['fecha_emision', 'is_disfrutadas', 'estatus']);
+
+        $disfrutados = [];
+        foreach ($vacaciones as $v) {
+            $estatus = strtoupper(trim((string) $v->estatus));
+            if ($estatus === 'NEGADAS') {
+                continue;
+            }
+            if ((int) $v->is_disfrutadas !== 1) {
+                continue;
+            }
+            $disfrutados[] = (int) Carbon::parse($v->fecha_emision)->format('Y');
+        }
+        $disfrutados = array_values(array_unique($disfrutados));
+        sort($disfrutados);
+
+        $setDisfrutados = array_fill_keys($disfrutados, true);
+        $noDisfrutados = [];
+        for ($y = $anioInicio; $y <= $anioFin; $y++) {
+            if (! isset($setDisfrutados[$y])) {
+                $noDisfrutados[] = $y;
+            }
+        }
+
+        return [
+            'disfrutados' => $disfrutados,
+            'no_disfrutados' => $noDisfrutados,
+            'fecha_ingreso_fmt' => $ingreso->format('d/m/Y'),
+        ];
+    }
+
+    public function nombramiento($id)
+    {
+        $nombramiento = OficialesNombramiento::with([
+            'estacione',
+            'tipo_nombramiento',
+            'oficiale.oficiales_cargos' => function ($q) {
+                $q->where('is_actual', 1)->with('cargo');
+            },
+            'oficiale.cargos_administrativo',
+        ])->findOrFail($id);
+
+        $funcionario = $nombramiento->oficiale;
+        $entidad = $this->entidad();
+        $director = trim((string) ($entidad->director_general ?? '')) ?: '________________________';
+
+        $jerarquia = optional(optional($funcionario?->oficiales_cargos->first())->cargo)->nombre_cargo;
+        $cargoAdmin = optional($funcionario?->cargos_administrativo)->nombre_cargo;
+        $rango = $jerarquia ?: $cargoAdmin;
+        $destinatario = trim(implode(' ', array_filter([
+            $rango ? mb_strtoupper($rango).' (CPET)' : null,
+            $funcionario?->nombre_completo ? mb_strtoupper($funcionario->nombre_completo) : null,
+        ])));
+
+        $fecha = $nombramiento->fecha_inicio
+            ? Carbon::parse($nombramiento->fecha_inicio)->locale('es')->isoFormat('D [de] MMMM [de] YYYY')
+            : Carbon::now()->locale('es')->isoFormat('D [de] MMMM [de] YYYY');
+
+        $designacion = optional($nombramiento->tipo_nombramiento)->nombre
+            ?: optional($nombramiento->estacione)->estacion
+            ?: '________________';
+
+        return view('admin.reports.nombramiento', [
+            'nombramiento' => $nombramiento,
+            'funcionario' => $funcionario,
+            'entidad' => $entidad,
+            'director' => $director,
+            'destinatario' => $destinatario !== '' ? $destinatario : '________________________',
+            'cedula' => $funcionario?->documento_identidad ?? '—',
+            'designacion' => mb_strtoupper($designacion),
+            'fecha' => $fecha,
+            'iniciales' => $this->inicialesDocumento($director),
+        ]);
+    }
+
+    private function inicialesDocumento(string $nombre): string
+    {
+        $partes = preg_split('/\s+/', trim($nombre)) ?: [];
+        $letras = [];
+        foreach ($partes as $parte) {
+            $parte = preg_replace('/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ.]/u', '', $parte);
+            if ($parte === '' || $parte === '.') {
+                continue;
+            }
+            // Omite abreviaturas muy cortas tipo (RA).
+            if (mb_strlen($parte) <= 2 && str_contains($parte, '.')) {
+                continue;
+            }
+            $letras[] = mb_strtoupper(mb_substr($parte, 0, 1));
+        }
+
+        $sigla = implode('', $letras);
+
+        return $sigla !== '' ? $sigla.'/' : '';
     }
 
     public function radiogram($id)

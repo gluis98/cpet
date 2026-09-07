@@ -200,10 +200,55 @@
                         <div class="col-md-4 mb-3">
                             <label class="form-label" for="estatus">Estatus <span class="text-accent-600">*</span></label>
                             <select class="form-control" id="estatus" name="estatus" required>
-                                @foreach (['Operativo','No Operativo','En Reposo','Retirado','Suspendido','Jubilado','Fallecido','URRA'] as $st)
+                                @foreach (\App\Models\Oficiale::ESTATUS as $st)
                                     <option value="{{ $st }}" @selected(old('estatus', $oficial->estatus ?? 'Operativo') === $st)>{{ $st }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="row" id="wrap-tipo-retiro" style="{{ old('estatus', $oficial->estatus) === 'Retirado' ? '' : 'display:none;' }}">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="tipo_retiro">Tipo de retiro <span class="text-accent-600">*</span></label>
+                            <select class="form-control" id="tipo_retiro" name="tipo_retiro">
+                                <option value="">--- SELECCIONE ---</option>
+                                @foreach (\App\Models\Oficiale::TIPOS_RETIRO as $tr)
+                                    <option value="{{ $tr }}" @selected(old('tipo_retiro', $oficial->tipo_retiro) === $tr)>{{ $tr }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" id="wrap-reingresos" style="{{ old('estatus', $oficial->estatus) === 'Reingreso' ? '' : 'display:none;' }}">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label d-flex align-items-center justify-content-between">
+                                <span>Fechas de reingreso</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="btn-add-reingreso">
+                                    <i class="fas fa-plus"></i> Agregar fecha
+                                </button>
+                            </label>
+                            <div id="reingresos-list" class="border rounded p-3 bg-light">
+                                @php
+                                    $reingresosOld = old('fechas_reingreso');
+                                    if (! is_array($reingresosOld)) {
+                                        $reingresosOld = $oficial->relationLoaded('oficiales_reingresos')
+                                            ? $oficial->oficiales_reingresos->map(fn ($r) => optional($r->fecha_reingreso)->format('Y-m-d'))->filter()->values()->all()
+                                            : ($oficial->oficiales_reingresos()->pluck('fecha_reingreso')->map(fn ($d) => \Carbon\Carbon::parse($d)->format('Y-m-d'))->all());
+                                    }
+                                    if ($reingresosOld === []) {
+                                        $reingresosOld = [''];
+                                    }
+                                @endphp
+                                @foreach ($reingresosOld as $fechaReingreso)
+                                    <div class="input-group mb-2 reingreso-row">
+                                        <input type="date" class="form-control" name="fechas_reingreso[]" value="{{ $fechaReingreso }}">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-outline-danger btn-remove-reingreso" title="Quitar">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <small class="text-muted">Registre cada fecha en que el funcionario reingresó al cuerpo.</small>
                         </div>
                     </div>
                     <div class="row">

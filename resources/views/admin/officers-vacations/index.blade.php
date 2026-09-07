@@ -70,7 +70,6 @@
                                     <option value="NEGADAS">NEGADAS</option>
                                     <option value="VENCIDAS">VENCIDAS</option>
                                     <option value="REGLAMENTARIAS">REGLAMENTARIAS</option>
-                                    <option value="EN PROCESO">EN PROCESO</option>
                                 </select>
                             </div>
                         </div>
@@ -379,7 +378,7 @@ $(document).ready(function () {
 
     function toggleCheckbox() {
         const status = $('#estatus').val();
-        if (status === 'APROBADAS' || status === 'EN PROCESO' || status === 'REGLAMENTARIAS') {
+        if (status === 'APROBADAS' || status === 'REGLAMENTARIAS') {
             $('#is_disfrutadas').prop('disabled', false);
         } else {
             $('#is_disfrutadas').prop('disabled', true).prop('checked', false);

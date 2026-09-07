@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(HomeController::class)->group(function () {
         Route::get('/', 'index')->name('home');
         Route::get('/officers/radiogram/{id}', 'officers_radiogram')->name('officers.radiogram');
+        Route::get('/officers/nombramientos/{id}', 'officers_nombramientos')->name('officers.nombramientos');
         Route::get('/officers/academy/{id}', 'officers_academy')->name('officers.academy');
         Route::get('/officers/courses/{id}', 'officers_courses')->name('officers.courses');
         Route::get('/officers/positions/{id}', 'officers_position')->name('officers.positions');
@@ -54,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(ReportesController::class)->group(function () {
         Route::get('/reports/vacation/{id}', 'vacation')->name('report.vacation');
         Route::get('/reports/radiogram/{id}', 'radiogram')->name('report.radiogram');
+        Route::get('/reports/nombramiento/{id}', 'nombramiento')->name('report.nombramiento');
         Route::get('/reports/officers', 'officers')->name('report.officers');
         Route::get('/reports/officers/officers-born_date', 'officers_born_date')->name('report.officers_born_date');
         Route::get('/reports/officers/ingress-date', 'ingress_date')->name('report.officers.ingress_date');

@@ -67,7 +67,7 @@
     }
 
     function extractItem(data) {
-        return data?.item || data?.discapacidad || data?.curso || data?.cargo || data?.municipio || data?.parroquia || data?.centro_votacion || null;
+        return data?.item || data?.discapacidad || data?.curso || data?.cargo || data?.nombramiento || data?.municipio || data?.parroquia || data?.centro_votacion || null;
     }
 
     function promptAdd(options) {

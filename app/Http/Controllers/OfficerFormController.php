@@ -57,8 +57,11 @@ class OfficerFormController extends Controller
         $data = $this->validated($request);
         $data['tipo_funcionario'] = $tipoFuncionario;
         $this->syncCentroVotacionText($data);
+        $fechasReingreso = $data['fechas_reingreso'] ?? [];
+        unset($data['fechas_reingreso']);
 
         $oficial = Oficiale::create($data);
+        $this->syncReingresos($oficial, $data['estatus'] ?? null, $fechasReingreso);
         $this->storePhoto($request, $oficial);
 
         return redirect()
@@ -70,7 +73,7 @@ class OfficerFormController extends Controller
     {
         $tipoFuncionario = Oficiale::normalizeTipo($tipo);
         $slug = array_search($tipoFuncionario, Oficiale::TIPOS_FUNCIONARIO, true) ?: 'policial';
-        $oficial = Oficiale::findOrFail($id);
+        $oficial = Oficiale::with('oficiales_reingresos')->findOrFail($id);
 
         return view('admin.officers.form', [
             'title' => 'Editar funcionario — '.$oficial->nombre_completo,
@@ -90,8 +93,11 @@ class OfficerFormController extends Controller
         $data = $this->validated($request);
         $data['tipo_funcionario'] = $tipoFuncionario;
         $this->syncCentroVotacionText($data);
+        $fechasReingreso = $data['fechas_reingreso'] ?? [];
+        unset($data['fechas_reingreso']);
 
         $oficial->update($data);
+        $this->syncReingresos($oficial, $data['estatus'] ?? null, $fechasReingreso);
         $this->storePhoto($request, $oficial);
 
         return redirect()
@@ -213,7 +219,10 @@ class OfficerFormController extends Controller
             'parroquia_id' => ['nullable', 'integer', 'exists:parroquias,id'],
             'numero_placa' => ['nullable', 'string', 'max:255'],
             'fecha_ingreso' => ['required', 'date'],
-            'estatus' => ['required', 'string', 'max:50'],
+            'estatus' => ['required', 'string', 'in:'.implode(',', Oficiale::ESTATUS)],
+            'tipo_retiro' => ['nullable', 'in:'.implode(',', Oficiale::TIPOS_RETIRO)],
+            'fechas_reingreso' => ['nullable', 'array'],
+            'fechas_reingreso.*' => ['nullable', 'date'],
             'cargo_administrativo_id' => ['nullable', 'integer'],
             'talla_camisa' => ['nullable', 'string', 'max:255'],
             'talla_pantalon' => ['nullable', 'string', 'max:10'],
@@ -243,6 +252,33 @@ class OfficerFormController extends Controller
             $data['numero_placa'] = null;
         }
 
+        if (($data['estatus'] ?? null) === 'Retirado') {
+            if (empty($data['tipo_retiro'])) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'tipo_retiro' => 'Seleccione el tipo de retiro (Renuncia o Destitución).',
+                ]);
+            }
+        } else {
+            $data['tipo_retiro'] = null;
+        }
+
+        $fechas = [];
+        foreach ($data['fechas_reingreso'] ?? [] as $fecha) {
+            $fecha = trim((string) $fecha);
+            if ($fecha !== '') {
+                $fechas[] = $fecha;
+            }
+        }
+        $fechas = array_values(array_unique($fechas));
+
+        if (($data['estatus'] ?? null) === 'Reingreso' && $fechas === []) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'fechas_reingreso' => 'Agregue al menos una fecha de reingreso.',
+            ]);
+        }
+
+        $data['fechas_reingreso'] = $fechas;
+
         $data['sabe_conducir'] = (string) ($data['sabe_conducir'] ?? '0') === '1';
         if (! $data['sabe_conducir']) {
             $data['tipos_conduccion'] = null;
@@ -254,6 +290,24 @@ class OfficerFormController extends Controller
         }
 
         return $data;
+    }
+
+    private function syncReingresos(Oficiale $oficial, ?string $estatus, array $fechas): void
+    {
+        // Solo sincroniza cuando el estatus es Reingreso; el historial se conserva si cambia de estatus.
+        if ($estatus !== 'Reingreso') {
+            return;
+        }
+
+        $fechas = array_values(array_unique(array_filter(array_map('trim', $fechas))));
+        $oficial->oficiales_reingresos()->whereNotIn('fecha_reingreso', $fechas)->delete();
+
+        foreach ($fechas as $fecha) {
+            $oficial->oficiales_reingresos()->firstOrCreate(
+                ['fecha_reingreso' => $fecha],
+                ['fecha_reingreso' => $fecha]
+            );
+        }
     }
 
     private function syncCentroVotacionText(array &$data): void

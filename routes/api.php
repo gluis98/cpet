@@ -14,6 +14,7 @@ use App\Http\Controllers\OfficersAwardsController;
 use App\Http\Controllers\OfficersArmamentController;
 use App\Http\Controllers\ArmamentController;
 use App\Http\Controllers\OfficersRadiogramController;
+use App\Http\Controllers\OfficersNombramientosController;
 use App\Http\Controllers\OfficersHealthController;
 use App\Http\Controllers\OfficersIcapController;
 use App\Http\Controllers\OfficersUrraController;
@@ -102,6 +103,12 @@ Route::controller(CatalogosController::class)->group(function () {
     Route::put('/catalogo-cursos/{id}', 'cursosUpdate');
     Route::delete('/catalogo-cursos/{id}', 'cursosDestroy');
 
+    Route::get('/catalogo-nombramientos', 'nombramientosIndex');
+    Route::post('/catalogo-nombramientos', 'nombramientosStore');
+    Route::get('/catalogo-nombramientos/{id}', 'nombramientosShow');
+    Route::put('/catalogo-nombramientos/{id}', 'nombramientosUpdate');
+    Route::delete('/catalogo-nombramientos/{id}', 'nombramientosDestroy');
+
     Route::get('/cargos', 'cargosIndex');
     Route::post('/cargos', 'cargosStore');
     Route::get('/cargos/{id}', 'cargosShow');
@@ -155,6 +162,14 @@ Route::controller(OfficersRadiogramController::class)->group(function(){
     Route::get('/officers/radiogram/{id}', 'show');
     Route::put('/officers/radiogram/{id}', 'update');
     Route::delete('/officers/radiogram/{id}', 'destroy');
+});
+
+Route::controller(OfficersNombramientosController::class)->group(function () {
+    Route::get('/officers/nombramientos/index/{id}', 'index');
+    Route::post('/officers/nombramientos', 'store');
+    Route::get('/officers/nombramientos/{id}', 'show');
+    Route::put('/officers/nombramientos/{id}', 'update');
+    Route::delete('/officers/nombramientos/{id}', 'destroy');
 });
 
 Route::controller(OfficersHealthController::class)->group(function(){

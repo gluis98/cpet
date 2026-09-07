@@ -189,6 +189,18 @@ class HomeController extends Controller
         return view('admin.officers-radiogram.index', ['title' => $title, 'leftImagePath' => $this->leftImagePath, 'id'=>$id]);
     }
 
+    public function officers_nombramientos($id)
+    {
+        $o = \App\Models\Oficiale::findOrFail($id);
+        $title = 'Funcionario: '.$o->nombre_completo.' - Nombramientos';
+
+        return view('admin.officers-nombramientos.index', [
+            'title' => $title,
+            'leftImagePath' => $this->leftImagePath,
+            'id' => $id,
+        ]);
+    }
+
     public function officers_health($id)
     {
         $o = \App\Models\Oficiale::find($id);

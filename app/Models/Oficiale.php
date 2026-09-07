@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $telefono
  * @property string|null $correo_electronico
  * @property string|null $estatus
+ * @property string|null $tipo_retiro
  * @property string|null $numero_placa
  * @property int|null $parroquia_id
  * @property int|null $centro_votacion_id
@@ -95,6 +96,7 @@ class Oficiale extends Model
 		'telefono_residencial',
 		'correo_electronico',
 		'estatus',
+		'tipo_retiro',
 		'numero_placa',
 		'parroquia_id',
 		'centro_votacion_id',
@@ -118,11 +120,17 @@ class Oficiale extends Model
 		'Operativo',
 		'No Operativo',
 		'En Reposo',
+		'Reingreso',
 		'Retirado',
 		'Suspendido',
 		'Jubilado',
 		'Fallecido',
 		'URRA',
+	];
+
+	public const TIPOS_RETIRO = [
+		'Renuncia',
+		'Destitución',
 	];
 
 	public const TIPOS_VIVIENDA = [
@@ -143,6 +151,25 @@ class Oficiale extends Model
 		$key = strtolower((string) $tipo);
 
 		return self::TIPOS_FUNCIONARIO[$key] ?? 'Policial';
+	}
+
+	public static function normalizeSexo(?string $sexo): ?string
+	{
+		$valor = trim((string) $sexo);
+		if ($valor === '') {
+			return null;
+		}
+
+		$norm = mb_strtolower($valor);
+		$norm = strtr($norm, [
+			'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+		]);
+
+		return match (true) {
+			in_array($norm, ['m', 'masculino', 'hombre', 'male', 'masc'], true) => 'Masculino',
+			in_array($norm, ['f', 'femenino', 'mujer', 'female', 'fem'], true) => 'Femenino',
+			default => in_array($valor, self::SEXOS, true) ? $valor : null,
+		};
 	}
 
 	public static function normalizeTipoVivienda(?string $tipo): ?string
@@ -231,6 +258,11 @@ class Oficiale extends Model
 		return $this->hasMany(OficialesRadiograma::class, 'id_policia');
 	}
 
+	public function oficiales_nombramientos()
+	{
+		return $this->hasMany(OficialesNombramiento::class, 'id_policia');
+	}
+
 	public function oficiales_reconocimientos()
 	{
 		return $this->hasMany(OficialesReconocimiento::class, 'id_policia');
@@ -244,6 +276,12 @@ class Oficiale extends Model
 	public function oficiales_vacaciones()
 	{
 		return $this->hasMany(OficialesVacacione::class, 'id_policia');
+	}
+
+	public function oficiales_reingresos()
+	{
+		return $this->hasMany(OficialesReingreso::class, 'id_policia')
+			->orderByDesc('fecha_reingreso');
 	}
 
 	public function oficiales_urras()

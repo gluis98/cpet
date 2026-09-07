@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cargo;
 use App\Models\CargosAdministrativo;
 use App\Models\CatalogoCurso;
+use App\Models\CatalogoNombramiento;
 use App\Models\Discapacidade;
 use Illuminate\Http\Request;
 
@@ -121,6 +122,64 @@ class CatalogosController extends Controller
         $item->delete();
 
         return response()->json(['msj' => 'Curso/diplomado eliminado.'], 200);
+    }
+
+    /* ---------- Tipos de nombramiento ---------- */
+
+    public function nombramientosIndex()
+    {
+        return response()->json(
+            CatalogoNombramiento::orderBy('nombre')
+                ->get(['id', 'nombre'])
+                ->map(fn ($item) => $this->catalogItem($item->id, $item->nombre)),
+            200
+        );
+    }
+
+    public function nombramientosStore(Request $request)
+    {
+        $nombre = $this->nombreFromRequest($request);
+        $item = CatalogoNombramiento::firstOrCreate(['nombre' => $nombre], ['nombre' => $nombre]);
+
+        return response()->json([
+            'msj' => 'Tipo de nombramiento registrado.',
+            'nombramiento' => $item,
+            'item' => $this->catalogItem($item->id, $item->nombre),
+        ], 201);
+    }
+
+    public function nombramientosShow($id)
+    {
+        $item = CatalogoNombramiento::findOrFail($id);
+
+        return response()->json($this->catalogItem($item->id, $item->nombre), 200);
+    }
+
+    public function nombramientosUpdate(Request $request, $id)
+    {
+        $item = CatalogoNombramiento::findOrFail($id);
+        $nombre = $this->nombreFromRequest($request, 'catalogo_nombramientos', 'nombre', $item->id);
+        $item->update(['nombre' => $nombre]);
+
+        return response()->json([
+            'msj' => 'Tipo de nombramiento actualizado.',
+            'item' => $this->catalogItem($item->id, $item->nombre),
+        ], 200);
+    }
+
+    public function nombramientosDestroy($id)
+    {
+        $item = CatalogoNombramiento::findOrFail($id);
+
+        if ($item->oficiales_nombramientos()->exists()) {
+            return response()->json([
+                'msj' => 'No se puede eliminar: hay nombramientos de funcionarios asociados a este tipo.',
+            ], 422);
+        }
+
+        $item->delete();
+
+        return response()->json(['msj' => 'Tipo de nombramiento eliminado.'], 200);
     }
 
     /* ---------- Cargos (jerarquías) ---------- */
