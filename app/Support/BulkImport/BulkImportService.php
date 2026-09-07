@@ -182,6 +182,7 @@ class BulkImportService
         }
 
         $created = 0;
+        $updated = 0;
         $skipped = 0;
         $failed = 0;
         $dedupedTotal = 0;
@@ -229,6 +230,8 @@ class BulkImportService
 
                     if (($result['status'] ?? '') === 'created') {
                         $created++;
+                    } elseif (($result['status'] ?? '') === 'updated') {
+                        $updated++;
                     } elseif (($result['status'] ?? '') === 'skipped') {
                         $skipped++;
                         if (! empty($result['message'])) {
@@ -252,6 +255,7 @@ class BulkImportService
                 'ok' => false,
                 'msj' => 'Error al importar: '.$e->getMessage(),
                 'created' => 0,
+                'updated' => 0,
                 'skipped' => 0,
                 'failed' => 0,
                 'total_rows' => $totalRows,
@@ -262,6 +266,9 @@ class BulkImportService
 
         $hasIssues = $skipped > 0 || $failed > 0;
         $summary = "Procesadas {$totalRows} filas: {$created} creados";
+        if ($updated > 0) {
+            $summary .= ", {$updated} actualizados";
+        }
         if ($skipped > 0) {
             $summary .= ", {$skipped} omitidos";
         }
@@ -280,6 +287,7 @@ class BulkImportService
             'ok' => true,
             'msj' => $summary,
             'created' => $created,
+            'updated' => $updated,
             'skipped' => $skipped,
             'failed' => $failed,
             'deduped' => $dedupedTotal,
@@ -294,86 +302,168 @@ class BulkImportService
     {
         $doc = $this->normalizeDocumento($this->require($d, 'documento_identidad'));
         $matchFn = fn ($q) => $q->where('documento_identidad', $doc);
+        $deduped = $this->dedupeRecords(Oficiale::class, $matchFn);
 
-        return $this->importUnique('funcionarios', $doc, Oficiale::class, $matchFn, function () use ($d, $doc) {
-            $tipo = Oficiale::normalizeTipo($this->require($d, 'tipo_funcionario'));
-            $estatus = $this->require($d, 'estatus');
-            if (! in_array($estatus, Oficiale::ESTATUS, true)) {
-                throw new \InvalidArgumentException("estatus inválido: {$estatus}");
+        if ($this->isImportRowSeen('funcionarios', $doc)) {
+            return [
+                'status' => 'skipped',
+                'message' => $this->skipMessage('Registro duplicado en el archivo', $deduped),
+                'deduped' => $deduped,
+            ];
+        }
+        $this->markImportRowSeen('funcionarios', $doc);
+
+        $built = $this->buildFuncionarioPayload($d, $doc);
+        $payload = $built['payload'];
+        $fechasReingreso = $built['fechas_reingreso'];
+        $providedKeys = $built['provided_keys'];
+
+        $existing = Oficiale::query()->where('documento_identidad', $doc)->first();
+
+        if (! $existing) {
+            $oficial = Oficiale::create($payload);
+            $this->syncFechasReingresoImport((int) $oficial->id, $fechasReingreso);
+
+            return ['status' => 'created', 'deduped' => $deduped];
+        }
+
+        $changes = [];
+        foreach ($providedKeys as $key) {
+            if (! array_key_exists($key, $payload)) {
+                continue;
             }
-
-            $cargoId = null;
-            if (! empty($d['cargo'])) {
-                $cargo = CargosAdministrativo::firstOrCreate(
-                    ['nombre_cargo' => trim($d['cargo'])],
-                    ['nombre_cargo' => trim($d['cargo'])]
-                );
-                $cargoId = $cargo->id;
+            $incoming = $payload[$key];
+            $current = $existing->getAttribute($key);
+            if ($this->funcionarioValuesDiffer($key, $current, $incoming)) {
+                $changes[$key] = $incoming;
             }
+        }
 
-            $sabe = in_array((string) ($d['sabe_conducir'] ?? '0'), ['1', 'true', 'Si', 'SI'], true);
+        $reingresosAdded = 0;
+        if ($fechasReingreso !== []) {
+            $reingresosAdded = $this->syncFechasReingresoImport((int) $existing->id, $fechasReingreso);
+        }
+
+        if ($changes === [] && $reingresosAdded === 0) {
+            return [
+                'status' => 'skipped',
+                'deduped' => $deduped,
+            ];
+        }
+
+        if ($changes !== []) {
+            $existing->fill($changes);
+            $existing->save();
+        }
+
+        return ['status' => 'updated', 'deduped' => $deduped];
+    }
+
+    /**
+     * @return array{payload: array<string, mixed>, fechas_reingreso: list<string>, provided_keys: list<string>}
+     */
+    private function buildFuncionarioPayload(array $d, string $doc): array
+    {
+        $tipo = Oficiale::normalizeTipo($this->require($d, 'tipo_funcionario'));
+        $estatus = $this->require($d, 'estatus');
+        if (! in_array($estatus, Oficiale::ESTATUS, true)) {
+            throw new \InvalidArgumentException("estatus inválido: {$estatus}");
+        }
+
+        $cargoId = null;
+        $cargoProvided = filled(trim((string) ($d['cargo'] ?? '')));
+        if ($cargoProvided) {
+            $cargo = CargosAdministrativo::firstOrCreate(
+                ['nombre_cargo' => trim((string) $d['cargo'])],
+                ['nombre_cargo' => trim((string) $d['cargo'])]
+            );
+            $cargoId = $cargo->id;
+        }
+
+        $sabeRaw = $d['sabe_conducir'] ?? null;
+        $sabeProvided = $sabeRaw !== null && trim((string) $sabeRaw) !== '';
+        $sabe = $sabeProvided
+            ? in_array((string) $sabeRaw, ['1', 'true', 'Si', 'SI'], true)
+            : false;
+
+        $tipos = null;
+        $tiposProvided = filled(trim((string) ($d['tipos_conduccion'] ?? '')));
+        if ($sabe && $tiposProvided) {
+            $tipos = array_values(array_filter(array_map('trim', preg_split('/[;,|]/', (string) $d['tipos_conduccion']))));
+            $tipos = array_values(array_intersect($tipos, Oficiale::TIPOS_CONDUCCION));
+            if ($tipos === []) {
+                $tipos = null;
+            }
+        }
+        if ($sabeProvided && ! $sabe) {
             $tipos = null;
-            if ($sabe && ! empty($d['tipos_conduccion'])) {
-                $tipos = array_values(array_filter(array_map('trim', preg_split('/[;,|]/', (string) $d['tipos_conduccion']))));
-                $allowed = Oficiale::TIPOS_CONDUCCION;
-                $tipos = array_values(array_intersect($tipos, $allowed));
-                if ($tipos === []) {
-                    $tipos = null;
-                }
-            }
+            $tiposProvided = true;
+        }
 
-            $viviendaRaw = trim((string) ($d['tipo_vivienda'] ?? ''));
-            $vivienda = $viviendaRaw !== '' ? Oficiale::normalizeTipoVivienda($viviendaRaw) : null;
-            if ($viviendaRaw !== '' && $vivienda === null) {
-                throw new \InvalidArgumentException("tipo_vivienda inválido: {$viviendaRaw}");
-            }
+        $viviendaRaw = trim((string) ($d['tipo_vivienda'] ?? ''));
+        $viviendaProvided = $viviendaRaw !== '';
+        $vivienda = $viviendaProvided ? Oficiale::normalizeTipoVivienda($viviendaRaw) : null;
+        if ($viviendaProvided && $vivienda === null) {
+            throw new \InvalidArgumentException("tipo_vivienda inválido: {$viviendaRaw}");
+        }
 
-            $sexoRaw = trim((string) ($d['sexo'] ?? ''));
-            $sexo = $sexoRaw !== '' ? Oficiale::normalizeSexo($sexoRaw) : null;
-            if ($sexoRaw !== '' && $sexo === null) {
-                throw new \InvalidArgumentException("sexo inválido: {$sexoRaw} (use Masculino/Femenino o M/F)");
-            }
+        $sexoRaw = trim((string) ($d['sexo'] ?? ''));
+        $sexoProvided = $sexoRaw !== '';
+        $sexo = $sexoProvided ? Oficiale::normalizeSexo($sexoRaw) : null;
+        if ($sexoProvided && $sexo === null) {
+            throw new \InvalidArgumentException("sexo inválido: {$sexoRaw} (use Masculino/Femenino o M/F)");
+        }
 
+        $tipoRetiro = null;
+        $tipoRetiroProvided = $estatus === 'Retirado' || filled(trim((string) ($d['tipo_retiro'] ?? '')));
+        if ($estatus === 'Retirado') {
+            $tipoRetiroRaw = trim((string) ($d['tipo_retiro'] ?? ''));
+            if ($tipoRetiroRaw === '') {
+                throw new \InvalidArgumentException('tipo_retiro es obligatorio si estatus=Retirado (Renuncia o Destitución)');
+            }
+            $tipoRetiroFold = mb_strtolower($this->foldAccents($tipoRetiroRaw));
+            $tipoRetiro = match (true) {
+                str_contains($tipoRetiroFold, 'renun') => 'Renuncia',
+                str_contains($tipoRetiroFold, 'destit') => 'Destitución',
+                in_array($tipoRetiroRaw, Oficiale::TIPOS_RETIRO, true) => $tipoRetiroRaw,
+                default => null,
+            };
+            if ($tipoRetiro === null) {
+                throw new \InvalidArgumentException("tipo_retiro inválido: {$tipoRetiroRaw}");
+            }
+        } else {
             $tipoRetiro = null;
-            if ($estatus === 'Retirado') {
-                $tipoRetiroRaw = trim((string) ($d['tipo_retiro'] ?? ''));
-                if ($tipoRetiroRaw === '') {
-                    throw new \InvalidArgumentException('tipo_retiro es obligatorio si estatus=Retirado (Renuncia o Destitución)');
-                }
-                $tipoRetiroFold = mb_strtolower($this->foldAccents($tipoRetiroRaw));
-                $tipoRetiro = match (true) {
-                    str_contains($tipoRetiroFold, 'renun') => 'Renuncia',
-                    str_contains($tipoRetiroFold, 'destit') => 'Destitución',
-                    in_array($tipoRetiroRaw, Oficiale::TIPOS_RETIRO, true) => $tipoRetiroRaw,
-                    default => null,
-                };
-                if ($tipoRetiro === null) {
-                    throw new \InvalidArgumentException("tipo_retiro inválido: {$tipoRetiroRaw}");
-                }
-            }
+            $tipoRetiroProvided = true;
+        }
 
-            $fechasReingreso = [];
-            if ($estatus === 'Reingreso') {
-                $rawFechas = trim((string) ($d['fechas_reingreso'] ?? ''));
-                if ($rawFechas === '') {
-                    throw new \InvalidArgumentException('fechas_reingreso es obligatorio si estatus=Reingreso');
-                }
-                foreach (preg_split('/[;,|]/', $rawFechas) as $parte) {
-                    $parte = trim($parte);
-                    if ($parte === '') {
-                        continue;
-                    }
-                    $fechasReingreso[] = $this->date($parte);
-                }
-                $fechasReingreso = array_values(array_unique($fechasReingreso));
-                if ($fechasReingreso === []) {
-                    throw new \InvalidArgumentException('fechas_reingreso no contiene fechas válidas');
-                }
+        $fechasReingreso = [];
+        if ($estatus === 'Reingreso') {
+            $rawFechas = trim((string) ($d['fechas_reingreso'] ?? ''));
+            if ($rawFechas === '') {
+                throw new \InvalidArgumentException('fechas_reingreso es obligatorio si estatus=Reingreso');
             }
+            foreach (preg_split('/[;,|]/', $rawFechas) as $parte) {
+                $parte = trim($parte);
+                if ($parte === '') {
+                    continue;
+                }
+                $fechasReingreso[] = $this->date($parte);
+            }
+            $fechasReingreso = array_values(array_unique($fechasReingreso));
+            if ($fechasReingreso === []) {
+                throw new \InvalidArgumentException('fechas_reingreso no contiene fechas válidas');
+            }
+        }
 
+        $municipioProvided = filled(trim((string) ($d['municipio'] ?? '')));
+        $parroquiaProvided = filled(trim((string) ($d['parroquia'] ?? '')));
+        $centroProvided = filled(trim((string) ($d['centro_votacion'] ?? '')));
+        $parroquiaId = null;
+        $centroNombre = null;
+        $centroVotacionId = null;
+        if ($municipioProvided || $parroquiaProvided || $centroProvided) {
             $parroquiaId = $this->resolveParroquiaId($d['municipio'] ?? null, $d['parroquia'] ?? null);
             $centroNombre = trim((string) ($d['centro_votacion'] ?? ''));
-            $centroVotacionId = null;
             if ($centroNombre !== '') {
                 $centroVotacionId = $this->resolveCentroVotacionId(
                     $d['municipio'] ?? null,
@@ -385,55 +475,199 @@ class BulkImportService
                     $centroNombre = $centro->nombre;
                     $parroquiaId = $parroquiaId ?? $centro->parroquia_id;
                 }
+            } else {
+                $centroNombre = null;
+                $centroVotacionId = null;
             }
+        }
 
-            $oficial = Oficiale::create([
-                'documento_identidad' => $doc,
-                'nombre_completo' => $this->require($d, 'nombre_completo'),
-                'fecha_nacimiento' => $this->date($this->require($d, 'fecha_nacimiento')),
-                'sexo' => $sexo,
-                'numero_placa' => filled($d['numero_placa'] ?? null) ? trim((string) $d['numero_placa']) : null,
-                'fecha_ingreso' => $this->date($this->require($d, 'fecha_ingreso')),
-                'estatus' => $estatus,
-                'tipo_retiro' => $tipoRetiro,
-                'tipo_funcionario' => $tipo,
-                'telefono' => filled($d['telefono'] ?? null) ? trim((string) $d['telefono']) : null,
-                'correo_electronico' => filled($d['correo_electronico'] ?? null) ? trim((string) $d['correo_electronico']) : null,
-                'cargo_administrativo_id' => $cargoId,
-                'tipo_sangre' => $d['tipo_sangre'] ?: null,
-                'estado_civil' => $d['estado_civil'] ?: null,
-                'direccion' => $d['direccion'] ?: null,
-                'centro_votacion' => $centroNombre !== '' ? $centroNombre : null,
-                'centro_votacion_id' => $centroVotacionId,
-                'parroquia_id' => $parroquiaId,
-                'tipo_vivienda' => $vivienda,
-                'direccion_vivienda' => ($vivienda === 'No posee' || ! $vivienda) ? null : ($d['direccion_vivienda'] ?: null),
-                'sabe_conducir' => $sabe,
-                'tipos_conduccion' => $tipos,
-                'telefono_residencial' => $d['telefono_residencial'] ?: null,
-                'talla_camisa' => $d['talla_camisa'] ?: null,
-                'talla_pantalon' => $d['talla_pantalon'] ?: null,
-                'talla_zapatos' => $d['talla_zapatos'] ?: null,
-                'talla_saco' => $d['talla_saco'] ?: null,
-                'talla_kepin_toka' => $d['talla_kepin_toka'] ?: null,
-                'talla_tacon' => $d['talla_tacon'] ?: null,
-                'talla_falda' => $d['talla_falda'] ?: null,
-                'talla_gorra' => $d['talla_gorra'] ?: null,
-            ]);
+        $optionalScalar = [
+            'telefono' => filled($d['telefono'] ?? null) ? trim((string) $d['telefono']) : null,
+            'correo_electronico' => filled($d['correo_electronico'] ?? null) ? trim((string) $d['correo_electronico']) : null,
+            'tipo_sangre' => filled(trim((string) ($d['tipo_sangre'] ?? ''))) ? trim((string) $d['tipo_sangre']) : null,
+            'estado_civil' => filled(trim((string) ($d['estado_civil'] ?? ''))) ? trim((string) $d['estado_civil']) : null,
+            'direccion' => filled(trim((string) ($d['direccion'] ?? ''))) ? trim((string) $d['direccion']) : null,
+            'telefono_residencial' => filled(trim((string) ($d['telefono_residencial'] ?? ''))) ? trim((string) $d['telefono_residencial']) : null,
+            'talla_camisa' => filled(trim((string) ($d['talla_camisa'] ?? ''))) ? trim((string) $d['talla_camisa']) : null,
+            'talla_pantalon' => filled(trim((string) ($d['talla_pantalon'] ?? ''))) ? trim((string) $d['talla_pantalon']) : null,
+            'talla_zapatos' => filled(trim((string) ($d['talla_zapatos'] ?? ''))) ? trim((string) $d['talla_zapatos']) : null,
+            'talla_saco' => filled(trim((string) ($d['talla_saco'] ?? ''))) ? trim((string) $d['talla_saco']) : null,
+            'talla_kepin_toka' => filled(trim((string) ($d['talla_kepin_toka'] ?? ''))) ? trim((string) $d['talla_kepin_toka']) : null,
+            'talla_tacon' => filled(trim((string) ($d['talla_tacon'] ?? ''))) ? trim((string) $d['talla_tacon']) : null,
+            'talla_falda' => filled(trim((string) ($d['talla_falda'] ?? ''))) ? trim((string) $d['talla_falda']) : null,
+            'talla_gorra' => filled(trim((string) ($d['talla_gorra'] ?? ''))) ? trim((string) $d['talla_gorra']) : null,
+        ];
 
-            foreach ($fechasReingreso as $fechaReingreso) {
-                OficialesReingreso::firstOrCreate(
-                    [
-                        'id_policia' => $oficial->id,
-                        'fecha_reingreso' => $fechaReingreso,
-                    ],
-                    [
-                        'id_policia' => $oficial->id,
-                        'fecha_reingreso' => $fechaReingreso,
-                    ]
-                );
+        $placaRaw = $d['numero_placa'] ?? null;
+        $placaProvided = $placaRaw !== null && trim((string) $placaRaw) !== '';
+        $numeroPlaca = $placaProvided ? trim((string) $placaRaw) : null;
+
+        $direccionViviendaProvided = filled(trim((string) ($d['direccion_vivienda'] ?? ''))) || $viviendaProvided;
+        $direccionVivienda = ($vivienda === 'No posee' || ! $vivienda)
+            ? null
+            : (filled(trim((string) ($d['direccion_vivienda'] ?? ''))) ? trim((string) $d['direccion_vivienda']) : null);
+
+        $payload = [
+            'documento_identidad' => $doc,
+            'nombre_completo' => $this->require($d, 'nombre_completo'),
+            'fecha_nacimiento' => $this->date($this->require($d, 'fecha_nacimiento')),
+            'fecha_ingreso' => $this->date($this->require($d, 'fecha_ingreso')),
+            'estatus' => $estatus,
+            'tipo_funcionario' => $tipo,
+        ];
+
+        $providedKeys = [
+            'documento_identidad',
+            'nombre_completo',
+            'fecha_nacimiento',
+            'fecha_ingreso',
+            'estatus',
+            'tipo_funcionario',
+        ];
+
+        if ($sexoProvided) {
+            $payload['sexo'] = $sexo;
+            $providedKeys[] = 'sexo';
+        }
+        if ($placaProvided || array_key_exists('numero_placa', $d)) {
+            // Celda presente en plantilla: vacío => sin credencial
+            if ($this->columnWasMapped($d, 'numero_placa')) {
+                $payload['numero_placa'] = $numeroPlaca;
+                $providedKeys[] = 'numero_placa';
             }
-        });
+        }
+        if ($tipoRetiroProvided) {
+            $payload['tipo_retiro'] = $tipoRetiro;
+            $providedKeys[] = 'tipo_retiro';
+        }
+        if ($cargoProvided) {
+            $payload['cargo_administrativo_id'] = $cargoId;
+            $providedKeys[] = 'cargo_administrativo_id';
+        }
+        if ($sabeProvided) {
+            $payload['sabe_conducir'] = $sabe;
+            $providedKeys[] = 'sabe_conducir';
+        }
+        if ($tiposProvided || ($sabeProvided && ! $sabe)) {
+            $payload['tipos_conduccion'] = $tipos;
+            $providedKeys[] = 'tipos_conduccion';
+        }
+        if ($viviendaProvided) {
+            $payload['tipo_vivienda'] = $vivienda;
+            $providedKeys[] = 'tipo_vivienda';
+        }
+        if ($direccionViviendaProvided) {
+            $payload['direccion_vivienda'] = $direccionVivienda;
+            $providedKeys[] = 'direccion_vivienda';
+        }
+        if ($centroProvided || $municipioProvided || $parroquiaProvided) {
+            $payload['centro_votacion'] = $centroNombre !== '' ? $centroNombre : null;
+            $payload['centro_votacion_id'] = $centroVotacionId;
+            $payload['parroquia_id'] = $parroquiaId;
+            $providedKeys[] = 'centro_votacion';
+            $providedKeys[] = 'centro_votacion_id';
+            $providedKeys[] = 'parroquia_id';
+        }
+
+        foreach ($optionalScalar as $key => $value) {
+            if ($this->columnWasMapped($d, $key) && filled(trim((string) ($d[$key] ?? '')))) {
+                $payload[$key] = $value;
+                $providedKeys[] = $key;
+            }
+        }
+
+        // En altas nuevas, rellenar opcionales vacíos como null para columnas fillable esperadas.
+        $createDefaults = [
+            'sexo' => $sexo,
+            'numero_placa' => $numeroPlaca,
+            'tipo_retiro' => $tipoRetiro,
+            'cargo_administrativo_id' => $cargoId,
+            'sabe_conducir' => $sabe,
+            'tipos_conduccion' => $tipos,
+            'tipo_vivienda' => $vivienda,
+            'direccion_vivienda' => $direccionVivienda,
+            'centro_votacion' => ($centroNombre !== null && $centroNombre !== '') ? $centroNombre : null,
+            'centro_votacion_id' => $centroVotacionId,
+            'parroquia_id' => $parroquiaId,
+        ];
+        foreach ($optionalScalar as $key => $value) {
+            $createDefaults[$key] = $value;
+        }
+        foreach ($createDefaults as $key => $value) {
+            if (! array_key_exists($key, $payload)) {
+                $payload[$key] = $value;
+            }
+        }
+
+        return [
+            'payload' => $payload,
+            'fechas_reingreso' => $fechasReingreso,
+            'provided_keys' => array_values(array_unique($providedKeys)),
+        ];
+    }
+
+    private function columnWasMapped(array $d, string $key): bool
+    {
+        return array_key_exists($key, $d);
+    }
+
+    private function funcionarioValuesDiffer(string $key, mixed $current, mixed $incoming): bool
+    {
+        if (in_array($key, ['fecha_nacimiento', 'fecha_ingreso'], true)) {
+            $curr = $current ? Carbon::parse($current)->toDateString() : null;
+            $next = $incoming ? Carbon::parse($incoming)->toDateString() : null;
+
+            return $curr !== $next;
+        }
+
+        if ($key === 'sabe_conducir') {
+            return (bool) $current !== (bool) $incoming;
+        }
+
+        if ($key === 'tipos_conduccion') {
+            $curr = is_array($current) ? array_values($current) : (empty($current) ? [] : (array) $current);
+            $next = is_array($incoming) ? array_values($incoming) : (empty($incoming) ? [] : (array) $incoming);
+            sort($curr);
+            sort($next);
+
+            return $curr !== $next;
+        }
+
+        $curr = $current === null ? null : trim((string) $current);
+        $next = $incoming === null ? null : trim((string) $incoming);
+        if ($curr === '') {
+            $curr = null;
+        }
+        if ($next === '') {
+            $next = null;
+        }
+
+        return $curr !== $next;
+    }
+
+    /**
+     * @param  list<string>  $fechas
+     */
+    private function syncFechasReingresoImport(int $idPolicia, array $fechas): int
+    {
+        $added = 0;
+        foreach ($fechas as $fecha) {
+            $row = OficialesReingreso::firstOrCreate(
+                [
+                    'id_policia' => $idPolicia,
+                    'fecha_reingreso' => $fecha,
+                ],
+                [
+                    'id_policia' => $idPolicia,
+                    'fecha_reingreso' => $fecha,
+                ]
+            );
+            if ($row->wasRecentlyCreated) {
+                $added++;
+            }
+        }
+
+        return $added;
     }
 
     private function importCargoFuncionario(array $d): array

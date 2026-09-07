@@ -87,8 +87,9 @@ class BulkImportRegistry
                 ],
                 'notes' => [
                     'La fotografía no se carga por Excel; se asigna luego en el formulario.',
-                    'Si el documento_identidad ya existe, la fila se omite (no se actualiza).',
-                    'Si hay registros duplicados en BD, se eliminan dejando solo el más antiguo.',
+                    'Si el documento_identidad ya existe, se actualizan solo los campos distintos (no se duplica).',
+                    'Celdas vacías en campos opcionales no borran el valor ya guardado.',
+                    'Si hay registros duplicados en BD (misma cédula), se eliminan dejando uno solo.',
                     'Las fechas aceptan formato DD/MM/YYYY (Excel en español) o YYYY-MM-DD.',
                     'numero_placa es opcional; si está vacío se guardará como Sin Credencial Asignada.',
                     'El campo sexo acepta Masculino/Femenino o M/F.',

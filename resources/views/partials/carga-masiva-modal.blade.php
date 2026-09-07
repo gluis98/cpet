@@ -513,6 +513,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             html += '<div class="carga-result__stats">';
                             html += '<span class="carga-result__stat">Procesadas: ' + (data.total_rows || 0) + '</span>';
                             html += '<span class="carga-result__stat">Creados: ' + (data.created || 0) + '</span>';
+                            html += '<span class="carga-result__stat">Actualizados: ' + (data.updated || 0) + '</span>';
                             html += '<span class="carga-result__stat">Omitidos: ' + (data.skipped || 0) + '</span>';
                             html += '<span class="carga-result__stat">Errores: ' + (data.failed || 0) + '</span>';
                             if ((data.deduped || 0) > 0) {
