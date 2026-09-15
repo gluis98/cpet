@@ -23,6 +23,7 @@ class OfficersController extends Controller
             }
             $search = trim((string) $request->get('q', $request->get('search', '')));
             $hasTipoRetiro = Schema::hasColumn('oficiales', 'tipo_retiro');
+            $hasEstacionServicio = Schema::hasColumn('oficiales', 'id_estacion_servicio');
 
             $base = Oficiale::query();
             if ($request->filled('tipo_funcionario')) {
@@ -34,7 +35,7 @@ class OfficersController extends Controller
 
             if ($search !== '') {
                 $like = '%'.$search.'%';
-                $base->where(function ($q) use ($like) {
+                $base->where(function ($q) use ($like, $hasEstacionServicio) {
                     $q->where('numero_placa', 'like', $like)
                         ->orWhere('documento_identidad', 'like', $like)
                         ->orWhere('nombre_completo', 'like', $like)
@@ -49,6 +50,11 @@ class OfficersController extends Controller
                                     $c->where('nombre_cargo', 'like', $like);
                                 });
                         });
+                    if ($hasEstacionServicio) {
+                        $q->orWhereHas('estacion_servicio', function ($eq) use ($like) {
+                            $eq->where('estacion', 'like', $like);
+                        });
+                    }
                 });
             }
 
@@ -68,23 +74,33 @@ class OfficersController extends Controller
             if ($hasTipoRetiro) {
                 $select[] = 'tipo_retiro';
             }
+            if ($hasEstacionServicio) {
+                $select[] = 'id_estacion_servicio';
+            }
+
+            $with = [
+                'cargos_administrativo:id,nombre_cargo',
+                'oficiales_cargos' => function ($q) {
+                    $q->select('id', 'id_policia', 'id_cargo', 'is_actual')
+                        ->where('is_actual', 1)
+                        ->with('cargo:id,nombre_cargo')
+                        ->orderByDesc('id')
+                        ->limit(1);
+                },
+            ];
+            if ($hasEstacionServicio) {
+                $with['estacion_servicio'] = function ($q) {
+                    $q->select('id', 'estacion');
+                };
+            }
 
             $rows = (clone $base)
                 ->select($select)
-                ->with([
-                    'cargos_administrativo:id,nombre_cargo',
-                    'oficiales_cargos' => function ($q) {
-                        $q->select('id', 'id_policia', 'id_cargo', 'is_actual')
-                            ->where('is_actual', 1)
-                            ->with('cargo:id,nombre_cargo')
-                            ->orderByDesc('id')
-                            ->limit(1);
-                    },
-                ])
+                ->with($with)
                 ->orderBy('nombre_completo')
                 ->forPage($page, $perPage)
                 ->get()
-                ->map(function ($row) use ($hasTipoRetiro) {
+                ->map(function ($row) use ($hasTipoRetiro, $hasEstacionServicio) {
                     $jerarquia = optional(optional($row->oficiales_cargos->first())->cargo)->nombre_cargo;
 
                     return [
@@ -100,6 +116,9 @@ class OfficersController extends Controller
                         'tipo_retiro' => $hasTipoRetiro ? ($row->tipo_retiro ?? null) : null,
                         'jerarquia' => $jerarquia,
                         'cargo' => optional($row->cargos_administrativo)->nombre_cargo,
+                        'estacion' => $hasEstacionServicio
+                            ? optional($row->estacion_servicio)->estacion
+                            : null,
                     ];
                 })
                 ->values();

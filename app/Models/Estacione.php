@@ -34,4 +34,9 @@ class Estacione extends Model
 	{
 		return $this->hasMany(OficialesRadiograma::class, 'id_estacion');
 	}
+
+	public function oficiales()
+	{
+		return $this->hasMany(Oficiale::class, 'id_estacion_servicio');
+	}
 }

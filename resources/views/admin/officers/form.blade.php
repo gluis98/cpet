@@ -67,6 +67,23 @@
         display: none !important;
     }
 
+    .photo-dropzone #photo-preview {
+        position: absolute !important;
+        inset: 0 !important;
+        z-index: 1;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .photo-dropzone #photo-preview.hidden {
+        display: none !important;
+    }
+
+    .photo-dropzone #photo-overlay {
+        z-index: 2;
+    }
+
     .photo-dropzone.is-dragover {
         border-color: #2f6fad !important;
         background: linear-gradient(180deg, #eef4fb, #fff) !important;
@@ -193,10 +210,10 @@
     var clearBtn = document.getElementById('photo-clear');
     var objectUrl = null;
     var hadExisting = {{ ($oficial->exists && $oficial->fotografia) ? 'true' : 'false' }};
-    var existingUrl = @json(($oficial->exists && $oficial->fotografia) ? asset('storage/'.$oficial->fotografia) : null);
+    var existingUrl = @json(($oficial->exists && $oficial->fotografia) ? public_asset('storage/'.$oficial->fotografia) : null);
 
     function showPreview(url, label) {
-        if (objectUrl) {
+        if (objectUrl && objectUrl !== url) {
             URL.revokeObjectURL(objectUrl);
             objectUrl = null;
         }
@@ -245,6 +262,10 @@
                 alert('El tamaño máximo es 5 MB.');
             }
             return;
+        }
+        if (objectUrl) {
+            URL.revokeObjectURL(objectUrl);
+            objectUrl = null;
         }
         objectUrl = URL.createObjectURL(file);
         showPreview(objectUrl, file.name);
@@ -412,6 +433,16 @@
                 postUrl: apiBase + '/cargos-administrativos',
                 $select: $('#cargo_administrativo_id'),
                 successMessage: 'Cargo agregado',
+            });
+        });
+
+        $('#btn-add-estacion-servicio').on('click', function () {
+            CpetCatalog.promptAdd({
+                title: 'Nueva estación de servicio',
+                placeholder: 'Ejemplo: Comando Valera…',
+                postUrl: apiBase + '/stations',
+                $select: $('#id_estacion_servicio'),
+                successMessage: 'Estación agregada',
             });
         });
 

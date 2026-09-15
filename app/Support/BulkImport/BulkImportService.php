@@ -569,6 +569,15 @@ class BulkImportService
             $providedKeys[] = 'parroquia_id';
         }
 
+        $estacionServicioId = null;
+        $estacionProvided = filled(trim((string) ($this->optionalValue($d, ['estacion_servicio', 'estacion', 'estación', 'unidad']) ?? '')));
+        if ($estacionProvided) {
+            $nombreEstacion = trim((string) $this->optionalValue($d, ['estacion_servicio', 'estacion', 'estación', 'unidad']));
+            $estacionServicioId = $this->resolveOrCreateEstacionId($nombreEstacion);
+            $payload['id_estacion_servicio'] = $estacionServicioId;
+            $providedKeys[] = 'id_estacion_servicio';
+        }
+
         foreach ($optionalScalar as $key => $value) {
             if ($this->columnWasMapped($d, $key) && filled(trim((string) ($d[$key] ?? '')))) {
                 $payload[$key] = $value;
@@ -582,6 +591,7 @@ class BulkImportService
             'numero_placa' => $numeroPlaca,
             'tipo_retiro' => $tipoRetiro,
             'cargo_administrativo_id' => $cargoId,
+            'id_estacion_servicio' => $estacionServicioId,
             'sabe_conducir' => $sabe,
             'tipos_conduccion' => $tipos,
             'tipo_vivienda' => $vivienda,
@@ -668,6 +678,26 @@ class BulkImportService
         }
 
         return $added;
+    }
+
+    private function resolveOrCreateEstacionId(string $nombreEstacion): int
+    {
+        $nombreEstacion = trim($nombreEstacion);
+        $nombreNorm = $this->normalizeMatchText($this->foldAccents($nombreEstacion));
+        $estacion = Estacione::query()
+            ->get(['id', 'estacion'])
+            ->first(function ($item) use ($nombreNorm) {
+                return $this->normalizeMatchText($this->foldAccents((string) $item->estacion)) === $nombreNorm;
+            });
+
+        if (! $estacion) {
+            $estacion = Estacione::create([
+                'estacion' => $nombreEstacion,
+                'descripcion' => null,
+            ]);
+        }
+
+        return (int) $estacion->id;
     }
 
     private function importCargoFuncionario(array $d): array

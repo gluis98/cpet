@@ -70,7 +70,7 @@
         $edad = $oficial->fecha_nacimiento->age;
     }
     $cargoActual = optional(optional($oficial->oficiales_cargos->firstWhere('is_actual', 1))->cargo)->nombre_cargo ?? 'N/A';
-    $foto = $oficial->fotografia ? asset('storage/'.$oficial->fotografia) : asset('images/oficial-icon.png');
+    $foto = $oficial->fotografia ? public_asset('storage/'.$oficial->fotografia) : asset('images/oficial-icon.png');
     $academicos = $oficial->oficiales_academicos ?? collect();
     $cantidadHijos = ($oficial->oficiales_familiares ?? collect())
         ->filter(fn ($f) => stripos((string) $f->parentesco, 'Hijo') !== false)
@@ -159,6 +159,7 @@
                         <div class="col-md-6 ficha-field"><label>Fecha de ingreso</label><span>{{ optional($oficial->fecha_ingreso)->format('d/m/Y') ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Estatus</label><span>{{ $oficial->estatus ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Jerarquía actual</label><span>{{ $cargoActual }}</span></div>
+                        <div class="col-md-6 ficha-field"><label>Estación de servicio</label><span>{{ optional($oficial->estacion_servicio)->estacion ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Tipo de funcionario</label><span>{{ $oficial->tipo_funcionario ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Cargo</label><span>{{ optional($oficial->cargos_administrativo)->nombre_cargo ?? 'N/A' }}</span></div>
                     </div>

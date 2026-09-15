@@ -1,7 +1,7 @@
 @php
     $isEdit = $oficial->exists;
     $fotoUrl = ($isEdit && $oficial->fotografia)
-        ? asset('storage/'.$oficial->fotografia)
+        ? public_asset('storage/'.$oficial->fotografia)
         : null;
 @endphp
 
@@ -257,6 +257,25 @@
                             <input type="text" class="form-control" id="tipo_funcionario_display" value="{{ $tipoFuncionario }}" readonly>
                             <small class="text-muted">Policial, Administrativo u Obrero (según el módulo donde se creó).</small>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="id_estacion_servicio">Estación donde presta servicio</label>
+                            <div class="input-group">
+                                <select class="form-control" id="id_estacion_servicio" name="id_estacion_servicio">
+                                    <option value="">--- SELECCIONE ---</option>
+                                    @foreach (($estaciones ?? []) as $est)
+                                        <option value="{{ $est->id }}" @selected((string) old('id_estacion_servicio', $oficial->id_estacion_servicio) === (string) $est->id)>{{ $est->estacion }}</option>
+                                    @endforeach
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-secondary" id="btn-add-estacion-servicio" title="Agregar estación">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <small class="text-muted">Si no aparece, pulsa + para agregarla al catálogo.</small>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label" for="cargo_administrativo_id">Cargo</label>
                             <div class="input-group">

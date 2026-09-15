@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CargosAdministrativo;
 use App\Models\CentroVotacion;
+use App\Models\Estacione;
 use App\Models\Oficiale;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -46,6 +47,7 @@ class OfficerFormController extends Controller
             'tipoFuncionario' => $tipoFuncionario,
             'oficial' => new Oficiale(['tipo_funcionario' => $tipoFuncionario]),
             'cargosAdministrativos' => CargosAdministrativo::orderBy('nombre_cargo')->get(),
+            'estaciones' => Estacione::orderBy('estacion')->get(),
             'leftImagePath' => $this->logoDataUri(),
         ]);
     }
@@ -58,7 +60,7 @@ class OfficerFormController extends Controller
         $data['tipo_funcionario'] = $tipoFuncionario;
         $this->syncCentroVotacionText($data);
         $fechasReingreso = $data['fechas_reingreso'] ?? [];
-        unset($data['fechas_reingreso']);
+        unset($data['fechas_reingreso'], $data['fotografia']);
 
         $oficial = Oficiale::create($data);
         $this->syncReingresos($oficial, $data['estatus'] ?? null, $fechasReingreso);
@@ -81,6 +83,7 @@ class OfficerFormController extends Controller
             'tipoFuncionario' => $tipoFuncionario,
             'oficial' => $oficial,
             'cargosAdministrativos' => CargosAdministrativo::orderBy('nombre_cargo')->get(),
+            'estaciones' => Estacione::orderBy('estacion')->get(),
             'leftImagePath' => $this->logoDataUri(),
         ]);
     }
@@ -94,7 +97,7 @@ class OfficerFormController extends Controller
         $data['tipo_funcionario'] = $tipoFuncionario;
         $this->syncCentroVotacionText($data);
         $fechasReingreso = $data['fechas_reingreso'] ?? [];
-        unset($data['fechas_reingreso']);
+        unset($data['fechas_reingreso'], $data['fotografia']);
 
         $oficial->update($data);
         $this->syncReingresos($oficial, $data['estatus'] ?? null, $fechasReingreso);
@@ -117,6 +120,7 @@ class OfficerFormController extends Controller
         $withRelations = [
             'oficiales_cargos.cargo',
             'cargos_administrativo',
+            'estacion_servicio',
             'parroquia.municipio',
             'centro_votacion_catalogo',
             'oficiales_academicos' => function ($q) {
@@ -182,6 +186,7 @@ class OfficerFormController extends Controller
         $oficial = Oficiale::with([
             'oficiales_cargos.cargo',
             'cargos_administrativo',
+            'estacion_servicio',
             'parroquia.municipio',
             'centro_votacion_catalogo',
             'oficiales_academicos' => function ($q) {
@@ -224,6 +229,7 @@ class OfficerFormController extends Controller
             'fechas_reingreso' => ['nullable', 'array'],
             'fechas_reingreso.*' => ['nullable', 'date'],
             'cargo_administrativo_id' => ['nullable', 'integer'],
+            'id_estacion_servicio' => ['nullable', 'integer', 'exists:estaciones,id'],
             'talla_camisa' => ['nullable', 'string', 'max:255'],
             'talla_pantalon' => ['nullable', 'string', 'max:10'],
             'talla_zapatos' => ['nullable', 'string', 'max:255'],
@@ -238,7 +244,7 @@ class OfficerFormController extends Controller
             'fotografia' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        foreach (['cargo_administrativo_id', 'parroquia_id', 'centro_votacion_id'] as $fk) {
+        foreach (['cargo_administrativo_id', 'parroquia_id', 'centro_votacion_id', 'id_estacion_servicio'] as $fk) {
             if (empty($data[$fk])) {
                 $data[$fk] = null;
             }
@@ -331,14 +337,16 @@ class OfficerFormController extends Controller
 
         try {
             $filePath = $request->file('fotografia')->store($folderPath, 'public');
-            $oficial->fotografia = $filePath;
-            $oficial->save();
+            $oficial->forceFill(['fotografia' => $filePath])->save();
 
-            if ($oldFoto && Storage::disk('public')->exists($oldFoto)) {
+            if ($oldFoto && $oldFoto !== $filePath && Storage::disk('public')->exists($oldFoto)) {
                 Storage::disk('public')->delete($oldFoto);
             }
         } catch (\Throwable $e) {
-            Log::error('Error al guardar fotografía', ['error' => $e->getMessage()]);
+            Log::error('Error al guardar fotografía', [
+                'oficial_id' => $oficial->id,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 

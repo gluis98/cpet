@@ -188,6 +188,7 @@
                         <th class="text-center">Teléfono</th>
                         <th class="text-center">Fecha de ingreso</th>
                         <th class="text-center">Jerarquía</th>
+                        <th class="text-center">Estación</th>
                         <th class="text-center">Cargo</th>
                         <th class="text-center">Estatus</th>
                         <th class="text-center actions">Acciones</th>
@@ -296,7 +297,7 @@
     function renderRows(rows) {
         var tbody = document.getElementById('officers-tbody');
         if (!rows.length) {
-            tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">Sin resultados</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">Sin resultados</td></tr>';
             return;
         }
         var html = '';
@@ -308,6 +309,7 @@
                 '<td class="text-center">' + esc(r.telefono || 'S/T') + '</td>' +
                 '<td class="text-center">' + esc(r.fecha_ingreso || 'S/F') + '</td>' +
                 '<td class="text-center">' + esc(r.jerarquia || 'N/A') + '</td>' +
+                '<td class="text-center">' + esc(r.estacion || 'N/A') + '</td>' +
                 '<td class="text-center">' + esc(r.cargo || 'S/A') + '</td>' +
                 '<td class="text-center">' + badgeEstatus(r.estatus, r.tipo_retiro) + '</td>' +
                 '<td class="text-right actions">' + actionsHtml(r.id) + '</td>' +
@@ -352,7 +354,7 @@
                 if (!res.ok || res.json.error) {
                     var msg = (res.json && (res.json.detail || res.json.error)) || 'Error al cargar funcionarios';
                     document.getElementById('officers-tbody').innerHTML =
-                        '<tr><td colspan="9" class="text-center text-danger py-4">' + esc(msg) + '</td></tr>';
+                        '<tr><td colspan="10" class="text-center text-danger py-4">' + esc(msg) + '</td></tr>';
                     state.total = 0;
                     state.lastPage = 1;
                     return;
@@ -365,7 +367,7 @@
             })
             .catch(function () {
                 document.getElementById('officers-tbody').innerHTML =
-                    '<tr><td colspan="9" class="text-center text-danger py-4">No se pudo conectar con el servidor</td></tr>';
+                    '<tr><td colspan="10" class="text-center text-danger py-4">No se pudo conectar con el servidor</td></tr>';
             })
             .finally(function () {
                 state.loading = false;

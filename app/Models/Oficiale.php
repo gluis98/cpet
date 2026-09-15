@@ -61,6 +61,7 @@ class Oficiale extends Model
 
 	protected $casts = [
 		'cargo_administrativo_id' => 'int',
+		'id_estacion_servicio' => 'int',
 		'fecha_nacimiento' => 'datetime',
 		'fecha_ingreso' => 'datetime',
 		'parroquia_id' => 'int',
@@ -71,6 +72,7 @@ class Oficiale extends Model
 
 	protected $fillable = [
 		'cargo_administrativo_id',
+		'id_estacion_servicio',
 		'tipo_funcionario',
 		'documento_identidad',
 		'nombre_completo',
@@ -210,6 +212,11 @@ class Oficiale extends Model
 	public function cargos_administrativo()
 	{
 		return $this->belongsTo(CargosAdministrativo::class, 'cargo_administrativo_id');
+	}
+
+	public function estacion_servicio()
+	{
+		return $this->belongsTo(Estacione::class, 'id_estacion_servicio');
 	}
 
 	public function oficiales_academicos()

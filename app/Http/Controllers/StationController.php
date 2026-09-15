@@ -4,46 +4,91 @@ namespace App\Http\Controllers;
 
 use App\Models\Estacione;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class StationController extends Controller
 {
-     /**
-     * Display a listing of the resource.
-     */ 
-    public function index() {
-        return response()->json(Estacione::all(), 200);
+    public function index()
+    {
+        return response()->json(
+            Estacione::query()
+                ->orderBy('estacion')
+                ->get(['id', 'estacion'])
+                ->map(fn (Estacione $e) => [
+                    'id' => $e->id,
+                    'nombre' => $e->estacion,
+                    'estacion' => $e->estacion,
+                ]),
+            200
+        );
     }
 
+    public function store(Request $request)
+    {
+        $nombre = trim((string) ($request->input('nombre') ?: $request->input('estacion') ?: ''));
+        if ($nombre === '') {
+            throw ValidationException::withMessages([
+                'nombre' => 'El nombre de la estación es obligatorio.',
+            ]);
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {
-        $oficiales = Estacione::create($request->all());
-        return response()->json(['msj' => "Registro realizado con éxito."], 201);
+        $item = Estacione::query()
+            ->get(['id', 'estacion'])
+            ->first(function (Estacione $e) use ($nombre) {
+                return mb_strtolower(trim((string) $e->estacion)) === mb_strtolower($nombre);
+            });
+
+        if (! $item) {
+            $item = Estacione::create([
+                'estacion' => $nombre,
+                'descripcion' => $request->input('descripcion'),
+            ]);
+        }
+
+        return response()->json([
+            'msj' => 'Estación registrada.',
+            'estacion' => $item,
+            'item' => [
+                'id' => $item->id,
+                'nombre' => $item->estacion,
+            ],
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id) {
-        return response()->json(Estacione::findOrFail($id), 200);
+    public function show($id)
+    {
+        $item = Estacione::findOrFail($id);
+
+        return response()->json([
+            'id' => $item->id,
+            'nombre' => $item->estacion,
+            'estacion' => $item->estacion,
+            'descripcion' => $item->descripcion,
+        ], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-     public function update(Request $request, $id) {
-        $oficiales = Estacione::findOrFail($id);
-        $oficiales->update($request->all());
-        return response()->json(['msj' => "Registro actualizado con éxito."], 200);
+    public function update(Request $request, $id)
+    {
+        $item = Estacione::findOrFail($id);
+        $nombre = trim((string) ($request->input('nombre') ?: $request->input('estacion') ?: $item->estacion));
+        $item->update([
+            'estacion' => $nombre,
+            'descripcion' => $request->input('descripcion', $item->descripcion),
+        ]);
+
+        return response()->json([
+            'msj' => 'Estación actualizada.',
+            'item' => [
+                'id' => $item->id,
+                'nombre' => $item->estacion,
+            ],
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         Estacione::destroy($id);
-        return response()->json(['msj' => "Registro eliminado con éxito."], 200);
+
+        return response()->json(['msj' => 'Estación eliminada.'], 200);
     }
 }
