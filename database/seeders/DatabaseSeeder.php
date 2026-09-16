@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             EstadosSeeder::class,
+            MunicipiosParroquiasTrujilloSeeder::class,
             CargosSeeder::class,
             ArmamentosSeeder::class,
             CargosAdministrativosSeeder::class,
