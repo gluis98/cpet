@@ -138,7 +138,8 @@
                 <div class="tab-pane fade show active" id="tab-personales" role="tabpanel">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Cédula</label><span>{{ $oficial->documento_identidad ?? 'N/A' }}</span></div>
-                        <div class="col-md-6 ficha-field"><label>Carnet de la Patria</label><span>{{ $oficial->carnet_patria ?? 'N/A' }}</span></div>
+                        <div class="col-md-6 ficha-field"><label>Carnet de la Patria (código)</label><span>{{ $oficial->carnet_patria ?? 'N/A' }}</span></div>
+                        <div class="col-md-6 ficha-field"><label>Carnet de la Patria (serial)</label><span>{{ $oficial->carnet_patria_serial ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Nombre completo</label><span>{{ $oficial->nombre_completo ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Fecha de nacimiento</label><span>{{ optional($oficial->fecha_nacimiento)->format('d/m/Y') ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Sexo</label><span>{{ $oficial->sexo ?? 'N/A' }}</span></div>

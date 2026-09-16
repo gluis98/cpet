@@ -53,7 +53,8 @@ class BulkImportRegistry
                 'parent_key' => null,
                 'columns' => [
                     self::documentoIdentidadColumn('Cédula (única)'),
-                    ['key' => 'carnet_patria', 'label' => 'carnet_patria', 'required' => false, 'example' => '0000123456789', 'help' => 'Código del Carnet de la Patria', 'aliases' => ['carnet', 'carnet patria', 'carnet de la patria', 'codigo carnet', 'código carnet']],
+                    ['key' => 'carnet_patria', 'label' => 'carnet_patria', 'required' => false, 'example' => '0000123456789', 'help' => 'Código del Carnet de la Patria', 'aliases' => ['carnet', 'carnet patria', 'carnet de la patria', 'codigo carnet', 'código carnet', 'codigo', 'código']],
+                    ['key' => 'carnet_patria_serial', 'label' => 'carnet_patria_serial', 'required' => false, 'example' => 'A12345678', 'help' => 'Serial del Carnet de la Patria', 'aliases' => ['serial carnet', 'serial carnet patria', 'serial', 'serial patria']],
                     ['key' => 'nombre_completo', 'label' => 'nombre_completo', 'required' => true, 'example' => 'Juan Pérez', 'help' => 'Nombre y apellido'],
                     ['key' => 'fecha_nacimiento', 'label' => 'fecha_nacimiento', 'required' => true, 'example' => '15/05/1990', 'help' => 'YYYY-MM-DD o DD/MM/YYYY'],
                     ['key' => 'sexo', 'label' => 'sexo', 'required' => false, 'example' => 'Masculino', 'help' => 'Masculino | Femenino | M | F', 'aliases' => ['genero', 'género', 'sex']],

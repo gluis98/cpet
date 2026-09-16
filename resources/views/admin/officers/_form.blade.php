@@ -89,17 +89,25 @@
                 <div class="officer-pane" id="pane-personales" role="tabpanel">
                     <h3 class="mb-4 text-base font-semibold text-slate-800">Datos personales</h3>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label" for="documento_identidad">Documento de identidad <span class="text-accent-600">*</span></label>
                             <input type="text" class="form-control" id="documento_identidad" name="documento_identidad" required
                                    value="{{ old('documento_identidad', $oficial->documento_identidad) }}"
                                    placeholder="Número de cédula">
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label" for="carnet_patria">Carnet de la Patria</label>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="carnet_patria">Carnet de la Patria (código)</label>
                             <input type="text" class="form-control" id="carnet_patria" name="carnet_patria"
                                    value="{{ old('carnet_patria', $oficial->carnet_patria) }}"
-                                   placeholder="Código del carnet"
+                                   placeholder="Código"
+                                   maxlength="50"
+                                   autocomplete="off">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="carnet_patria_serial">Carnet de la Patria (serial)</label>
+                            <input type="text" class="form-control" id="carnet_patria_serial" name="carnet_patria_serial"
+                                   value="{{ old('carnet_patria_serial', $oficial->carnet_patria_serial) }}"
+                                   placeholder="Serial"
                                    maxlength="50"
                                    autocomplete="off">
                         </div>

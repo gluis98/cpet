@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $tipo_funcionario
  * @property string|null $documento_identidad
  * @property string|null $carnet_patria
+ * @property string|null $carnet_patria_serial
  * @property string|null $nombre_completo
  * @property Carbon|null $fecha_nacimiento
  * @property string|null $tipo_sangre
@@ -77,6 +78,7 @@ class Oficiale extends Model
 		'tipo_funcionario',
 		'documento_identidad',
 		'carnet_patria',
+		'carnet_patria_serial',
 		'nombre_completo',
 		'fecha_nacimiento',
 		'sexo',

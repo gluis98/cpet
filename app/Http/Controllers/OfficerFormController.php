@@ -209,6 +209,7 @@ class OfficerFormController extends Controller
         $data = $request->validate([
             'documento_identidad' => ['required', 'string', 'max:50'],
             'carnet_patria' => ['nullable', 'string', 'max:50'],
+            'carnet_patria_serial' => ['nullable', 'string', 'max:50'],
             'nombre_completo' => ['required', 'string', 'max:255'],
             'fecha_nacimiento' => ['required', 'date'],
             'sexo' => ['nullable', 'in:Masculino,Femenino'],
@@ -263,6 +264,12 @@ class OfficerFormController extends Controller
             $data['carnet_patria'] = null;
         } else {
             $data['carnet_patria'] = trim((string) $data['carnet_patria']);
+        }
+
+        if (! filled(trim((string) ($data['carnet_patria_serial'] ?? '')))) {
+            $data['carnet_patria_serial'] = null;
+        } else {
+            $data['carnet_patria_serial'] = trim((string) $data['carnet_patria_serial']);
         }
 
         if (($data['estatus'] ?? null) === 'Retirado') {
