@@ -57,8 +57,130 @@
         .ficha-layout { grid-template-columns: 1fr; }
     }
     @media print {
-        .no-print { display: none !important; }
-        .ficha-layout { border: 0; }
+        @page {
+            size: A4 portrait;
+            margin: 8mm;
+        }
+
+        html, body {
+            background: #fff !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Ocultar chrome de la app */
+        #app-sidebar,
+        #sidebar-overlay,
+        #sidebar-open,
+        header,
+        footer,
+        .no-print,
+        .app-content-shell > div > div.border-b {
+            display: none !important;
+        }
+
+        .app-content-shell,
+        .app-content-shell > div {
+            padding: 0 !important;
+            margin: 0 !important;
+            min-height: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-shadow: none !important;
+            background: #fff !important;
+        }
+
+        main,
+        main > div {
+            padding: 0 !important;
+            margin: 0 !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            background: #fff !important;
+        }
+
+        .container-fluid {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .ficha-layout {
+            display: grid !important;
+            grid-template-columns: 140px 1fr !important;
+            gap: 0.75rem !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+
+        .ficha-photo-square {
+            width: 120px !important;
+            height: 150px !important;
+            margin-bottom: 0.35rem !important;
+        }
+
+        .ficha-meta {
+            font-size: 0.72rem !important;
+            line-height: 1.25 !important;
+        }
+
+        /* En pantalla son pestañas; al imprimir se muestran todas */
+        .ficha-tabs {
+            display: none !important;
+        }
+
+        .tab-content > .tab-pane {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            page-break-inside: avoid;
+            break-inside: avoid;
+            margin-bottom: 0.55rem !important;
+        }
+
+        .tab-content > .tab-pane::before {
+            content: attr(data-print-title);
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #1a3a5c;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.35rem;
+            padding-bottom: 0.15rem;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .ficha-field {
+            margin-bottom: 0.35rem !important;
+        }
+
+        .ficha-field label {
+            font-size: 0.62rem !important;
+            margin-bottom: 0.08rem !important;
+        }
+
+        .ficha-field span {
+            padding: 0.28rem 0.45rem !important;
+            font-size: 0.78rem !important;
+            border-radius: 3px !important;
+            background: #fff !important;
+        }
+
+        .ficha-academy-item {
+            padding: 0.4rem 0.55rem !important;
+            margin-bottom: 0.35rem !important;
+        }
+
+        .ficha-academy-item img,
+        .ficha-academy-item .btn,
+        .ficha-academy-item a[target="_blank"] {
+            display: none !important;
+        }
     }
 </style>
 @endsection
@@ -110,7 +232,7 @@
         </aside>
 
         <div>
-            <ul class="nav nav-tabs ficha-tabs mb-3" role="tablist">
+            <ul class="nav nav-tabs ficha-tabs mb-3 no-print" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#tab-personales" role="tab">Datos personales</a>
                 </li>
@@ -135,7 +257,7 @@
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="tab-personales" role="tabpanel">
+                <div class="tab-pane fade show active" id="tab-personales" role="tabpanel" data-print-title="Datos personales">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Cédula</label><span>{{ $oficial->documento_identidad ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Carnet de la Patria (código)</label><span>{{ $oficial->carnet_patria ?? 'N/A' }}</span></div>
@@ -154,7 +276,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-laborales" role="tabpanel">
+                <div class="tab-pane fade" id="tab-laborales" role="tabpanel" data-print-title="Datos laborales">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Tipo de cargo</label><span>{{ $oficial->tipo_funcionario ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Credencial</label><span>{{ \App\Models\Oficiale::displayNumeroPlaca($oficial->numero_placa) }}</span></div>
@@ -167,7 +289,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-academica" role="tabpanel">
+                <div class="tab-pane fade" id="tab-academica" role="tabpanel" data-print-title="Formación académica">
                     @forelse ($academicos as $index => $academico)
                         <div class="ficha-academy-item {{ $index === 0 && $academico->fecha_fin ? 'is-actual' : '' }}">
                             <div class="d-flex justify-content-between align-items-start flex-wrap">
@@ -207,7 +329,7 @@
                     @endforelse
                 </div>
 
-                <div class="tab-pane fade" id="tab-vivienda" role="tabpanel">
+                <div class="tab-pane fade" id="tab-vivienda" role="tabpanel" data-print-title="Vivienda">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Tipo de vivienda</label><span>{{ $oficial->tipo_vivienda ?? 'N/A' }}</span></div>
                         @if (in_array($oficial->tipo_vivienda, ['Propia', 'Alquilada'], true))
@@ -216,7 +338,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-conduccion" role="tabpanel">
+                <div class="tab-pane fade" id="tab-conduccion" role="tabpanel" data-print-title="Conducción">
                     <div class="row">
                         <div class="col-md-6 ficha-field">
                             <label>¿Sabe conducir?</label>
@@ -231,7 +353,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-tallas" role="tabpanel">
+                <div class="tab-pane fade" id="tab-tallas" role="tabpanel" data-print-title="Tallas">
                     <div class="row">
                         <div class="col-md-4 ficha-field"><label>Camisa</label><span>{{ $oficial->talla_camisa ?? 'N/A' }}</span></div>
                         <div class="col-md-4 ficha-field"><label>Pantalón</label><span>{{ $oficial->talla_pantalon ?? 'N/A' }}</span></div>
@@ -244,7 +366,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-contacto" role="tabpanel">
+                <div class="tab-pane fade" id="tab-contacto" role="tabpanel" data-print-title="Contacto">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Teléfono</label><span>{{ $oficial->telefono ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Teléfono residencial</label><span>{{ $oficial->telefono_residencial ?? 'N/A' }}</span></div>
