@@ -53,134 +53,186 @@
         border-left: 4px solid #c4922e;
         background: #fffbeb;
     }
+    .ficha-print-sheet { display: none; }
+
     @media (max-width: 768px) {
         .ficha-layout { grid-template-columns: 1fr; }
     }
+
     @media print {
         @page {
             size: A4 portrait;
-            margin: 8mm;
+            margin: 7mm;
         }
 
         html, body {
             background: #fff !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
+            font-size: 8.5pt;
+            color: #0f172a;
         }
 
-        /* Ocultar chrome de la app */
         #app-sidebar,
         #sidebar-overlay,
         #sidebar-open,
         header,
         footer,
         .no-print,
-        .app-content-shell > div > div.border-b {
+        .app-content-shell > div > div.border-b,
+        .ficha-layout {
             display: none !important;
         }
 
         .app-content-shell,
-        .app-content-shell > div {
+        .app-content-shell > div,
+        main,
+        main > div,
+        .container-fluid {
             padding: 0 !important;
             margin: 0 !important;
             min-height: 0 !important;
             width: 100% !important;
             max-width: 100% !important;
-            box-shadow: none !important;
-            background: #fff !important;
-        }
-
-        main,
-        main > div {
-            padding: 0 !important;
-            margin: 0 !important;
             border: 0 !important;
             box-shadow: none !important;
             border-radius: 0 !important;
             background: #fff !important;
         }
 
-        .container-fluid {
-            padding: 0 !important;
-            margin: 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-        }
-
-        .ficha-layout {
-            display: grid !important;
-            grid-template-columns: 140px 1fr !important;
-            gap: 0.75rem !important;
-            border: 0 !important;
-            border-radius: 0 !important;
-            padding: 0 !important;
-            box-shadow: none !important;
-        }
-
-        .ficha-photo-square {
-            width: 120px !important;
-            height: 150px !important;
-            margin-bottom: 0.35rem !important;
-        }
-
-        .ficha-meta {
-            font-size: 0.72rem !important;
-            line-height: 1.25 !important;
-        }
-
-        /* En pantalla son pestañas; al imprimir se muestran todas */
-        .ficha-tabs {
-            display: none !important;
-        }
-
-        .tab-content > .tab-pane {
+        .ficha-print-sheet {
             display: block !important;
-            opacity: 1 !important;
-            visibility: visible !important;
+        }
+
+        .print-top {
+            display: grid;
+            grid-template-columns: 32mm 1fr;
+            gap: 3.5mm;
+            align-items: start;
+            margin-bottom: 3mm;
+            padding-bottom: 2.5mm;
+            border-bottom: 1.5pt solid #1a3a5c;
+        }
+
+        .print-photo {
+            width: 32mm;
+            height: 40mm;
+            object-fit: cover;
+            border: 1.2pt solid #1a3a5c;
+            display: block;
+            background: #f1f5f9;
+        }
+
+        .print-identity h1 {
+            margin: 0 0 1.5mm;
+            font-size: 13pt;
+            line-height: 1.15;
+            color: #0a1a2e;
+        }
+
+        .print-identity .print-sub {
+            margin: 0;
+            font-size: 8.5pt;
+            color: #334155;
+            line-height: 1.35;
+        }
+
+        .print-identity .print-badges {
+            margin-top: 2mm;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5mm;
+        }
+
+        .print-badge {
+            display: inline-block;
+            border: 0.7pt solid #1a3a5c;
+            border-radius: 2px;
+            padding: 0.6mm 1.8mm;
+            font-size: 7.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #1a3a5c;
+        }
+
+        .print-block {
+            margin: 0 0 2.2mm;
             page-break-inside: avoid;
             break-inside: avoid;
-            margin-bottom: 0.55rem !important;
         }
 
-        .tab-content > .tab-pane::before {
-            content: attr(data-print-title);
-            display: block;
-            font-size: 0.78rem;
+        .print-block h2 {
+            margin: 0 0 1.2mm;
+            padding: 0.8mm 1.5mm;
+            font-size: 8pt;
             font-weight: 700;
-            color: #1a3a5c;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #fff;
+            background: #1a3a5c;
+        }
+
+        .print-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1mm 2.5mm;
+            padding: 1.2mm 1.5mm 1.5mm;
+            border: 0.7pt solid #cbd5e1;
+            border-top: 0;
+        }
+
+        .print-grid-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .print-grid-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .print-item {
+            min-width: 0;
+            line-height: 1.2;
+        }
+
+        .print-item.span-2 { grid-column: span 2; }
+        .print-item.span-3 { grid-column: span 3; }
+        .print-item.span-4,
+        .print-item.full { grid-column: 1 / -1; }
+
+        .print-item .k {
+            display: block;
+            font-size: 6.2pt;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            margin-bottom: 0.35rem;
-            padding-bottom: 0.15rem;
-            border-bottom: 1px solid #cbd5e1;
+            color: #64748b;
+            margin-bottom: 0.2mm;
         }
 
-        .ficha-field {
-            margin-bottom: 0.35rem !important;
+        .print-item .v {
+            display: block;
+            font-size: 8pt;
+            color: #0f172a;
+            word-break: break-word;
         }
 
-        .ficha-field label {
-            font-size: 0.62rem !important;
-            margin-bottom: 0.08rem !important;
+        .print-academy {
+            font-size: 7.5pt;
+            line-height: 1.25;
+            padding: 0.8mm 0;
+            border-bottom: 0.5pt dotted #cbd5e1;
         }
 
-        .ficha-field span {
-            padding: 0.28rem 0.45rem !important;
-            font-size: 0.78rem !important;
-            border-radius: 3px !important;
-            background: #fff !important;
+        .print-academy:last-child { border-bottom: 0; }
+
+        .print-two-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.2mm;
         }
 
-        .ficha-academy-item {
-            padding: 0.4rem 0.55rem !important;
-            margin-bottom: 0.35rem !important;
-        }
-
-        .ficha-academy-item img,
-        .ficha-academy-item .btn,
-        .ficha-academy-item a[target="_blank"] {
-            display: none !important;
-        }
+        .print-two-cols .print-block { margin-bottom: 0; }
     }
 </style>
 @endsection
@@ -198,6 +250,7 @@
         ->filter(fn ($f) => stripos((string) $f->parentesco, 'Hijo') !== false)
         ->count();
     $tipoSlug = array_search($oficial->tipo_funcionario ?? 'Policial', \App\Models\Oficiale::TIPOS_FUNCIONARIO, true) ?: 'policial';
+    $tiposConduccion = ! empty($oficial->tipos_conduccion) ? implode(', ', $oficial->tipos_conduccion) : 'Sin especificar';
 @endphp
 
 <div class="container-fluid mb-4">
@@ -221,7 +274,8 @@
         </div>
     </div>
 
-    <div class="ficha-layout" id="ficha-print">
+    {{-- Vista pantalla (pestañas) --}}
+    <div class="ficha-layout" id="ficha-screen">
         <aside class="ficha-photo-wrap">
             <img src="{{ $foto }}" alt="Fotografía" class="ficha-photo-square" onerror="this.src='{{ asset('images/oficial-icon.png') }}'">
             <div class="ficha-meta">
@@ -233,31 +287,17 @@
 
         <div>
             <ul class="nav nav-tabs ficha-tabs mb-3 no-print" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#tab-personales" role="tab">Datos personales</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab-laborales" role="tab">Datos laborales</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab-academica" role="tab">Formación académica</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab-vivienda" role="tab">Vivienda</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab-conduccion" role="tab">Conducción</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab-tallas" role="tab">Tallas</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#tab-contacto" role="tab">Contacto</a>
-                </li>
+                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab-personales" role="tab">Datos personales</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-laborales" role="tab">Datos laborales</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-academica" role="tab">Formación académica</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-vivienda" role="tab">Vivienda</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-conduccion" role="tab">Conducción</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-tallas" role="tab">Tallas</a></li>
+                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-contacto" role="tab">Contacto</a></li>
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="tab-personales" role="tabpanel" data-print-title="Datos personales">
+                <div class="tab-pane fade show active" id="tab-personales" role="tabpanel">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Cédula</label><span>{{ $oficial->documento_identidad ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Carnet de la Patria (código)</label><span>{{ $oficial->carnet_patria ?? 'N/A' }}</span></div>
@@ -276,7 +316,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-laborales" role="tabpanel" data-print-title="Datos laborales">
+                <div class="tab-pane fade" id="tab-laborales" role="tabpanel">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Tipo de cargo</label><span>{{ $oficial->tipo_funcionario ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Credencial</label><span>{{ \App\Models\Oficiale::displayNumeroPlaca($oficial->numero_placa) }}</span></div>
@@ -289,7 +329,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-academica" role="tabpanel" data-print-title="Formación académica">
+                <div class="tab-pane fade" id="tab-academica" role="tabpanel">
                     @forelse ($academicos as $index => $academico)
                         <div class="ficha-academy-item {{ $index === 0 && $academico->fecha_fin ? 'is-actual' : '' }}">
                             <div class="d-flex justify-content-between align-items-start flex-wrap">
@@ -310,7 +350,7 @@
                                 <p class="mb-0 mt-2 small">{{ $academico->descripcion }}</p>
                             @endif
                             @if ($academico->documento_fondo_negro)
-                                <div class="mt-2">
+                                <div class="mt-2 no-print">
                                     <span class="small text-muted d-block mb-1">Documento (fondo negro)</span>
                                     @if (str_ends_with(strtolower($academico->documento_fondo_negro), '.pdf'))
                                         <a href="{{ asset('storage/' . $academico->documento_fondo_negro) }}" target="_blank" class="btn btn-sm btn-outline-dark">
@@ -329,7 +369,7 @@
                     @endforelse
                 </div>
 
-                <div class="tab-pane fade" id="tab-vivienda" role="tabpanel" data-print-title="Vivienda">
+                <div class="tab-pane fade" id="tab-vivienda" role="tabpanel">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Tipo de vivienda</label><span>{{ $oficial->tipo_vivienda ?? 'N/A' }}</span></div>
                         @if (in_array($oficial->tipo_vivienda, ['Propia', 'Alquilada'], true))
@@ -338,7 +378,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-conduccion" role="tabpanel" data-print-title="Conducción">
+                <div class="tab-pane fade" id="tab-conduccion" role="tabpanel">
                     <div class="row">
                         <div class="col-md-6 ficha-field">
                             <label>¿Sabe conducir?</label>
@@ -347,13 +387,13 @@
                         @if ($oficial->sabe_conducir)
                             <div class="col-md-12 ficha-field">
                                 <label>Tipos de vehículos</label>
-                                <span>{{ !empty($oficial->tipos_conduccion) ? implode(', ', $oficial->tipos_conduccion) : 'Sin especificar' }}</span>
+                                <span>{{ $tiposConduccion }}</span>
                             </div>
                         @endif
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-tallas" role="tabpanel" data-print-title="Tallas">
+                <div class="tab-pane fade" id="tab-tallas" role="tabpanel">
                     <div class="row">
                         <div class="col-md-4 ficha-field"><label>Camisa</label><span>{{ $oficial->talla_camisa ?? 'N/A' }}</span></div>
                         <div class="col-md-4 ficha-field"><label>Pantalón</label><span>{{ $oficial->talla_pantalon ?? 'N/A' }}</span></div>
@@ -366,7 +406,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-contacto" role="tabpanel" data-print-title="Contacto">
+                <div class="tab-pane fade" id="tab-contacto" role="tabpanel">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Teléfono</label><span>{{ $oficial->telefono ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Teléfono residencial</label><span>{{ $oficial->telefono_residencial ?? 'N/A' }}</span></div>
@@ -375,6 +415,117 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    {{-- Vista impresión (bloques compactos, una hoja) --}}
+    <div class="ficha-print-sheet" id="ficha-print">
+        <div class="print-top">
+            <img class="print-photo" src="{{ $foto }}" alt="Fotografía" onerror="this.src='{{ asset('images/oficial-icon.png') }}'">
+            <div class="print-identity">
+                <h1>{{ $oficial->nombre_completo ?? 'Sin nombre' }}</h1>
+                <p class="print-sub">
+                    <strong>C.I.</strong> {{ $oficial->documento_identidad ?? 'N/A' }}
+                    &nbsp;·&nbsp; <strong>Credencial</strong> {{ \App\Models\Oficiale::displayNumeroPlaca($oficial->numero_placa) }}
+                    &nbsp;·&nbsp; <strong>Ingreso</strong> {{ optional($oficial->fecha_ingreso)->format('d/m/Y') ?? 'N/A' }}
+                </p>
+                <div class="print-badges">
+                    <span class="print-badge">{{ $oficial->tipo_funcionario ?? 'Policial' }}</span>
+                    <span class="print-badge">{{ $oficial->estatus ?? 'N/A' }}</span>
+                    <span class="print-badge">{{ $cargoActual }}</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="print-block">
+            <h2>Datos personales</h2>
+            <div class="print-grid">
+                <div class="print-item"><span class="k">Cédula</span><span class="v">{{ $oficial->documento_identidad ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">Sexo</span><span class="v">{{ $oficial->sexo ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">Nacimiento</span><span class="v">{{ optional($oficial->fecha_nacimiento)->format('d/m/Y') ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">Edad</span><span class="v">{{ $edad }}</span></div>
+                <div class="print-item"><span class="k">Tipo sangre</span><span class="v">{{ $oficial->tipo_sangre ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">Estado civil</span><span class="v">{{ $oficial->estado_civil ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">Hijos</span><span class="v">{{ $cantidadHijos }}</span></div>
+                <div class="print-item"><span class="k">Carnet código</span><span class="v">{{ $oficial->carnet_patria ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">Carnet serial</span><span class="v">{{ $oficial->carnet_patria_serial ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">Municipio</span><span class="v">{{ optional($oficial->parroquia?->municipio)->descripcion ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">Parroquia</span><span class="v">{{ optional($oficial->parroquia)->descripcion ?? 'N/A' }}</span></div>
+                <div class="print-item span-2"><span class="k">Centro de votación</span><span class="v">{{ $oficial->centro_votacion_catalogo->nombre ?? $oficial->centro_votacion ?? 'N/A' }}</span></div>
+                <div class="print-item full"><span class="k">Dirección</span><span class="v">{{ $oficial->direccion ?? 'N/A' }}</span></div>
+            </div>
+        </section>
+
+        <section class="print-block">
+            <h2>Datos laborales</h2>
+            <div class="print-grid">
+                <div class="print-item"><span class="k">Tipo funcionario</span><span class="v">{{ $oficial->tipo_funcionario ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">Estatus</span><span class="v">{{ $oficial->estatus ?? 'N/A' }}@if($oficial->estatus === 'Retirado' && $oficial->tipo_retiro) ({{ $oficial->tipo_retiro }})@endif</span></div>
+                <div class="print-item"><span class="k">Fecha ingreso</span><span class="v">{{ optional($oficial->fecha_ingreso)->format('d/m/Y') ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">Credencial</span><span class="v">{{ \App\Models\Oficiale::displayNumeroPlaca($oficial->numero_placa) }}</span></div>
+                <div class="print-item span-2"><span class="k">Jerarquía actual</span><span class="v">{{ $cargoActual }}</span></div>
+                <div class="print-item span-2"><span class="k">Cargo</span><span class="v">{{ optional($oficial->cargos_administrativo)->nombre_cargo ?? 'N/A' }}</span></div>
+                <div class="print-item full"><span class="k">Estación de servicio</span><span class="v">{{ optional($oficial->estacion_servicio)->estacion ?? 'N/A' }}</span></div>
+            </div>
+        </section>
+
+        <section class="print-block">
+            <h2>Formación académica</h2>
+            <div class="print-grid" style="display:block;">
+                @forelse ($academicos->take(4) as $index => $academico)
+                    <div class="print-academy">
+                        <strong>{{ $academico->titulo ?: $academico->tipo_formacion }}</strong>
+                        — {{ $academico->tipo_formacion }}
+                        · {{ $academico->institucion ?: 'Sin institución' }}
+                        · {{ $academico->fecha_fin ? $academico->fecha_fin->format('Y') : 'S/F' }}
+                        @if ($index === 0 && $academico->fecha_fin)
+                            · <em>Título actual</em>
+                        @endif
+                    </div>
+                @empty
+                    <div class="print-academy">Sin formación académica registrada.</div>
+                @endforelse
+                @if ($academicos->count() > 4)
+                    <div class="print-academy"><em>+ {{ $academicos->count() - 4 }} registro(s) adicional(es) en el sistema</em></div>
+                @endif
+            </div>
+        </section>
+
+        <div class="print-two-cols">
+            <section class="print-block">
+                <h2>Conducción y vivienda</h2>
+                <div class="print-grid print-grid-2">
+                    <div class="print-item"><span class="k">¿Sabe conducir?</span><span class="v">{{ $oficial->sabe_conducir ? 'Sí' : 'No' }}</span></div>
+                    <div class="print-item"><span class="k">Tipo vivienda</span><span class="v">{{ $oficial->tipo_vivienda ?? 'N/A' }}</span></div>
+                    <div class="print-item full"><span class="k">Tipos de vehículos</span><span class="v">{{ $oficial->sabe_conducir ? $tiposConduccion : 'N/A' }}</span></div>
+                    @if (in_array($oficial->tipo_vivienda, ['Propia', 'Alquilada'], true))
+                        <div class="print-item full"><span class="k">Dirección vivienda</span><span class="v">{{ $oficial->direccion_vivienda ?? 'N/A' }}</span></div>
+                    @endif
+                </div>
+            </section>
+
+            <section class="print-block">
+                <h2>Contacto</h2>
+                <div class="print-grid print-grid-2">
+                    <div class="print-item"><span class="k">Teléfono</span><span class="v">{{ $oficial->telefono ?? 'N/A' }}</span></div>
+                    <div class="print-item"><span class="k">Residencial</span><span class="v">{{ $oficial->telefono_residencial ?? 'N/A' }}</span></div>
+                    <div class="print-item full"><span class="k">Correo</span><span class="v">{{ $oficial->correo_electronico ?? 'N/A' }}</span></div>
+                </div>
+            </section>
+        </div>
+
+        <section class="print-block" style="margin-top:2.2mm;">
+            <h2>Tallas</h2>
+            <div class="print-grid" style="grid-template-columns: repeat(8, minmax(0, 1fr));">
+                <div class="print-item"><span class="k">Camisa</span><span class="v">{{ $oficial->talla_camisa ?? '—' }}</span></div>
+                <div class="print-item"><span class="k">Pantalón</span><span class="v">{{ $oficial->talla_pantalon ?? '—' }}</span></div>
+                <div class="print-item"><span class="k">Zapatos</span><span class="v">{{ $oficial->talla_zapatos ?? '—' }}</span></div>
+                <div class="print-item"><span class="k">Saco</span><span class="v">{{ $oficial->talla_saco ?? '—' }}</span></div>
+                <div class="print-item"><span class="k">Kepin</span><span class="v">{{ $oficial->talla_kepin_toka ?? '—' }}</span></div>
+                <div class="print-item"><span class="k">Tacón</span><span class="v">{{ $oficial->talla_tacon ?? '—' }}</span></div>
+                <div class="print-item"><span class="k">Falda</span><span class="v">{{ $oficial->talla_falda ?? '—' }}</span></div>
+                <div class="print-item"><span class="k">Gorra</span><span class="v">{{ $oficial->talla_gorra ?? '—' }}</span></div>
+            </div>
+        </section>
     </div>
 </div>
 @endsection
