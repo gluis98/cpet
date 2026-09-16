@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\SetupController;
 use App\Http\Controllers\BulkImportController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\OfficerFormController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportesController;
@@ -13,6 +14,10 @@ Route::get('/setup', [SetupController::class, 'create'])->name('setup.create');
 Route::post('/setup', [SetupController::class, 'store'])->name('setup.store');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/media/{path}', [MediaController::class, 'show'])
+        ->where('path', '.*')
+        ->name('media.show');
+
     Route::get('/perfil', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/perfil/contrasena', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 

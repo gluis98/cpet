@@ -208,6 +208,7 @@ class OfficerFormController extends Controller
     {
         $data = $request->validate([
             'documento_identidad' => ['required', 'string', 'max:50'],
+            'carnet_patria' => ['nullable', 'string', 'max:50'],
             'nombre_completo' => ['required', 'string', 'max:255'],
             'fecha_nacimiento' => ['required', 'date'],
             'sexo' => ['nullable', 'in:Masculino,Femenino'],
@@ -256,6 +257,12 @@ class OfficerFormController extends Controller
 
         if (! filled(trim((string) ($data['numero_placa'] ?? '')))) {
             $data['numero_placa'] = null;
+        }
+
+        if (! filled(trim((string) ($data['carnet_patria'] ?? '')))) {
+            $data['carnet_patria'] = null;
+        } else {
+            $data['carnet_patria'] = trim((string) $data['carnet_patria']);
         }
 
         if (($data['estatus'] ?? null) === 'Retirado') {
@@ -332,15 +339,25 @@ class OfficerFormController extends Controller
             return;
         }
 
+        $file = $request->file('fotografia');
         $folderPath = 'fotografias/'.$oficial->id;
-        $oldFoto = $oficial->fotografia;
+        $oldFoto = $oficial->fotoStoragePath();
 
         try {
-            $filePath = $request->file('fotografia')->store($folderPath, 'public');
+            $disk = Storage::disk('public');
+            if (! $disk->exists($folderPath)) {
+                $disk->makeDirectory($folderPath);
+            }
+
+            $filePath = $file->store($folderPath, 'public');
+            if (! is_string($filePath) || $filePath === '' || ! $disk->exists($filePath)) {
+                throw new \RuntimeException('No se pudo escribir el archivo de fotografía en storage.');
+            }
+
             $oficial->forceFill(['fotografia' => $filePath])->save();
 
-            if ($oldFoto && $oldFoto !== $filePath && Storage::disk('public')->exists($oldFoto)) {
-                Storage::disk('public')->delete($oldFoto);
+            if ($oldFoto && $oldFoto !== $filePath && $disk->exists($oldFoto)) {
+                $disk->delete($oldFoto);
             }
         } catch (\Throwable $e) {
             Log::error('Error al guardar fotografía', [

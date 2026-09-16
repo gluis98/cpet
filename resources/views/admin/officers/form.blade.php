@@ -209,8 +209,8 @@
     var filenameEl = document.getElementById('photo-filename');
     var clearBtn = document.getElementById('photo-clear');
     var objectUrl = null;
-    var hadExisting = {{ ($oficial->exists && $oficial->fotografia) ? 'true' : 'false' }};
-    var existingUrl = @json(($oficial->exists && $oficial->fotografia) ? public_asset('storage/'.$oficial->fotografia) : null);
+    var hadExisting = {{ ($oficial->exists && $oficial->fotoStoragePath()) ? 'true' : 'false' }};
+    var existingUrl = @json(($oficial->exists && $oficial->fotoStoragePath()) ? $oficial->fotoUrl() : null);
 
     function showPreview(url, label) {
         if (objectUrl && objectUrl !== url) {
@@ -226,6 +226,30 @@
         clearBtn.classList.remove('hidden');
     }
 
+    function showPlaceholder(message) {
+        if (objectUrl) {
+            URL.revokeObjectURL(objectUrl);
+            objectUrl = null;
+        }
+        preview.removeAttribute('src');
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+        filenameEl.textContent = message || 'Sin imagen seleccionada';
+        clearBtn.classList.add('hidden');
+    }
+
+    window.__officerPhotoBroken = function () {
+        hadExisting = false;
+        existingUrl = null;
+        showPlaceholder('Foto no encontrada — sube una nueva');
+    };
+
+    if (hadExisting && existingUrl) {
+        showPreview(existingUrl, 'Foto actual cargada');
+    }
+
     function resetPreview() {
         if (objectUrl) {
             URL.revokeObjectURL(objectUrl);
@@ -236,13 +260,7 @@
             showPreview(existingUrl, 'Foto actual cargada');
             return;
         }
-        preview.removeAttribute('src');
-        preview.classList.add('hidden');
-        placeholder.classList.remove('hidden');
-        overlay.classList.add('hidden');
-        overlay.classList.remove('flex');
-        filenameEl.textContent = 'Sin imagen seleccionada';
-        clearBtn.classList.add('hidden');
+        showPlaceholder('Sin imagen seleccionada');
     }
 
     function handleFile(file) {

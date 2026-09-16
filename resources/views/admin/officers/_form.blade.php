@@ -1,8 +1,6 @@
 @php
     $isEdit = $oficial->exists;
-    $fotoUrl = ($isEdit && $oficial->fotografia)
-        ? public_asset('storage/'.$oficial->fotografia)
-        : null;
+    $fotoUrl = $isEdit ? $oficial->fotoUrl() : null;
 @endphp
 
 <input type="hidden" name="tipo_funcionario" value="{{ $tipoFuncionario }}">
@@ -29,7 +27,8 @@
                         <img id="photo-preview"
                              src="{{ $fotoUrl ?? '' }}"
                              alt="Vista previa"
-                             class="absolute inset-0 h-full w-full object-cover {{ $fotoUrl ? '' : 'hidden' }}">
+                             class="absolute inset-0 h-full w-full object-cover {{ $fotoUrl ? '' : 'hidden' }}"
+                             @if ($fotoUrl) onerror="window.__officerPhotoBroken && window.__officerPhotoBroken()" @endif>
 
                         <div id="photo-placeholder" class="{{ $fotoUrl ? 'hidden' : '' }} photo-placeholder absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
                             <span class="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-100 text-brand-700 shadow-sm transition group-hover:scale-105">
@@ -90,11 +89,19 @@
                 <div class="officer-pane" id="pane-personales" role="tabpanel">
                     <h3 class="mb-4 text-base font-semibold text-slate-800">Datos personales</h3>
                     <div class="row">
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label" for="documento_identidad">Documento de identidad <span class="text-accent-600">*</span></label>
                             <input type="text" class="form-control" id="documento_identidad" name="documento_identidad" required
                                    value="{{ old('documento_identidad', $oficial->documento_identidad) }}"
                                    placeholder="Número de cédula">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="carnet_patria">Carnet de la Patria</label>
+                            <input type="text" class="form-control" id="carnet_patria" name="carnet_patria"
+                                   value="{{ old('carnet_patria', $oficial->carnet_patria) }}"
+                                   placeholder="Código del carnet"
+                                   maxlength="50"
+                                   autocomplete="off">
                         </div>
                     </div>
                     <div class="row">

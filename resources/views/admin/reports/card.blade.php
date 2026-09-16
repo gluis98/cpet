@@ -147,7 +147,7 @@
 
   <div class="container">
     <div class="left-section">
-      <img src="{{ $officer->fotografia ? 'http://localhost/cpet/public/storage/' . $officer->fotografia : asset('images/oficial-icon.png') }}" alt="Foto Oficial">
+      <img src="{{ $officer->fotoUrl() ?: asset('images/oficial-icon.png') }}" alt="Foto Oficial">
       <h2>{{ $officer->nombre_completo }}</h2>
       <div>
         <h3>Datos Oficiales</h3>

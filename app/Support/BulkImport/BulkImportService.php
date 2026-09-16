@@ -482,6 +482,7 @@ class BulkImportService
         }
 
         $optionalScalar = [
+            'carnet_patria' => filled(trim((string) ($d['carnet_patria'] ?? ''))) ? trim((string) $d['carnet_patria']) : null,
             'telefono' => filled($d['telefono'] ?? null) ? trim((string) $d['telefono']) : null,
             'correo_electronico' => filled($d['correo_electronico'] ?? null) ? trim((string) $d['correo_electronico']) : null,
             'tipo_sangre' => filled(trim((string) ($d['tipo_sangre'] ?? ''))) ? trim((string) $d['tipo_sangre']) : null,

@@ -226,8 +226,8 @@
 </head>
 <body>
 @php
-    $foto = ($officer && $officer->fotografia)
-        ? asset('storage/'.$officer->fotografia)
+    $foto = ($officer && $officer->fotoUrl())
+        ? $officer->fotoUrl()
         : asset('images/oficial-icon.png');
 
     $jerarquia = optional(

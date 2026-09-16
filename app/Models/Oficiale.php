@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $cargo_administrativo_id
  * @property string|null $tipo_funcionario
  * @property string|null $documento_identidad
+ * @property string|null $carnet_patria
  * @property string|null $nombre_completo
  * @property Carbon|null $fecha_nacimiento
  * @property string|null $tipo_sangre
@@ -75,6 +76,7 @@ class Oficiale extends Model
 		'id_estacion_servicio',
 		'tipo_funcionario',
 		'documento_identidad',
+		'carnet_patria',
 		'nombre_completo',
 		'fecha_nacimiento',
 		'sexo',
@@ -197,6 +199,40 @@ class Oficiale extends Model
 		$valor = trim((string) $placa);
 
 		return $valor !== '' ? $valor : self::PLACA_SIN_ASIGNAR;
+	}
+
+	/**
+	 * Ruta relativa en el disco public (sin prefijo storage/).
+	 */
+	public function fotoStoragePath(): ?string
+	{
+		$raw = trim(str_replace('\\', '/', (string) $this->fotografia));
+		if ($raw === '') {
+			return null;
+		}
+
+		$raw = ltrim($raw, '/');
+		foreach (['storage/', 'public/storage/', 'app/public/'] as $prefix) {
+			if (str_starts_with($raw, $prefix)) {
+				$raw = substr($raw, strlen($prefix));
+			}
+		}
+
+		return $raw !== '' ? $raw : null;
+	}
+
+	/**
+	 * URL servida por la app (no depende del symlink del servidor web).
+	 */
+	public function fotoUrl(): ?string
+	{
+		$path = $this->fotoStoragePath();
+		if (! $path) {
+			return null;
+		}
+
+		// url() conserva las barras del path (route() a veces las codifica como %2F).
+		return url('media/'.$path);
 	}
 
 	public function parroquia()
