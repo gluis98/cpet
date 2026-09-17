@@ -27,6 +27,8 @@ use App\Support\VacacionesPeriodos;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -45,6 +47,10 @@ class BulkImportService
         $module = BulkImportRegistry::get($moduleKey);
         if (! $module) {
             abort(404, 'Módulo no encontrado');
+        }
+
+        if (($module['format'] ?? 'excel') === 'images') {
+            return $this->downloadFotografiasGuide($module);
         }
 
         $spreadsheet = new Spreadsheet();
@@ -113,6 +119,221 @@ class BulkImportService
         }, $filename, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
+    }
+
+    /**
+     * Guía de nombrado para carga masiva de fotografías.
+     */
+    private function downloadFotografiasGuide(array $module): StreamedResponse
+    {
+        $lines = [
+            'CPET — Guía de carga masiva de fotografías',
+            str_repeat('=', 48),
+            '',
+            '1) En el módulo Fotografías, arrastre o seleccione varias fotos.',
+            '2) Cada archivo debe llamarse SOLO con el número de cédula.',
+            '',
+            'Ejemplos válidos:',
+            '  12345678.jpg',
+            '  87654321.png',
+            '  11223344.jpeg',
+            '',
+            'Extensiones permitidas: jpg, jpeg, png, webp, gif',
+            '',
+            'Notas:',
+        ];
+
+        foreach ($module['notes'] ?? [] as $note) {
+            $lines[] = '  - '.$note;
+        }
+
+        $lines[] = '';
+        $lines[] = 'El funcionario debe existir previamente en el sistema.';
+        $content = implode("\r\n", $lines);
+
+        return response()->streamDownload(function () use ($content) {
+            echo $content;
+        }, 'guia_fotografias_'.date('Ymd').'.txt', [
+            'Content-Type' => 'text/plain; charset=UTF-8',
+        ]);
+    }
+
+    /**
+     * Importa fotografías (nombre de archivo = cédula).
+     *
+     * @param  list<\Illuminate\Http\UploadedFile|null>  $files
+     * @return array<string, mixed>
+     */
+    public function importFotografias(array $files): array
+    {
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        $updated = 0;
+        $skipped = 0;
+        $failed = 0;
+        $totalRows = 0;
+        $errors = [];
+        $seenDocs = [];
+
+        $files = array_values(array_filter($files, fn ($f) => $f instanceof UploadedFile && $f->isValid()));
+
+        if ($files === []) {
+            return [
+                'ok' => false,
+                'msj' => 'No se recibieron fotografías válidas.',
+                'created' => 0,
+                'updated' => 0,
+                'skipped' => 0,
+                'failed' => 0,
+                'total_rows' => 0,
+                'errors' => [],
+            ];
+        }
+
+        DB::beginTransaction();
+        try {
+            foreach ($files as $file) {
+                $basename = $file->getClientOriginalName();
+                $ext = strtolower($file->getClientOriginalExtension() ?: $file->extension() ?: '');
+
+                $totalRows++;
+
+                if (! in_array($ext, $allowed, true)) {
+                    $failed++;
+                    $errors[] = "{$basename}: formato no permitido. Use jpg, jpeg, png, webp o gif.";
+
+                    continue;
+                }
+
+                $doc = $this->normalizeDocumento(pathinfo($basename, PATHINFO_FILENAME));
+
+                if ($doc === '') {
+                    $failed++;
+                    $errors[] = "{$basename}: el nombre del archivo debe ser el número de cédula (ej: 12345678.jpg).";
+
+                    continue;
+                }
+
+                if (isset($seenDocs[$doc])) {
+                    $skipped++;
+                    $errors[] = "{$basename}: cédula {$doc} duplicada en esta carga (ya se usó {$seenDocs[$doc]}).";
+
+                    continue;
+                }
+                $seenDocs[$doc] = $basename;
+
+                if ($file->getSize() > 5 * 1024 * 1024) {
+                    $failed++;
+                    $errors[] = "{$basename}: supera el máximo de 5 MB.";
+
+                    continue;
+                }
+
+                try {
+                    $oficial = $this->findOficialFlexible($doc);
+                    $this->storeOficialFotoFromPath($oficial, $file->getRealPath(), $ext);
+                    $updated++;
+                } catch (\Throwable $e) {
+                    $failed++;
+                    $errors[] = "{$basename}: ".$e->getMessage();
+                }
+            }
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            return [
+                'ok' => false,
+                'msj' => 'Error al importar fotografías: '.$e->getMessage(),
+                'created' => 0,
+                'updated' => 0,
+                'skipped' => 0,
+                'failed' => 0,
+                'total_rows' => $totalRows,
+                'errors' => $errors,
+            ];
+        }
+
+        $hasIssues = $skipped > 0 || $failed > 0;
+        $summary = "Procesadas {$totalRows} fotos: {$updated} asignadas";
+        if ($skipped > 0) {
+            $summary .= ", {$skipped} omitidas";
+        }
+        if ($failed > 0) {
+            $summary .= ", {$failed} con error";
+        }
+
+        return [
+            'ok' => true,
+            'msj' => $summary,
+            'created' => 0,
+            'updated' => $updated,
+            'skipped' => $skipped,
+            'failed' => $failed,
+            'total_rows' => $totalRows,
+            'empty_rows' => 0,
+            'deduped' => 0,
+            'has_issues' => $hasIssues,
+            'errors' => array_slice($errors, 0, 100),
+        ];
+    }
+
+    /**
+     * Busca funcionario por cédula normalizada (solo dígitos) o valor exacto.
+     */
+    private function findOficialFlexible(string $documento): Oficiale
+    {
+        $documento = $this->normalizeDocumento($documento);
+
+        try {
+            return $this->findOficial($documento);
+        } catch (\InvalidArgumentException) {
+            // Fallback: coincidencia por dígitos si en BD quedó con puntos/guiones.
+            $candidatos = Oficiale::query()
+                ->whereNotNull('documento_identidad')
+                ->where('documento_identidad', '!=', '')
+                ->get(['id', 'documento_identidad']);
+
+            foreach ($candidatos as $row) {
+                if ($this->normalizeDocumento((string) $row->documento_identidad) === $documento) {
+                    return Oficiale::findOrFail($row->id);
+                }
+            }
+
+            throw new \InvalidArgumentException("Funcionario con documento {$documento} no encontrado");
+        }
+    }
+
+    private function storeOficialFotoFromPath(Oficiale $oficial, string $absolutePath, string $ext): void
+    {
+        $folderPath = 'fotografias/'.$oficial->id;
+        $disk = Storage::disk('public');
+
+        if (! $disk->exists($folderPath)) {
+            $disk->makeDirectory($folderPath);
+        }
+
+        $oldFoto = method_exists($oficial, 'fotoStoragePath')
+            ? $oficial->fotoStoragePath()
+            : (filled($oficial->fotografia) ? ltrim(str_replace('\\', '/', (string) $oficial->fotografia), '/') : null);
+
+        $filename = uniqid('foto_', true).'.'.strtolower($ext);
+        $target = $folderPath.'/'.$filename;
+        $bytes = File::get($absolutePath);
+
+        if (! $disk->put($target, $bytes)) {
+            throw new \RuntimeException('No se pudo guardar la fotografía en storage.');
+        }
+
+        if (! $disk->exists($target)) {
+            throw new \RuntimeException('La fotografía no quedó disponible en storage.');
+        }
+
+        $oficial->forceFill(['fotografia' => $target])->save();
+
+        if ($oldFoto && $oldFoto !== $target && $disk->exists($oldFoto)) {
+            $disk->delete($oldFoto);
+        }
     }
 
     public function import(string $moduleKey, UploadedFile $file): array

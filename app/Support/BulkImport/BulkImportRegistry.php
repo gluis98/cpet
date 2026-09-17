@@ -89,7 +89,7 @@ class BulkImportRegistry
                     ['key' => 'talla_gorra', 'label' => 'talla_gorra', 'required' => false, 'example' => 'L', 'help' => 'Talla'],
                 ],
                 'notes' => [
-                    'La fotografía no se carga por Excel; se asigna luego en el formulario.',
+                    'La fotografía no se carga por Excel; use el módulo «Fotografías» (varias imágenes nombradas con la cédula).',
                     'Si el documento_identidad ya existe, se actualizan solo los campos distintos (no se duplica).',
                     'Celdas vacías en campos opcionales no borran el valor ya guardado.',
                     'estacion_servicio se guarda en el catálogo de estaciones (sin duplicar nombres).',
@@ -314,6 +314,33 @@ class BulkImportRegistry
                     'Si el tipo de nombramiento o la estación no existen, se crean automáticamente.',
                     'Si is_actual=1, los demás nombramientos del funcionario pasan a histórico.',
                     'Duplicado = mismo funcionario + nombramiento + estación + fecha_inicio (se omite / se limpia en BD).',
+                ],
+            ],
+            'fotografias' => [
+                'title' => 'Fotografías',
+                'icon' => 'fas fa-camera',
+                'group' => 'Principal',
+                'description' => 'Arrastre o seleccione varias fotos. Cada archivo debe llamarse con la cédula del funcionario (ej: 12345678.jpg).',
+                'parent_key' => 'documento_identidad',
+                'format' => 'images',
+                'accept' => 'image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif',
+                'file_label' => 'Fotografías',
+                'template_label' => 'Descargar guía',
+                'columns' => [
+                    [
+                        'key' => 'nombre_archivo',
+                        'label' => 'nombre_archivo',
+                        'required' => true,
+                        'example' => '12345678.jpg',
+                        'help' => 'El nombre de cada foto debe ser solo el número de cédula. Extensiones: jpg, jpeg, png, webp, gif.',
+                    ],
+                ],
+                'notes' => [
+                    'Seleccione o arrastre varias fotos a la vez (no hace falta ZIP).',
+                    'Ejemplo de nombre válido: 12345678.jpg',
+                    'El funcionario debe existir previamente con esa cédula.',
+                    'Si ya tenía foto, se reemplaza.',
+                    'Cada imagen: máximo 5 MB. Puede subir hasta 100 fotos por vez.',
                 ],
             ],
         ];

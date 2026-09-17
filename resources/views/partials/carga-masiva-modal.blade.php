@@ -284,6 +284,101 @@
             border-bottom: 1px solid #e2e8f0;
         }
     }
+    .carga-foto-dz {
+        border: 2px dashed #94a3b8;
+        border-radius: 1rem;
+        background: linear-gradient(180deg, #f8fafc 0%, #eef4fb 100%);
+        padding: 1.5rem 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+        user-select: none;
+    }
+
+    .carga-foto-dz:hover,
+    .carga-foto-dz.is-dragover {
+        border-color: #1a4574;
+        background: linear-gradient(180deg, #eef4fb 0%, #fff 100%);
+        box-shadow: 0 0 0 4px rgba(26, 69, 116, 0.12);
+    }
+
+    .carga-foto-dz__icon {
+        font-size: 2rem;
+        color: #1a4574;
+        margin-bottom: 0.5rem;
+    }
+
+    .carga-foto-dz__title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f2744;
+        margin: 0 0 0.25rem;
+    }
+
+    .carga-foto-dz__hint {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin: 0;
+    }
+
+    .carga-foto-dz__example {
+        margin-top: 0.75rem;
+        font-size: 0.78rem;
+        color: #475569;
+    }
+
+    .carga-foto-dz__example code {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.35rem;
+        padding: 0.15rem 0.4rem;
+        color: #1a4574;
+    }
+
+    .carga-foto-list {
+        list-style: none;
+        margin: 0.85rem 0 0;
+        padding: 0;
+        max-height: 140px;
+        overflow-y: auto;
+        text-align: left;
+    }
+
+    .carga-foto-list li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        font-size: 0.78rem;
+        color: #334155;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        padding: 0.4rem 0.6rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .carga-foto-list li span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .carga-foto-list .carga-foto-remove {
+        border: 0;
+        background: transparent;
+        color: #b91c1c;
+        cursor: pointer;
+        padding: 0 0.2rem;
+        flex-shrink: 0;
+    }
+
+    .carga-foto-count {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #1a4574;
+    }
 </style>
 
 @php
@@ -303,7 +398,7 @@
                     <h5 class="modal-title mb-0" id="cargaMasivaModalLabel">
                         <i class="fas fa-file-excel mr-2"></i> Carga masiva
                     </h5>
-                    <small class="d-block mt-1" style="opacity: 0.85;">Seleccione el módulo, descargue la plantilla y suba el Excel completado</small>
+                    <small class="d-block mt-1" style="opacity: 0.85;">Seleccione el módulo, descargue la guía/plantilla y suba el archivo</small>
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
@@ -336,42 +431,46 @@
 
                         <div class="carga-panel__body">
                             @foreach ($cargaModules as $key => $mod)
+                                @php $isImages = ($mod['format'] ?? 'excel') === 'images'; @endphp
                                 <div class="carga-panel__section {{ $key === $cargaFirstKey ? 'is-active' : '' }}"
                                      data-carga-panel="{{ $key }}">
                                     <div class="d-flex flex-wrap align-items-center mb-3" style="gap: 0.5rem;">
                                         <a href="{{ route('bulk-import.template', $key) }}"
                                            class="btn btn-outline-primary btn-sm">
-                                            <i class="fas fa-download mr-1"></i> Descargar plantilla
+                                            <i class="fas fa-download mr-1"></i>
+                                            {{ $mod['template_label'] ?? 'Descargar plantilla' }}
                                         </a>
                                     </div>
 
-                                    <p class="text-muted small mb-2 font-weight-bold" style="color:#334155 !important;">
-                                        Columnas del Excel
-                                    </p>
-                                    <div style="max-height: 160px; overflow-y: auto; margin-bottom: 0.75rem;">
-                                        <table class="carga-guide">
-                                            <thead>
-                                            <tr>
-                                                <th>Campo</th>
-                                                <th>Req.</th>
-                                                <th>Descripción</th>
-                                                <th>Ejemplo</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            @foreach ($mod['columns'] as $col)
+                                    @if (! $isImages)
+                                        <p class="text-muted small mb-2 font-weight-bold" style="color:#334155 !important;">
+                                            Columnas del Excel
+                                        </p>
+                                        <div style="max-height: 160px; overflow-y: auto; margin-bottom: 0.75rem;">
+                                            <table class="carga-guide">
+                                                <thead>
                                                 <tr>
-                                                    <td><code>{{ $col['label'] }}</code></td>
-                                                    <td class="{{ $col['required'] ? 'req' : '' }}">
-                                                        {{ $col['required'] ? 'Sí' : 'No' }}
-                                                    </td>
-                                                    <td>{{ $col['help'] ?? '' }}</td>
-                                                    <td>{{ $col['example'] ?? '' }}</td>
+                                                    <th>Campo</th>
+                                                    <th>Req.</th>
+                                                    <th>Descripción</th>
+                                                    <th>Ejemplo</th>
                                                 </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                </thead>
+                                                <tbody>
+                                                @foreach ($mod['columns'] as $col)
+                                                    <tr>
+                                                        <td><code>{{ $col['label'] }}</code></td>
+                                                        <td class="{{ $col['required'] ? 'req' : '' }}">
+                                                            {{ $col['required'] ? 'Sí' : 'No' }}
+                                                        </td>
+                                                        <td>{{ $col['help'] ?? '' }}</td>
+                                                        <td>{{ $col['example'] ?? '' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @endif
 
                                     @if (! empty($mod['notes']))
                                         <ul class="carga-notes">
@@ -381,20 +480,52 @@
                                         </ul>
                                     @endif
 
-                                    <form class="carga-import-form" data-module="{{ $key }}" enctype="multipart/form-data">
+                                    <form class="carga-import-form"
+                                          data-module="{{ $key }}"
+                                          data-format="{{ $mod['format'] ?? 'excel' }}"
+                                          enctype="multipart/form-data">
                                         @csrf
                                         <input type="hidden" name="module" value="{{ $key }}">
-                                        <div class="form-group">
-                                            <label for="carga_file_{{ $key }}">Archivo Excel (.xlsx)</label>
-                                            <input type="file"
-                                                   name="file"
-                                                   id="carga_file_{{ $key }}"
-                                                   class="form-control-file"
-                                                   accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                                   required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary carga-submit-btn">
-                                            <i class="fas fa-upload mr-1"></i> Importar
+
+                                        @if ($isImages)
+                                            <div class="carga-foto-dz"
+                                                 id="carga_foto_dz_{{ $key }}"
+                                                 role="button"
+                                                 tabindex="0"
+                                                 aria-label="Seleccionar fotografías">
+                                                <div class="carga-foto-dz__icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                                <p class="carga-foto-dz__title">Arrastre las fotos aquí</p>
+                                                <p class="carga-foto-dz__hint">o haga clic para seleccionar varias a la vez</p>
+                                                <p class="carga-foto-dz__example">
+                                                    Cada foto debe llamarse como la cédula:
+                                                    <code>12345678.jpg</code>
+                                                </p>
+                                                <input type="file"
+                                                       name="files[]"
+                                                       id="carga_file_{{ $key }}"
+                                                       class="d-none carga-foto-input"
+                                                       accept="{{ $mod['accept'] }}"
+                                                       multiple>
+                                            </div>
+                                            <div class="carga-foto-count" id="carga_foto_count_{{ $key }}" hidden>
+                                                0 fotos seleccionadas
+                                            </div>
+                                            <ul class="carga-foto-list" id="carga_foto_list_{{ $key }}"></ul>
+                                        @else
+                                            <div class="form-group">
+                                                <label for="carga_file_{{ $key }}">{{ $mod['file_label'] ?? 'Archivo Excel (.xlsx)' }}</label>
+                                                <input type="file"
+                                                       name="file"
+                                                       id="carga_file_{{ $key }}"
+                                                       class="form-control-file"
+                                                       accept="{{ $mod['accept'] ?? '.xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }}"
+                                                       required>
+                                            </div>
+                                        @endif
+
+                                        <button type="submit" class="btn btn-primary carga-submit-btn mt-2">
+                                            <i class="fas fa-upload mr-1"></i>
+                                            {{ $isImages ? 'Subir fotografías' : 'Importar' }}
                                         </button>
                                         <div class="carga-result" data-carga-result="{{ $key }}"></div>
                                     </form>
@@ -448,12 +579,127 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    var fotoBags = {};
+
+    function syncFotoInput(module) {
+        var input = document.getElementById('carga_file_' + module);
+        var bag = fotoBags[module] || [];
+        if (!input) return;
+        var dt = new DataTransfer();
+        bag.forEach(function (file) { dt.items.add(file); });
+        input.files = dt.files;
+    }
+
+    function renderFotoList(module) {
+        var list = document.getElementById('carga_foto_list_' + module);
+        var countEl = document.getElementById('carga_foto_count_' + module);
+        var bag = fotoBags[module] || [];
+        if (!list || !countEl) return;
+
+        list.innerHTML = '';
+        bag.forEach(function (file, idx) {
+            var li = document.createElement('li');
+            var name = document.createElement('span');
+            name.textContent = file.name + ' (' + Math.max(1, Math.round(file.size / 1024)) + ' KB)';
+            var btnRm = document.createElement('button');
+            btnRm.type = 'button';
+            btnRm.className = 'carga-foto-remove';
+            btnRm.title = 'Quitar';
+            btnRm.innerHTML = '<i class="fas fa-times"></i>';
+            btnRm.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                fotoBags[module].splice(idx, 1);
+                syncFotoInput(module);
+                renderFotoList(module);
+            });
+            li.appendChild(name);
+            li.appendChild(btnRm);
+            list.appendChild(li);
+        });
+
+        countEl.hidden = bag.length === 0;
+        countEl.textContent = bag.length === 1
+            ? '1 foto seleccionada'
+            : (bag.length + ' fotos seleccionadas');
+    }
+
+    function addFotoFiles(module, fileList) {
+        if (!fotoBags[module]) fotoBags[module] = [];
+        var existing = {};
+        fotoBags[module].forEach(function (f) { existing[f.name + '|' + f.size] = true; });
+
+        Array.prototype.forEach.call(fileList || [], function (file) {
+            if (!file.type || file.type.indexOf('image/') !== 0) return;
+            var key = file.name + '|' + file.size;
+            if (existing[key]) return;
+            if (fotoBags[module].length >= 100) return;
+            fotoBags[module].push(file);
+            existing[key] = true;
+        });
+
+        syncFotoInput(module);
+        renderFotoList(module);
+    }
+
+    document.querySelectorAll('.carga-foto-dz').forEach(function (dz) {
+        var input = dz.querySelector('.carga-foto-input');
+        if (!input) return;
+        var moduleKey = (input.id || '').replace('carga_file_', '');
+        fotoBags[moduleKey] = [];
+
+        dz.addEventListener('click', function () { input.click(); });
+        dz.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                input.click();
+            }
+        });
+
+        ['dragenter', 'dragover'].forEach(function (evt) {
+            dz.addEventListener(evt, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dz.classList.add('is-dragover');
+            });
+        });
+        ['dragleave', 'drop'].forEach(function (evt) {
+            dz.addEventListener(evt, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dz.classList.remove('is-dragover');
+            });
+        });
+        dz.addEventListener('drop', function (e) {
+            addFotoFiles(moduleKey, e.dataTransfer && e.dataTransfer.files);
+        });
+        input.addEventListener('change', function () {
+            addFotoFiles(moduleKey, input.files);
+            syncFotoInput(moduleKey);
+        });
+    });
+
     document.querySelectorAll('.carga-import-form').forEach(function (form) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             var module = form.getAttribute('data-module');
+            var format = form.getAttribute('data-format') || 'excel';
             var resultEl = form.querySelector('[data-carga-result]');
             var btn = form.querySelector('.carga-submit-btn');
+
+            if (format === 'images') {
+                syncFotoInput(module);
+                var fotoInput = document.getElementById('carga_file_' + module);
+                if (!fotoInput || !fotoInput.files || !fotoInput.files.length) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({ icon: 'warning', title: 'Sin fotos', text: 'Seleccione o arrastre al menos una fotografía.' });
+                    } else {
+                        alert('Seleccione o arrastre al menos una fotografía.');
+                    }
+                    return;
+                }
+            }
+
             var fd = new FormData(form);
 
             if (resultEl) {
@@ -462,7 +708,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Importando…';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> ' + (format === 'images' ? 'Subiendo…' : 'Importando…');
             }
 
             fetch(importUrl, {
@@ -512,8 +758,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (ok && (data.total_rows != null)) {
                             html += '<div class="carga-result__stats">';
                             html += '<span class="carga-result__stat">Procesadas: ' + (data.total_rows || 0) + '</span>';
-                            html += '<span class="carga-result__stat">Creados: ' + (data.created || 0) + '</span>';
-                            html += '<span class="carga-result__stat">Actualizados: ' + (data.updated || 0) + '</span>';
+                            if (format === 'images') {
+                                html += '<span class="carga-result__stat">Asignadas: ' + (data.updated || 0) + '</span>';
+                            } else {
+                                html += '<span class="carga-result__stat">Creados: ' + (data.created || 0) + '</span>';
+                                html += '<span class="carga-result__stat">Actualizados: ' + (data.updated || 0) + '</span>';
+                            }
                             html += '<span class="carga-result__stat">Omitidos: ' + (data.skipped || 0) + '</span>';
                             html += '<span class="carga-result__stat">Errores: ' + (data.failed || 0) + '</span>';
                             if ((data.deduped || 0) > 0) {
@@ -554,7 +804,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     if (ok) {
-                        if ((data.created || 0) > 0) {
+                        if (format === 'images') {
+                            fotoBags[module] = [];
+                            syncFotoInput(module);
+                            renderFotoList(module);
+                        }
+                        if ((data.created || 0) > 0 || (data.updated || 0) > 0) {
                             $(document).trigger('cpet:refresh-table');
                         }
                         if (typeof Swal !== 'undefined') {
@@ -581,7 +836,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 .finally(function () {
                     if (btn) {
                         btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-upload mr-1"></i> Importar';
+                        btn.innerHTML = format === 'images'
+                            ? '<i class="fas fa-upload mr-1"></i> Subir fotografías'
+                            : '<i class="fas fa-upload mr-1"></i> Importar';
                     }
                 });
         });
