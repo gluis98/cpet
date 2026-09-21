@@ -231,6 +231,12 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" for="fecha_egreso">Fecha de egreso <span class="text-accent-600">*</span></label>
+                            <input type="date" class="form-control" id="fecha_egreso" name="fecha_egreso"
+                                   value="{{ old('fecha_egreso', optional($oficial->fecha_egreso)->format('Y-m-d')) }}">
+                            <small class="text-muted">Solo aplica cuando el estatus es Retirado.</small>
+                        </div>
                     </div>
                     <div class="row" id="wrap-reingresos" style="{{ old('estatus', $oficial->estatus) === 'Reingreso' ? '' : 'display:none;' }}">
                         <div class="col-md-12 mb-3">

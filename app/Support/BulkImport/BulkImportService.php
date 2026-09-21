@@ -759,6 +759,19 @@ class BulkImportService
                 $providedKeys[] = 'numero_placa';
             }
         }
+
+        if ($estatus === 'Retirado') {
+            $egresoRaw = trim((string) ($d['fecha_egreso'] ?? ''));
+            if ($egresoRaw === '') {
+                throw new \InvalidArgumentException('fecha_egreso es obligatoria si estatus=Retirado');
+            }
+            $payload['fecha_egreso'] = $this->date($egresoRaw);
+            $providedKeys[] = 'fecha_egreso';
+        } else {
+            $payload['fecha_egreso'] = null;
+            $providedKeys[] = 'fecha_egreso';
+        }
+
         if ($tipoRetiroProvided) {
             $payload['tipo_retiro'] = $tipoRetiro;
             $providedKeys[] = 'tipo_retiro';
@@ -813,6 +826,7 @@ class BulkImportService
             'sexo' => $sexo,
             'numero_placa' => $numeroPlaca,
             'tipo_retiro' => $tipoRetiro,
+            'fecha_egreso' => $payload['fecha_egreso'] ?? null,
             'cargo_administrativo_id' => $cargoId,
             'id_estacion_servicio' => $estacionServicioId,
             'sabe_conducir' => $sabe,
@@ -846,7 +860,7 @@ class BulkImportService
 
     private function funcionarioValuesDiffer(string $key, mixed $current, mixed $incoming): bool
     {
-        if (in_array($key, ['fecha_nacimiento', 'fecha_ingreso'], true)) {
+        if (in_array($key, ['fecha_nacimiento', 'fecha_ingreso', 'fecha_egreso'], true)) {
             $curr = $current ? Carbon::parse($current)->toDateString() : null;
             $next = $incoming ? Carbon::parse($incoming)->toDateString() : null;
 

@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $talla_pantalon
  * @property string|null $talla_zapatos
  * @property Carbon|null $fecha_ingreso
+ * @property Carbon|null $fecha_egreso
  * @property string|null $estado_civil
  * @property string|null $direccion
  * @property string|null $telefono
@@ -66,6 +67,7 @@ class Oficiale extends Model
 		'id_estacion_servicio' => 'int',
 		'fecha_nacimiento' => 'datetime',
 		'fecha_ingreso' => 'datetime',
+		'fecha_egreso' => 'datetime',
 		'parroquia_id' => 'int',
 		'centro_votacion_id' => 'int',
 		'sabe_conducir' => 'boolean',
@@ -92,6 +94,7 @@ class Oficiale extends Model
 		'talla_falda',
 		'talla_gorra',
 		'fecha_ingreso',
+		'fecha_egreso',
 		'estado_civil',
 		'direccion',
 		'tipo_vivienda',

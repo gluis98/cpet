@@ -384,6 +384,7 @@
     var estatusSelect = document.getElementById('estatus');
     var wrapTipoRetiro = document.getElementById('wrap-tipo-retiro');
     var tipoRetiro = document.getElementById('tipo_retiro');
+    var fechaEgreso = document.getElementById('fecha_egreso');
     var wrapReingresos = document.getElementById('wrap-reingresos');
     var reingresosList = document.getElementById('reingresos-list');
 
@@ -399,6 +400,12 @@
             tipoRetiro.required = isRetirado;
             if (!isRetirado) {
                 tipoRetiro.value = '';
+            }
+        }
+        if (fechaEgreso) {
+            fechaEgreso.required = isRetirado;
+            if (!isRetirado) {
+                fechaEgreso.value = '';
             }
         }
         if (wrapReingresos) {

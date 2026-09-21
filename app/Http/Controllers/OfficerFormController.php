@@ -226,6 +226,7 @@ class OfficerFormController extends Controller
             'parroquia_id' => ['nullable', 'integer', 'exists:parroquias,id'],
             'numero_placa' => ['nullable', 'string', 'max:255'],
             'fecha_ingreso' => ['required', 'date'],
+            'fecha_egreso' => ['nullable', 'date', 'after_or_equal:fecha_ingreso'],
             'estatus' => ['required', 'string', 'in:'.implode(',', Oficiale::ESTATUS)],
             'tipo_retiro' => ['nullable', 'in:'.implode(',', Oficiale::TIPOS_RETIRO)],
             'fechas_reingreso' => ['nullable', 'array'],
@@ -260,6 +261,10 @@ class OfficerFormController extends Controller
             $data['numero_placa'] = null;
         }
 
+        if (! filled(trim((string) ($data['fecha_egreso'] ?? '')))) {
+            $data['fecha_egreso'] = null;
+        }
+
         if (! filled(trim((string) ($data['carnet_patria'] ?? '')))) {
             $data['carnet_patria'] = null;
         } else {
@@ -278,8 +283,14 @@ class OfficerFormController extends Controller
                     'tipo_retiro' => 'Seleccione el tipo de retiro (Renuncia o Destitución).',
                 ]);
             }
+            if (empty($data['fecha_egreso'])) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'fecha_egreso' => 'Indique la fecha de egreso cuando el estatus es Retirado.',
+                ]);
+            }
         } else {
             $data['tipo_retiro'] = null;
+            $data['fecha_egreso'] = null;
         }
 
         $fechas = [];

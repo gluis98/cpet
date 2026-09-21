@@ -321,6 +321,10 @@
                         <div class="col-md-6 ficha-field"><label>Tipo de cargo</label><span>{{ $oficial->tipo_funcionario ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Credencial</label><span>{{ \App\Models\Oficiale::displayNumeroPlaca($oficial->numero_placa) }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Fecha de ingreso</label><span>{{ optional($oficial->fecha_ingreso)->format('d/m/Y') ?? 'N/A' }}</span></div>
+                        @if ($oficial->estatus === 'Retirado')
+                            <div class="col-md-6 ficha-field"><label>Fecha de egreso</label><span>{{ optional($oficial->fecha_egreso)->format('d/m/Y') ?? 'N/A' }}</span></div>
+                            <div class="col-md-6 ficha-field"><label>Tipo de retiro</label><span>{{ $oficial->tipo_retiro ?? 'N/A' }}</span></div>
+                        @endif
                         <div class="col-md-6 ficha-field"><label>Estatus</label><span>{{ $oficial->estatus ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Jerarquía actual</label><span>{{ $cargoActual }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Estación de servicio</label><span>{{ optional($oficial->estacion_servicio)->estacion ?? 'N/A' }}</span></div>
@@ -461,6 +465,10 @@
                 <div class="print-item"><span class="k">Tipo funcionario</span><span class="v">{{ $oficial->tipo_funcionario ?? 'N/A' }}</span></div>
                 <div class="print-item"><span class="k">Estatus</span><span class="v">{{ $oficial->estatus ?? 'N/A' }}@if($oficial->estatus === 'Retirado' && $oficial->tipo_retiro) ({{ $oficial->tipo_retiro }})@endif</span></div>
                 <div class="print-item"><span class="k">Fecha ingreso</span><span class="v">{{ optional($oficial->fecha_ingreso)->format('d/m/Y') ?? 'N/A' }}</span></div>
+                @if ($oficial->estatus === 'Retirado')
+                    <div class="print-item"><span class="k">Fecha egreso</span><span class="v">{{ optional($oficial->fecha_egreso)->format('d/m/Y') ?? 'N/A' }}</span></div>
+                    <div class="print-item"><span class="k">Tipo retiro</span><span class="v">{{ $oficial->tipo_retiro ?? 'N/A' }}</span></div>
+                @endif
                 <div class="print-item"><span class="k">Credencial</span><span class="v">{{ \App\Models\Oficiale::displayNumeroPlaca($oficial->numero_placa) }}</span></div>
                 <div class="print-item span-2"><span class="k">Jerarquía actual</span><span class="v">{{ $cargoActual }}</span></div>
                 <div class="print-item span-2"><span class="k">Cargo</span><span class="v">{{ optional($oficial->cargos_administrativo)->nombre_cargo ?? 'N/A' }}</span></div>
