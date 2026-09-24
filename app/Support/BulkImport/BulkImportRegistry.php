@@ -78,7 +78,7 @@ class BulkImportRegistry
                     ['key' => 'tipo_vivienda', 'label' => 'tipo_vivienda', 'required' => false, 'example' => 'Propia', 'help' => 'Propia | Alquilada | No posee'],
                     ['key' => 'direccion_vivienda', 'label' => 'direccion_vivienda', 'required' => false, 'example' => 'Av. 2', 'help' => 'Si vivienda Propia/Alquilada'],
                     ['key' => 'sabe_conducir', 'label' => 'sabe_conducir', 'required' => false, 'example' => '1', 'help' => '0 o 1'],
-                    ['key' => 'tipos_conduccion', 'label' => 'tipos_conduccion', 'required' => false, 'example' => 'Vehículo;Moto', 'help' => 'Separar con ; → Vehículo, Moto, Jack, Grúa'],
+                    ['key' => 'tipos_conduccion', 'label' => 'tipos_conduccion', 'required' => false, 'example' => 'Vehículo;Moto', 'help' => 'Separar con ; → '.implode(', ', \App\Models\Oficiale::TIPOS_CONDUCCION)],
                     ['key' => 'telefono_residencial', 'label' => 'telefono_residencial', 'required' => false, 'example' => '02711234567', 'help' => 'Teléfono residencial'],
                     ['key' => 'talla_camisa', 'label' => 'talla_camisa', 'required' => false, 'example' => 'M', 'help' => 'Talla'],
                     ['key' => 'talla_pantalon', 'label' => 'talla_pantalon', 'required' => false, 'example' => '32', 'help' => 'Talla'],

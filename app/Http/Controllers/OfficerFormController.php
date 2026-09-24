@@ -220,7 +220,7 @@ class OfficerFormController extends Controller
             'direccion_vivienda' => ['nullable', 'string'],
             'sabe_conducir' => ['nullable', 'in:0,1'],
             'tipos_conduccion' => ['nullable', 'array'],
-            'tipos_conduccion.*' => ['string', 'in:Vehículo,Moto,Jack,Grúa'],
+            'tipos_conduccion.*' => ['string', 'in:'.implode(',', Oficiale::TIPOS_CONDUCCION)],
             'centro_votacion' => ['nullable', 'string'],
             'centro_votacion_id' => ['nullable', 'integer', 'exists:centros_votacion,id'],
             'parroquia_id' => ['nullable', 'integer', 'exists:parroquias,id'],

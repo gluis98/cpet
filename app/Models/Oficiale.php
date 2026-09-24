@@ -153,6 +153,12 @@ class Oficiale extends Model
 		'Moto',
 		'Jack',
 		'Grúa',
+		'Automático',
+		'Sincrónico',
+		'Corola',
+		'Toyota',
+		'Camión',
+		'Bus',
 	];
 
 	public static function normalizeTipo(?string $tipo): string
