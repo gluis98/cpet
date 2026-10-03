@@ -189,6 +189,7 @@ class OfficerFormController extends Controller
             'estacion_servicio',
             'parroquia.municipio',
             'centro_votacion_catalogo',
+            'oficiales_reingresos',
             'oficiales_academicos' => function ($q) {
                 $q->orderByRaw('fecha_fin IS NULL')
                     ->orderByDesc('fecha_fin')
