@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $cargo_administrativo_id
  * @property string|null $tipo_funcionario
  * @property string|null $documento_identidad
+ * @property string|null $rif
  * @property string|null $carnet_patria
  * @property string|null $carnet_patria_serial
  * @property string|null $nombre_completo
@@ -79,6 +80,7 @@ class Oficiale extends Model
 		'id_estacion_servicio',
 		'tipo_funcionario',
 		'documento_identidad',
+		'rif',
 		'carnet_patria',
 		'carnet_patria_serial',
 		'nombre_completo',

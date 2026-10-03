@@ -53,6 +53,7 @@ class BulkImportRegistry
                 'parent_key' => null,
                 'columns' => [
                     self::documentoIdentidadColumn('Cédula (única)'),
+                    ['key' => 'rif', 'label' => 'rif', 'required' => false, 'example' => 'V-12345678-9', 'help' => 'RIF del funcionario', 'aliases' => ['r.i.f', 'r.i.f.', 'numero rif', 'número rif', 'nro rif']],
                     ['key' => 'carnet_patria', 'label' => 'carnet_patria', 'required' => false, 'example' => '0000123456789', 'help' => 'Código del Carnet de la Patria', 'aliases' => ['carnet', 'carnet patria', 'carnet de la patria', 'codigo carnet', 'código carnet', 'codigo', 'código']],
                     ['key' => 'carnet_patria_serial', 'label' => 'carnet_patria_serial', 'required' => false, 'example' => 'A12345678', 'help' => 'Serial del Carnet de la Patria', 'aliases' => ['serial carnet', 'serial carnet patria', 'serial', 'serial patria']],
                     ['key' => 'nombre_completo', 'label' => 'nombre_completo', 'required' => true, 'example' => 'Juan Pérez', 'help' => 'Nombre y apellido'],

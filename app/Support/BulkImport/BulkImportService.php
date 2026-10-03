@@ -703,6 +703,7 @@ class BulkImportService
         }
 
         $optionalScalar = [
+            'rif' => filled(trim((string) ($d['rif'] ?? ''))) ? mb_strtoupper(trim((string) $d['rif'])) : null,
             'carnet_patria' => filled(trim((string) ($d['carnet_patria'] ?? ''))) ? trim((string) $d['carnet_patria']) : null,
             'carnet_patria_serial' => filled(trim((string) ($d['carnet_patria_serial'] ?? ''))) ? trim((string) $d['carnet_patria_serial']) : null,
             'telefono' => filled($d['telefono'] ?? null) ? trim((string) $d['telefono']) : null,

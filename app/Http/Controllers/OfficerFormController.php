@@ -209,6 +209,7 @@ class OfficerFormController extends Controller
     {
         $data = $request->validate([
             'documento_identidad' => ['required', 'string', 'max:50'],
+            'rif' => ['nullable', 'string', 'max:30'],
             'carnet_patria' => ['nullable', 'string', 'max:50'],
             'carnet_patria_serial' => ['nullable', 'string', 'max:50'],
             'nombre_completo' => ['required', 'string', 'max:255'],
@@ -264,6 +265,12 @@ class OfficerFormController extends Controller
 
         if (! filled(trim((string) ($data['fecha_egreso'] ?? '')))) {
             $data['fecha_egreso'] = null;
+        }
+
+        if (! filled(trim((string) ($data['rif'] ?? '')))) {
+            $data['rif'] = null;
+        } else {
+            $data['rif'] = mb_strtoupper(trim((string) $data['rif']));
         }
 
         if (! filled(trim((string) ($data['carnet_patria'] ?? '')))) {

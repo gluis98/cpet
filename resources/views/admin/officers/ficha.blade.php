@@ -307,6 +307,7 @@
                 <div class="tab-pane fade show active" id="tab-personales" role="tabpanel">
                     <div class="row">
                         <div class="col-md-6 ficha-field"><label>Cédula</label><span>{{ $oficial->documento_identidad ?? 'N/A' }}</span></div>
+                        <div class="col-md-6 ficha-field"><label>RIF</label><span>{{ $oficial->rif ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Carnet de la Patria (código)</label><span>{{ $oficial->carnet_patria ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Carnet de la Patria (serial)</label><span>{{ $oficial->carnet_patria_serial ?? 'N/A' }}</span></div>
                         <div class="col-md-6 ficha-field"><label>Nombre completo</label><span>{{ $oficial->nombre_completo ?? 'N/A' }}</span></div>
@@ -452,6 +453,7 @@
             <h2>Datos personales</h2>
             <div class="print-grid">
                 <div class="print-item"><span class="k">Cédula</span><span class="v">{{ $oficial->documento_identidad ?? 'N/A' }}</span></div>
+                <div class="print-item"><span class="k">RIF</span><span class="v">{{ $oficial->rif ?? 'N/A' }}</span></div>
                 <div class="print-item"><span class="k">Sexo</span><span class="v">{{ $oficial->sexo ?? 'N/A' }}</span></div>
                 <div class="print-item"><span class="k">Nacimiento</span><span class="v">{{ optional($oficial->fecha_nacimiento)->format('d/m/Y') ?? 'N/A' }}</span></div>
                 <div class="print-item"><span class="k">Edad</span><span class="v">{{ $edad }}</span></div>
