@@ -1289,7 +1289,13 @@ class BulkImportService
         }
 
         $fechaEmision = $this->date($this->requireAny($d, ['fecha_emision', 'fecha_inicio', 'fecha_desde'], 'fecha_emision'));
-        $anio = (int) Carbon::parse($fechaEmision)->format('Y');
+        $periodoRaw = $this->optionalValue($d, ['periodo', 'periodo_correspondiente', 'anio_periodo', 'ano_periodo', 'año']);
+        $periodo = $periodoRaw !== null && $periodoRaw !== ''
+            ? (int) preg_replace('/\D+/', '', (string) $periodoRaw)
+            : (int) Carbon::parse($fechaEmision)->format('Y');
+        if ($periodo < 1970 || $periodo > ((int) Carbon::now()->format('Y') + 5)) {
+            throw new \InvalidArgumentException('periodo debe ser un año válido (ej. 2025)');
+        }
         $hastaRaw = $this->optionalValue($d, ['fecha_hasta', 'fecha_fin', 'hasta']);
         $hasta = $hastaRaw !== null ? $this->date($hastaRaw) : null;
         $reintegroRaw = $this->optionalValue($d, ['fecha_reintegro', 'reintegro']);
@@ -1303,21 +1309,22 @@ class BulkImportService
             $disfrutadas = 0;
         }
 
-        // Una sola vacación por año de servicio: limpia duplicados previos del mismo año.
-        $dedupedPrevios = VacacionesPeriodos::dedupeOficial((int) $oficial->id, $anio);
+        // Una sola vacación por periodo correspondiente: limpia duplicados previos del mismo periodo.
+        $dedupedPrevios = VacacionesPeriodos::dedupeOficial((int) $oficial->id, $periodo);
 
-        $rowKey = "{$oficial->id}|{$anio}";
+        $rowKey = "{$oficial->id}|{$periodo}";
         $matchFn = fn ($q) => $q->where('id_policia', $oficial->id)
-            ->whereYear('fecha_emision', $anio);
+            ->where('periodo', $periodo);
 
         $result = $this->importUnique(
             'vacaciones',
             $rowKey,
             OficialesVacacione::class,
             $matchFn,
-            function () use ($oficial, $fechaEmision, $hasta, $reintegro, $estatus, $d, $disfrutadas) {
+            function () use ($oficial, $periodo, $fechaEmision, $hasta, $reintegro, $estatus, $d, $disfrutadas) {
                 OficialesVacacione::create([
                     'id_policia' => $oficial->id,
+                    'periodo' => $periodo,
                     'fecha_emision' => $fechaEmision,
                     'fecha_hasta' => $hasta,
                     'fecha_reintegro' => $reintegro,
@@ -1326,7 +1333,7 @@ class BulkImportService
                     'is_disfrutadas' => $disfrutadas,
                 ]);
             },
-            "Vacaciones del año {$anio} ya existen para este funcionario"
+            "Vacaciones del periodo {$periodo} ya existen para este funcionario"
         );
 
         $result['deduped'] = (int) ($result['deduped'] ?? 0) + $dedupedPrevios;

@@ -18,6 +18,8 @@ class OfficersVacationsController extends Controller
 
         $oficial = Oficiale::find((int) $id);
         $vacaciones = OficialesVacacione::where('id_policia', $id)
+            ->orderByRaw('periodo IS NULL')
+            ->orderByDesc('periodo')
             ->orderByRaw('fecha_emision IS NULL')
             ->orderByDesc('fecha_emision')
             ->orderByDesc('id')
@@ -39,7 +41,7 @@ class OfficersVacationsController extends Controller
     public function store(Request $request)
     {
         $data = $this->payload($request);
-        $this->assertAnioUnico((int) $data['id_policia'], $data['fecha_emision']);
+        $this->assertPeriodoUnico((int) $data['id_policia'], (int) $data['periodo']);
 
         $vacacion = OficialesVacacione::create($data);
 
@@ -61,7 +63,7 @@ class OfficersVacationsController extends Controller
         $vacacion = OficialesVacacione::findOrFail($id);
         $data = $this->payload($request, $vacacion);
         $idPolicia = (int) ($data['id_policia'] ?? $vacacion->id_policia);
-        $this->assertAnioUnico($idPolicia, $data['fecha_emision'], (int) $vacacion->id);
+        $this->assertPeriodoUnico($idPolicia, (int) $data['periodo'], (int) $vacacion->id);
 
         $vacacion->update($data);
 
@@ -96,8 +98,11 @@ class OfficersVacationsController extends Controller
 
     private function payload(Request $request, ?OficialesVacacione $existing = null): array
     {
+        $anioActual = (int) Carbon::now()->format('Y');
+
         $data = $request->validate([
             'id_policia' => [$existing ? 'sometimes' : 'required', 'integer'],
+            'periodo' => ['required', 'integer', 'min:1970', 'max:'.($anioActual + 5)],
             'fecha_emision' => ['required', 'date'],
             'fecha_hasta' => ['nullable', 'date', 'after_or_equal:fecha_emision'],
             'fecha_reintegro' => ['nullable', 'date'],
@@ -113,6 +118,7 @@ class OfficersVacationsController extends Controller
             ]);
         }
 
+        $data['periodo'] = (int) $data['periodo'];
         $data['is_disfrutadas'] = $request->boolean('is_disfrutadas') ? 1 : 0;
 
         if (! empty($data['fecha_reintegro']) && Carbon::parse($data['fecha_reintegro'])->lte(Carbon::today())) {
@@ -122,12 +128,11 @@ class OfficersVacationsController extends Controller
         return $data;
     }
 
-    private function assertAnioUnico(int $idPolicia, string $fechaEmision, ?int $ignoreId = null): void
+    private function assertPeriodoUnico(int $idPolicia, int $periodo, ?int $ignoreId = null): void
     {
-        $anio = (int) Carbon::parse($fechaEmision)->format('Y');
         $query = OficialesVacacione::query()
             ->where('id_policia', $idPolicia)
-            ->whereYear('fecha_emision', $anio);
+            ->where('periodo', $periodo);
 
         if ($ignoreId) {
             $query->where('id', '!=', $ignoreId);
@@ -135,8 +140,8 @@ class OfficersVacationsController extends Controller
 
         if ($query->exists()) {
             throw ValidationException::withMessages([
-                'fecha_emision' => "Ya existe un periodo de vacaciones para el año {$anio}. Solo se permite uno por año de servicio.",
+                'periodo' => "Ya existe un periodo de vacaciones para el año {$periodo}. Solo se permite uno por periodo correspondiente.",
             ]);
         }
     }
-}
+};

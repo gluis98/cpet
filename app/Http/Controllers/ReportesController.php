@@ -39,10 +39,12 @@ class ReportesController extends Controller
                 $q->where('is_actual', 1)->with('cargo');
             },
             'oficiale.cargos_administrativo',
+            'oficiale.estacion_servicio',
         ])->findOrFail($id);
 
         $funcionario = $vacacion->oficiale;
-        $anio = Carbon::parse($vacacion->fecha_emision)->format('Y');
+        $periodo = VacacionesPeriodos::anioDe($vacacion)
+            ?? (int) Carbon::parse($vacacion->fecha_emision)->format('Y');
         $dias = 0;
         $fechaInicio = Carbon::parse($vacacion->fecha_emision);
         $fechaFinRaw = $vacacion->fecha_hasta ?? $vacacion->fecha_reintegro;
@@ -64,11 +66,15 @@ class ReportesController extends Controller
             $funcionario?->nombre_completo,
         ])));
 
+        $estacion = optional($funcionario?->estacion_servicio)->estacion ?: '—';
+
         return view('admin.reports.vacation', [
             'oficial' => $vacacion,
             'funcionario' => $funcionario,
             'title' => 'BOLETA DE VACACIONES',
-            'tipo' => 'VACACIONES DEL AÑO '.$anio.' CON '.$dias.' DÍAS HÁBILES',
+            'tipo' => 'VACACIONES DEL PERIODO '.$periodo.' CON '.$dias.' DÍAS HÁBILES',
+            'periodo' => $periodo,
+            'estacion' => $estacion,
             'entidad' => $this->entidad(),
             'aniosDisfrutados' => $periodos['disfrutados'],
             'aniosNoDisfrutados' => $periodos['no_disfrutados'],

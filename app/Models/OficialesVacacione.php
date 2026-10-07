@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property int|null $id_policia
+ * @property int|null $periodo
  * @property Carbon|null $fecha_emision
  * @property Carbon|null $fecha_hasta
  * @property Carbon|null $fecha_reintegro
@@ -32,6 +33,7 @@ class OficialesVacacione extends Model
 
 	protected $casts = [
 		'id_policia' => 'int',
+		'periodo' => 'int',
 		'fecha_emision' => 'datetime',
 		'fecha_hasta' => 'datetime',
 		'fecha_reintegro' => 'datetime',
@@ -40,6 +42,7 @@ class OficialesVacacione extends Model
 
 	protected $fillable = [
 		'id_policia',
+		'periodo',
 		'fecha_emision',
 		'fecha_hasta',
 		'fecha_reintegro',

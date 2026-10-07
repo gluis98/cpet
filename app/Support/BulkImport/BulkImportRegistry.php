@@ -239,10 +239,11 @@ class BulkImportRegistry
                 'parent_key' => 'documento_identidad',
                 'columns' => [
                     self::documentoIdentidadColumn('Cédula del funcionario'),
+                    ['key' => 'periodo', 'label' => 'periodo', 'required' => true, 'example' => '2025', 'help' => 'Año correspondiente de estas vacaciones (ej. 2025)', 'aliases' => ['periodo correspondiente', 'periodo vacaciones', 'anio periodo', 'año periodo', 'ano periodo', 'año']],
                     ['key' => 'fecha_emision', 'label' => 'fecha_emision', 'required' => true, 'example' => '2026-02-01', 'help' => 'Fecha desde / emisión (YYYY-MM-DD o DD/MM/YYYY)', 'aliases' => ['fecha de emision', 'fecha emision', 'fecha inicio', 'fecha desde', 'desde']],
                     ['key' => 'fecha_inicio', 'label' => 'fecha_inicio', 'required' => false, 'example' => '', 'help' => 'Alternativa a fecha_emision'],
                     ['key' => 'fecha_desde', 'label' => 'fecha_desde', 'required' => false, 'example' => '', 'help' => 'Alternativa a fecha_emision'],
-                    ['key' => 'fecha_hasta', 'label' => 'fecha_hasta', 'required' => false, 'example' => '2026-02-14', 'help' => 'Fecha hasta del periodo (YYYY-MM-DD o DD/MM/YYYY)', 'aliases' => ['hasta', 'fecha hasta', 'fecha fin periodo']],
+                    ['key' => 'fecha_hasta', 'label' => 'fecha_hasta', 'required' => false, 'example' => '2026-02-14', 'help' => 'Fecha hasta del disfrute (YYYY-MM-DD o DD/MM/YYYY)', 'aliases' => ['hasta', 'fecha hasta', 'fecha fin periodo']],
                     ['key' => 'estatus', 'label' => 'estatus', 'required' => true, 'example' => 'APROBADAS', 'help' => 'APROBADAS | NEGADAS | VENCIDAS | REGLAMENTARIAS', 'aliases' => ['estado', 'status', 'estatus vacaciones']],
                     ['key' => 'estado', 'label' => 'estado', 'required' => false, 'example' => '', 'help' => 'Alternativa a estatus'],
                     ['key' => 'fecha_reintegro', 'label' => 'fecha_reintegro', 'required' => false, 'example' => '2026-02-15', 'help' => 'Fecha de reintegro (independiente de hasta)', 'aliases' => ['fecha de reintegro', 'fecha reintegro', 'reintegro']],
@@ -252,9 +253,10 @@ class BulkImportRegistry
                 ],
                 'notes' => [
                     'El estatus se guarda en mayúsculas.',
-                    'fecha_hasta es el fin del periodo; fecha_reintegro es el día de reintegro (pueden diferir).',
-                    'Acepta encabezados como "Fecha de emisión", "Cédula", "Estado", etc.',
-                    'Solo 1 vacación por año de servicio (año de fecha_emision). Si se repite, se conserva una sola.',
+                    'periodo = año al que corresponden las vacaciones (puede diferir del año de disfrute).',
+                    'fecha_hasta es el fin del disfrute; fecha_reintegro es el día de reintegro (pueden diferir).',
+                    'Acepta encabezados como "Fecha de emisión", "Cédula", "Periodo", "Estado", etc.',
+                    'Solo 1 vacación por periodo correspondiente. Si se repite, se conserva una sola.',
                 ],
             ],
             'reconocimientos' => [

@@ -261,7 +261,8 @@
     $oficialNombre = $oficial->oficiale->nombre_completo ?? '—';
     $placa = $oficial->oficiale->numero_placa ?? '—';
     $cedula = $oficial->oficiale->documento_identidad ?? '—';
-    $direccion = $oficial->oficiale->direccion ?? '—';
+    $estacionServicio = $estacion ?? (optional($oficial->oficiale->estacion_servicio ?? null)->estacion ?: '—');
+    $periodoVacaciones = $periodo ?? ($oficial->periodo ?? '—');
     $fmt = function ($d) {
         if (! $d) {
             return '—';
@@ -325,8 +326,14 @@
             </div>
             <div class="grid">
                 <div>
-                    <span class="label">Con ubicación en:</span>
-                    <span class="input-field">{{ $direccion }}</span>
+                    <span class="label">Estación donde presta servicio:</span>
+                    <span class="input-field">{{ $estacionServicio }}</span>
+                </div>
+            </div>
+            <div class="grid">
+                <div>
+                    <span class="label">Periodo correspondiente de estas vacaciones:</span>
+                    <span class="input-field">{{ $periodoVacaciones }}</span>
                 </div>
             </div>
             <div class="grid two">
@@ -349,6 +356,12 @@
                 <div>
                     <span class="label">Tipo de permiso:</span>
                     <span class="input-field">{{ $tipo }}</span>
+                </div>
+            </div>
+            <div class="grid">
+                <div>
+                    <span class="label">El funcionario saldrá a disfrutar el periodo:</span>
+                    <span class="input-field">{{ $periodoVacaciones }}</span>
                 </div>
             </div>
             <div class="grid">

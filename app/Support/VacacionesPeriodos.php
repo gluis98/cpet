@@ -26,6 +26,10 @@ class VacacionesPeriodos
 
     public static function anioDe(?OficialesVacacione $v): ?int
     {
+        if ($v?->periodo) {
+            return (int) $v->periodo;
+        }
+
         if (! $v?->fecha_emision) {
             return null;
         }
@@ -70,16 +74,23 @@ class VacacionesPeriodos
     }
 
     /**
-     * Elimina duplicados por año de emisión para un funcionario. Conserva el mejor registro.
+     * Elimina duplicados por periodo correspondiente para un funcionario. Conserva el mejor registro.
      */
     public static function dedupeOficial(int $idPolicia, ?int $soloAnio = null): int
     {
         $query = OficialesVacacione::query()
             ->where('id_policia', $idPolicia)
-            ->whereNotNull('fecha_emision');
+            ->where(function ($q) {
+                $q->whereNotNull('periodo')->orWhereNotNull('fecha_emision');
+            });
 
         if ($soloAnio !== null) {
-            $query->whereYear('fecha_emision', $soloAnio);
+            $query->where(function ($q) use ($soloAnio) {
+                $q->where('periodo', $soloAnio)
+                    ->orWhere(function ($q2) use ($soloAnio) {
+                        $q2->whereNull('periodo')->whereYear('fecha_emision', $soloAnio);
+                    });
+            });
         }
 
         $grupos = $query->orderByDesc('id')->get()->groupBy(fn ($v) => self::anioDe($v));
@@ -143,7 +154,9 @@ class VacacionesPeriodos
 
         $vacaciones ??= OficialesVacacione::query()
             ->where('id_policia', $oficial->id)
-            ->whereNotNull('fecha_emision')
+            ->where(function ($q) {
+                $q->whereNotNull('periodo')->orWhereNotNull('fecha_emision');
+            })
             ->get();
 
         // Una fila por año (la de mayor score).

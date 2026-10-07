@@ -62,7 +62,7 @@
                     <div class="card-header">Datos de la solicitud</div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label" for="estatus">Estatus *</label>
                                 <select class="form-control" id="estatus" name="estatus" required>
                                     <option value="">--- SELECCIONE UN ESTATUS ---</option>
@@ -71,6 +71,11 @@
                                     <option value="VENCIDAS">VENCIDAS</option>
                                     <option value="REGLAMENTARIAS">REGLAMENTARIAS</option>
                                 </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="periodo">Periodo correspondiente de estas vacaciones *</label>
+                                <input type="number" class="form-control" id="periodo" name="periodo" min="1970" max="2100" step="1" placeholder="Ej: 2025" required>
+                                <small class="text-muted">Año al que corresponden estas vacaciones (independiente de la fecha de disfrute).</small>
                             </div>
                         </div>
                         <div class="row">
@@ -165,6 +170,7 @@
                 <table class="table table-bordered table-hover" id="vacaciones-table" style="width:100%">
                     <thead>
                         <tr>
+                            <th class="text-center">Periodo</th>
                             <th class="text-center">Fecha de emisión</th>
                             <th class="text-center">Hasta</th>
                             <th class="text-center">Fecha de reintegro</th>
@@ -264,6 +270,7 @@ $(document).ready(function () {
             .then(r => r.json())
             .then(data => {
                 id = data.id;
+                $('#periodo').val(data.periodo || '');
                 $('#fecha_emision').val(data.fecha_emision ? String(data.fecha_emision).substr(0, 10) : '');
                 $('#fecha_hasta').val(data.fecha_hasta ? String(data.fecha_hasta).substr(0, 10) : '');
                 $('#fecha_reintegro').val(data.fecha_reintegro ? String(data.fecha_reintegro).substr(0, 10) : '');
@@ -319,11 +326,13 @@ $(document).ready(function () {
         var rows = filterRows();
         var template = '';
         rows.forEach(function (e) {
+            var periodo = e.periodo || (e.fecha_emision ? String(e.fecha_emision).substr(0, 4) : 'S/P');
             var emision = e.fecha_emision ? String(e.fecha_emision).substr(0, 10) : 'S/F';
             var hasta = e.fecha_hasta ? String(e.fecha_hasta).substr(0, 10) : 'S/F';
             var reintegro = e.fecha_reintegro ? String(e.fecha_reintegro).substr(0, 10) : 'S/F';
             template += `
                 <tr>
+                    <td class="text-center"><strong>${periodo}</strong></td>
                     <td class="text-center">${emision}</td>
                     <td class="text-center">${hasta}</td>
                     <td class="text-center">${reintegro}</td>
@@ -337,9 +346,9 @@ $(document).ready(function () {
                 </tr>`;
         });
 
-        CpetModule.refreshDataTable('#vacaciones-table', template || '<tr><td colspan="6" class="text-center text-muted">Sin registros</td></tr>', {
+        CpetModule.refreshDataTable('#vacaciones-table', template || '<tr><td colspan="7" class="text-center text-muted">Sin registros</td></tr>', {
             order: [[0, 'desc']],
-            columnDefs: [{ orderable: false, targets: 5 }]
+            columnDefs: [{ orderable: false, targets: 6 }]
         });
     }
 
