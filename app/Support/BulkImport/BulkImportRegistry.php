@@ -302,11 +302,11 @@ class BulkImportRegistry
                 'title' => 'Nombramientos',
                 'icon' => 'fas fa-user-tie',
                 'group' => 'Submódulos',
-                'description' => 'Nombramientos del funcionario (estación + tipo de nombramiento).',
+                'description' => 'Nombramientos del funcionario (estación + cargo administrativo).',
                 'parent_key' => 'documento_identidad',
                 'columns' => [
                     self::documentoIdentidadColumn(),
-                    ['key' => 'nombramiento', 'label' => 'nombramiento', 'required' => true, 'example' => 'Director', 'help' => 'De qué fue nombrado (se busca/crea en catálogo)', 'aliases' => ['tipo_nombramiento', 'tipo nombramiento', 'de que fue nombrado', 'de qué fue nombrado', 'cargo nombramiento']],
+                    ['key' => 'nombramiento', 'label' => 'nombramiento', 'required' => true, 'example' => 'Director', 'help' => 'De qué fue nombrado (cargo administrativo; se busca/crea)', 'aliases' => ['tipo_nombramiento', 'tipo nombramiento', 'de que fue nombrado', 'de qué fue nombrado', 'cargo nombramiento', 'cargo administrativo']],
                     ['key' => 'estacion', 'label' => 'estacion', 'required' => true, 'example' => 'Comando Valera', 'help' => 'Nombre de la estación (se busca/crea en catálogo)', 'aliases' => ['estación', 'estacion comando', 'estación de comando', 'comando']],
                     ['key' => 'fecha_inicio', 'label' => 'fecha_inicio', 'required' => true, 'example' => '01/03/2024', 'help' => 'YYYY-MM-DD o DD/MM/YYYY', 'aliases' => ['fecha inicio', 'desde']],
                     ['key' => 'fecha_final', 'label' => 'fecha_final', 'required' => false, 'example' => '30/06/2024', 'help' => 'YYYY-MM-DD o DD/MM/YYYY', 'aliases' => ['fecha fin', 'fecha final', 'hasta']],
@@ -315,7 +315,7 @@ class BulkImportRegistry
                 ],
                 'notes' => [
                     'El funcionario (documento_identidad) debe existir previamente.',
-                    'Si el tipo de nombramiento o la estación no existen, se crean automáticamente.',
+                    'Si el cargo administrativo o la estación no existen, se crean automáticamente.',
                     'Si is_actual=1, los demás nombramientos del funcionario pasan a histórico.',
                     'Duplicado = mismo funcionario + nombramiento + estación + fecha_inicio (se omite / se limpia en BD).',
                 ],

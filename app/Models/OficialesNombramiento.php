@@ -51,6 +51,11 @@ class OficialesNombramiento extends Model
 
     public function tipo_nombramiento()
     {
-        return $this->belongsTo(CatalogoNombramiento::class, 'id_tipo_nombramiento');
+        return $this->belongsTo(CargosAdministrativo::class, 'id_tipo_nombramiento');
+    }
+
+    public function cargo_administrativo()
+    {
+        return $this->belongsTo(CargosAdministrativo::class, 'id_tipo_nombramiento');
     }
 }

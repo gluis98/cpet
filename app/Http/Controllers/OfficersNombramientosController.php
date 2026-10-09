@@ -71,7 +71,7 @@ class OfficersNombramientosController extends Controller
         $data = $request->validate([
             'id_policia' => [$existing ? 'sometimes' : 'required', 'integer', 'exists:oficiales,id'],
             'id_estacion' => ['required', 'integer', 'exists:estaciones,id'],
-            'id_tipo_nombramiento' => ['required', 'integer', 'exists:catalogo_nombramientos,id'],
+            'id_tipo_nombramiento' => ['required', 'integer', 'exists:cargos_administrativos,id'],
             'fecha_inicio' => ['required', 'date'],
             'fecha_final' => ['nullable', 'date', 'after_or_equal:fecha_inicio'],
             'descripcion' => ['nullable', 'string', 'max:255'],

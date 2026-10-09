@@ -136,7 +136,8 @@ class ReportesController extends Controller
             ? Carbon::parse($nombramiento->fecha_inicio)->locale('es')->isoFormat('D [de] MMMM [de] YYYY')
             : Carbon::now()->locale('es')->isoFormat('D [de] MMMM [de] YYYY');
 
-        $designacion = optional($nombramiento->tipo_nombramiento)->nombre
+        $designacion = optional($nombramiento->tipo_nombramiento)->nombre_cargo
+            ?: optional($nombramiento->tipo_nombramiento)->nombre
             ?: optional($nombramiento->estacione)->estacion
             ?: '________________';
 

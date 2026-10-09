@@ -101,45 +101,44 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function() {
-        var id = "";
-        index();
-        index_estaciones();
+$(document).ready(function () {
+    var id = '';
+    var apiBase = @json(url('api'));
+    var reportBase = @json(url('reports/radiogram'));
+    var needsAdminPassword = @json(auth()->user()->role !== 'Administrador');
 
-        $(document).on('cpet:refresh-table', index);
+    index();
+    indexEstaciones();
 
-        $('#btn-add').click(function(e){
-            e.preventDefault();
-            $('#form-edit').attr('id', 'form-add');
-            $('#form-add').trigger('reset');
-            $('#btn-submit').text('Guardar');
-            $('#btn-submit').attr('css', 'btn btn-primary btn-lg');
-            $('#add').modal('show'); 
-        });
+    $(document).on('cpet:refresh-table', index);
 
-        $(document).on('submit','#form-add', function(e){
-            e.preventDefault();
-            let formData = new FormData(this);
-                formData.append('id_policia', '{{ $id }}');
-            fetch('/cpet/public/api/officers/radiogram', {
-                method: 'POST',
-                body: formData
-            }).then(response => response.json())
-            .then(data => {
+    $('#btn-add').on('click', function (e) {
+        e.preventDefault();
+        $('#form-edit').attr('id', 'form-add');
+        $('#form-add').trigger('reset');
+        indexEstaciones();
+        $('#btn-submit').text('Guardar').attr('class', 'btn btn-primary btn-lg');
+        $('#add').modal('show');
+    });
+
+    $(document).on('submit', '#form-add', function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        formData.append('id_policia', '{{ $id }}');
+        fetch(apiBase + '/officers/radiogram', { method: 'POST', body: formData })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
                 CpetModule.afterSave({ message: data.msj, refresh: index });
             });
-        });
+    });
 
-        $(document).on('submit','#form-edit', function(e){
-            e.preventDefault();
-            let formData = new FormData(this);
-                formData.append('_method', 'PUT');
-            console.log(id)
-            fetch('/cpet/public/api/officers/radiogram/'+id, {
-                method: 'POST',
-                body: formData
-            }).then(response => response.json())
-            .then(data => {
+    $(document).on('submit', '#form-edit', function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        formData.append('_method', 'PUT');
+        fetch(apiBase + '/officers/radiogram/' + id, { method: 'POST', body: formData })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
                 CpetModule.afterSave({
                     message: data.msj,
                     refresh: index,
@@ -149,218 +148,144 @@
                     }
                 });
             });
-        });
+    });
 
-        $(document).on('click','.edit', function(e){
-            e.preventDefault();
-            id = $(this).data('id');
-            fetch('/cpet/public/api/officers/radiogram/'+id)
-            .then(response => response.json())
-            .then(data => {
-                
+    $(document).on('click', '.edit', function (e) {
+        e.preventDefault();
+        id = $(this).data('id');
+        fetch(apiBase + '/officers/radiogram/' + id)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
                 id = data.id;
-                
-                $('#id_estacion option').each(function() {
-                    if($(this).val() == data.id_estacion){
-                        $(this).attr('selected', 'selected');
-                    }
+                return indexEstaciones(data.id_estacion).then(function () {
+                    $('#is_actual').prop('checked', data.is_actual == 1);
+                    $('#fecha_inicio').val(data.fecha_inicio ? String(data.fecha_inicio).substr(0, 10) : '');
+                    $('#fecha_final').val(data.fecha_final ? String(data.fecha_final).substr(0, 10) : '');
+                    $('#descripcion').val(data.descripcion || '');
+                    $('#form-add').attr('id', 'form-edit');
+                    $('#btn-submit').attr('class', 'btn btn-dark btn-lg').text('Actualizar');
+                    $('#add').modal('show');
                 });
-
-                $('#is_actual').prop('checked', data.is_actual == 1);
-                $('#fecha_inicio').val(data.fecha_inicio.substr(0,4) + '-' + data.fecha_inicio.substr(5,2) + '-' + data.fecha_inicio.substr(8,2));
-                if(data.fecha_fin != null && data.fecha_fin != ""){
-                    $('#fecha_fin').val(data.fecha_fin.substr(0,4) + '-' + data.fecha_fin.substr(5,2) + '-' + data.fecha_fin.substr(8,2));
-                }
-                $('#descripcion').val(data.descripcion);
-                
-
-                $('#form-add').attr('id', 'form-edit');
-                $('#btn-submit').attr('class', 'btn btn-dark btn-lg');
-                $('#btn-submit').text('Actualizar');
-                $('#add').modal('show');
             });
-        });
+    });
 
-        $(document).on('click','.delete', function(e){
-            e.preventDefault();
-            id = $(this).data('id');
-            let formData = new FormData();
-            formData.append('_method', 'DELETE');
-            let pass = "",
-                request = "";
-            if({{ auth()->user()->role != 'Administrador' ? 'true' : 'false' }}){
-                Swal.fire({
-                    title: 'Ingrese contraseña del administrador',
-                    input: 'password',
-                    inputPlaceholder: 'Contraseña actual',
-                    inputAttributes: {
-                        maxlength: 20,
-                        autocapitalize: 'off',
-                        autocorrect: 'off'
-                    }
-                }).then(result => {
-                    if (result.isConfirmed) {
-                        let form = new FormData();
-                            form.append('password', result.value);
-                        request = fetch('/cpet/public/api/users/confirm-password-admin', {
-                                        method: "POST",
-                                        body: form
-                                    }).then(response => response.json())
-                                    .then(result => {
-                                        return result;
-                                    })
-                                    .catch(error => {
-                                        // Manejo de errores y asignar mensaje a una variable
-                                        let errorMessage = `Error: ${error.message}`;
-                                        console.error(errorMessage);
-                                        return { error: errorMessage };
-                                    });
-                                    
-                            return request;
-                        
-                    }
-                }).then(() => {
-                    request.then(result => {
-                        if(result.msj){
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: result.msj
-                            });                            
-                        }
+    $(document).on('click', '.delete', function (e) {
+        e.preventDefault();
+        id = $(this).data('id');
+        var formData = new FormData();
+        formData.append('_method', 'DELETE');
 
-                        if(result.status){
-                            Swal.fire({
-                                title: '¿Estás seguro?',
-                                text: "No podrás revertir esto.",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Sí, eliminar'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    fetch('/cpet/public/api/officers/radiogram/'+id, {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                        },
-                                        body: JSON.stringify({
-                                            _method: 'DELETE',
-                                            password: pass
-                                        })
-                                    }).then(response => response.json())
-                                    .then(data => {
-                                        CpetModule.afterSave({ message: data.msj, refresh: index });
-                                    });
-                                }
-                            });
-                        }
-
-                        
+        var confirmDelete = function () {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'No podrás revertir esto.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then(function (result) {
+                if (!result.isConfirmed) return;
+                fetch(apiBase + '/officers/radiogram/' + id, { method: 'POST', body: formData })
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        CpetModule.afterSave({ message: data.msj, refresh: index });
                     });
-                });
-            }else{
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "No podrás revertir esto.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, eliminar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch('/cpet/public/api/officers/radiogram/'+id, {
-                            method: 'POST',
-                            body: formData
-                        }).then(response => response.json())
-                        .then(data => {
-                            CpetModule.afterSave({ message: data.msj, refresh: index });
-                        });
+            });
+        };
+
+        if (!needsAdminPassword) {
+            confirmDelete();
+            return;
+        }
+
+        Swal.fire({
+            title: 'Ingrese contraseña del administrador',
+            input: 'password',
+            inputPlaceholder: 'Contraseña actual',
+            showCancelButton: true,
+            confirmButtonText: 'Continuar',
+            cancelButtonText: 'Cancelar'
+        }).then(function (result) {
+            if (!result.isConfirmed) return;
+            var form = new FormData();
+            form.append('password', result.value);
+            fetch(apiBase + '/users/confirm-password-admin', { method: 'POST', body: form })
+                .then(function (r) { return r.json(); })
+                .then(function (authResult) {
+                    if (authResult.msj) {
+                        Swal.fire({ icon: 'error', title: 'Error', text: authResult.msj });
+                        return;
+                    }
+                    if (authResult.status) {
+                        confirmDelete();
                     }
                 });
-            }
         });
+    });
 
-        function index(){
-            fetch('/cpet/public/api/officers/radiogram/index/{{ $id }}')
-            .then(response => response.json())
-            .then(data => {
-                let template = '';
-                if(data.length == 0){
-                    template += `
-                        <div class="row border p-3">
-                            <div class="col-md-12">
-                                <h5 class="text-center text-muted">No hay datos registrados</h5>
+    function index() {
+        fetch(apiBase + '/officers/radiogram/index/{{ $id }}')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var template = '';
+                if (!data.length) {
+                    template = `
+                        <div class="col-12">
+                            <div class="border p-3">
+                                <h5 class="text-center text-muted mb-0">No hay datos registrados</h5>
                             </div>
                         </div>`;
-                }else{
-                
-                    data.forEach(e => {
+                } else {
+                    data.forEach(function (e) {
+                        var estacion = (e.estacione && e.estacione.estacion) ? e.estacione.estacion : 'Sin estación';
                         template += `
                         <div class="col-md-4">
                             <div class="card mb-3 shadow">
                                 <div class="card-header h4">
-                                    <i class="fas fa-map-marker-alt"></i> ${e.estacione.estacion}
+                                    <i class="fas fa-map-marker-alt"></i> ${estacion}
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p><strong>Estado:</strong> <br>${(e.is_actual) ? '<i class="fas fa-medal text-warning"></i> Cumpliendo servicio' : 'Servicio Cumplido'}</p>
-                                        </div>
-                                    </div>
+                                    <p><strong>Estado:</strong><br>${e.is_actual == 1 ? '<i class="fas fa-medal text-warning"></i> Cumpliendo servicio' : 'Servicio Cumplido'}</p>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <p><strong>Fecha de envio:</strong> <br>${new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_inicio))}
+                                            <p><strong>Fecha de envío:</strong><br>${e.fecha_inicio ? new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_inicio)) : 'Sin fecha'}</p>
                                         </div>
                                         <div class="col-md-6">
-                                            <p><strong>Fecha de reintegro:</strong> ${(e.fecha_fin) ? new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_fin)) : 'Sin fecha'}</p>
+                                            <p><strong>Fecha de reintegro:</strong><br>${e.fecha_final ? new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(e.fecha_final)) : 'Sin fecha'}</p>
                                         </div>
                                     </div>
                                     <hr>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p class="text-justify">${(e.descripcion) ? e.descripcion : 'Sin descripción'}</p>
-                                        </div>
-                                    </div>
+                                    <p class="text-justify">${e.descripcion || 'Sin descripción'}</p>
                                     <hr>
-                                    <div class="row">
-                                        <div class="col-md-12 text-right">
-                                            <a href="../../reports/radiogram/${e.id}" class="btn btn-dark btn-sm" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Imprimir radiograma" target="_blank"><i class="fas fa-print"></i></a>
-                                            <button class="btn btn-dark btn-sm edit" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Editar radiograma"><i class="fas fa-edit"></i></button>
-                                            <button class="btn btn-danger btn-sm delete" data-id="${e.id}" data-toggle="tooltip" data-placement="top" title="Eliminar radiograma"><i class="fas fa-trash"></i></button>    
-                                        </div>
+                                    <div class="text-right">
+                                        <a href="${reportBase}/${e.id}" class="btn btn-dark btn-sm" title="Imprimir radiograma" target="_blank"><i class="fas fa-print"></i></a>
+                                        <button class="btn btn-dark btn-sm edit" data-id="${e.id}" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger btn-sm delete" data-id="${e.id}" title="Eliminar"><i class="fas fa-trash"></i></button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        `;
-
-                        
+                        </div>`;
                     });
                 }
                 $('#radiogram-container').html(template);
-                $(function () {
-                    $('[data-toggle="tooltip"]').tooltip()
-                })
+                $('[data-toggle="tooltip"]').tooltip();
             });
-        }
+    }
 
-        function index_estaciones(){
-            fetch('/cpet/public/api/stations')
-            .then(response => response.json())
-            .then(data => {
-                let template = '<option value>--- SELECCIONE UNA ESTACIÓN ---</option>';
-                data.forEach(e => {
-                    template += `
-                        <option value="${e.id}">${e.estacion}</option>
-                    `;
+    function indexEstaciones(selectedId) {
+        return fetch(apiBase + '/stations')
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var template = '<option value="">--- SELECCIONE UNA ESTACIÓN ---</option>';
+                (data || []).forEach(function (e) {
+                    template += '<option value="' + e.id + '">' + (e.estacion || e.nombre || '') + '</option>';
                 });
                 $('#id_estacion').html(template);
+                if (selectedId) {
+                    $('#id_estacion').val(String(selectedId));
+                }
             });
-        }
-    });
+    }
+});
 </script>
 @endsection

@@ -21,15 +21,15 @@
                                 <label class="form-label" for="id_tipo_nombramiento">De qué fue nombrado *</label>
                                 <div class="input-group">
                                     <select class="form-control" id="id_tipo_nombramiento" name="id_tipo_nombramiento" required>
-                                        <option value="">--- SELECCIONE ---</option>
+                                        <option value="">--- SELECCIONE UN CARGO ---</option>
                                     </select>
                                     <div class="input-group-append">
-                                        <button type="button" class="btn btn-secondary" id="btn-add-tipo" title="Agregar tipo de nombramiento">
+                                        <button type="button" class="btn btn-secondary" id="btn-add-tipo" title="Agregar cargo administrativo">
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
                                 </div>
-                                <small class="text-muted">Si no aparece en la lista, pulsa + para agregarlo.</small>
+                                <small class="text-muted">Lista de cargos administrativos. Si no aparece, pulsa + para agregarlo.</small>
                             </div>
                         </div>
                         <div class="row">
@@ -116,11 +116,12 @@ $(document).ready(function () {
 
     $('#btn-add-tipo').on('click', function () {
         CpetCatalog.promptAdd({
-            title: 'Nuevo tipo de nombramiento',
+            title: 'Nuevo cargo administrativo',
             placeholder: 'Ejemplo: Director, Jefe de División…',
-            postUrl: apiBase + '/catalogo-nombramientos',
+            postUrl: apiBase + '/cargos-administrativos',
             $select: $('#id_tipo_nombramiento'),
-            successMessage: 'Tipo de nombramiento agregado',
+            fieldName: 'nombre_cargo',
+            successMessage: 'Cargo administrativo agregado',
         });
     });
 
@@ -232,7 +233,9 @@ $(document).ready(function () {
                         </div>`;
                 } else {
                     data.forEach(function (e) {
-                        var tipo = (e.tipo_nombramiento && e.tipo_nombramiento.nombre) ? e.tipo_nombramiento.nombre : 'Sin tipo';
+                        var tipo = (e.tipo_nombramiento && (e.tipo_nombramiento.nombre_cargo || e.tipo_nombramiento.nombre))
+                            ? (e.tipo_nombramiento.nombre_cargo || e.tipo_nombramiento.nombre)
+                            : 'Sin cargo';
                         var estacion = (e.estacione && e.estacione.estacion) ? e.estacione.estacion : 'Sin estación';
                         template += `
                         <div class="col-md-4">
@@ -286,9 +289,9 @@ $(document).ready(function () {
     function indexTipos(selectedId) {
         return CpetCatalog.loadSelect(
             $('#id_tipo_nombramiento'),
-            apiBase + '/catalogo-nombramientos',
+            apiBase + '/cargos-administrativos',
             selectedId,
-            '--- SELECCIONE ---'
+            '--- SELECCIONE UN CARGO ---'
         );
     }
 });

@@ -293,6 +293,12 @@ class CatalogosController extends Controller
             ], 422);
         }
 
+        if ($item->oficiales_nombramientos()->exists()) {
+            return response()->json([
+                'msj' => 'No se puede eliminar: hay nombramientos asociados a este cargo administrativo.',
+            ], 422);
+        }
+
         $item->delete();
 
         return response()->json(['msj' => 'Cargo administrativo eliminado.'], 200);

@@ -16,7 +16,6 @@ use App\Models\OficialesCurso;
 use App\Models\OficialesFamiliare;
 use App\Models\OficialesRadiograma;
 use App\Models\OficialesNombramiento;
-use App\Models\CatalogoNombramiento;
 use App\Models\OficialesReconocimiento;
 use App\Models\OficialesReingreso;
 use App\Models\OficialesSalud;
@@ -1441,13 +1440,13 @@ class BulkImportService
 
         $nombreTipo = trim($this->requireAny($d, ['nombramiento', 'tipo_nombramiento', 'de_que_fue_nombrado'], 'nombramiento'));
         $tipoNorm = $this->normalizeMatchText($this->foldAccents($nombreTipo));
-        $tipo = CatalogoNombramiento::query()
-            ->get(['id', 'nombre'])
+        $tipo = CargosAdministrativo::query()
+            ->get(['id', 'nombre_cargo'])
             ->first(function ($item) use ($tipoNorm) {
-                return $this->normalizeMatchText($this->foldAccents((string) $item->nombre)) === $tipoNorm;
+                return $this->normalizeMatchText($this->foldAccents((string) $item->nombre_cargo)) === $tipoNorm;
             });
         if (! $tipo) {
-            $tipo = CatalogoNombramiento::create(['nombre' => $nombreTipo]);
+            $tipo = CargosAdministrativo::create(['nombre_cargo' => $nombreTipo]);
         }
 
         $nombreEstacion = trim($this->require($d, 'estacion'));
@@ -1491,7 +1490,7 @@ class BulkImportService
                 'is_actual' => $isActual ? 1 : 0,
                 'descripcion' => $descripcion !== '' ? $descripcion : null,
             ]);
-        }, "Nombramiento {$tipo->nombre} en estación {$estacion->estacion} con la misma fecha de inicio ya existe");
+        }, "Nombramiento {$tipo->nombre_cargo} en estación {$estacion->estacion} con la misma fecha de inicio ya existe");
     }
 
     private function resolveParroquiaId(?string $municipio, ?string $parroquia): ?int

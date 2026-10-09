@@ -28,8 +28,22 @@ class CargosAdministrativo extends Model
 		'nombre_cargo'
 	];
 
+	protected $appends = [
+		'nombre',
+	];
+
+	public function getNombreAttribute(): string
+	{
+		return (string) ($this->attributes['nombre_cargo'] ?? '');
+	}
+
 	public function oficiales()
 	{
 		return $this->hasMany(Oficiale::class, 'cargo_administrativo_id');
+	}
+
+	public function oficiales_nombramientos()
+	{
+		return $this->hasMany(OficialesNombramiento::class, 'id_tipo_nombramiento');
 	}
 }
