@@ -31,6 +31,10 @@
         if (selected !== false) {
             $select.val(id).trigger('change');
         }
+
+        if (window.CpetSelectSearch && typeof window.CpetSelectSearch.refresh === 'function') {
+            window.CpetSelectSearch.refresh($select);
+        }
     }
 
     function loadSelect($select, url, selectedId, emptyLabel) {
@@ -63,6 +67,10 @@
                 }
 
                 $select.trigger('change');
+
+                if (window.CpetSelectSearch && typeof window.CpetSelectSearch.refresh === 'function') {
+                    window.CpetSelectSearch.refresh($select);
+                }
             });
     }
 

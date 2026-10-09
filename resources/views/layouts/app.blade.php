@@ -16,6 +16,7 @@
     <link href="{{ public_asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ public_asset('vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet">
     <link href="{{ public_asset('vendor/select2/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ public_asset('css/cpet-select2.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
@@ -251,6 +252,7 @@
 <script src="{{ public_asset('vendor/select2/select2.min.js') }}"></script>
 <script src="{{ public_asset('js/sweetalert2@11.js') }}"></script>
 <script src="{{ public_asset('js/cpet-catalog-select.js') }}"></script>
+<script src="{{ public_asset('js/cpet-select-search.js') }}"></script>
 <script src="{{ public_asset('vendor/jszip/jszip.min.js') }}"></script>
 <script src="{{ public_asset('vendor/pdfmake/pdfmake.min.js') }}"></script>
 <script src="{{ public_asset('vendor/pdfmake/vfs_fonts.js') }}"></script>

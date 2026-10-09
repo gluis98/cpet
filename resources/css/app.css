@@ -254,6 +254,67 @@
     outline: none;
 }
 
+/* Select2: buscador en todos los selects */
+.app-shell .select2-container {
+    width: 100% !important;
+    max-width: 100%;
+}
+
+.app-shell .input-group > .select2-container {
+    flex: 1 1 auto;
+    width: 1% !important;
+}
+
+.app-shell .select2-container--default .select2-selection--single {
+    height: auto !important;
+    min-height: 2.55rem;
+    border-radius: 0.65rem !important;
+    border: 1px solid #c9d5e3 !important;
+    background: #fff !important;
+    padding: 0.35rem 0.5rem;
+    box-shadow: 0 1px 2px rgba(15, 39, 68, 0.04);
+}
+
+.app-shell .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #0f172a !important;
+    line-height: 1.6 !important;
+    padding-left: 0.35rem !important;
+    font-size: 0.875rem !important;
+}
+
+.app-shell .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100% !important;
+    right: 0.4rem;
+}
+
+.app-shell .select2-container--default.select2-container--focus .select2-selection--single,
+.app-shell .select2-container--default.select2-container--open .select2-selection--single {
+    border-color: #4f8cc4 !important;
+    box-shadow: 0 0 0 3px rgba(47, 111, 173, 0.18) !important;
+}
+
+.app-shell .select2-dropdown {
+    border: 1px solid #c9d5e3 !important;
+    border-radius: 0.65rem !important;
+    overflow: hidden;
+    z-index: 2100;
+}
+
+.app-shell .select2-search--dropdown .select2-search__field {
+    border-radius: 0.5rem !important;
+    border: 1px solid #c9d5e3 !important;
+    padding: 0.45rem 0.65rem !important;
+    font-size: 0.875rem !important;
+}
+
+.app-shell .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #1a4574 !important;
+}
+
+.app-shell .modal .select2-container {
+    z-index: 1;
+}
+
 .app-shell .card {
     border-radius: 1rem !important;
     border: 1px solid rgba(148, 163, 184, 0.35) !important;
