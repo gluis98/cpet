@@ -13,7 +13,10 @@ return new class extends Migration
             return;
         }
 
-        // Remapear id_tipo_nombramiento: de catalogo_nombramientos → cargos_administrativos (mismo nombre).
+        // 1) Quitar FK a catalogo_nombramientos ANTES de remapear IDs.
+        $this->dropForeignKeyIfExists('oficiales_nombramientos', 'id_tipo_nombramiento');
+
+        // 2) Remapear id_tipo_nombramiento: catalogo_nombramientos → cargos_administrativos (mismo nombre).
         if (Schema::hasTable('catalogo_nombramientos')) {
             $catalogo = DB::table('catalogo_nombramientos')->get(['id', 'nombre']);
             $map = [];
@@ -47,8 +50,30 @@ return new class extends Migration
             }
         }
 
-        $this->dropForeignKeyIfExists('oficiales_nombramientos', 'id_tipo_nombramiento');
+        // 3) Huérfanos: si quedó algún ID que no existe en cargos_administrativos, crear "Sin cargo" y reasignar.
+        $validIds = DB::table('cargos_administrativos')->pluck('id')->map(fn ($id) => (int) $id)->all();
+        $orphans = DB::table('oficiales_nombramientos')
+            ->whereNotIn('id_tipo_nombramiento', $validIds ?: [0])
+            ->distinct()
+            ->pluck('id_tipo_nombramiento');
 
+        if ($orphans->isNotEmpty()) {
+            $fallbackId = DB::table('cargos_administrativos')
+                ->whereRaw('LOWER(TRIM(nombre_cargo)) = ?', ['sin cargo'])
+                ->value('id');
+
+            if (! $fallbackId) {
+                $fallbackId = DB::table('cargos_administrativos')->insertGetId([
+                    'nombre_cargo' => 'Sin cargo',
+                ]);
+            }
+
+            DB::table('oficiales_nombramientos')
+                ->whereNotIn('id_tipo_nombramiento', $validIds ?: [0])
+                ->update(['id_tipo_nombramiento' => $fallbackId]);
+        }
+
+        // 4) Nueva FK hacia cargos_administrativos.
         Schema::table('oficiales_nombramientos', function (Blueprint $table) {
             $table->foreign('id_tipo_nombramiento')
                 ->references('id')
