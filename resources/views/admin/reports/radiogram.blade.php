@@ -3,370 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radiograma - {{ $oficial->oficiale->nombre_completo }}</title>
+    <title>Radiograma - {{ $funcionario->nombre_completo ?? 'Funcionario' }}</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @page {
+            size: letter portrait;
+            margin: 8mm 10mm;
         }
+
+        * { box-sizing: border-box; }
 
         body {
-            background-color: #f0f0f0;
-            font-family: 'Arial', 'Helvetica', sans-serif;
             margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #111;
+            background: #e8eef5;
         }
 
-        /* Simulación de Hoja A4 */
-        .page-simulation {
-            background-color: white;
-            width: 210mm;
-            height: 297mm;
-            padding: 15mm;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
+        .actions {
+            text-align: center;
+            margin: 0 auto 12px;
         }
 
-        /* Contenedor principal */
-        .page-wrapper {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+        .actions button {
+            border: 0;
+            background: #1a4574;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
         }
 
-        /* Sección de cada radiograma */
-        .radiograma-section {
-            height: 48%; 
+        .sheet {
+            width: 216mm;
+            min-height: 279mm;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 8px 28px rgba(15, 39, 68, 0.12);
+            padding: 6mm 8mm;
+            display: flex;
+            flex-direction: column;
+            gap: 4mm;
+        }
+
+        .radiograma {
             position: relative;
-            box-sizing: border-box;
-            padding: 10px 0;
+            flex: 1 1 50%;
+            border: 1.5px solid #111;
+            padding: 5mm 6mm 4mm;
             display: flex;
             flex-direction: column;
+            min-height: 0;
+            page-break-inside: avoid;
+            overflow: hidden;
         }
 
-        /* Header con logo */
+        .watermark {
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            width: 210px;
+            height: 210px;
+            transform: translate(-50%, -50%);
+            opacity: 0.07;
+            object-fit: contain;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+
         .header {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #333;
-            position: relative;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 6px;
+            margin-bottom: 4px;
         }
 
-        .header-logo {
-            position: absolute;
-            left: 0;
-            width: 60px;
-            height: 60px;
+        .header-left,
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+            width: 88px;
+        }
+
+        .header-right {
+            justify-content: flex-end;
+        }
+
+        .header .logo-sm {
+            width: 42px;
+            height: 42px;
             object-fit: contain;
         }
 
-        .header-title {
-            text-align: center;
+        .header .logo-md {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .header .logo-lg {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+        }
+
+        .membrete {
             flex: 1;
-        }
-
-        .header-title h2 {
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #000;
             margin: 0;
-        }
-
-        .header-title p {
-            font-size: 11px;
-            color: #555;
-            margin: 3px 0 0 0;
-        }
-
-        /* Etiqueta de tipo de documento */
-        .document-type {
+            padding: 0 2px;
+            font-size: 9px;
+            font-weight: 700;
+            line-height: 1.28;
             text-align: center;
-            font-size: 10px;
-            margin-bottom: 10px;
-            color: #888;
-            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        /* Línea divisoria */
-        .divider {
-            border-top: 2px dashed #333;
-            margin: 10px 0;
-            position: relative;
-            text-align: center;
-            width: 100%;
-        }
-
-        .divider span {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #fff;
-            padding: 0 15px;
-            font-size: 10px;
-            color: #333;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        /* Estilos de contenido */
-        .grid {
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .label {
-            font-weight: bold;
-            font-size: 13px;
-            color: #000;
-        }
-
-        .input-field {
-            text-align: justify;
-            line-height: 1.6;
-            display: inline-block;
-            font-size: 13px;
-            color: #000;
-        }
-
-        .text-right {
+        .fecha {
             text-align: right;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 2px 0 8px;
+            text-transform: uppercase;
         }
 
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .nro {
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0 0 8px;
         }
 
-        /* Sección de firmas */
-        .signature-row {
-            margin-top: auto;
-            padding-top: 25px;
-            display: flex;
-            justify-content: space-around;
+        .destinatario {
+            font-size: 11.5px;
+            line-height: 1.4;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0 0 8px;
+        }
+
+        .destinatario .presente {
+            margin-top: 4px;
+        }
+
+        .cuerpo {
+            font-size: 11.5px;
+            line-height: 1.45;
+            text-align: justify;
+            text-transform: uppercase;
+            margin: 0 0 10px;
+        }
+
+        .cuerpo .destacado {
+            font-weight: 800;
+            text-decoration: underline;
+        }
+
+        .cumplase {
+            font-size: 11.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin: 4px 0 14px;
+        }
+
+        .firma {
             text-align: center;
-            font-size: 11px;
+            margin-top: auto;
+            padding-top: 18px;
+            text-transform: uppercase;
         }
 
-        .signature-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .firma .nombre {
+            margin: 0 0 3px;
+            font-size: 11.5px;
+            font-weight: 800;
+            line-height: 1.3;
         }
 
-        .signature-line {
-            width: 200px;
-            border-top: 2px solid #000;
-            margin-bottom: 5px;
+        .firma .cargo {
+            margin: 0;
+            font-size: 9.5px;
+            font-weight: 700;
+            line-height: 1.3;
         }
 
-        .signature-label {
-            font-size: 11px;
-            font-weight: bold;
-            color: #333;
+        .iniciales {
+            margin-top: 10px;
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
-        /* Estilos de impresión */
         @media print {
             body {
-                background: none;
+                background: #fff;
                 padding: 0;
             }
-            
-            .page-simulation {
+
+            .actions { display: none !important; }
+
+            .sheet {
                 box-shadow: none;
+                width: auto;
+                min-height: auto;
+                height: auto;
+                padding: 0;
+                gap: 3mm;
                 margin: 0;
-                border: none;
-                width: 100%;
-                height: 100%;
-                padding: 10mm;
-            }
-            
-            .no-print {
-                display: none;
             }
 
-            /* Asegurar que el contenido se ajuste bien en la página */
-            .radiograma-section {
-                page-break-inside: avoid;
+            .radiograma {
+                border: 1.5px solid #111;
             }
-        }
-
-        /* Botón de impresión */
-        .no-print {
-            margin-bottom: 20px;
-            background: #007bff;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s;
-        }
-
-        .no-print:hover {
-            background: #0056b3;
-        }
-
-        @page {
-            size: A4;
-            margin: 0;
         }
     </style>
 </head>
 <body>
+@php
+    $rrhhNombre = trim((string) ($rrhh ?? '')) ?: '________________________';
+    $dest = $destinatario ?? '________________________';
+    $ci = $cedula ?? '—';
+    $fechaTxt = $fecha ?? now()->locale('es')->isoFormat('D [de] MMMM [de] YYYY');
+    $nroTxt = $nro ?? 'C-G-P ___';
+    $estacionTxt = $estacion ?? '________________';
+    $especificoTxt = $especifico ?? null;
+    $inicialesTxt = $iniciales ?? '';
+@endphp
 
-    <button class="no-print" onclick="window.print()">🖨️ Imprimir Radiograma</button>
+<div class="actions">
+    <button type="button" onclick="window.print()">Imprimir radiograma</button>
+</div>
 
-    <div class="page-simulation">
-        <div class="page-wrapper">
-            
-            <!-- COPIA 1 - ORIGINAL -->
-            <div class="radiograma-section">
-                <!-- Header con logo -->
+<div class="sheet">
+    @for ($copia = 1; $copia <= 2; $copia++)
+        <article class="radiograma">
+            <img src="{{ asset('images/icon/logo.png') }}" alt="" class="watermark">
+
+            <div class="content">
                 <div class="header">
-                    <img src="{{ asset('images/icon/logo.png') }}" alt="Logo" class="header-logo">
-                    <div class="header-title">
-                        <h2>Cuerpo de Policía del Estado Trujillo</h2>
-                        <p>Comando General</p>
+                    <div class="header-left">
+                        <img src="{{ asset('img/justicia.jpeg') }}" alt="Justicia y Paz" class="logo-md">
+                        <img src="{{ asset('images/icon/logo.png') }}" alt="CPET" class="logo-sm">
+                    </div>
+                    <p class="membrete">
+                        REPÚBLICA BOLIVARIANA DE VENEZUELA<br>
+                        PODER PÚBLICO ESTADAL<br>
+                        GOBIERNO BOLIVARIANO DEL ESTADO TRUJILLO<br>
+                        CUERPO DE POLICÍA DEL ESTADO TRUJILLO<br>
+                        DIRECCIÓN GENERAL DE POLICÍA<br>
+                        OFICINA DE TALENTO HUMANO
+                    </p>
+                    <div class="header-right">
+                        <img src="{{ asset('img/juntos.jpeg') }}" alt="Juntos por la Vida y la Paz" class="logo-lg">
                     </div>
                 </div>
 
-                <div class="document-type">ORIGINAL</div>
+                <p class="fecha">TRUJILLO, {{ $fechaTxt }}</p>
 
-                <div class="grid text-right">
-                    <span class="label">Trujillo, {{ \Carbon\Carbon::parse($oficial->fecha_inicio)->locale('es')->isoFormat('D [de] MMMM [del] YYYY') }}</span>
+                <p class="nro">RDGMA NRO. {{ $nroTxt }}</p>
+
+                <div class="destinatario">
+                    CIUDADANO (A):<br>
+                    {{ $dest }}<br>
+                    C.I. N {{ $ci }}<br>
+                    <div class="presente">PRESENTE;</div>
                 </div>
 
-                <div class="grid">
-                    <span class="label">RGDMA. Nro. C-G-P: </span>
-                    <span class="input-field">{{ str_pad($oficial->id, 3, '0', STR_PAD_LEFT) }}-{{ \Carbon\Carbon::parse($oficial->fecha_inicio)->format('Y') }}</span>
+                <p class="cuerpo">
+                    PARA SU CONOCIMIENTO Y DEMÁS FINES DE ESTRICTO CUMPLIMIENTO, A PARTIR DE LA PRESENTE FECHA,
+                    PRESTARÁ SU SERVICIO EN:
+                    <span class="destacado">{{ $estacionTxt }}</span>@if($especificoTxt),
+                    ESPECÍFICAMENTE EN <span class="destacado">{{ $especificoTxt }}</span>@endif.
+                    IGUALMENTE HAGO DE SU CONOCIMIENTO QUE DEBERÁ PRESENTARSE EN SU UNIDAD DE DESTINO.
+                </p>
+
+                <p class="cumplase">CÚMPLASE:</p>
+
+                <div class="firma">
+                    <p class="nombre">{{ mb_strtoupper($rrhhNombre) }}</p>
+                    <p class="cargo">
+                        DIRECTOR DE LA OFICINA DE TALENTO HUMANO DE LA DIRECCIÓN GENERAL<br>
+                        DEL CUERPO DE POLICÍA DEL ESTADO TRUJILLO
+                    </p>
                 </div>
 
-                <div class="grid">
-                    <div><span class="label">Ciudadano(a)</span></div>
-                    <div><span class="label">{{ ($oficial->oficiale->oficiales_cargos->where('is_actual', 1)->first() != null) ? $oficial->oficiale->oficiales_cargos->where('is_actual', 1)->first()->cargo->nombre_cargo : "Sin Cargo" }}</span></div>
-                    <div class="flex-between">
-                        <span class="label">{{ strtoupper($oficial->oficiale->nombre_completo) }}</span> 
-                        <span class="label">C.I.N: {{ number_format($oficial->oficiale->documento_identidad, 0, '', '.') }}</span>
-                    </div>
-                </div>
-
-                <div class="grid">
-                    <span class="label">Presente:</span>
-                </div>
-
-                <div class="grid">
-                    <span class="input-field">
-                        PARA SU CONOCIMIENTO Y DEMÁS FINES DE ESTRICTO CUMPLIMIENTO, A PARTIR DE LA PRESENTE FECHA, 
-                        PRESTARÁ SU SERVICIO EN {{ strtoupper($oficial->estacione->estacion) }}
-                        @if($oficial->descripcion), {{ strtoupper($oficial->descripcion) }}@endif, 
-                        POR DISPOSICIÓN DEL COMANDO SUPERIOR. IGUALMENTE HAGO DE SU CONOCIMIENTO QUE DEBERÁ 
-                        PRESENTARSE EN SU UNIDAD DE DESTINO.
-                    </span>
-                </div>
-
-                <div class="signature-row">
-                    <div class="signature-box">
-                        <div class="signature-line"></div>
-                        <span class="signature-label">Recibido por</span>
-                    </div>
-                    <div class="signature-box">
-                        <div class="signature-line"></div>
-                        <span class="signature-label">Firma y Sello Autorizado</span>
-                    </div>
-                </div>
+                @if ($inicialesTxt !== '')
+                    <div class="iniciales">{{ $inicialesTxt }}</div>
+                @endif
             </div>
-
-            <!-- LÍNEA DE CORTE -->
-            <div class="divider">
-                <span>✂ Corte por aquí</span>
-            </div>
-
-            <!-- COPIA 2 - DUPLICADO -->
-            <div class="radiograma-section">
-                <!-- Header con logo -->
-                <div class="header">
-                    <img src="{{ asset('images/icon/logo.png') }}" alt="Logo" class="header-logo">
-                    <div class="header-title">
-                        <h2>Cuerpo de Policía del Estado Trujillo</h2>
-                        <p>Comando General</p>
-                    </div>
-                </div>
-
-                <div class="document-type">Copia</div>
-
-                <div class="grid text-right">
-                    <span class="label">Trujillo, {{ \Carbon\Carbon::parse($oficial->fecha_inicio)->locale('es')->isoFormat('D [de] MMMM [del] YYYY') }}</span>
-                </div>
-
-                <div class="grid">
-                    <span class="label">RGDMA. Nro. C-G-P: </span>
-                    <span class="input-field">{{ str_pad($oficial->id, 3, '0', STR_PAD_LEFT) }}-{{ \Carbon\Carbon::parse($oficial->fecha_inicio)->format('Y') }}</span>
-                </div>
-
-                <div class="grid">
-                    <div><span class="label">Ciudadano(a)</span></div>
-                    <div><span class="label">{{ ($oficial->oficiale->oficiales_cargos->where('is_actual', 1)->first() != null) ? $oficial->oficiale->oficiales_cargos->where('is_actual', 1)->first()->cargo->nombre_cargo : "Sin Cargo" }}</span></div>
-                    <div class="flex-between">
-                        <span class="label">{{ strtoupper($oficial->oficiale->nombre_completo) }}</span> 
-                        <span class="label">C.I.N: {{ number_format($oficial->oficiale->documento_identidad, 0, '', '.') }}</span>
-                    </div>
-                </div>
-
-                <div class="grid">
-                    <span class="label">Presente:</span>
-                </div>
-
-                <div class="grid">
-                    <span class="input-field">
-                        PARA SU CONOCIMIENTO Y DEMÁS FINES DE ESTRICTO CUMPLIMIENTO, A PARTIR DE LA PRESENTE FECHA, 
-                        PRESTARÁ SU SERVICIO EN {{ strtoupper($oficial->estacione->estacion) }}
-                        @if($oficial->descripcion), {{ strtoupper($oficial->descripcion) }}@endif, 
-                        POR DISPOSICIÓN DEL COMANDO SUPERIOR. IGUALMENTE HAGO DE SU CONOCIMIENTO QUE DEBERÁ 
-                        PRESENTARSE EN SU UNIDAD DE DESTINO.
-                    </span>
-                </div>
-
-                <div class="signature-row">
-                    <div class="signature-box">
-                        <div class="signature-line"></div>
-                        <span class="signature-label">Recibido por</span>
-                    </div>
-                    <div class="signature-box">
-                        <div class="signature-line"></div>
-                        <span class="signature-label">Firma y Sello Autorizado</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <script>
-        // Auto-cerrar ventana después de imprimir (opcional)
-        window.onafterprint = function() {
-            // window.close(); // Descomenta si deseas cerrar automáticamente
-        };
-    </script>
-
+        </article>
+    @endfor
+</div>
 </body>
 </html>

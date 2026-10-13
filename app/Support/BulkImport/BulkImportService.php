@@ -1490,6 +1490,12 @@ class BulkImportService
                 'is_actual' => $isActual ? 1 : 0,
                 'descripcion' => $descripcion !== '' ? $descripcion : null,
             ]);
+
+            // Alinea cargo administrativo y estación de servicio del funcionario.
+            $oficial->update([
+                'cargo_administrativo_id' => $tipo->id,
+                'id_estacion_servicio' => $estacion->id,
+            ]);
         }, "Nombramiento {$tipo->nombre_cargo} en estación {$estacion->estacion} con la misma fecha de inicio ya existe");
     }
 

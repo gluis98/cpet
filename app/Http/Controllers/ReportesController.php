@@ -177,19 +177,48 @@ class ReportesController extends Controller
 
     public function radiogram($id)
     {
-        $oficial = OficialesRadiograma::findOrFail($id);
-        $anio = Carbon::parse($oficial->fecha_emision)->format('Y');
-        $dias = 0;
-        $fechaInicio = Carbon::parse($oficial->fecha_emision);
-        $fechaFin = isset($oficial->fecha_reintegro) ? Carbon::parse($oficial->fecha_reintegro) : Carbon::now();
-        while ($fechaInicio->lte($fechaFin)) {
-            if ($fechaInicio->isWeekday()) {
-                $dias++;
-            }
-            $fechaInicio->addDay();
-        }
-        $dias_habiles = $dias;
-        return view('admin.reports.radiogram', ['oficial' => $oficial, 'title' => '', 'tipo' => 'VACACIONES DEL AÑO ' . $anio . " CON " . $dias_habiles . " DÍAS HÁBILES", 'entidad' => $this->entidad()]);
+        $radiograma = OficialesRadiograma::with([
+            'estacione',
+            'oficiale.oficiales_cargos' => function ($q) {
+                $q->where('is_actual', 1)->with('cargo');
+            },
+            'oficiale.cargos_administrativo',
+        ])->findOrFail($id);
+
+        $funcionario = $radiograma->oficiale;
+        $entidad = $this->entidad();
+        $rrhh = trim((string) ($entidad->rrhh ?? '')) ?: '________________________';
+
+        $jerarquia = optional(optional($funcionario?->oficiales_cargos->first())->cargo)->nombre_cargo;
+        $cargoAdmin = optional($funcionario?->cargos_administrativo)->nombre_cargo;
+        $rango = $jerarquia ?: $cargoAdmin;
+
+        $destinatario = trim(implode(' ', array_filter([
+            $rango ? mb_strtoupper($rango).' (CPET)' : null,
+            $funcionario?->nombre_completo ? mb_strtoupper($funcionario->nombre_completo) : null,
+        ])));
+
+        $fecha = $radiograma->fecha_inicio
+            ? Carbon::parse($radiograma->fecha_inicio)->locale('es')->isoFormat('D [de] MMMM [de] YYYY')
+            : Carbon::now()->locale('es')->isoFormat('D [de] MMMM [de] YYYY');
+
+        $nro = 'C-G-P '.str_pad((string) $radiograma->id, 3, '0', STR_PAD_LEFT);
+        $estacion = optional($radiograma->estacione)->estacion ?: '________________';
+        $especifico = trim((string) ($radiograma->descripcion ?? ''));
+
+        return view('admin.reports.radiogram', [
+            'radiograma' => $radiograma,
+            'funcionario' => $funcionario,
+            'entidad' => $entidad,
+            'rrhh' => $rrhh,
+            'destinatario' => $destinatario !== '' ? $destinatario : '________________________',
+            'cedula' => $funcionario?->documento_identidad ?? '—',
+            'fecha' => $fecha,
+            'nro' => $nro,
+            'estacion' => mb_strtoupper($estacion),
+            'especifico' => $especifico !== '' ? mb_strtoupper($especifico) : null,
+            'iniciales' => $this->inicialesDocumento($rrhh),
+        ]);
     }
 
     public function card(Request $request)

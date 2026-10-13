@@ -13,6 +13,8 @@ class OfficersIcapController extends Controller
     {
         return response()->json(
             OficialesIcapExpediente::where('id_policia', $id)
+                ->orderByRaw('fecha IS NULL')
+                ->orderByDesc('fecha')
                 ->orderByDesc('id')
                 ->get(),
             200
@@ -99,16 +101,22 @@ class OfficersIcapController extends Controller
     private function validatedExpediente(Request $request, bool $creating): array
     {
         $rules = [
-            'causa' => ['nullable', 'string'],
-            'resulta' => ['nullable', 'string'],
-            'culminacion_proceso' => ['nullable', 'string'],
+            'expediente' => ['required', 'string', 'max:255'],
+            'fecha' => ['required', 'date'],
+            'causa' => ['required', 'string'],
+            'tipo_sancion' => ['required', 'string', 'max:255'],
+            'decision' => ['required', 'string'],
         ];
 
         if ($creating) {
             $rules['id_policia'] = ['required', 'integer'];
         }
 
-        return $request->validate($rules);
+        $data = $request->validate($rules);
+        $data['expediente'] = trim($data['expediente']);
+        $data['tipo_sancion'] = trim($data['tipo_sancion']);
+
+        return $data;
     }
 
     private function validatedSobreviviente(Request $request, bool $creating): array

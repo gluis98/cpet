@@ -12,13 +12,16 @@ class OficialesIcapExpediente extends Model
 
     protected $casts = [
         'id_policia' => 'int',
+        'fecha' => 'date',
     ];
 
     protected $fillable = [
         'id_policia',
+        'expediente',
+        'fecha',
         'causa',
-        'resulta',
-        'culminacion_proceso',
+        'tipo_sancion',
+        'decision',
     ];
 
     public function oficiale()

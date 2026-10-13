@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Oficiale;
 use App\Models\OficialesNombramiento;
 use Illuminate\Http\Request;
 
@@ -33,6 +34,8 @@ class OfficersNombramientosController extends Controller
                 ->update(['is_actual' => 0]);
         }
 
+        $this->syncOficialDesdeNombramiento($row);
+
         return response()->json(['msj' => 'Registro realizado con éxito.'], 201);
     }
 
@@ -48,6 +51,7 @@ class OfficersNombramientosController extends Controller
     {
         $row = OficialesNombramiento::findOrFail($id);
         $row->update($this->payload($request, $row));
+        $row->refresh();
 
         if ((int) $row->is_actual === 1) {
             OficialesNombramiento::query()
@@ -55,6 +59,8 @@ class OfficersNombramientosController extends Controller
                 ->where('id', '!=', $row->id)
                 ->update(['is_actual' => 0]);
         }
+
+        $this->syncOficialDesdeNombramiento($row);
 
         return response()->json(['msj' => 'Registro actualizado con éxito.'], 200);
     }
@@ -64,6 +70,20 @@ class OfficersNombramientosController extends Controller
         OficialesNombramiento::destroy($id);
 
         return response()->json(['msj' => 'Registro eliminado con éxito.'], 200);
+    }
+
+    /**
+     * Actualiza cargo administrativo y estación de servicio del funcionario
+     * para que coincidan con el nombramiento seleccionado.
+     */
+    private function syncOficialDesdeNombramiento(OficialesNombramiento $row): void
+    {
+        Oficiale::query()
+            ->where('id', $row->id_policia)
+            ->update([
+                'cargo_administrativo_id' => $row->id_tipo_nombramiento,
+                'id_estacion_servicio' => $row->id_estacion,
+            ]);
     }
 
     private function payload(Request $request, ?OficialesNombramiento $existing = null): array

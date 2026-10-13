@@ -80,17 +80,37 @@
                     </div>
 
                     <div id="fields-expediente">
-                        <div class="form-group">
-                            <label class="form-label" for="causa">Causa</label>
-                            <textarea class="form-control" id="causa" name="causa" rows="4"></textarea>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label class="form-label" for="expediente">Expediente *</label>
+                                <input type="text" class="form-control" id="expediente" name="expediente" placeholder="Nº de expediente" required>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="form-label" for="fecha">Fecha *</label>
+                                <input type="date" class="form-control" id="fecha" name="fecha" required>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="resulta_exp">Resulta</label>
-                            <textarea class="form-control" id="resulta_exp" name="resulta" rows="4"></textarea>
+                            <label class="form-label" for="causa">Causa *</label>
+                            <textarea class="form-control" id="causa" name="causa" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tipo_sancion">Tipo de sanción *</label>
+                            <select class="form-control" id="tipo_sancion" name="tipo_sancion" required>
+                                <option value="">--- SELECCIONE ---</option>
+                                <option value="Amonestación verbal">Amonestación verbal</option>
+                                <option value="Amonestación escrita">Amonestación escrita</option>
+                                <option value="Suspensión">Suspensión</option>
+                                <option value="Multa">Multa</option>
+                                <option value="Destitución">Destitución</option>
+                                <option value="Separación del cargo">Separación del cargo</option>
+                                <option value="Absuelto / Sin sanción">Absuelto / Sin sanción</option>
+                                <option value="Otro">Otro</option>
+                            </select>
                         </div>
                         <div class="form-group mb-0">
-                            <label class="form-label" for="culminacion_proceso_exp">Culminación del proceso</label>
-                            <textarea class="form-control" id="culminacion_proceso_exp" name="culminacion_proceso" rows="4"></textarea>
+                            <label class="form-label" for="decision">Decisión *</label>
+                            <textarea class="form-control" id="decision" name="decision" rows="3" required></textarea>
                         </div>
                     </div>
 
@@ -240,14 +260,18 @@ $(document).ready(function () {
         formData.append('id_policia', '{{ $id }}');
 
         if (currentTab === 'expedientes') {
-            formData.set('resulta', $('#resulta_exp').val() || '');
-            formData.set('culminacion_proceso', $('#culminacion_proceso_exp').val() || '');
             formData.delete('observaciones');
             formData.delete('copia_digitalizada');
+            formData.delete('resulta');
+            formData.delete('culminacion_proceso');
         } else {
             formData.set('resulta', $('#resulta_sob').val() || '');
             formData.set('culminacion_proceso', $('#culminacion_proceso_sob').val() || '');
+            formData.delete('expediente');
+            formData.delete('fecha');
             formData.delete('causa');
+            formData.delete('tipo_sancion');
+            formData.delete('decision');
         }
 
         return formData;
@@ -265,7 +289,9 @@ $(document).ready(function () {
                 CpetModule.afterSave({ message: data.msj, refresh: loadAll });
             })
             .catch(err => {
-                const msg = err?.message || 'Error al guardar';
+                const msg = err?.errors
+                    ? Object.values(err.errors).flat().join('\n')
+                    : (err?.message || 'Error al guardar');
                 Swal.fire({ icon: 'error', title: 'Error', text: msg });
             });
     });
@@ -291,7 +317,10 @@ $(document).ready(function () {
                 });
             })
             .catch(err => {
-                Swal.fire({ icon: 'error', title: 'Error', text: err?.message || 'Error al actualizar' });
+                const msg = err?.errors
+                    ? Object.values(err.errors).flat().join('\n')
+                    : (err?.message || 'Error al actualizar');
+                Swal.fire({ icon: 'error', title: 'Error', text: msg });
             });
     });
 
@@ -303,9 +332,15 @@ $(document).ready(function () {
             .then(data => {
                 id = data.id;
                 if (currentTab === 'expedientes') {
+                    $('#expediente').val(data.expediente || '');
+                    $('#fecha').val(data.fecha ? String(data.fecha).substr(0, 10) : '');
                     $('#causa').val(data.causa || '');
-                    $('#resulta_exp').val(data.resulta || '');
-                    $('#culminacion_proceso_exp').val(data.culminacion_proceso || '');
+                    var tipo = data.tipo_sancion || '';
+                    if (tipo && !$('#tipo_sancion option[value="' + tipo.replace(/"/g, '\\"') + '"]').length) {
+                        $('#tipo_sancion').append($('<option>', { value: tipo, text: tipo }));
+                    }
+                    $('#tipo_sancion').val(tipo).trigger('change');
+                    $('#decision').val(data.decision || '');
                 } else {
                     $('#observaciones').val(data.observaciones || '');
                     $('#resulta_sob').val(data.resulta || '');
@@ -359,18 +394,25 @@ $(document).ready(function () {
             html = `<div class="text-center text-muted py-5">No hay registros en esta pestaña</div>`;
         } else if (currentTab === 'expedientes') {
             data.forEach(e => {
+                const titulo = e.expediente ? String(e.expediente) : ('Expediente #' + e.id);
+                const fechaTxt = e.fecha ? String(e.fecha).substr(0, 10) : 'Sin fecha';
                 html += `
                 <div class="icap-card">
                     <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h5 class="mb-0 font-weight-bold">Expediente #${e.id}</h5>
+                        <div>
+                            <h5 class="mb-0 font-weight-bold">${titulo}</h5>
+                            <small class="text-muted">${fechaTxt}</small>
+                        </div>
                         <div>
                             <button class="btn btn-dark btn-sm edit" data-id="${e.id}"><i class="fas fa-edit"></i></button>
                             <button class="btn btn-danger btn-sm delete" data-id="${e.id}"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
+                    ${fieldBlock('Expediente', e.expediente)}
+                    ${fieldBlock('Fecha', fechaTxt)}
                     ${fieldBlock('Causa', e.causa)}
-                    ${fieldBlock('Resulta', e.resulta)}
-                    ${fieldBlock('Culminación del proceso', e.culminacion_proceso)}
+                    ${fieldBlock('Tipo de sanción', e.tipo_sancion)}
+                    ${fieldBlock('Decisión', e.decision)}
                 </div>`;
             });
         } else {

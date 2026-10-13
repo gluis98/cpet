@@ -62,14 +62,14 @@
     @media print {
         @page {
             size: A4 portrait;
-            margin: 7mm;
+            margin: 8mm 9mm;
         }
 
         html, body {
             background: #fff !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
-            font-size: 8.5pt;
+            font-size: 11pt;
             color: #0f172a;
         }
 
@@ -104,19 +104,55 @@
             display: block !important;
         }
 
+        .print-header {
+            display: flex;
+            align-items: center;
+            gap: 4mm;
+            margin-bottom: 3.5mm;
+            padding-bottom: 2.5mm;
+            border-bottom: 1.6pt solid #1a3a5c;
+        }
+
+        .print-header .print-logo {
+            width: 18mm;
+            height: 18mm;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .print-header .print-membrete {
+            flex: 1;
+            margin: 0;
+            text-align: center;
+            font-size: 8.5pt;
+            font-weight: 700;
+            line-height: 1.3;
+            text-transform: uppercase;
+            color: #0a1a2e;
+        }
+
+        .print-header .print-doc-title {
+            margin: 1.5mm 0 0;
+            font-size: 11pt;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #1a3a5c;
+        }
+
         .print-top {
             display: grid;
-            grid-template-columns: 32mm 1fr;
-            gap: 3.5mm;
+            grid-template-columns: 34mm 1fr;
+            gap: 4mm;
             align-items: start;
-            margin-bottom: 3mm;
+            margin-bottom: 3.5mm;
             padding-bottom: 2.5mm;
-            border-bottom: 1.5pt solid #1a3a5c;
+            border-bottom: 1pt solid #94a3b8;
         }
 
         .print-photo {
-            width: 32mm;
-            height: 40mm;
+            width: 34mm;
+            height: 42mm;
             object-fit: cover;
             border: 1.2pt solid #1a3a5c;
             display: block;
@@ -124,32 +160,32 @@
         }
 
         .print-identity h1 {
-            margin: 0 0 1.5mm;
-            font-size: 13pt;
+            margin: 0 0 2mm;
+            font-size: 15pt;
             line-height: 1.15;
             color: #0a1a2e;
         }
 
         .print-identity .print-sub {
             margin: 0;
-            font-size: 8.5pt;
+            font-size: 10.5pt;
             color: #334155;
-            line-height: 1.35;
+            line-height: 1.4;
         }
 
         .print-identity .print-badges {
-            margin-top: 2mm;
+            margin-top: 2.5mm;
             display: flex;
             flex-wrap: wrap;
-            gap: 1.5mm;
+            gap: 1.8mm;
         }
 
         .print-badge {
             display: inline-block;
-            border: 0.7pt solid #1a3a5c;
+            border: 0.8pt solid #1a3a5c;
             border-radius: 2px;
-            padding: 0.6mm 1.8mm;
-            font-size: 7.5pt;
+            padding: 0.8mm 2mm;
+            font-size: 9pt;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.03em;
@@ -157,15 +193,15 @@
         }
 
         .print-block {
-            margin: 0 0 2.2mm;
+            margin: 0 0 2.8mm;
             page-break-inside: avoid;
             break-inside: avoid;
         }
 
         .print-block h2 {
-            margin: 0 0 1.2mm;
-            padding: 0.8mm 1.5mm;
-            font-size: 8pt;
+            margin: 0;
+            padding: 1.4mm 2mm;
+            font-size: 10pt;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -176,9 +212,9 @@
         .print-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 1mm 2.5mm;
-            padding: 1.2mm 1.5mm 1.5mm;
-            border: 0.7pt solid #cbd5e1;
+            gap: 1.6mm 3mm;
+            padding: 2mm 2.2mm 2.2mm;
+            border: 0.8pt solid #cbd5e1;
             border-top: 0;
         }
 
@@ -192,7 +228,7 @@
 
         .print-item {
             min-width: 0;
-            line-height: 1.2;
+            line-height: 1.25;
         }
 
         .print-item.span-2 { grid-column: span 2; }
@@ -202,25 +238,25 @@
 
         .print-item .k {
             display: block;
-            font-size: 6.2pt;
+            font-size: 8pt;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             color: #64748b;
-            margin-bottom: 0.2mm;
+            margin-bottom: 0.4mm;
         }
 
         .print-item .v {
             display: block;
-            font-size: 8pt;
+            font-size: 10.5pt;
             color: #0f172a;
             word-break: break-word;
         }
 
         .print-academy {
-            font-size: 7.5pt;
-            line-height: 1.25;
-            padding: 0.8mm 0;
+            font-size: 10pt;
+            line-height: 1.35;
+            padding: 1.2mm 0;
             border-bottom: 0.5pt dotted #cbd5e1;
         }
 
@@ -229,7 +265,7 @@
         .print-two-cols {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2.2mm;
+            gap: 2.5mm;
         }
 
         .print-two-cols .print-block { margin-bottom: 0; }
@@ -432,6 +468,20 @@
 
     {{-- Vista impresión (bloques compactos, una hoja) --}}
     <div class="ficha-print-sheet" id="ficha-print">
+        <div class="print-header">
+            <img class="print-logo" src="{{ asset('images/icon/logo.png') }}" alt="Logo CPET">
+            <div>
+                <p class="print-membrete">
+                    República Bolivariana de Venezuela<br>
+                    Gobierno Bolivariano del Estado Trujillo<br>
+                    Cuerpo de Policía del Estado Trujillo<br>
+                    Oficina de Talento Humano
+                </p>
+                <p class="print-doc-title">Ficha del funcionario</p>
+            </div>
+            <img class="print-logo" src="{{ asset('images/icon/gran-mision.png') }}" alt="Gran Misión">
+        </div>
+
         <div class="print-top">
             <img class="print-photo" src="{{ $foto }}" alt="Fotografía" onerror="this.src='{{ asset('images/oficial-icon.png') }}'">
             <div class="print-identity">
