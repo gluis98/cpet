@@ -308,7 +308,7 @@
                                         @foreach ([
                                             'talla_camisa' => 'Talla camisa',
                                             'talla_pantalon' => 'Talla pantalón',
-                                            'talla_zapato' => 'Talla zapatos',
+                                            'talla_zapatos' => 'Talla zapatos',
                                             'talla_saco' => 'Talla saco',
                                             'talla_kepin_toka' => 'Talla kepi / toka',
                                             'talla_tacon' => 'Talla tacón',

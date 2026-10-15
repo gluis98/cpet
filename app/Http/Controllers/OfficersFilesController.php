@@ -18,10 +18,19 @@ class OfficersFilesController extends Controller
      */
     public function index($id)
     {
-        return response()->json(
-            OficialesDocumento::where('id_policia', $id)->orderByDesc('id')->get(),
-            200
-        );
+        $docs = OficialesDocumento::where('id_policia', $id)
+            ->orderByDesc('id')
+            ->get()
+            ->map(function (OficialesDocumento $doc) {
+                $path = ltrim(str_replace('\\', '/', (string) $doc->archivo_url), '/');
+                $path = preg_replace('#^(public/|storage/)#i', '', $path) ?: $path;
+                $doc->archivo_url = $path;
+                $doc->url = url('media/'.$path);
+
+                return $doc;
+            });
+
+        return response()->json($docs, 200);
     }
 
     /**
@@ -92,10 +101,19 @@ class OfficersFilesController extends Controller
      */
     public function get_reposos($id)
     {
-        return response()->json(
-            OficialesSaludReposo::where('oficiales_salud_id', $id)->orderByDesc('id')->get(),
-            200
-        );
+        $rows = OficialesSaludReposo::where('oficiales_salud_id', $id)
+            ->orderByDesc('id')
+            ->get()
+            ->map(function (OficialesSaludReposo $row) {
+                $path = ltrim(str_replace('\\', '/', (string) $row->archivo), '/');
+                $path = preg_replace('#^(public/|storage/)#i', '', $path) ?: $path;
+                $row->archivo = $path;
+                $row->url = url('media/'.$path);
+
+                return $row;
+            });
+
+        return response()->json($rows, 200);
     }
 
     /**

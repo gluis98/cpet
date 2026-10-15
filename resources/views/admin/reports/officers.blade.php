@@ -179,7 +179,7 @@
             <td>{{$officer->tipo_sangre}}</td>
             <td>{{ $officer->talla_camisa ?? 'S/I' }}</td>
             <td>{{ $officer->talla_pantalon ?? 'S/I' }}</td>
-            <td>{{ $officer->talla_zapato ?? 'S/I' }}</td>
+            <td>{{ $officer->talla_zapatos ?? 'S/I' }}</td>
             <td>{{ $officer->talla_saco ?? 'S/I' }}</td>
             <td>{{ $officer->talla_kepin_toka ?? 'S/I' }}</td>
             <td>{{ $officer->talla_tacon ?? 'S/I' }}</td>

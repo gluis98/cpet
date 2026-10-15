@@ -154,7 +154,7 @@
         var id = "";
         var reposoDropzone = null;
         var reposoFilesApiBase = @json(url('api/officers/files/reposos'));
-        var storageBase = @json(public_asset('storage'));
+        var storageBase = @json(url('media'));
         index();
 
         $(document).on('cpet:refresh-table', index);

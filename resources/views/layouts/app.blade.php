@@ -17,9 +17,9 @@
     <link href="{{ public_asset('vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet">
     <link href="{{ public_asset('vendor/select2/select2.min.css') }}" rel="stylesheet">
     <link href="{{ public_asset('css/cpet-select2.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
 
     @include('partials.vite-assets')
     @yield('styles')
@@ -58,7 +58,7 @@
             <button type="button" id="sidebar-close" class="rounded-lg p-2 lg:hidden" aria-label="Cerrar menú">
                 <i class="fas fa-times"></i>
             </button>
-        </div>
+                </div>
 
         {{-- Usuario --}}
         <div class="relative z-10 mx-4 mb-3 rounded-2xl border border-white/10 bg-white/5 px-3.5 py-3 backdrop-blur-sm {{ request()->routeIs('profile.*') ? 'ring-1 ring-accent-400/40' : '' }}">
@@ -74,7 +74,7 @@
                     </a>
                 </div>
             </div>
-        </div>
+                </div>
 
         <nav class="relative z-10 flex-1 space-y-1 overflow-y-auto px-3 py-2 text-sm">
             <p class="sidebar-muted px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.14em]">Menú</p>
@@ -174,7 +174,7 @@
                                placeholder="Buscar cédula, credencial o nombre…"
                                class="w-full rounded-xl border border-slate-200 bg-slate-50/80 py-2.5 pl-10 pr-3 text-sm text-slate-800 shadow-inner outline-none transition focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-100">
                     </div>
-                </form>
+                    </form>
 
                 <div class="ml-auto flex shrink-0 items-center gap-2">
                     <button type="button" id="btn-bulk-import" title="Carga masiva"
@@ -214,11 +214,11 @@
                                 @endforelse
                             </div>
                             <a href="{{ route('home') }}" class="block border-t border-slate-100 px-4 py-2.5 text-center text-sm font-semibold text-brand-700 hover:bg-brand-50">Ver dashboard</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
         <div class="mt-4 border-b border-slate-200/50 bg-white/60 px-4 py-3 backdrop-blur-sm sm:mt-5 sm:px-6 lg:px-8">
             <nav class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
@@ -227,13 +227,13 @@
                     <span class="text-slate-300">/</span>
                     <span class="truncate font-medium text-slate-700">{{ $title }}</span>
                 @endif
-            </nav>
-        </div>
+                    </nav>
+                </div>
 
         <main class="flex-1 px-4 pb-6 pt-4 sm:px-6 sm:pt-5 lg:px-8">
             <div class="rounded-2xl border border-white/80 bg-white/95 p-5 shadow-[0_12px_40px_rgba(15,39,68,0.08)] ring-1 ring-slate-200/60 sm:p-7">
                 @yield('content')
-            </div>
+                            </div>
         </main>
 
         <footer class="px-4 py-5 text-center text-xs text-slate-500 sm:px-6 lg:px-8">
@@ -241,7 +241,7 @@
             <a href="https://www.instagram.com/adsyssystems/" target="_blank" rel="noopener" class="font-medium text-brand-700 hover:text-accent-600">Adsys Sistemas</a>
         </footer>
     </div>
-</div>
+    </div>
 
 @include('partials.reportes-modal')
 @include('partials.carga-masiva-modal')
@@ -256,18 +256,18 @@
 <script src="{{ public_asset('vendor/jszip/jszip.min.js') }}"></script>
 <script src="{{ public_asset('vendor/pdfmake/pdfmake.min.js') }}"></script>
 <script src="{{ public_asset('vendor/pdfmake/vfs_fonts.js') }}"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.0/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
 <script src="{{ public_asset('js/datatable-spanish.js') }}"></script>
 <script src="{{ public_asset('js/cpet-module-table.js') }}"></script>
 
-<script>
+    <script>
     var title = @json($title ?? '');
     window.leftImageBase64 = @json($leftImagePath ?? '');
 
@@ -328,7 +328,7 @@
             }
         });
     })();
-</script>
-@yield('scripts')
+    </script>
+    @yield('scripts')
 </body>
 </html>

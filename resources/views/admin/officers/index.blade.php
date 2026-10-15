@@ -66,7 +66,7 @@
         color: #64748b;
     }
     .officers-pager {
-        display: flex;
+            display: flex;
         flex-wrap: wrap;
         gap: .5rem;
         align-items: center;
@@ -92,10 +92,10 @@
     #officers-tbody tr { cursor: default; }
     #officers-loading {
         display: none;
-        text-align: center;
+            text-align: center;
         padding: 1.5rem;
         color: #64748b;
-    }
+        }
     #officers-loading.is-on { display: block; }
 </style>
 @endsection
@@ -104,25 +104,25 @@
 <div class="modal fade" id="modal-archivos" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content" style="width: 1000px !important; margin-left: -100px !important">
-            <div class="modal-header">
+        <div class="modal-header">
                 <h5 class="modal-title">Archivos del oficial</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
-            </div>
-            <div class="modal-body">
+        </div>
+        <div class="modal-body">
                 <div class="alert alert-info">
                     <p class="mb-0"><i class="fas fa-info-circle"></i> Sube y previsualiza los archivos del funcionario.</p>
                 </div>
                 <form class="dropzone" id="myDropzone" method="POST"></form>
                 <hr>
                 <div class="row cpet-file-gallery" id="archivos-index"></div>
-            </div>
+                    </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
 @if (session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
 @endif
@@ -134,12 +134,12 @@
         <p class="mt-1 text-sm text-slate-500">
             {{ $totalFuncionarios }} registrados · filtra por estatus
         </p>
-    </div>
+                    </div>
     <a class="btn btn-primary" href="{{ route('officers.form.create', $tipo) }}">
         <i class="fas fa-plus"></i> Nuevo {{ $tipoFuncionario }}
     </a>
-</div>
-
+                </div>
+                
 <div class="officers-table-panel overflow-visible rounded-2xl border border-slate-200 bg-white shadow-md shadow-slate-200/50">
     <div class="estatus-tabs-wrap border-b border-slate-200 bg-slate-50/80 px-2 pt-2 sm:px-3" role="tablist">
         <div class="flex min-w-max gap-1">
@@ -157,11 +157,11 @@
                         aria-selected="false">
                     <span>{{ $estatus }}</span>
                     <span class="estatus-tab__count">{{ $count }}</span>
-                </button>
+                    </button>
             @endforeach
-        </div>
-    </div>
-
+      </div>
+                    </div>
+                
     <div class="p-4 sm:p-5">
         <div class="officers-toolbar">
             <input type="search" id="officers-search" class="form-control" placeholder="Buscar cédula, nombre, placa, cargo…">
@@ -217,8 +217,9 @@
     Dropzone.autoDiscover = false;
 
     var apiBase = @json(url('api/officers'));
-    var storageBase = @json(public_asset('storage'));
+    var storageBase = @json(url('media'));
     var filesApiBase = @json(url('api/officers/files'));
+    var csrfToken = @json(csrf_token());
     var tipoFuncionario = @json($tipoFuncionario);
     var tipoSlug = @json($tipo);
     var placaSin = @json(\App\Models\Oficiale::PLACA_SIN_ASIGNAR);
@@ -467,14 +468,30 @@
                 officerDropzone.destroy();
                 officerDropzone = null;
             }
+            var $dz = $('#myDropzone');
+            $dz[0].className = 'dropzone';
+            $dz.html('');
             officerDropzone = new Dropzone('#myDropzone', {
                 url: filesApiBase + '/add-files/' + currentFilesId,
                 method: 'POST',
                 paramName: 'archivos',
                 maxFilesize: 10,
                 acceptedFiles: '.jpg,.jpeg,.png,.pdf',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
                 dictDefaultMessage: 'Arrastra los archivos aquí para subirlos',
-                success: function () { index_archivos(currentFilesId); }
+                success: function () { index_archivos(currentFilesId); },
+                error: function (file, message) {
+                    var msg = (typeof message === 'string')
+                        ? message
+                        : (message?.message || message?.error || 'Error al subir el archivo');
+                    if (window.Swal) {
+                        Swal.fire({ icon: 'error', title: 'No se pudo subir', text: msg });
+                    }
+                }
             });
             $('#modal-archivos').modal('show');
             index_archivos(currentFilesId);

@@ -45,6 +45,15 @@
     border-radius: 0.35rem;
 }
 
+/* Lightbox por encima del modal de archivos (Bootstrap 4 ~1050) */
+#cpet-file-lightbox {
+    z-index: 1080 !important;
+}
+
+body.modal-open .modal-backdrop.show:last-of-type {
+    z-index: 1075 !important;
+}
+
 .cpet-file-lightbox__content {
     background: #1a1a1a;
     color: #fff;

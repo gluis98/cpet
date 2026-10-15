@@ -407,7 +407,7 @@ class ReportesController extends Controller
             'estado_civil',
             'talla_camisa',
             'talla_pantalon',
-            'talla_zapato',
+            'talla_zapatos',
             'talla_saco',
             'talla_kepin_toka',
             'talla_tacon',

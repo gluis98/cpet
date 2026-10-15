@@ -167,7 +167,7 @@
           <li><strong>Tipado Sangre:</strong> {!! $officer->tipo_sangre ?? '<i>S/I</i>' !!}</li>
           <li><strong>Talla Camisa:</strong> {!! $officer->talla_camisa ?? '<i>S/I</i>' !!}</li>
           <li><strong>Talla Pantalón:</strong> {!! $officer->talla_pantalon ?? '<i>S/I</i>' !!}</li>
-          <li><strong>Talla Zapato:</strong> {!! $officer->talla_zapato ?? '<i>S/I</i>' !!}</li>
+          <li><strong>Talla Zapato:</strong> {!! $officer->talla_zapatos ?? '<i>S/I</i>' !!}</li>
           <li><strong>Talla Saco:</strong> {!! $officer->talla_saco ?? '<i>S/I</i>' !!}</li>
           <li><strong>Talla Kepin/Toka:</strong> {!! $officer->talla_kepin_toka ?? '<i>S/I</i>' !!}</li>
           <li><strong>Talla Tacón:</strong> {!! $officer->talla_tacon ?? '<i>S/I</i>' !!}</li>

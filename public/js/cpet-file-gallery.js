@@ -12,8 +12,23 @@
     var PDF_EXT = /\.pdf$/i;
 
     function fileUrl(storageBase, path) {
+        var raw = String(path || '').trim();
+        if (!raw) {
+            return '';
+        }
+
+        // URL absoluta o ruta /media ya lista.
+        if (/^https?:\/\//i.test(raw) || raw.indexOf('/media/') !== -1) {
+            return raw;
+        }
+
         var base = String(storageBase || '').replace(/\/$/, '');
-        var rel = String(path || '').replace(/^\//, '');
+        var rel = raw.replace(/^\//, '');
+
+        // Quita prefijos típicos de storage público.
+        rel = rel.replace(/^public\//i, '');
+        rel = rel.replace(/^storage\//i, '');
+
         return base + '/' + rel;
     }
 
@@ -96,7 +111,7 @@
     }
 
     function filePath(file) {
-        return file.archivo_url || file.archivo || '';
+        return file.url || file.archivo_url || file.archivo || '';
     }
 
     function renderLightbox() {
@@ -241,7 +256,12 @@
                 }
                 state.index = parseInt($(this).data('index'), 10) || 0;
                 renderLightbox();
-                $('#cpet-file-lightbox').modal('show');
+                var $lb = $('#cpet-file-lightbox');
+                // Asegura que el lightbox quede por encima del modal de archivos.
+                if ($lb.parent()[0] !== document.body) {
+                    $('body').append($lb.detach());
+                }
+                $lb.modal('show');
             });
         },
     };
