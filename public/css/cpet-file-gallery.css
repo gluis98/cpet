@@ -45,12 +45,12 @@
     border-radius: 0.35rem;
 }
 
-/* Lightbox por encima del modal de archivos (Bootstrap 4 ~1050) */
-#cpet-file-lightbox {
+/* Lightbox solo cuando está abierto (no elevar backdrops de otros modales) */
+#cpet-file-lightbox.show {
     z-index: 1080 !important;
 }
 
-body.modal-open .modal-backdrop.show:last-of-type {
+body.modal-open:has(#cpet-file-lightbox.show) .modal-backdrop.show:last-of-type {
     z-index: 1075 !important;
 }
 

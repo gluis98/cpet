@@ -261,6 +261,11 @@
                 if ($lb.parent()[0] !== document.body) {
                     $('body').append($lb.detach());
                 }
+                $lb.off('shown.bs.modal.cpetLb').on('shown.bs.modal.cpetLb', function () {
+                    var z = 1080;
+                    $lb.css('z-index', z);
+                    $('.modal-backdrop').last().css('z-index', z - 1);
+                });
                 $lb.modal('show');
             });
         },

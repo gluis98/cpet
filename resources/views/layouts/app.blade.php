@@ -318,6 +318,18 @@
             if (this.parentElement !== document.body) {
                 document.body.appendChild(this);
             }
+            // No heredar z-index altos del lightbox de archivos
+            if (this.id !== 'cpet-file-lightbox') {
+                $(this).css('z-index', '');
+            }
+        });
+
+        $(document).on('shown.bs.modal', '.modal', function () {
+            if (this.id === 'cpet-file-lightbox') {
+                return;
+            }
+            // Backdrop normal por debajo del modal (1050 / 1040 en Bootstrap 4)
+            $('.modal-backdrop').last().css('z-index', '');
         });
 
         // Bootstrap 4 bloquea el foco fuera del .modal; SweetAlert2 se renderiza en body.
