@@ -33,7 +33,9 @@ class VacacionesPeriodos
     }
 
     /**
-     * Número de año de servicio que representa un periodo (1 = primer año).
+     * Número de año vacacional que representa un periodo (1 = primera vacación).
+     * La primera vacación se otorga al año siguiente del ingreso
+     * (ingreso 1998 → periodo 1999 = año 1).
      */
     public static function anioServicioDePeriodo(?Oficiale $oficial, ?int $periodo): ?int
     {
@@ -42,15 +44,16 @@ class VacacionesPeriodos
         }
 
         $ingresoYear = (int) Carbon::parse($oficial->fecha_ingreso)->format('Y');
-        $n = (int) $periodo - $ingresoYear + 1;
+        // Año de ingreso no genera vacaciones; el siguiente es el año 1.
+        $n = (int) $periodo - $ingresoYear;
 
         return $n >= 1 ? $n : null;
     }
 
     /**
      * Días de vacaciones que corresponden según años de servicio y tipo de funcionario.
-     * Policial / Administrativo: 15 el 1.er año, +1 por año (máx. 30).
-     * Obrero: 18 el 1.er año, +1 por año (máx. 30).
+     * Policial / Administrativo: 15 en la 1.ª vacación (año siguiente al ingreso), +1 por año (máx. 30).
+     * Obrero: 18 en la 1.ª vacación, +1 por año (máx. 30).
      * No se persiste en BD; solo cálculo en memoria.
      */
     public static function diasCorrespondientes(?Oficiale $oficial, ?int $periodo = null): ?int
