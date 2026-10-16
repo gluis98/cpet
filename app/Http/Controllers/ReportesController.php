@@ -45,16 +45,22 @@ class ReportesController extends Controller
         $funcionario = $vacacion->oficiale;
         $periodo = VacacionesPeriodos::anioDe($vacacion)
             ?? (int) Carbon::parse($vacacion->fecha_emision)->format('Y');
-        $dias = 0;
+
+        $diasCorrespondientes = VacacionesPeriodos::diasCorrespondientes($funcionario, $periodo);
+        $diasHabiles = 0;
         $fechaInicio = Carbon::parse($vacacion->fecha_emision);
         $fechaFinRaw = $vacacion->fecha_hasta ?? $vacacion->fecha_reintegro;
         $fechaFin = $fechaFinRaw ? Carbon::parse($fechaFinRaw) : Carbon::now();
         while ($fechaInicio->lte($fechaFin)) {
             if ($fechaInicio->isWeekday()) {
-                $dias++;
+                $diasHabiles++;
             }
             $fechaInicio->addDay();
         }
+
+        $diasTxt = $diasCorrespondientes !== null
+            ? $diasCorrespondientes.' DÍAS CORRESPONDIENTES'
+            : $diasHabiles.' DÍAS HÁBILES';
 
         $periodos = $this->periodosVacacionesPlanilla($funcionario);
 
@@ -72,7 +78,7 @@ class ReportesController extends Controller
             'oficial' => $vacacion,
             'funcionario' => $funcionario,
             'title' => 'BOLETA DE VACACIONES',
-            'tipo' => 'VACACIONES DEL PERIODO '.$periodo.' CON '.$dias.' DÍAS HÁBILES',
+            'tipo' => 'VACACIONES DEL PERIODO '.$periodo.' CON '.$diasTxt,
             'periodo' => $periodo,
             'estacion' => $estacion,
             'entidad' => $this->entidad(),
@@ -300,16 +306,44 @@ class ReportesController extends Controller
                 'oficiales_familiares' => fn ($q) => $this->applyFamiliaresReportFilters($q, $request),
                 'oficiales_familiares.discapacidade',
             ])
+            ->withCount([
+                'oficiales_familiares as hijos_count' => fn ($q) => $q->where('parentesco', 'Hijo(a)'),
+            ])
             ->whereHas('oficiales_familiares', fn ($q) => $this->applyFamiliaresReportFilters($q, $request))
             ->orderBy('nombre_completo');
 
         $oficiales = $query->get();
-        $totalFamiliares = $oficiales->sum(fn ($o) => $o->oficiales_familiares->count());
+
+        $totalesPorParentesco = [];
+        foreach ($oficiales as $oficial) {
+            foreach ($oficial->oficiales_familiares as $familiar) {
+                $key = trim((string) ($familiar->parentesco ?: 'Sin parentesco'));
+                $totalesPorParentesco[$key] = ($totalesPorParentesco[$key] ?? 0) + 1;
+            }
+        }
+        ksort($totalesPorParentesco, SORT_NATURAL | SORT_FLAG_CASE);
+
+        $etiquetas = [
+            'Hijo(a)' => 'Total hijos',
+            'Padre' => 'Total padres',
+            'Madre' => 'Total madres',
+            'Esposo(a)' => 'Total esposos(as)',
+        ];
+
+        $totalesEtiquetados = [];
+        foreach ($totalesPorParentesco as $parentesco => $total) {
+            $totalesEtiquetados[] = [
+                'label' => $etiquetas[$parentesco] ?? ('Total '.$parentesco),
+                'total' => $total,
+                'parentesco' => $parentesco,
+            ];
+        }
 
         return view('admin.reports.familly', [
             'oficiales' => $oficiales,
             'filtros' => $this->describeFamiliaresFilters($request),
-            'totalFamiliares' => $totalFamiliares,
+            'totalesPorParentesco' => $totalesEtiquetados,
+            'totalFamiliares' => array_sum($totalesPorParentesco),
             'entidad' => $this->entidad(),
         ]);
     }

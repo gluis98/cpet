@@ -206,6 +206,23 @@
             border-radius: 999px;
         }
 
+        .officer-block__meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hijos-hint {
+            font-size: 0.75rem;
+            color: var(--slate-500);
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -319,10 +336,17 @@
                         <strong>{{ $oficiales->count() }}</strong>
                         Funcionarios
                     </div>
-                    <div class="stat">
-                        <strong>{{ $totalFamiliares }}</strong>
-                        Familiares
-                    </div>
+                    @forelse ($totalesPorParentesco ?? [] as $tot)
+                        <div class="stat">
+                            <strong>{{ $tot['total'] }}</strong>
+                            {{ $tot['label'] }}
+                        </div>
+                    @empty
+                        <div class="stat">
+                            <strong>0</strong>
+                            Sin familiares
+                        </div>
+                    @endforelse
                 </div>
             </div>
             @if (! empty($filtros))
@@ -346,7 +370,10 @@
                             <h2>{{ $officer->nombre_completo }}</h2>
                             <span>Cédula: {{ $officer->documento_identidad }}</span>
                         </div>
-                        <span class="badge-count">{{ $officer->oficiales_familiares->count() }} familiar(es)</span>
+                        <div class="officer-block__meta">
+                            <span class="hijos-hint">{{ (int) ($officer->hijos_count ?? 0) }} hijo(s)</span>
+                            <span class="badge-count">{{ $officer->oficiales_familiares->count() }} familiar(es)</span>
+                        </div>
                     </div>
                     <table>
                         <thead>

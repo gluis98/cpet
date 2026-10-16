@@ -25,15 +25,18 @@ class OfficersVacationsController extends Controller
             ->orderByDesc('id')
             ->get();
 
+        $vacaciones = VacacionesPeriodos::conDiasCorrespondientes($oficial, $vacaciones);
         $resumen = VacacionesPeriodos::resumen($oficial, $vacaciones);
 
         return response()->json([
-            'data' => $vacaciones,
+            'data' => $vacaciones->values(),
             'counts' => [
                 'anios_servicio' => $resumen['anios_servicio'],
                 'disfrutadas' => $resumen['disfrutadas'],
                 'vencidas' => $resumen['vencidas'],
                 'total' => $resumen['total'],
+                'dias_base' => VacacionesPeriodos::diasBase($oficial?->tipo_funcionario),
+                'tipo_funcionario' => $oficial?->tipo_funcionario,
             ],
         ], 200);
     }

@@ -9,6 +9,14 @@ use Illuminate\Support\Collection;
 
 class VacacionesPeriodos
 {
+    /** Días base el primer año según tipo de funcionario. */
+    public static function diasBase(?string $tipoFuncionario): int
+    {
+        $tipo = mb_strtolower(trim((string) $tipoFuncionario));
+
+        return $tipo === 'obrero' ? 18 : 15;
+    }
+
     /**
      * Años de servicio (máximo de periodos vacacionales: 1 por año).
      */
@@ -22,6 +30,58 @@ class VacacionesPeriodos
         $hoy = Carbon::today();
 
         return max(0, (int) $hoy->year - (int) $ingreso->year);
+    }
+
+    /**
+     * Número de año de servicio que representa un periodo (1 = primer año).
+     */
+    public static function anioServicioDePeriodo(?Oficiale $oficial, ?int $periodo): ?int
+    {
+        if (! $oficial?->fecha_ingreso || ! $periodo) {
+            return null;
+        }
+
+        $ingresoYear = (int) Carbon::parse($oficial->fecha_ingreso)->format('Y');
+        $n = (int) $periodo - $ingresoYear + 1;
+
+        return $n >= 1 ? $n : null;
+    }
+
+    /**
+     * Días de vacaciones que corresponden según años de servicio y tipo de funcionario.
+     * Policial / Administrativo: 15 el 1.er año, +1 por año (máx. 30).
+     * Obrero: 18 el 1.er año, +1 por año (máx. 30).
+     * No se persiste en BD; solo cálculo en memoria.
+     */
+    public static function diasCorrespondientes(?Oficiale $oficial, ?int $periodo = null): ?int
+    {
+        $periodo ??= (int) Carbon::now()->format('Y');
+        $anioN = self::anioServicioDePeriodo($oficial, $periodo);
+        if ($anioN === null) {
+            return null;
+        }
+
+        $base = self::diasBase($oficial?->tipo_funcionario);
+        $dias = $base + ($anioN - 1);
+
+        return min(30, max($base, $dias));
+    }
+
+    /**
+     * Adjunta dias_correspondientes a cada vacación (atributo dinámico, no columna).
+     *
+     * @param  Collection<int, OficialesVacacione>  $vacaciones
+     * @return Collection<int, OficialesVacacione>
+     */
+    public static function conDiasCorrespondientes(?Oficiale $oficial, Collection $vacaciones): Collection
+    {
+        return $vacaciones->map(function (OficialesVacacione $v) use ($oficial) {
+            $periodo = self::anioDe($v);
+            $v->setAttribute('dias_correspondientes', self::diasCorrespondientes($oficial, $periodo));
+            $v->setAttribute('anio_servicio', self::anioServicioDePeriodo($oficial, $periodo));
+
+            return $v;
+        });
     }
 
     public static function anioDe(?OficialesVacacione $v): ?int

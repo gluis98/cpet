@@ -171,6 +171,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">Periodo</th>
+                            <th class="text-center">Días correspondientes</th>
                             <th class="text-center">Fecha de emisión</th>
                             <th class="text-center">Hasta</th>
                             <th class="text-center">Fecha de reintegro</th>
@@ -327,12 +328,15 @@ $(document).ready(function () {
         var template = '';
         rows.forEach(function (e) {
             var periodo = e.periodo || (e.fecha_emision ? String(e.fecha_emision).substr(0, 4) : 'S/P');
+            var dias = e.dias_correspondientes != null ? e.dias_correspondientes : '—';
+            var anioServ = e.anio_servicio != null ? (' <small class="text-muted">(año ' + e.anio_servicio + ')</small>') : '';
             var emision = e.fecha_emision ? String(e.fecha_emision).substr(0, 10) : 'S/F';
             var hasta = e.fecha_hasta ? String(e.fecha_hasta).substr(0, 10) : 'S/F';
             var reintegro = e.fecha_reintegro ? String(e.fecha_reintegro).substr(0, 10) : 'S/F';
             template += `
                 <tr>
                     <td class="text-center"><strong>${periodo}</strong></td>
+                    <td class="text-center"><strong>${dias}</strong>${anioServ}</td>
                     <td class="text-center">${emision}</td>
                     <td class="text-center">${hasta}</td>
                     <td class="text-center">${reintegro}</td>
@@ -346,9 +350,9 @@ $(document).ready(function () {
                 </tr>`;
         });
 
-        CpetModule.refreshDataTable('#vacaciones-table', template || '<tr><td colspan="7" class="text-center text-muted">Sin registros</td></tr>', {
+        CpetModule.refreshDataTable('#vacaciones-table', template || '<tr><td colspan="8" class="text-center text-muted">Sin registros</td></tr>', {
             order: [[0, 'desc']],
-            columnDefs: [{ orderable: false, targets: 6 }]
+            columnDefs: [{ orderable: false, targets: 7 }]
         });
     }
 

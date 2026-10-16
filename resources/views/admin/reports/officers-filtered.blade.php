@@ -18,17 +18,64 @@
         .actions { text-align: center; margin-bottom: 14px; }
         .actions button { border: 0; background: #1a4574; color: #fff; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; }
         .empty { text-align: center; padding: 24px; color: #64748b; }
+        .totales {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 0 0 16px;
+        }
+        .total-card {
+            background: #eef4fb;
+            border: 1px solid #d4e3f4;
+            border-radius: 10px;
+            padding: 10px 16px;
+            min-width: 140px;
+        }
+        .total-card strong {
+            display: block;
+            font-size: 1.35rem;
+            color: #1a4574;
+            line-height: 1.2;
+        }
+        .total-card span {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .totales-footer {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: #0f2744;
+            color: #fff;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+        }
         @media print { body { background: #fff; padding: 0; } .wrap { box-shadow: none; } .actions { display: none; } }
     </style>
 </head>
 <body>
+@php
+    $totalRegistros = $oficiales->count();
+@endphp
 <div class="actions">
     <button type="button" onclick="window.print()">Imprimir reporte</button>
 </div>
 
 <div class="wrap">
     <h1>Reporte de funcionarios — filtros avanzados</h1>
-    <p class="meta">Generado el {{ now()->format('d/m/Y H:i') }} · {{ $oficiales->count() }} registro(s)</p>
+    <p class="meta">Generado el {{ now()->format('d/m/Y H:i') }}</p>
+
+    <div class="totales">
+        <div class="total-card">
+            <strong>{{ $totalRegistros }}</strong>
+            <span>Total de registros obtenidos</span>
+        </div>
+    </div>
 
     @if (! empty($filtros))
         <ul class="filtros">
@@ -87,6 +134,11 @@
             @endforelse
         </tbody>
     </table>
+
+    <div class="totales-footer">
+        <span>Totalización del reporte</span>
+        <span>{{ $totalRegistros }} funcionario(s) encontrado(s)</span>
+    </div>
 </div>
 </body>
 </html>
